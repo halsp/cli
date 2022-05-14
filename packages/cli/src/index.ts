@@ -1,9 +1,8 @@
 export {
   Configuration,
   ConfigurationOptions,
-  loadConfig,
   defineConfig,
-  StaticItem,
+  AssetItem,
   Prebuild,
   Postbuild,
 } from "./configuration";
