@@ -1,0 +1,2 @@
+export const COMMAND_ARGS_METADATA = "@sfajs/cli_COMMAND_ARGS";
+export const COMMAND_OPTIONS_METADATA = "@sfajs/cli_COMMAND_COMMAND_OPTIONS";
