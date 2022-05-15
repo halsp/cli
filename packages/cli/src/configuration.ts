@@ -9,8 +9,6 @@ export type Prebuild = (
 export type Postbuild = (config: Configuration) => Promise<void> | void;
 
 export interface Configuration {
-  readonly customMethods?: readonly string[];
-  readonly sourceRoot?: string;
   readonly build?: {
     readonly prebuild?: Prebuild[];
     readonly postbuild?: Postbuild[];
@@ -26,6 +24,10 @@ export interface Configuration {
     readonly watch?: boolean;
     readonly watchAssets?: boolean;
   };
+  readonly start?: {
+    readonly port?: number;
+  };
+  readonly entryFile?: string;
 }
 
 export interface ConfigurationOptions {

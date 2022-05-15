@@ -7,7 +7,6 @@ function runLoadConfig(exist: boolean, type: string) {
     });
     if (exist) {
       expect(config).toEqual({
-        customMethods: [`CUSTOM${type.toUpperCase()}`],
         mode: type == "ts" ? "production" : undefined,
       });
     } else {
@@ -31,7 +30,6 @@ test(`startup config`, async () => {
 
   expect(res.status).toBe(200);
   expect(res.body).toEqual({
-    customMethods: ["CUSTOMTS"],
     mode: "development",
   });
 });
