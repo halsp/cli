@@ -73,7 +73,7 @@ export class ConfigService {
       return {};
     }
 
-    const module = this.getModuleFromString(code, "sfa-cli.config.js");
+    const module = this.getModuleFromString(code);
     if (module.default) {
       return module.default(this.mode);
     } else if (module.exports) {
@@ -83,17 +83,13 @@ export class ConfigService {
     }
   }
 
-  private getModuleFromString(
-    bundle: string,
-    filename: string
-  ): {
+  private getModuleFromString(bundle: string): {
     default?: (mode: string) => Configuration;
     exports?: (mode: string) => Configuration;
   } {
     const m: any = {};
     const wrapper = module.wrap(bundle);
     const script = new vm.Script(wrapper, {
-      filename,
       displayErrors: true,
     });
     const result = script.runInThisContext();

@@ -9,7 +9,7 @@ export class StartCommand extends BaseCommand {
     command
       .command("start")
       .alias("s")
-      .option("-m, --mode", "Run mode (e.g., development,production).")
+      .option("-m, --mode [mode]", "Run mode (e.g., development,production).")
       .option("-c, --config [path]", "Path to sfa-cli configuration file.")
       .option("-tc, --tsconfig [path]", "Path to tsconfig.json file.")
       .option("-w, --watch", "Run in watch mode (live-reload).")
@@ -17,8 +17,8 @@ export class StartCommand extends BaseCommand {
       .description("Run sfa application.")
       .action(async (command: Record<string, boolean | string>) => {
         await new CliStartup(undefined, command)
-          .add(BuildMiddlware)
           .add(StartMiddleware)
+          .add(BuildMiddlware)
           .run();
       });
   }

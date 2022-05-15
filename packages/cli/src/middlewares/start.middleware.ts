@@ -1,12 +1,14 @@
-import { Middleware } from "@sfajs/core";
-import { SfaHttp } from "@sfajs/http";
+import { isUndefined, Middleware } from "@sfajs/core";
 import { Inject } from "@sfajs/inject";
 import path from "path";
+import * as fs from "fs";
 import { ConfigService } from "../services/config.service";
 import { TsconfigService } from "../services/tsconfig.service";
-import { SetupStartup } from "../setup-startup";
-import chalk from "chalk";
+import { spawn } from "child_process";
+import killProcess from "tree-kill";
 import { CommandService } from "../services/command.service";
+import { START_DEV_FILE_NAME } from "../constant";
+import { treeKillSync } from "../utils/tree-kill";
 
 // TODO: remove dist
 export class StartMiddleware extends Middleware {
@@ -27,33 +29,115 @@ export class StartMiddleware extends Middleware {
     return this.commandService.getOptionVlaue<string>("mode", "production");
   }
   private get enterFile() {
-    return this.commandService.getOptionVlaue<string>("entryFile", "startup");
+    const result = this.commandService.getOptionVlaue<string>(
+      "entryFile",
+      START_DEV_FILE_NAME
+    );
+    if (result.includes(".")) {
+      return result;
+    } else {
+      return result + ".js";
+    }
+  }
+  private get port() {
+    return this.commandService.getOptionVlaue<string>("port", "2333");
   }
 
   async invoke(): Promise<void> {
-    await this.next();
+    this.ctx.res.setBody({
+      onWatchSuccess: this.createOnSuccessHook(),
+    });
 
-    const outDir = this.tsconfigService.outDir;
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const setupStartup: SetupStartup<SfaHttp> = require(path.resolve(
+    await this.next();
+  }
+
+  private createOnSuccessHook(binaryToRun = "node") {
+    let childProcessRef: any;
+    process.on(
+      "exit",
+      () => childProcessRef && treeKillSync(childProcessRef.pid)
+    );
+
+    return () => {
+      if (isUndefined(this.ctx.commandOptions["enterFile"])) {
+        this.copyEnterFile();
+      }
+
+      if (childProcessRef) {
+        childProcessRef.removeAllListeners("exit");
+        childProcessRef.on("exit", () => {
+          childProcessRef = this.spawnChildProcess(binaryToRun);
+          childProcessRef.on("exit", () => (childProcessRef = undefined));
+        });
+
+        childProcessRef.stdin && childProcessRef.stdin.pause();
+        killProcess(childProcessRef.pid);
+      } else {
+        childProcessRef = this.spawnChildProcess(binaryToRun);
+        childProcessRef.on("exit", (code: number) => {
+          process.exitCode = code;
+          childProcessRef = undefined;
+        });
+      }
+    };
+  }
+
+  private spawnChildProcess(binaryToRun: string) {
+    let outputFilePath = path.resolve(
       process.cwd(),
-      outDir,
-      "startup"
-    )).default;
-    const startup = await setupStartup(
-      new SfaHttp().useHttpJsonBody(),
-      this.mode
+      this.outDir,
+      this.enterFile
     );
-    startup.use(async (ctx, next) => {
-      console.log(ctx.req.method, ctx.req.path);
-      await next();
+    if (!fs.existsSync(outputFilePath)) {
+      throw new Error("Can't find enter file");
+    }
+
+    let childProcessArgs: string[] = [];
+    const argsStartIndex = process.argv.indexOf("--");
+    if (argsStartIndex >= 0) {
+      childProcessArgs = process.argv.slice(argsStartIndex + 1);
+    }
+    outputFilePath =
+      outputFilePath.indexOf(" ") >= 0 ? `"${outputFilePath}"` : outputFilePath;
+
+    const processArgs = [outputFilePath, ...childProcessArgs];
+    if (this.debug) {
+      const inspectFlag =
+        typeof this.debug === "string"
+          ? `--inspect=${this.debug}`
+          : "--inspect";
+      processArgs.unshift(inspectFlag);
+    }
+    if (this.isSourceMapSupportPkgAvailable()) {
+      processArgs.unshift("-r source-map-support/register");
+    }
+
+    return spawn(binaryToRun, processArgs, {
+      stdio: "inherit",
+      shell: true,
+      cwd: this.outDir,
     });
-    const { server, port } = await startup.dynamicListen(
-      this.configService.value.start?.port ?? 2333
+  }
+
+  private isSourceMapSupportPkgAvailable() {
+    try {
+      require.resolve("source-map-support");
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  private copyEnterFile() {
+    let code = fs.readFileSync(
+      path.join(__dirname, "../run-startup.js"),
+      "utf-8"
     );
-    console.log(chalk.blue(`start: http://localhost:${port}`));
-    this.ok({
-      server,
-    });
+    code = code.replace("{{MODE}}", this.mode);
+    code = code.replace("{{PORT}}", this.port);
+    fs.writeFileSync(
+      path.resolve(process.cwd(), this.outDir, START_DEV_FILE_NAME),
+      code
+    );
   }
 }
