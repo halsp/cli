@@ -130,7 +130,7 @@ export class StartMiddleware extends Middleware {
 
   private copyEnterFile() {
     let code = fs.readFileSync(
-      path.join(__dirname, "../run-startup.js"),
+      path.join(__dirname, "../utils/run-startup.js"),
       "utf-8"
     );
     code = code.replace("{{MODE}}", this.mode);
