@@ -9,6 +9,7 @@ import { TsLoaderService } from "./services/ts-loader.service";
 import { FileService } from "./services/file.service";
 import { CompilerService } from "./services/compiler.service";
 import { WatchCompilerService } from "./services/watch-compiler.service";
+import { CommandService } from "./services/command.service";
 
 declare module "@sfajs/core" {
   interface HttpContext {
@@ -50,8 +51,8 @@ export class CliStartup extends Startup {
   ) {
     super();
 
-    this[COMMAND_ARGS_METADATA] = options ?? {};
-    this[COMMAND_OPTIONS_METADATA] = args ?? {};
+    this[COMMAND_OPTIONS_METADATA] = options ?? {};
+    this[COMMAND_ARGS_METADATA] = args ?? {};
 
     this.useInject()
       .inject(TsconfigService)
@@ -60,7 +61,8 @@ export class CliStartup extends Startup {
       .inject(TsLoaderService)
       .inject(FileService)
       .inject(CompilerService)
-      .inject(WatchCompilerService);
+      .inject(WatchCompilerService)
+      .inject(CommandService);
   }
 
   async run() {
