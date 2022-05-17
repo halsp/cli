@@ -11,13 +11,6 @@ export class ReadService {
     }
   }
 
-  readAnyOfTxt(names: string[]) {
-    for (const name of names) {
-      const txt = this.readTxt(name);
-      if (txt) return txt;
-    }
-  }
-
   readTxt(name: string): string | undefined {
     const file = path.resolve(process.cwd(), name);
     if (fs.existsSync(file)) {

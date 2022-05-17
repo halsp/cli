@@ -2,7 +2,7 @@ import ts from "typescript";
 import * as fs from "fs";
 import { Context } from "@sfajs/pipe";
 import { HttpContext } from "@sfajs/core";
-import path, { join } from "path";
+import path from "path";
 import { Inject } from "@sfajs/inject";
 import { TsLoaderService } from "./ts-loader.service";
 
@@ -13,7 +13,7 @@ export class TsconfigService {
   private readonly tsLoaderService!: TsLoaderService;
 
   get fileName() {
-    return this.ctx.commandArgs.tsconfigFile ?? "tsconfig.json";
+    return this.ctx.getCommandOption<string>("tsconfigFile") ?? "tsconfig.json";
   }
   get filePath() {
     return path.resolve(process.cwd(), this.fileName);
