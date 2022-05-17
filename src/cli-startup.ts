@@ -66,6 +66,6 @@ export class CliStartup extends Startup {
   }
 
   async run() {
-    super.invoke(new HttpContext(new SfaRequest()));
+    return super.invoke(new HttpContext(new SfaRequest()));
   }
 }
