@@ -32,11 +32,10 @@ export class CommandService {
       if (!isUndefined(this.ctx.commandOptions[property])) {
         return this.ctx.commandOptions[property] as unknown as T;
       }
-      if (!isUndefined(this.configService.value[property])) {
-        const value = this.getValue(this.configService, property);
-        if (!isUndefined(value)) {
-          return value;
-        }
+
+      const value = this.getValue(this.configService.value, property);
+      if (!isUndefined(value)) {
+        return value;
       }
     }
 

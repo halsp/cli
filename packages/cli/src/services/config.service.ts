@@ -61,11 +61,17 @@ export class ConfigService {
     if (this.configFilePath) {
       code = this.readService.readTxt(this.configFilePath);
       if (code) {
-        const { outputText } = ts.transpileModule(
+        code = ts.transpile(
           code,
-          this.tsconfigService.value
+          {
+            module: ts.ModuleKind.CommonJS,
+            target: ts.ScriptTarget.ES2017,
+            inlineSourceMap: true,
+            inlineSources: true,
+            rootDir: process.cwd(),
+          },
+          this.configFilePath
         );
-        code = outputText;
       }
     }
 
