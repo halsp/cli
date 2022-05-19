@@ -14,6 +14,7 @@ export class StartCommand extends BaseCommand {
       .option("-tc, --tsconfig [path]", "Path to tsconfig.json file.")
       .option("-w, --watch", "Run in watch mode (live-reload).")
       .option("-wa, --watchAssets", "Watch non-ts (e.g., .views) files mode.")
+      .option("-p, --port [port]", "The port on http listens")
       .description("Run sfa application.")
       .action(async (command: Record<string, boolean | string>) => {
         await new CliStartup(undefined, command)
