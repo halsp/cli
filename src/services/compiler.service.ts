@@ -30,24 +30,20 @@ export class CompilerService {
 
     const createProgram =
       this.tsBinary.createIncrementalProgram || this.tsBinary.createProgram;
-    const program = createProgram.call(ts, {
+    const buildProgram = createProgram.call(ts, {
       rootNames: fileNames,
       projectReferences,
       options,
     });
-    const programRef = program.getProgram
-      ? program.getProgram()
-      : (program as any as ts.Program);
+    const program = buildProgram.getProgram();
 
-    const before = this.config.build?.beforeHooks.map((hook) =>
-      hook(programRef)
-    );
-    const after = this.config.build?.afterHooks.map((hook) => hook(programRef));
+    const before = this.config.build?.beforeHooks.map((hook) => hook(program));
+    const after = this.config.build?.afterHooks.map((hook) => hook(program));
     const afterDeclarations = this.config.build?.afterDeclarationsHooks.map(
-      (hook) => hook(programRef)
+      (hook) => hook(program)
     );
 
-    const emitResult = program.emit(
+    const emitResult = buildProgram.emit(
       undefined,
       undefined,
       undefined,
@@ -62,7 +58,6 @@ export class CompilerService {
     const errorsCount = this.reportAfterCompilationDiagnostic(
       program as any,
       emitResult,
-      this.tsBinary,
       formatHost
     );
     if (errorsCount) {
@@ -74,19 +69,21 @@ export class CompilerService {
   private reportAfterCompilationDiagnostic(
     program: ts.EmitAndSemanticDiagnosticsBuilderProgram,
     emitResult: ts.EmitResult,
-    tsBinary: typeof ts,
     formatHost: ts.FormatDiagnosticsHost
   ): number {
-    const diagnostics = tsBinary
+    const diagnostics = this.tsBinary
       .getPreEmitDiagnostics(program as unknown as ts.Program)
       .concat(emitResult.diagnostics);
 
     if (diagnostics.length > 0) {
       console.error(
-        tsBinary.formatDiagnosticsWithColorAndContext(diagnostics, formatHost)
+        this.tsBinary.formatDiagnosticsWithColorAndContext(
+          diagnostics,
+          formatHost
+        )
       );
       console.info(
-        `Found ${diagnostics.length} error(s).` + tsBinary.sys.newLine
+        `Found ${diagnostics.length} error(s).` + this.tsBinary.sys.newLine
       );
     }
     return diagnostics.length;

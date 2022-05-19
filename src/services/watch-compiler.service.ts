@@ -54,7 +54,6 @@ export class WatchCompilerService {
     (host as any).createProgram = (
       rootNames: ReadonlyArray<string>,
       options: ts.CompilerOptions | undefined,
-      // tslint:disable-next-line:no-shadowed-variable
       host: ts.CompilerHost,
       oldProgram: ts.EmitAndSemanticDiagnosticsBuilderProgram
     ) => {
