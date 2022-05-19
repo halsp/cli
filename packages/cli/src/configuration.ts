@@ -18,7 +18,6 @@ export interface Configuration {
     readonly afterDeclarationsHooks: ((program?: ts.Program) => Transformer)[];
 
     readonly deleteOutDir?: boolean;
-    readonly deleteBuildFileTypes?: string[];
     readonly assets?: AssetItem[];
 
     readonly watch?: boolean;

@@ -31,6 +31,14 @@ export class BuildMiddlware extends Middleware {
   }
 
   async invoke(): Promise<void> {
+    if (this.config.build?.prebuild) {
+      for (const fn of this.config.build.prebuild) {
+        if (!(await fn(this.config))) {
+          return;
+        }
+      }
+    }
+
     if (this.config.build?.deleteOutDir) {
       this.fileService.deleteFile(path.join(process.cwd(), this.outDir));
     }
@@ -42,17 +50,15 @@ export class BuildMiddlware extends Middleware {
     } else {
       compilerResult = this.compilerService.compiler();
     }
+    if (!compilerResult) return;
 
-    if (compilerResult) {
-      if (this.config?.build?.deleteBuildFileTypes) {
-        for (const type of this.config?.build?.deleteBuildFileTypes) {
-          this.fileService.deleteFile(this.outDir, type);
-        }
+    this.copyAssets();
+    if (this.config.build?.postbuild) {
+      for (const fn of this.config.build.postbuild) {
+        await fn(this.config);
       }
-      this.copyAssets();
-
-      await this.next();
     }
+    await this.next();
   }
 
   private copyAssets() {
