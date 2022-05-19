@@ -23,13 +23,22 @@ export class StartMiddleware extends Middleware {
     return this.tsconfigService.outDir;
   }
   private get debug() {
-    return this.commandService.getOptionVlaue<boolean>("debug", false);
+    return this.commandService.getOptionOrConfigValue<boolean>(
+      "debug",
+      "build.debug",
+      false
+    );
   }
   private get mode() {
-    return this.commandService.getOptionVlaue<string>("mode", "production");
+    return this.commandService.getOptionOrConfigValue<string>(
+      "mode",
+      "mode",
+      "production"
+    );
   }
   private get enterFile() {
-    const result = this.commandService.getOptionVlaue<string>(
+    const result = this.commandService.getOptionOrConfigValue<string>(
+      "entryFile",
       "entryFile",
       START_DEV_FILE_NAME
     );
@@ -40,7 +49,11 @@ export class StartMiddleware extends Middleware {
     }
   }
   private get port() {
-    return this.commandService.getOptionVlaue<string>("port", "2333");
+    return this.commandService.getOptionOrConfigValue<string>(
+      "port",
+      "start.port",
+      "2333"
+    );
   }
 
   async invoke(): Promise<void> {

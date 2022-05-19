@@ -10,30 +10,39 @@ export class CommandService {
   private readonly configService!: ConfigService;
 
   getOptionVlaue<T extends string | boolean>(
-    properties: string[]
+    commands: string[] | string
   ): T | undefined;
-  getOptionVlaue<T extends string | boolean>(property: string): T | undefined;
   getOptionVlaue<T extends string | boolean>(
-    properties: string[],
+    commands: string[] | string,
     defaultVal: T
   ): T;
   getOptionVlaue<T extends string | boolean>(
-    property: string,
-    defaultVal: T
-  ): T;
-  getOptionVlaue<T extends string | boolean>(
-    properties: string[] | string,
+    commands: string[] | string,
     defaultVal?: T
   ): T | undefined {
-    if (!Array.isArray(properties)) {
-      properties = [properties];
+    if (!Array.isArray(commands)) {
+      commands = [commands];
     }
-    for (const property of properties) {
+    for (const property of commands) {
       if (!isUndefined(this.ctx.commandOptions[property])) {
         return this.ctx.commandOptions[property] as unknown as T;
       }
+    }
 
-      const value = this.getValue(this.configService.value, property);
+    return defaultVal;
+  }
+
+  getConfigVlaue<T = any>(paths: string[] | string): T | undefined;
+  getConfigVlaue<T = any>(paths: string[] | string, defaultVal: T): T;
+  getConfigVlaue<T = any>(
+    paths: string[] | string,
+    defaultVal?: T
+  ): T | undefined {
+    if (!Array.isArray(paths)) {
+      paths = [paths];
+    }
+    for (const property of paths) {
+      const value = this.getConfigValue(this.configService.value, property);
       if (!isUndefined(value)) {
         return value;
       }
@@ -42,7 +51,41 @@ export class CommandService {
     return defaultVal;
   }
 
-  private getValue<T = any>(obj: any, property: string): T | undefined {
+  getOptionOrConfigValue<T = any>(
+    optionCommands: string[] | string,
+    configPaths: string[] | string
+  ): T | undefined;
+  getOptionOrConfigValue<T = any>(
+    optionCommands: string[] | string,
+    configPaths: string[] | string,
+    defaultVal: T
+  ): T;
+  getOptionOrConfigValue<T = any>(
+    optionCommands: string[] | string,
+    configPaths: string[] | string,
+    defaultVal?: T
+  ): T | undefined {
+    if (!Array.isArray(optionCommands)) {
+      optionCommands = [optionCommands];
+    }
+    if (!Array.isArray(configPaths)) {
+      configPaths = [configPaths];
+    }
+
+    const optionValue = this.getOptionVlaue(optionCommands);
+    if (!isUndefined(optionValue)) {
+      return optionValue as any;
+    }
+
+    const configValue = this.getConfigVlaue(configPaths);
+    if (!isUndefined(configValue)) {
+      return configValue as any;
+    }
+
+    return defaultVal;
+  }
+
+  private getConfigValue<T = any>(obj: any, property: string): T | undefined {
     if (!property || !obj) {
       return undefined;
     }
@@ -60,6 +103,9 @@ export class CommandService {
       return undefined;
     }
 
-    return this.getValue(obj[firstFragment], property.replace(/^.*?\./, ""));
+    return this.getConfigValue(
+      obj[firstFragment],
+      property.replace(/^.*?\./, "")
+    );
   }
 }
