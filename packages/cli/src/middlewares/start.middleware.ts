@@ -2,7 +2,6 @@ import { isUndefined, Middleware } from "@sfajs/core";
 import { Inject } from "@sfajs/inject";
 import path from "path";
 import * as fs from "fs";
-import { ConfigService } from "../services/config.service";
 import { TsconfigService } from "../services/tsconfig.service";
 import { spawn } from "child_process";
 import killProcess from "tree-kill";
@@ -14,8 +13,6 @@ import { treeKillSync } from "../utils/tree-kill";
 export class StartMiddleware extends Middleware {
   @Inject
   private readonly tsconfigService!: TsconfigService;
-  @Inject
-  private readonly configService!: ConfigService;
   @Inject
   private readonly commandService!: CommandService;
 
@@ -36,10 +33,10 @@ export class StartMiddleware extends Middleware {
       "production"
     );
   }
-  private get enterFile() {
+  private get startupFile() {
     const result = this.commandService.getOptionOrConfigValue<string>(
-      "entryFile",
-      "entryFile",
+      "startupFile",
+      "startupFile",
       START_DEV_FILE_NAME
     );
     if (result.includes(".")) {
@@ -99,10 +96,10 @@ export class StartMiddleware extends Middleware {
     let outputFilePath = path.resolve(
       process.cwd(),
       this.outDir,
-      this.enterFile
+      this.startupFile
     );
     if (!fs.existsSync(outputFilePath)) {
-      throw new Error("Can't find enter file");
+      throw new Error("Can't find startup file");
     }
 
     let childProcessArgs: string[] = [];

@@ -60,11 +60,20 @@ export class CommandService {
     configPaths: string[] | string,
     defaultVal: T
   ): T;
-  getOptionOrConfigValue<T = any>(
+  getOptionOrConfigValue<T extends string | boolean, U = any>(
+    optionCommands: string[] | string,
+    configPaths: string[] | string
+  ): T | U | undefined;
+  getOptionOrConfigValue<T extends string | boolean, U = any>(
     optionCommands: string[] | string,
     configPaths: string[] | string,
-    defaultVal?: T
-  ): T | undefined {
+    defaultVal: T | U
+  ): T | U;
+  getOptionOrConfigValue<T extends string | boolean, U = any>(
+    optionCommands: string[] | string,
+    configPaths: string[] | string,
+    defaultVal?: T | U
+  ): T | U | undefined {
     if (!Array.isArray(optionCommands)) {
       optionCommands = [optionCommands];
     }
@@ -72,14 +81,14 @@ export class CommandService {
       configPaths = [configPaths];
     }
 
-    const optionValue = this.getOptionVlaue(optionCommands);
+    const optionValue = this.getOptionVlaue<T>(optionCommands);
     if (!isUndefined(optionValue)) {
-      return optionValue as any;
+      return optionValue;
     }
 
-    const configValue = this.getConfigVlaue(configPaths);
+    const configValue = this.getConfigVlaue<U>(configPaths);
     if (!isUndefined(configValue)) {
-      return configValue as any;
+      return configValue;
     }
 
     return defaultVal;

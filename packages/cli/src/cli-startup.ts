@@ -10,6 +10,7 @@ import { FileService } from "./services/file.service";
 import { CompilerService } from "./services/compiler.service";
 import { WatchCompilerService } from "./services/watch-compiler.service";
 import { CommandService } from "./services/command.service";
+import { AssetsService } from "./services/assets.service";
 
 declare module "@sfajs/core" {
   interface HttpContext {
@@ -62,7 +63,8 @@ export class CliStartup extends Startup {
       .inject(FileService)
       .inject(CompilerService)
       .inject(WatchCompilerService)
-      .inject(CommandService);
+      .inject(CommandService)
+      .inject(AssetsService);
   }
 
   async run() {

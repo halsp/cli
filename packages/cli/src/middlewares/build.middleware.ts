@@ -1,7 +1,8 @@
 import { Middleware } from "@sfajs/core";
 import { Inject } from "@sfajs/inject";
 import path from "path";
-import { AssetItem } from "../configuration";
+import { AssetsService } from "../services/assets.service";
+import { CommandService } from "../services/command.service";
 import { CompilerService } from "../services/compiler.service";
 import { ConfigService } from "../services/config.service";
 import { FileService } from "../services/file.service";
@@ -19,6 +20,10 @@ export class BuildMiddlware extends Middleware {
   private readonly compilerService!: CompilerService;
   @Inject
   private readonly watchCompilerService!: WatchCompilerService;
+  @Inject
+  private readonly commandService!: CommandService;
+  @Inject
+  private readonly assetsService!: AssetsService;
 
   private get config() {
     return this.configService.value;
@@ -27,55 +32,65 @@ export class BuildMiddlware extends Middleware {
     return this.tsconfigService.outDir;
   }
   private get watch() {
-    return !!this.ctx.commandOptions.watch;
+    return this.commandService.getOptionOrConfigValue<boolean>(
+      "watch",
+      "build.watch",
+      false
+    );
+  }
+  private get deleteOutDir() {
+    return this.commandService.getOptionOrConfigValue<boolean>(
+      "deleteOutDir",
+      "build.deleteOutDir",
+      false
+    );
   }
 
   async invoke(): Promise<void> {
-    if (this.config.build?.prebuild) {
-      for (const fn of this.config.build.prebuild) {
-        if (!(await fn(this.config))) {
-          return;
-        }
-      }
+    if (!(await this.execPrebuilds())) {
+      return;
     }
 
-    if (this.config.build?.deleteOutDir) {
+    if (this.deleteOutDir) {
       this.fileService.deleteFile(path.join(process.cwd(), this.outDir));
     }
 
     let compilerResult: boolean;
     if (this.watch) {
-      const onWatchSuccess = this.ctx.res.body.onWatchSuccess;
-      compilerResult = this.watchCompilerService.compiler(onWatchSuccess);
+      compilerResult = this.watchCompilerService.compiler(async () => {
+        this.assetsService.copy();
+        await this.execPostbuilds();
+        this.ctx.res.body.onWatchSuccess();
+      });
     } else {
       compilerResult = this.compilerService.compiler();
+      if (compilerResult) {
+        this.assetsService.copy();
+        await this.execPostbuilds();
+      }
     }
-    if (!compilerResult) return;
 
-    this.copyAssets();
+    if (compilerResult) {
+      await this.next();
+    }
+  }
+
+  private async execPrebuilds(): Promise<boolean> {
+    if (this.config.build?.prebuild) {
+      for (const fn of this.config.build.prebuild) {
+        if (!(await fn(this.config))) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
+  private async execPostbuilds() {
     if (this.config.build?.postbuild) {
       for (const fn of this.config.build.postbuild) {
         await fn(this.config);
       }
     }
-    await this.next();
-  }
-
-  private copyAssets() {
-    const files: AssetItem[] = [...(this.config.build?.assets ?? [])];
-    files.forEach((asset) => {
-      let source: string;
-      let target: string;
-      if (typeof asset == "string") {
-        source = asset;
-        target = asset;
-      } else {
-        source = asset.source;
-        target = asset.target;
-      }
-      const sourcePath = path.join(process.cwd(), source);
-      const targetPath = path.join(process.cwd(), this.outDir, target);
-      this.fileService.copyFile(sourcePath, targetPath);
-    });
   }
 }

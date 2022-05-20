@@ -4,7 +4,8 @@ import { isUndefined } from "@sfajs/core";
 
 function testCliStartup(args?: any, options?: any) {
   test(`cli startup`, async () => {
-    await runin("./test/cli-startup", async () => {
+    let worked = false;
+    await runin("test/cli-startup", async () => {
       const res = await new CliStartup(args, options)
         .use((ctx) => {
           ctx.ok({
@@ -20,7 +21,9 @@ function testCliStartup(args?: any, options?: any) {
         args: {},
         a: isUndefined(options) ? undefined : 1,
       });
+      worked = true;
     });
+    expect(worked).toBeTruthy();
   });
 }
 testCliStartup({}, { a: 1 });
