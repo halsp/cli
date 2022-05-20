@@ -2,7 +2,6 @@ import ts from "typescript";
 
 type Transformer = ts.TransformerFactory<any> | ts.CustomTransformerFactory;
 
-export type AssetItem = string | { source: string; target: string };
 export type Prebuild = (
   config: Configuration
 ) => Promise<boolean> | boolean | Promise<void> | void;
@@ -18,7 +17,7 @@ export interface Configuration {
     readonly afterDeclarationsHooks: ((program?: ts.Program) => Transformer)[];
 
     readonly deleteOutDir?: boolean;
-    readonly assets?: AssetItem[];
+    readonly assets?: string[];
 
     readonly watch?: boolean;
     readonly watchAssets?: boolean;
@@ -26,7 +25,7 @@ export interface Configuration {
   readonly start?: {
     readonly port?: number;
   };
-  readonly entryFile?: string;
+  readonly startupFile?: string;
 }
 
 export interface ConfigurationOptions {
