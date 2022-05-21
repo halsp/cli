@@ -16,6 +16,8 @@ export class WatchCompilerService {
   @Inject
   private readonly tsLoaderService!: TsLoaderService;
 
+  private watcher?: ts.WatchOfConfigFile<ts.EmitAndSemanticDiagnosticsBuilderProgram>;
+
   private get tsBinary() {
     return this.tsLoaderService.tsBinary;
   }
@@ -33,8 +35,6 @@ export class WatchCompilerService {
     }
     const { projectReferences } = this.tsconfigService.getParsedCommandLine();
 
-    const createProgram =
-      this.tsBinary.createEmitAndSemanticDiagnosticsBuilderProgram;
     const origDiagnosticReporter = (
       this.tsBinary as any
     ).createDiagnosticReporter(this.tsBinary.sys, true);
@@ -45,19 +45,19 @@ export class WatchCompilerService {
       this.tsconfigService.filePath,
       tsCompilerOptions,
       this.tsBinary.sys,
-      createProgram,
+      this.tsBinary.createEmitAndSemanticDiagnosticsBuilderProgram,
       this.createDiagnosticReporter(origDiagnosticReporter),
       this.createWatchStatusChanged(origWatchStatusReporter, onSuccess)
     );
 
     const origCreateProgram = host.createProgram;
-    (host as any).createProgram = (
-      rootNames: ReadonlyArray<string>,
+    host.createProgram = (
+      rootNames: ReadonlyArray<string> | undefined,
       options: ts.CompilerOptions | undefined,
-      host: ts.CompilerHost,
-      oldProgram: ts.EmitAndSemanticDiagnosticsBuilderProgram
+      host?: ts.CompilerHost,
+      oldProgram?: ts.EmitAndSemanticDiagnosticsBuilderProgram
     ) => {
-      const program = origCreateProgram(
+      const program = origCreateProgram.bind(this)(
         rootNames,
         options,
         host,
@@ -65,6 +65,7 @@ export class WatchCompilerService {
         undefined,
         projectReferences
       );
+
       const origProgramEmit = program.emit;
       program.emit = (
         targetSourceFile?: ts.SourceFile,
@@ -77,15 +78,15 @@ export class WatchCompilerService {
         transforms = typeof transforms !== "object" ? {} : transforms;
 
         const before =
-          this.config.build?.beforeHooks.map((hook) =>
+          this.config.build?.beforeHooks?.map((hook) =>
             hook(program.getProgram())
           ) ?? [];
         const after =
-          this.config.build?.afterHooks.map((hook) =>
+          this.config.build?.afterHooks?.map((hook) =>
             hook(program.getProgram())
           ) ?? [];
         const afterDeclarations =
-          this.config.build?.afterDeclarationsHooks.map((hook) =>
+          this.config.build?.afterDeclarationsHooks?.map((hook) =>
             hook(program.getProgram())
           ) ?? [];
 
@@ -103,11 +104,16 @@ export class WatchCompilerService {
           transforms
         );
       };
-      return program as any;
+      return program;
     };
 
-    this.tsBinary.createWatchProgram(host);
+    this.watcher = this.tsBinary.createWatchProgram(host);
     return true;
+  }
+
+  stop() {
+    this.watcher?.close();
+    this.watcher = undefined;
   }
 
   private createDiagnosticReporter(

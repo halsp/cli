@@ -12,9 +12,9 @@ export interface Configuration {
     readonly prebuild?: Prebuild[];
     readonly postbuild?: Postbuild[];
 
-    readonly beforeHooks: ((program?: ts.Program) => Transformer)[];
-    readonly afterHooks: ((program?: ts.Program) => Transformer)[];
-    readonly afterDeclarationsHooks: ((program?: ts.Program) => Transformer)[];
+    readonly beforeHooks?: ((program?: ts.Program) => Transformer)[];
+    readonly afterHooks?: ((program?: ts.Program) => Transformer)[];
+    readonly afterDeclarationsHooks?: ((program?: ts.Program) => Transformer)[];
 
     readonly deleteOutDir?: boolean;
     readonly assets?: string[];

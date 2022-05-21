@@ -42,7 +42,7 @@ export class BuildMiddlware extends Middleware {
     return this.commandService.getOptionOrConfigValue<boolean>(
       "deleteOutDir",
       "build.deleteOutDir",
-      false
+      true
     );
   }
 
@@ -60,7 +60,7 @@ export class BuildMiddlware extends Middleware {
       compilerResult = this.watchCompilerService.compiler(async () => {
         this.assetsService.copy();
         await this.execPostbuilds();
-        this.ctx.res.body.onWatchSuccess();
+        this.ctx.res.body?.onWatchSuccess();
       });
     } else {
       compilerResult = this.compilerService.compiler();
@@ -76,9 +76,9 @@ export class BuildMiddlware extends Middleware {
   }
 
   private async execPrebuilds(): Promise<boolean> {
-    if (this.config.build?.prebuild) {
+    if (this.config?.build?.prebuild) {
       for (const fn of this.config.build.prebuild) {
-        if (!(await fn(this.config))) {
+        if ((await fn(this.config)) == false) {
           return false;
         }
       }
@@ -87,7 +87,7 @@ export class BuildMiddlware extends Middleware {
   }
 
   private async execPostbuilds() {
-    if (this.config.build?.postbuild) {
+    if (this.config?.build?.postbuild) {
       for (const fn of this.config.build.postbuild) {
         await fn(this.config);
       }
