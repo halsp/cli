@@ -55,6 +55,14 @@ export class CliStartup extends Startup {
     this[COMMAND_OPTIONS_METADATA] = options ?? {};
     this[COMMAND_ARGS_METADATA] = args ?? {};
 
+    this.use(async (ctx, next) => {
+      try {
+        await next();
+      } catch (err) {
+        console.error(err);
+      }
+    });
+
     this.useInject()
       .inject(TsconfigService)
       .inject(ConfigService)

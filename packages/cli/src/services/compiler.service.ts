@@ -37,11 +37,13 @@ export class CompilerService {
     });
     const program = buildProgram.getProgram();
 
-    const before = this.config.build?.beforeHooks.map((hook) => hook(program));
-    const after = this.config.build?.afterHooks.map((hook) => hook(program));
-    const afterDeclarations = this.config.build?.afterDeclarationsHooks.map(
-      (hook) => hook(program)
-    );
+    const before =
+      this.config.build?.beforeHooks?.map((hook) => hook(program)) ?? [];
+    const after =
+      this.config.build?.afterHooks?.map((hook) => hook(program)) ?? [];
+    const afterDeclarations =
+      this.config.build?.afterDeclarationsHooks?.map((hook) => hook(program)) ??
+      [];
 
     const emitResult = buildProgram.emit(
       undefined,
