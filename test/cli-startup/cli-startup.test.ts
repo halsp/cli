@@ -28,3 +28,21 @@ function testCliStartup(args?: any, options?: any) {
 }
 testCliStartup({}, { a: 1 });
 testCliStartup(undefined, undefined);
+
+test(`cli-startup throw error`, async () => {
+  await runin("test/cli-startup", async () => {
+    const errMsg = "startup-err";
+    let err = false;
+    try {
+      await new CliStartup()
+        .use(() => {
+          throw new Error(errMsg);
+        })
+        .run();
+    } catch (error) {
+      expect((error as Error).message).toBe(errMsg);
+      err = true;
+    }
+    expect(err).toBeTruthy();
+  });
+});

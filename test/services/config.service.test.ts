@@ -19,7 +19,6 @@ runTest(
     );
     expect(service.value).toEqual({
       custom: 1,
-      mode: "test",
     });
     return;
   },
