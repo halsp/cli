@@ -1,3 +1,3 @@
 import { defineConfig } from "@sfajs/cli";
 
-export default defineConfig((m) => ({}));
+export default defineConfig(() => ({}));
