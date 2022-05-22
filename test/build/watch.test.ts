@@ -11,8 +11,7 @@ function runTest(options: {
   preserveWatchOutput?: boolean;
 }) {
   test(`build watch`, async () => {
-    let worked = false;
-    let onCallback = false;
+    let callCount = 0;
     await runin(`test/build/watch`, async () => {
       await new CliStartup(undefined, {
         watch: true,
@@ -23,7 +22,7 @@ function runTest(options: {
           if (options.callback) {
             ctx.res.setBody({
               onWatchSuccess: () => {
-                onCallback = true;
+                callCount++;
               },
             });
           }
@@ -31,7 +30,7 @@ function runTest(options: {
             await next();
           } finally {
             const assetsService = await parseInject(ctx, AssetsService);
-            assetsService.stopWatch();
+            await assetsService.stopWatch();
 
             const watchCompilerService = await parseInject(
               ctx,
@@ -40,16 +39,16 @@ function runTest(options: {
             watchCompilerService.stop();
             watchCompilerService.stop(); // test again
           }
+          callCount++;
         })
         .add(BuildMiddlware)
         .run();
 
       expect(fs.existsSync("./dist")).toBeTruthy();
       expect(fs.existsSync("./dist/build-test.js")).toBeTruthy();
-      worked = true;
+      callCount++;
     });
-    expect(worked).toBeTruthy();
-    expect(onCallback).toBe(!!options.callback);
+    expect(callCount).toBe(options.callback ? 3 : 2);
   });
 }
 

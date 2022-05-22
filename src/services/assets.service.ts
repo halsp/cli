@@ -46,8 +46,8 @@ export class AssetsService {
     );
   }
 
-  public stopWatch() {
-    this.watchers.forEach((watcher) => watcher.close());
+  public async stopWatch() {
+    await Promise.all(this.watchers.map((watcher) => watcher.close()));
   }
 
   public copy() {
@@ -57,10 +57,7 @@ export class AssetsService {
       if (this.watchAssets) {
         this.watchAsset(asset);
       } else {
-        this.fileService.copyFile(
-          this.getSourcePath(asset),
-          this.getTargetPath(asset)
-        );
+        this.fileService.copyFile(asset, this.getTargetPath(asset));
       }
     }
   }
@@ -81,17 +78,14 @@ export class AssetsService {
     };
 
     const watcher = chokidar
-      .watch(this.getSourcePath(asset))
+      .watch(asset)
       .on("add", onChange)
       .on("change", onChange)
       .on("unlink", onUnlink);
     this.watchers.push(watcher);
   }
 
-  private getSourcePath(asset: string) {
-    return path.join(process.cwd(), asset);
-  }
   private getTargetPath(asset: string) {
-    return path.join(process.cwd(), this.outDir, asset);
+    return path.join(this.outDir, asset);
   }
 }

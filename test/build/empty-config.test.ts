@@ -29,7 +29,7 @@ test(`empty config`, async () => {
           await next();
         } finally {
           const assetsService = await parseInject(ctx, AssetsService);
-          assetsService.stopWatch();
+          await assetsService.stopWatch();
 
           const watchCompilerService = await parseInject(
             ctx,
