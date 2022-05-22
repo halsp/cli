@@ -1,8 +1,5 @@
 import { Configuration, defineConfig } from "../../src/configuration";
 
-export default defineConfig((mode) => {
-  return <Configuration>{
-    mode: mode,
-    custom: 1,
-  };
+export default defineConfig(<Configuration>{
+  custom: 1,
 });
