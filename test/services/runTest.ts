@@ -1,4 +1,4 @@
-import { HttpContext, ObjectConstructor, SfaResponse } from "@sfajs/core";
+import { HttpContext, ObjectConstructor } from "@sfajs/core";
 import { CliStartup } from "../../src/cli-startup";
 import { runin } from "@sfajs/testing";
 import { parseInject } from "@sfajs/inject";

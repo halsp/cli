@@ -3,7 +3,7 @@ import * as ts from "typescript";
 
 const dict: any = {};
 
-export default defineConfig((m) => ({
+export default defineConfig(() => ({
   build: {
     beforeHooks: [
       () => {
