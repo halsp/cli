@@ -74,8 +74,7 @@ export class WatchCompilerService {
         emitOnlyDtsFiles?: boolean,
         customTransformers?: ts.CustomTransformers
       ) => {
-        let transforms = customTransformers;
-        transforms = typeof transforms !== "object" ? {} : transforms;
+        const transforms = customTransformers ?? {};
 
         const before =
           this.config.build?.beforeHooks?.map((hook) =>
