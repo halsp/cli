@@ -25,22 +25,17 @@ runTest(
   }
 );
 
-// runTest(
-//   ConfigService,
-//   async (res, service) => {
-//     expect(service.mode).toBe("test");
-//     expect(service.configFilePath).toBe(
-//       path.resolve(process.cwd(), "custom.config.ts")
-//     );
-//     expect(service.value).toEqual({
-//       custom: 1,
-//       mode: "test",
-//     });
-//     return;
-//   },
-//   undefined,
-//   {
-//     configName: "custom.config.ts",
-//     mode: "test",
-//   }
-// );
+runTest(
+  TsconfigService,
+  async (res, service) => {
+    expect(service.fileName).toBe("empty.tsconfig.json");
+    expect(service.filePath).toBe(
+      path.resolve(process.cwd(), "empty.tsconfig.json")
+    );
+    expect(service.outDir).toBe("dist");
+  },
+  undefined,
+  {
+    tsconfigFile: "empty.tsconfig.json",
+  }
+);
