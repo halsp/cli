@@ -1,29 +1,15 @@
 import { Inject } from "@sfajs/inject";
 import path from "path";
 import { FileService } from "./file.service";
-
-export const commentStartRegExp = /^\s*\/{2,}\s+/;
-export const commentLineRegExp = /^\s*\/{2,}\s+.+/;
+import { Plugin } from "./plugin.service";
 
 // plugin core
 // plugin inject|router
-const commentPluginStartRegExp = /^\s*\/{2,}\s+plugin\s+/;
+const commentPluginStartRegExp = /^\s*\/{2,}\s+\{\s+/;
 // plugin-end
-const commentPluginEndRegExp = /^\s*\/{2,}\s+plugin-end\s*/;
+const commentPluginEndRegExp = /^\s*\/{2,}\s+\}\s*/;
 
-export type Plugin =
-  | "inject"
-  | "router"
-  | "views"
-  | "mva"
-  | "pipe"
-  | "filter"
-  | "testing"
-  | "static"
-  | "swagger"
-  | "jwt";
-
-export class CreateService {
+export class CreateTemplateService {
   @Inject
   private readonly fileService!: FileService;
 
@@ -32,6 +18,7 @@ export class CreateService {
     this.fileService.copyCode(source, targetDir, (code) =>
       this.readFile(code, plugins)
     );
+    this.fileService.removeBlankDir(targetDir);
   }
 
   private readFile(code: string, plugins: Plugin[]): string | null {
