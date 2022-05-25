@@ -21,6 +21,7 @@
   "exclude": [
     "test",
     "dist",
-    "bin"
+    "bin",
+    "template"
   ]
 }

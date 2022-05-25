@@ -35,4 +35,36 @@ export class FileService {
       fs.copyFileSync(source, target);
     }
   }
+
+  copyCode(
+    source: string,
+    target: string,
+    codeFilter?: (code: string) => string | null,
+    ignoreEmpty = false
+  ) {
+    if (!fs.existsSync(source)) return;
+    const stat = fs.statSync(source);
+    if (stat.isDirectory()) {
+      if (!fs.existsSync(target)) {
+        fs.mkdirSync(target);
+      }
+      const files = fs.readdirSync(source);
+      files.forEach((file) => {
+        this.copyCode(
+          path.join(source, file),
+          path.join(target, file),
+          codeFilter
+        );
+      });
+    } else if (stat.isFile()) {
+      let code: string | null = fs.readFileSync(source, "utf-8");
+      if (codeFilter) {
+        code = codeFilter(code);
+      }
+      if (ignoreEmpty && !code) {
+        return;
+      }
+      fs.writeFileSync(target, code ?? "");
+    }
+  }
 }

@@ -4,10 +4,13 @@ import chalk from "chalk";
 import os from "os";
 import * as fs from "fs";
 import path from "path";
-
-type InfoItem = { key: string; value: string };
+import { DepsService } from "../services/deps.service";
+import { Inject } from "@sfajs/inject";
 
 export class InfoMiddleware extends Middleware {
+  @Inject
+  private readonly depsService!: DepsService;
+
   get log() {
     return console.log;
   }
@@ -48,7 +51,9 @@ export class InfoMiddleware extends Middleware {
     ]);
 
     this.logTitle("Sfa Packages Version");
-    this.logItems(this.getSfaDeps(path.join(process.cwd(), "package.json")));
+    this.logItems(
+      this.depsService.getProjectSfaDeps(path.join(process.cwd(), "package.json"))
+    );
     await this.next();
   }
 
@@ -65,31 +70,5 @@ export class InfoMiddleware extends Middleware {
           chalk.rgb(0x19, 0xc9, 0xac)(item.value)
       );
     }
-  }
-
-  private getSfaDeps(packagePath: string, parentResult?: InfoItem[]) {
-    const result: InfoItem[] = [];
-    const value = JSON.parse(fs.readFileSync(packagePath, "utf-8"));
-    const deps = value.dependencies ?? {};
-    const pkgs = Object.keys(deps)
-      .filter(
-        (name) =>
-          name.startsWith("@sfajs/") &&
-          (!parentResult || !parentResult.some((exist) => exist.key == name))
-      )
-      .map((name) => ({
-        key: name,
-        value: deps[name],
-      }));
-
-    result.push(...pkgs);
-
-    pkgs.forEach((pkg) => {
-      const depPackagePath = require.resolve(pkg.key + "/package.json", {
-        paths: [process.cwd()],
-      });
-      result.push(...this.getSfaDeps(depPackagePath, result));
-    });
-    return result;
   }
 }

@@ -5,7 +5,7 @@ import { SetupStartup } from "./setup-startup";
 const mode = "{{MODE}}";
 const port = "{{PORT}}";
 
-async function fn() {
+async function bootstrap() {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
   const setupStartup: SetupStartup<SfaHttp> = require("./startup").default;
   const startup = await setupStartup(new SfaHttp().useHttpJsonBody(), mode);
@@ -17,4 +17,4 @@ async function fn() {
   return result;
 }
 
-fn();
+bootstrap();
