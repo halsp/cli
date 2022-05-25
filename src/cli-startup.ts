@@ -15,8 +15,10 @@ import { CompilerService } from "./services/compiler.service";
 import { WatchCompilerService } from "./services/watch-compiler.service";
 import { CommandService } from "./services/command.service";
 import { AssetsService } from "./services/assets.service";
-import { CreateService } from "./services/create.service";
+import { CreateTemplateService } from "./services/create-template.service";
 import { DepsService } from "./services/deps.service";
+import { CreateEnvService } from "./services/create-env.service";
+import { PluginService } from "./services/plugin.service";
 
 declare module "@sfajs/core" {
   interface HttpContext {
@@ -75,7 +77,9 @@ export class CliStartup extends Startup {
       .inject(WatchCompilerService)
       .inject(CommandService)
       .inject(AssetsService)
-      .inject(CreateService)
+      .inject(CreateTemplateService)
+      .inject(CreateEnvService)
+      .inject(PluginService)
       .inject(DepsService);
   }
 

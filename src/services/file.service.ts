@@ -1,8 +1,9 @@
 import path from "path";
 import * as fs from "fs";
+import inquirer from "inquirer";
 
 export class FileService {
-  deleteFile(filePath: string, type?: string) {
+  public deleteFile(filePath: string, type?: string) {
     if (!fs.existsSync(filePath)) return;
 
     const stat = fs.statSync(filePath);
@@ -20,7 +21,7 @@ export class FileService {
     }
   }
 
-  copyFile(source: string, target: string) {
+  public copyFile(source: string, target: string) {
     if (!fs.existsSync(source)) return;
     const stat = fs.statSync(source);
     if (stat.isDirectory()) {
@@ -36,7 +37,7 @@ export class FileService {
     }
   }
 
-  copyCode(
+  public copyCode(
     source: string,
     target: string,
     codeFilter?: (code: string) => string | null,
@@ -66,5 +67,34 @@ export class FileService {
       }
       fs.writeFileSync(target, code ?? "");
     }
+  }
+
+  public removeBlankDir(dir: string) {
+    const files = fs.readdirSync(dir);
+    for (const file of files) {
+      const filePath = path.join(dir, file);
+      const stat = fs.statSync(filePath);
+      if (stat.isFile()) {
+        continue;
+      }
+
+      this.removeBlankDir(filePath);
+    }
+
+    if (!fs.readdirSync(dir).length) {
+      fs.rmdirSync(dir);
+    }
+  }
+
+  public async isOverwrite(message: string): Promise<boolean> {
+    const { overwrite } = await inquirer.prompt([
+      {
+        type: "confirm",
+        message: message,
+        name: "overwrite",
+        default: false,
+      },
+    ]);
+    return overwrite as boolean;
   }
 }
