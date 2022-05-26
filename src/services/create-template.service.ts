@@ -42,7 +42,7 @@ export class CreateTemplateService {
       const start = lines.findIndex((line) =>
         commentPluginStartRegExp.test(line)
       );
-      const end = lines.findIndex((line) => commentPluginEndRegExp.test(line));
+      const end = this.findEndIndex(lines, start);
       if (start < 0 || end < 0) {
         break;
       }
@@ -55,6 +55,22 @@ export class CreateTemplateService {
         lines.splice(start, end - start + 1);
       }
     }
+  }
+
+  private findEndIndex(lines: string[], startIndex: number) {
+    let children = 0;
+    for (let i = startIndex + 1; i < lines.length; i++) {
+      if (commentPluginStartRegExp.test(lines[i])) {
+        children++;
+      }
+      if (commentPluginEndRegExp.test(lines[i])) {
+        children--;
+      }
+      if (children < 0) {
+        return i;
+      }
+    }
+    return -1;
   }
 
   private removeImportLine(lines: string[], plugins: Plugin[]) {

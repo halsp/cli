@@ -6,7 +6,7 @@ import { CreateTemplateService } from "../../../src/services/create-template.ser
 import { Plugin } from "../../../src/services/plugin-select.service";
 import * as fs from "fs";
 
-export async function testTemplate(
+async function testTemplate(
   fn: (service: CreateTemplateService) => void | Promise<void>
 ) {
   let worked = false;
@@ -26,7 +26,7 @@ export async function testTemplate(
   expect(worked).toBeTruthy();
 }
 
-export async function testTemplateDefault(
+async function testTemplateDefault(
   plugins: Plugin[],
   file: string,
   fn: (text?: string) => void | Promise<void>,
@@ -57,3 +57,69 @@ export async function testTemplateDefault(
     }
   });
 }
+
+async function testContains(contains: boolean) {
+  test(`template contains ${contains}`, async () => {
+    await testTemplateDefault(
+      contains ? ["router", "mva"] : ["router"],
+      "contains.ts",
+      (text) => {
+        if (contains) {
+          expect(text?.trim()?.split("\n")?.at(0)?.trim()).toBe(
+            "// ROUTER_CONTENT"
+          );
+        } else {
+          expect(text?.trim()?.split("\n")?.at(0)?.trim()).toBe(
+            "// CONTAINS_CONTENT"
+          );
+        }
+      }
+    );
+  });
+}
+testContains(true);
+testContains(false);
+
+async function testSelect(select: boolean) {
+  test(`template select ${select}`, async () => {
+    await testTemplateDefault(
+      [select ? "inject" : "router"],
+      "select.ts",
+      (text) => {
+        if (select) {
+          expect(text?.trim()).toBe("// INJECT_CONTENT");
+        } else {
+          expect(text).toBeUndefined();
+        }
+      }
+    );
+  });
+}
+testSelect(true);
+testSelect(false);
+
+test(`crlf`, async () => {
+  await testTemplateDefault(
+    [],
+    "crlf.txt",
+    (text) => {
+      expect(text).toBe("a\r\nb");
+    },
+    () => {
+      fs.writeFileSync("./template/crlf.txt", "a\r\nb");
+    }
+  );
+});
+
+test(`crlf`, async () => {
+  await testTemplateDefault(
+    [],
+    "crlf.txt",
+    (text) => {
+      expect(text).toBe("a\r\nb");
+    },
+    () => {
+      fs.writeFileSync("./template/crlf.txt", "a\r\nb");
+    }
+  );
+});
