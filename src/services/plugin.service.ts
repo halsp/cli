@@ -92,4 +92,13 @@ export class PluginService {
     });
     return result;
   }
+
+  public pluginContains(plugin: Plugin) {
+    return this.depsService
+      .getPackageSfaDeps(`@sfajs/${plugin}`, [
+        path.join(__dirname, "../.."),
+        ...module.paths,
+      ])
+      .map((item) => item.key.replace(/^@sfajs\//, "") as Plugin);
+  }
 }

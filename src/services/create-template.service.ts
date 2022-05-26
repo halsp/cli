@@ -3,20 +3,24 @@ import path from "path";
 import { FileService } from "./file.service";
 import { Plugin } from "./plugin.service";
 
-// plugin core
 // plugin inject|router
-const commentPluginStartRegExp = /^\s*\/{2,}\s+\{\s+/;
+const commentPluginStartRegExp = /^\s*\/{2,}\s*\{\s+/;
 // plugin-end
-const commentPluginEndRegExp = /^\s*\/{2,}\s+\}\s*/;
+const commentPluginEndRegExp = /^\s*\/{2,}\s*\}\s*/;
 
 export class CreateTemplateService {
   @Inject
   private readonly fileService!: FileService;
 
-  public create(plugins: Plugin[], targetDir: string) {
-    const source = path.join(__dirname, "../../template/project");
-    this.fileService.copyCode(source, targetDir, (code) =>
-      this.readFile(code, plugins)
+  public create(plugins: Plugin[], targetDir: string, source?: string) {
+    if (!source) {
+      source = path.join(__dirname, "../../template/project");
+    }
+    this.fileService.copyCode(
+      source,
+      targetDir,
+      (code) => this.readFile(code, plugins),
+      true
     );
     this.fileService.removeBlankDir(targetDir);
   }
@@ -28,12 +32,7 @@ export class CreateTemplateService {
       const start = lines.findIndex((line) =>
         commentPluginStartRegExp.test(line)
       );
-      const end =
-        lines.length -
-        1 -
-        [...lines]
-          .reverse()
-          .findIndex((line) => commentPluginEndRegExp.test(line));
+      const end = lines.findIndex((line) => commentPluginEndRegExp.test(line));
       if (start < 0 || end < 0) {
         break;
       }
@@ -53,12 +52,15 @@ export class CreateTemplateService {
 
   private isCodeSelected(types: string, plugins: Plugin[]) {
     const codeTypes = types.trim().split("|");
-    if (codeTypes.includes("core")) {
-      return true;
-    }
-
-    return Object.keys(plugins)
-      .filter((key) => !!plugins[key])
-      .some((key) => codeTypes.some((type) => type == key));
+    return plugins.some((key) => {
+      return codeTypes.some((type) => {
+        if (type.includes("-")) {
+          const parents = type.split("-").splice(1);
+          return !parents.some((p) => plugins.some((item) => item == p));
+        } else {
+          return key == type;
+        }
+      });
+    });
   }
 }

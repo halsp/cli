@@ -54,7 +54,8 @@ export class FileService {
         this.copyCode(
           path.join(source, file),
           path.join(target, file),
-          codeFilter
+          codeFilter,
+          ignoreEmpty
         );
       });
     } else if (stat.isFile()) {
@@ -62,7 +63,7 @@ export class FileService {
       if (codeFilter) {
         code = codeFilter(code);
       }
-      if (ignoreEmpty && !code) {
+      if (ignoreEmpty && !code?.trim()) {
         return;
       }
       fs.writeFileSync(target, code ?? "");
