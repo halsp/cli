@@ -4,7 +4,7 @@ import { FileService } from "./file.service";
 import { Plugin } from "./plugin-select.service";
 
 // plugin inject|router
-const commentPluginStartRegExp = /^\s*\/{2,}\s*\{\s+/;
+const commentPluginStartRegExp = /^\s*\/{2,}\s*\{\s*/;
 // plugin-end
 const commentPluginEndRegExp = /^\s*\/{2,}\s*\}\s*/;
 const importRegExp =
@@ -47,8 +47,8 @@ export class CreateTemplateService {
         break;
       }
 
-      const types = lines[start].replace(commentPluginStartRegExp, "");
-      if (this.isCodeSelected(types, plugins)) {
+      const expression = lines[start].replace(commentPluginStartRegExp, "");
+      if (this.calcExpression(expression, plugins)) {
         lines.splice(end, 1);
         lines.splice(start, 1);
       } else {
@@ -90,17 +90,12 @@ export class CreateTemplateService {
     }
   }
 
-  private isCodeSelected(types: string, plugins: Plugin[]) {
-    const codeTypes = types.trim().split("|");
-    return plugins.some((key) => {
-      return codeTypes.some((type) => {
-        if (type.includes("-")) {
-          const parents = type.split("-").splice(1);
-          return !parents.some((p) => plugins.some((item) => item == p));
-        } else {
-          return key == type;
-        }
-      });
+  private calcExpression(expression: string, plugins: Plugin[]) {
+    plugins.forEach((plugin) => {
+      expression = expression.replace(new RegExp(plugin, "g"), "↑");
     });
+    expression = expression.replace(/[a-zA-Z]+/g, "false");
+    expression = expression.replace(new RegExp("↑", "g"), "true");
+    return eval(expression) as boolean;
   }
 }
