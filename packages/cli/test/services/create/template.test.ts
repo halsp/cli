@@ -111,15 +111,34 @@ test(`crlf`, async () => {
   );
 });
 
-test(`crlf`, async () => {
-  await testTemplateDefault(
-    [],
-    "crlf.txt",
-    (text) => {
-      expect(text).toBe("a\r\nb");
-    },
-    () => {
-      fs.writeFileSync("./template/crlf.txt", "a\r\nb");
-    }
-  );
+test(`default template`, async () => {
+  await testTemplate((service) => {
+    fs.rmSync("./dist/default", {
+      recursive: true,
+      force: true,
+    });
+
+    service.create([], path.join(__dirname, "dist/default"));
+    expect(fs.existsSync("dist/default")).toBeTruthy();
+    expect(fs.existsSync("dist/default/.eslintrc.js")).toBeTruthy();
+    expect(fs.existsSync("dist/default/LICENSE")).toBeTruthy();
+  });
 });
+
+function testChildren(childrenEnable: boolean) {
+  test(`children ${childrenEnable}`, async () => {
+    await testTemplateDefault(
+      childrenEnable ? ["router", "filter"] : ["router"],
+      "children.ts",
+      (text) => {
+        if (childrenEnable) {
+          expect(text?.trim()).toBe("// ROUTER_CONTENT\n// FILTER_CONTENT");
+        } else {
+          expect(text?.trim()).toBe("// ROUTER_CONTENT");
+        }
+      }
+    );
+  });
+}
+testChildren(true);
+testChildren(false);
