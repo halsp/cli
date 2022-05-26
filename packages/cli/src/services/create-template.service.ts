@@ -1,12 +1,14 @@
 import { Inject } from "@sfajs/inject";
 import path from "path";
 import { FileService } from "./file.service";
-import { Plugin } from "./plugin.service";
+import { Plugin } from "./plugin-select.service";
 
 // plugin inject|router
 const commentPluginStartRegExp = /^\s*\/{2,}\s*\{\s+/;
 // plugin-end
 const commentPluginEndRegExp = /^\s*\/{2,}\s*\}\s*/;
+const importRegExp =
+  /^import\s(\"@sfajs\/(.+?)\")|(.+?\sfrom\s\"@sfajs\/(.+?)\");$/;
 
 export class CreateTemplateService {
   @Inject
@@ -26,8 +28,16 @@ export class CreateTemplateService {
   }
 
   private readFile(code: string, plugins: Plugin[]): string | null {
-    const lines = code.trimStart().replace(/\r\n/g, "").split("\n");
+    const lines = code.trimStart().replace(/\r\n/g, "\n").split("\n");
 
+    this.removeCommentLine(lines, plugins);
+    this.removeImportLine(lines, plugins);
+
+    const lineEnd = code.includes("\r\n") ? "\r\n" : "\n";
+    return lines.join(lineEnd).trimStart();
+  }
+
+  private removeCommentLine(lines: string[], plugins: Plugin[]) {
     while (true) {
       const start = lines.findIndex((line) =>
         commentPluginStartRegExp.test(line)
@@ -45,9 +55,23 @@ export class CreateTemplateService {
         lines.splice(start, end - start + 1);
       }
     }
+  }
 
-    const lineEnd = code.includes("\r\n") ? "\r\n" : "\n";
-    return lines.join(lineEnd).trimStart();
+  private removeImportLine(lines: string[], plugins: Plugin[]) {
+    let importIndex = -1;
+    while (true) {
+      importIndex = lines.findIndex(
+        (line, index) => index > importIndex && importRegExp.test(line)
+      );
+      if (importIndex < 0) {
+        break;
+      }
+      const regArr = importRegExp.exec(lines[importIndex]) as RegExpExecArray;
+      const importName = (regArr[2] ?? regArr[4]) as Plugin;
+      if (!plugins.includes(importName)) {
+        lines.splice(importIndex, 1);
+      }
+    }
   }
 
   private isCodeSelected(types: string, plugins: Plugin[]) {

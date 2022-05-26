@@ -18,7 +18,7 @@ import { AssetsService } from "./services/assets.service";
 import { CreateTemplateService } from "./services/create-template.service";
 import { DepsService } from "./services/deps.service";
 import { CreateEnvService } from "./services/create-env.service";
-import { PluginService } from "./services/plugin.service";
+import { PluginSelectService } from "./services/plugin-select.service";
 
 declare module "@sfajs/core" {
   interface HttpContext {
@@ -79,7 +79,7 @@ export class CliStartup extends Startup {
       .inject(AssetsService)
       .inject(CreateTemplateService)
       .inject(CreateEnvService)
-      .inject(PluginService)
+      .inject(PluginSelectService)
       .inject(DepsService);
   }
 
