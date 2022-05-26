@@ -1,6 +1,6 @@
 import path from "path";
-import { ConfigService } from "../../src/services/config.service";
-import { runTest } from "./runTest";
+import { ConfigService } from "../../../src/services/config.service";
+import { runTest } from "../runTest";
 
 runTest(ConfigService, async (res, service) => {
   expect(service.mode).toBe("production");
