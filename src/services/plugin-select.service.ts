@@ -15,11 +15,11 @@ export type Plugin =
   | "swagger"
   | "jwt";
 
-export class PluginService {
+export class PluginSelectService {
   @Inject
   private readonly depsService!: DepsService;
 
-  public async getPlugins() {
+  public async select() {
     const { plugins } = await inquirer.prompt([
       {
         type: "checkbox",
@@ -91,14 +91,5 @@ export class PluginService {
         });
     });
     return result;
-  }
-
-  public pluginContains(plugin: Plugin) {
-    return this.depsService
-      .getPackageSfaDeps(`@sfajs/${plugin}`, [
-        path.join(__dirname, "../.."),
-        ...module.paths,
-      ])
-      .map((item) => item.key.replace(/^@sfajs\//, "") as Plugin);
   }
 }

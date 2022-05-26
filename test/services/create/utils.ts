@@ -3,7 +3,7 @@ import { runin } from "@sfajs/testing";
 import path from "path";
 import { CliStartup } from "../../../src/cli-startup";
 import { CreateTemplateService } from "../../../src/services/create-template.service";
-import { Plugin } from "../../../src/services/plugin.service";
+import { Plugin } from "../../../src/services/plugin-select.service";
 import * as fs from "fs";
 
 export async function testTemplate(
@@ -29,13 +29,18 @@ export async function testTemplate(
 export async function testTemplateDefault(
   plugins: Plugin[],
   file: string,
-  fn: (text?: string) => void | Promise<void>
+  fn: (text?: string) => void | Promise<void>,
+  beforeFn?: () => void | Promise<void>
 ) {
   await testTemplate(async (service) => {
     fs.rmSync("./dist/template", {
       recursive: true,
       force: true,
     });
+
+    if (beforeFn) {
+      await beforeFn();
+    }
 
     service.create(
       plugins,

@@ -4,7 +4,7 @@ import { CreateTemplateService } from "../services/create-template.service";
 import { Inject } from "@sfajs/inject";
 import { FileService } from "../services/file.service";
 import { CreateEnvService } from "../services/create-env.service";
-import { PluginService } from "../services/plugin.service";
+import { PluginSelectService } from "../services/plugin-select.service";
 
 export class CreateMiddleware extends Middleware {
   @Inject
@@ -12,7 +12,7 @@ export class CreateMiddleware extends Middleware {
   @Inject
   private readonly createEnvService!: CreateEnvService;
   @Inject
-  private readonly pluginService!: PluginService;
+  private readonly pluginSelectService!: PluginSelectService;
   @Inject
   private readonly fileService!: FileService;
 
@@ -28,7 +28,7 @@ export class CreateMiddleware extends Middleware {
       }
     }
 
-    const plugins = await this.pluginService.getPlugins();
+    const plugins = await this.pluginSelectService.select();
     this.createTemplateService.create(plugins, this.targetDir);
 
     await this.createEnvService.create();
