@@ -57,7 +57,7 @@ export class AssetsService {
       if (this.watchAssets) {
         this.watchAsset(asset);
       } else {
-        this.fileService.copyFile(asset, this.getTargetPath(asset));
+        this.fileService.copy(asset, this.getTargetPath(asset));
       }
     }
   }

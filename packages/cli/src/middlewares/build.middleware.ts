@@ -8,6 +8,7 @@ import { ConfigService } from "../services/config.service";
 import { FileService } from "../services/file.service";
 import { TsconfigService } from "../services/tsconfig.service";
 import { WatchCompilerService } from "../services/watch-compiler.service";
+import * as fs from "fs";
 
 export class BuildMiddlware extends Middleware {
   @Inject
@@ -52,7 +53,10 @@ export class BuildMiddlware extends Middleware {
     }
 
     if (this.deleteOutDir) {
-      this.fileService.deleteFile(path.join(process.cwd(), this.outDir));
+      fs.rmSync(path.join(process.cwd(), this.outDir), {
+        recursive: true,
+        force: true,
+      });
     }
 
     let compilerResult: boolean;
