@@ -9,6 +9,7 @@ const commentPluginStartRegExp = /^\s*\/{2,}\s*\{\s*/;
 const commentPluginEndRegExp = /^\s*\/{2,}\s*\}\s*/;
 const importRegExp =
   /^import\s(\"@sfajs\/(.+?)\")|(.+?\sfrom\s\"@sfajs\/(.+?)\");$/;
+const uslessRegExp = /\/{2,}\s*\!\s*/;
 
 export class CreateTemplateService {
   @Inject
@@ -18,11 +19,12 @@ export class CreateTemplateService {
     if (!source) {
       source = path.join(__dirname, "../../template/project");
     }
-    this.fileService.copyCode(
+    this.fileService.globCopy(
       source,
       targetDir,
-      (code) => this.readFile(code, plugins),
-      true
+      undefined,
+      undefined,
+      (_, code) => this.readFile(code, plugins)
     );
     this.fileService.removeBlankDir(targetDir);
   }
@@ -34,10 +36,23 @@ export class CreateTemplateService {
     this.removeImportLine(lines, plugins);
 
     const lineEnd = code.includes("\r\n") ? "\r\n" : "\n";
-    return lines.join(lineEnd).trimStart();
+    const result = lines.join(lineEnd).trimStart();
+    if (!!result.trim()) {
+      return result;
+    } else {
+      return null;
+    }
   }
 
   private removeCommentLine(lines: string[], plugins: Plugin[]) {
+    while (true) {
+      const index = lines.findIndex((line) => uslessRegExp.test(line));
+      if (index < 0) {
+        break;
+      }
+
+      lines.splice(index, 2);
+    }
     while (true) {
       const start = lines.findIndex((line) =>
         commentPluginStartRegExp.test(line)

@@ -3,17 +3,19 @@ import { runTest } from "./runTest";
 import * as fs from "fs";
 
 runTest(FileService, async (ctx, service) => {
-  service.deleteFile("dist");
-  service.deleteFile("dist"); // delete again
+  fs.rmSync("dist", {
+    recursive: true,
+    force: true,
+  });
 
-  service.copyFile("dist", "dist1");
+  service.copy("dist", "dist1");
   expect(fs.existsSync("dist1")).toBeFalsy();
 
   fs.mkdirSync("dist");
 
   fs.writeFileSync("dist/f1.js", "f1");
   fs.writeFileSync("dist/f2.ts", "f2");
-  service.deleteFile("dist", ".ts");
+  service.globDelete("dist", "**/*.ts");
 
   expect(fs.existsSync("dist/f1.js")).toBeTruthy();
   expect(fs.existsSync("dist/f2.ts")).toBeFalsy();
