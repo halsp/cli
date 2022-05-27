@@ -3,8 +3,12 @@ import "@sfajs/router";
 import "@sfajs/swagger";
 import "@sfajs/inject";
 import "@sfajs/mva";
+import "@sfajs/filter";
 import { swaggerJSDoc } from "@sfajs/swagger";
 import * as fs from "fs";
+// {filter
+import { GlobalActionFilter } from "./filters/global.action.filter";
+// }
 
 export default <T extends Startup>(startup: T, mode?: string) =>
   startup
@@ -17,24 +21,28 @@ export default <T extends Startup>(startup: T, mode?: string) =>
     // }
     // { swagger
     .useSwagger({
-      options: getSwaggerOptions(mode),
+      options: getSwaggerOptions(),
     })
+    // }
+    // {filter
+    .useFilter()
+    .useGlobalFilter(GlobalActionFilter)
     // }
     // { mva
     .useMva()
     // }
-    // { router-mva
+    // { router&&!mva
     .useRouter();
 // }
 
 // { swagger
-function getSwaggerOptions(mode?: string) {
+function getSwaggerOptions() {
   return <swaggerJSDoc.Options>{
     definition: {
-      openapi: "3.0.1",
+      openapi: version,
       info: {
-        title: "Todo",
-        description: "一个简易的 todo 项目，包含后端和前端",
+        title: "NewApplication",
+        description: "A new application",
         version: version,
         license: {
           name: "MIT",
@@ -45,7 +53,7 @@ function getSwaggerOptions(mode?: string) {
       },
       servers: [
         {
-          url: "/" + (mode == "development" ? "" : process.env.API_NAME),
+          url: "/",
         },
       ],
       schemes: ["https"],
@@ -53,61 +61,19 @@ function getSwaggerOptions(mode?: string) {
         {
           name: "user",
         },
-        {
-          name: "todo",
-        },
-        {
-          name: "bing",
-          description: "bing images",
-        },
       ],
       components: {
         schemas: {
           user: {
             type: "object",
             properties: {
-              _id: {
-                type: "string",
+              id: {
+                type: "integer",
                 description: "Automatically generated ID",
               },
               password: {
                 type: "string",
                 description: "Plaintext password",
-              },
-              create_at: {
-                type: "integer",
-                format: "timestamp",
-                description: "When was user created",
-              },
-            },
-          },
-          todo: {
-            type: "object",
-            properties: {
-              _id: {
-                type: "string",
-                description: "Automatically generated ID",
-              },
-              uid: {
-                type: "string",
-                description: "todo's owner",
-              },
-              content: {
-                type: "string",
-              },
-              create_at: {
-                type: "integer",
-                format: "timestamp",
-                description: "When was todo created",
-              },
-              update_at: {
-                type: "integer",
-                format: "timestamp",
-                description: "When was todo edited",
-              },
-              schedule: {
-                type: "integer",
-                format: "timestamp",
               },
             },
           },
