@@ -2,6 +2,8 @@ import { Inject } from "@sfajs/inject";
 import path from "path";
 import { FileService } from "./file.service";
 import { Plugin } from "./plugin-select.service";
+import * as fs from "fs";
+import walk from "ignore-walk";
 
 // plugin inject|router
 const commentPluginStartRegExp = /^\s*\/{2,}\s*\{\s*/;
@@ -15,18 +17,41 @@ export class CreateTemplateService {
   @Inject
   private readonly fileService!: FileService;
 
-  public create(plugins: Plugin[], targetDir: string, source?: string) {
-    if (!source) {
-      source = path.join(__dirname, "../../template/project");
+  public create(plugins: Plugin[], targetDir: string, sourceDir?: string) {
+    if (!sourceDir) {
+      sourceDir = path.join(__dirname, "../../template/project");
     }
-    this.fileService.globCopy(
-      source,
-      targetDir,
-      undefined,
-      undefined,
-      (_, code) => this.readFile(code, plugins)
-    );
-    this.fileService.removeBlankDir(targetDir);
+    if (!fs.existsSync(sourceDir)) return;
+    if (!fs.existsSync(targetDir)) {
+      fs.mkdirSync(targetDir, {
+        recursive: true,
+      });
+    }
+
+    const paths = walk.sync({
+      path: sourceDir,
+      ignoreFiles: [".gitignore"],
+    });
+    this.copyTemplate(sourceDir, targetDir, plugins, paths);
+  }
+
+  public copyTemplate(
+    sourceDir: string,
+    targetDir: string,
+    plugins: Plugin[],
+    paths: string[]
+  ) {
+    for (const p of paths) {
+      const sourceFile = path.join(sourceDir, p);
+      const targetFile = path.join(targetDir, p);
+      this.fileService.createDir(targetFile);
+
+      let content: string | null = fs.readFileSync(sourceFile, "utf-8");
+      content = this.readFile(content, plugins);
+      if (content != null) {
+        fs.writeFileSync(targetFile, content);
+      }
+    }
   }
 
   private readFile(code: string, plugins: Plugin[]): string | null {

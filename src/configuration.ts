@@ -6,6 +6,14 @@ export type Prebuild = (
   config: Configuration
 ) => Promise<boolean> | boolean | Promise<void> | void;
 export type Postbuild = (config: Configuration) => Promise<void> | void;
+export type AssetConfig =
+  | {
+      include: string | string[];
+      exclude?: string | string[];
+      outDir?: string;
+      root?: string;
+    }
+  | string;
 
 export interface Configuration {
   readonly build?: {
@@ -17,10 +25,12 @@ export interface Configuration {
     readonly afterDeclarationsHooks?: ((program?: ts.Program) => Transformer)[];
 
     readonly deleteOutDir?: boolean;
-    readonly assets?: string[];
+    readonly assets?: AssetConfig[];
 
     readonly watch?: boolean;
     readonly watchAssets?: boolean;
+
+    readonly tsConfigPath?: string;
   };
   readonly start?: {
     readonly port?: number;
