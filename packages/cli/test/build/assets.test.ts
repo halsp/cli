@@ -6,18 +6,26 @@ import { parseInject } from "@sfajs/inject";
 import { AssetsService } from "../../src/services/assets.service";
 import { WatchCompilerService } from "../../src/services/watch-compiler.service";
 
+function expectFiles() {
+  expect(fs.existsSync("./dist")).toBeTruthy();
+  expect(fs.existsSync("./dist/default/test.txt")).toBeTruthy();
+  expect(fs.readFileSync("./dist/default/test.txt", "utf-8")).toBe(
+    "test-build"
+  );
+  expect(fs.existsSync("./dist/build-test.js")).toBeTruthy();
+
+  expect(fs.existsSync("./dist/root/test.txt")).toBeTruthy();
+  expect(fs.existsSync("./dist/include/test.txt")).toBeTruthy();
+  expect(fs.existsSync("./dist/test/outDir/test.txt")).toBeTruthy();
+
+  expect(fs.existsSync("./dist/exclude/test.txt")).toBeFalsy();
+}
+
 test(`build assets`, async () => {
   let worked = false;
   await runin(`test/build/assets`, async () => {
     await new CliStartup().add(BuildMiddlware).run();
-
-    expect(fs.existsSync("./dist")).toBeTruthy();
-    expect(fs.existsSync("./dist/assets")).toBeTruthy();
-    expect(fs.existsSync("./dist/assets/test.txt")).toBeTruthy();
-    expect(fs.readFileSync("./dist/assets/test.txt", "utf-8")).toBe(
-      "test-build"
-    );
-    expect(fs.existsSync("./dist/build-test.js")).toBeTruthy();
+    expectFiles();
     worked = true;
   });
   expect(worked).toBeTruthy();
@@ -27,15 +35,15 @@ test(`build command assets`, async () => {
   let worked = false;
   await runin(`test/build/assets`, async () => {
     await new CliStartup(undefined, {
-      assets: "assets",
+      assets: "default/**/*",
     })
       .add(BuildMiddlware)
       .run();
 
     expect(fs.existsSync("./dist")).toBeTruthy();
-    expect(fs.existsSync("./dist/assets")).toBeTruthy();
-    expect(fs.existsSync("./dist/assets/test.txt")).toBeTruthy();
-    expect(fs.readFileSync("./dist/assets/test.txt", "utf-8")).toBe(
+    expect(fs.existsSync("./dist/default")).toBeTruthy();
+    expect(fs.existsSync("./dist/default/test.txt")).toBeTruthy();
+    expect(fs.readFileSync("./dist/default/test.txt", "utf-8")).toBe(
       "test-build"
     );
     expect(fs.existsSync("./dist/build-test.js")).toBeTruthy();
@@ -47,8 +55,8 @@ test(`build command assets`, async () => {
 function runWatchAssetsTest(type: "add" | "edit" | "unlink") {
   test(`watch assets ${type}`, async () => {
     const cacheFileName = `test-cache-${type}.txt`;
-    const cacheSourceFile = `./assets/${cacheFileName}`;
-    const cacheTargetFile = `./dist/assets/${cacheFileName}`;
+    const cacheSourceFile = `./default/${cacheFileName}`;
+    const cacheTargetFile = `./dist/default/${cacheFileName}`;
     const cacheFileContent = "watchAssets";
     const cacheFileEditContent = "Edit";
     let callCount = 0;
@@ -147,8 +155,7 @@ function runWatchAssetsTest(type: "add" | "edit" | "unlink") {
         .add(BuildMiddlware)
         .run();
 
-      expect(fs.existsSync("./dist")).toBeTruthy();
-      expect(fs.existsSync("./dist/assets")).toBeTruthy();
+      expectFiles();
       callCount++;
     });
     expect(callCount).toBe(3);

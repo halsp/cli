@@ -2,6 +2,23 @@ import { defineConfig } from "@sfajs/cli";
 
 export default defineConfig({
   build: {
-    assets: ["assets"],
+    assets: [
+      "default/**/*",
+      {
+        include: "include/**/*",
+      },
+      {
+        include: "exclude/**/*",
+        exclude: "exclude/**/*.txt",
+      },
+      {
+        include: "root/**/*",
+        root: "src",
+      },
+      {
+        include: "outDir/**/*",
+        outDir: "test",
+      },
+    ],
   },
 });

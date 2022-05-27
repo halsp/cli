@@ -142,3 +142,19 @@ function testChildren(childrenEnable: boolean) {
 }
 testChildren(true);
 testChildren(false);
+
+test(`sourceDir not exist`, async () => {
+  await testTemplate((service) => {
+    fs.rmSync("./dist/not-exist", {
+      recursive: true,
+      force: true,
+    });
+
+    service.create(
+      [],
+      path.join(__dirname, "dist/not-exist"),
+      path.join(__dirname, "not-exist")
+    );
+    expect(fs.existsSync("dist/not-exist")).toBeFalsy();
+  });
+});

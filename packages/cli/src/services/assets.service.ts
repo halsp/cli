@@ -1,10 +1,19 @@
 import { Inject } from "@sfajs/inject";
 import path from "path";
 import { CommandService } from "./command.service";
-import { FileService } from "./file.service";
 import { TsconfigService } from "./tsconfig.service";
 import * as chokidar from "chokidar";
 import * as fs from "fs";
+import { AssetConfig } from "../configuration";
+import glob from "glob";
+import { FileService } from "./file.service";
+
+type FixedAsset = {
+  include: string;
+  exclude: string[];
+  outDir: string;
+  root: string;
+};
 
 export class AssetsService {
   @Inject
@@ -16,18 +25,64 @@ export class AssetsService {
 
   private readonly watchers: chokidar.FSWatcher[] = [];
 
-  private get assets(): string[] {
-    let ass = this.commandService.getOptionOrConfigValue<string, string[]>(
-      "assets",
-      "build.assets"
-    );
-    if (!ass) return [];
+  public get assets(): FixedAsset[] {
+    let assCfg = this.commandService.getOptionOrConfigValue<
+      string,
+      AssetConfig[]
+    >("assets", "build.assets", []);
 
-    if (typeof ass == "string") {
-      ass = ass.split(",");
+    if (typeof assCfg == "string") {
+      assCfg = [
+        {
+          include: assCfg.split("|"),
+        },
+      ];
     }
-    return ass;
+
+    const result: FixedAsset[] = [];
+    assCfg
+      .map((asset) => {
+        if (typeof asset == "string") {
+          return {
+            include: asset,
+          };
+        } else {
+          return asset;
+        }
+      })
+      .filter((asset) => !!asset.include)
+      .forEach((asset) => {
+        let exclude = asset.exclude ?? [];
+        if (typeof exclude == "string") {
+          exclude = [exclude];
+        }
+
+        const outDir = path.join(this.outDir, asset.outDir ?? "");
+        const root = asset.root
+          ? path.resolve(process.cwd(), asset.root)
+          : process.cwd();
+
+        if (typeof asset.include == "string") {
+          result.push({
+            include: asset.include,
+            exclude,
+            outDir,
+            root,
+          });
+        } else {
+          for (const item of asset.include) {
+            result.push({
+              include: item,
+              exclude,
+              outDir,
+              root,
+            });
+          }
+        }
+      });
+    return result;
   }
+
   private get outDir() {
     return this.tsconfigService.outDir;
   }
@@ -57,35 +112,53 @@ export class AssetsService {
       if (this.watchAssets) {
         this.watchAsset(asset);
       } else {
-        this.fileService.copy(asset, this.getTargetPath(asset));
+        this.globCopy(asset);
       }
     }
   }
 
-  private watchAsset(asset: string) {
+  private globCopy(asset: FixedAsset) {
+    const paths = glob.sync(asset.include, {
+      ignore: asset.exclude,
+      cwd: asset.root,
+      dot: true,
+      nodir: true,
+    });
+    for (const p of paths) {
+      const sourceFile = path.join(asset.root, p);
+      const targetFile = path.join(asset.outDir, p);
+
+      this.fileService.createDir(targetFile);
+      fs.copyFileSync(sourceFile, targetFile);
+    }
+  }
+
+  private watchAsset(asset: FixedAsset) {
+    const getTargetPath = (file: string) => {
+      return path.join(asset.outDir, file);
+    };
+    const getSourcePath = (file: string) => {
+      return path.join(asset.root, file);
+    };
     const onChange = (filePath: string) => {
-      const targetPath = this.getTargetPath(filePath);
-      const dirname = path.dirname(targetPath);
-      if (!fs.existsSync(dirname)) {
-        fs.mkdirSync(dirname, {
-          recursive: true,
-        });
-      }
-      fs.copyFileSync(filePath, targetPath);
+      const targetPath = getTargetPath(filePath);
+      const sourcePath = getSourcePath(filePath);
+      this.fileService.createDir(targetPath);
+      fs.copyFileSync(sourcePath, targetPath);
     };
     const onUnlink = (filePath: string) => {
-      fs.unlinkSync(this.getTargetPath(filePath));
+      const targetPath = getTargetPath(filePath);
+      fs.unlinkSync(targetPath);
     };
 
     const watcher = chokidar
-      .watch(asset)
+      .watch(asset.include, {
+        ignored: asset.exclude,
+        cwd: asset.root,
+      })
       .on("add", onChange)
       .on("change", onChange)
       .on("unlink", onUnlink);
     this.watchers.push(watcher);
-  }
-
-  private getTargetPath(asset: string) {
-    return path.join(this.outDir, asset);
   }
 }
