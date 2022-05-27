@@ -36,13 +36,29 @@ export class TsconfigService {
     return this.#value;
   }
 
-  getParsedCommandLine() {
+  #parsedCommandLine: ts.ParsedCommandLine | undefined = undefined;
+  public get parsedCommandLine(): ts.ParsedCommandLine {
+    if (this.#parsedCommandLine == undefined) {
+      this.#parsedCommandLine = this.getParsedCommandLine();
+    }
+    return this.#parsedCommandLine;
+  }
+
+  public getParsedCommandLine(
+    optionsToExtend?: ts.CompilerOptions,
+    extendedConfigCache?: ts.ESMap<string, ts.ExtendedConfigCacheEntry>,
+    watchOptionsToExtend?: ts.WatchOptions,
+    extraFileExtensions?: readonly ts.FileExtensionInfo[]
+  ) {
     this.ensureTsconfigFile();
 
     const parsedCmd = this.tsBinary.getParsedCommandLineOfConfigFile(
       this.filePath,
-      undefined,
-      this.tsBinary.sys as unknown as ts.ParseConfigFileHost
+      optionsToExtend,
+      this.tsBinary.sys as unknown as ts.ParseConfigFileHost,
+      extendedConfigCache,
+      watchOptionsToExtend,
+      extraFileExtensions
     );
     if (!parsedCmd) {
       throw new Error("failed");

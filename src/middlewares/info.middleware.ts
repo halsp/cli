@@ -1,4 +1,3 @@
-import { Middleware } from "@sfajs/core";
 import figlet from "figlet";
 import chalk from "chalk";
 import os from "os";
@@ -6,8 +5,14 @@ import * as fs from "fs";
 import path from "path";
 import { DepsService } from "../services/deps.service";
 import { Inject } from "@sfajs/inject";
+import { BaseMiddlware } from "./base.middleware";
+import { CommandType } from "../utils/command-type";
 
-export class InfoMiddleware extends Middleware {
+export class InfoMiddleware extends BaseMiddlware {
+  override get command(): CommandType {
+    return "info";
+  }
+
   @Inject
   private readonly depsService!: DepsService;
 
@@ -15,7 +20,9 @@ export class InfoMiddleware extends Middleware {
     return console.log;
   }
 
-  async invoke(): Promise<void> {
+  override async invoke(): Promise<void> {
+    super.invoke();
+
     const text = figlet.textSync("SFAJSCLI");
     this.log("\n");
     this.log(chalk.rgb(0x19, 0xc9, 0xac)(text));
@@ -52,7 +59,9 @@ export class InfoMiddleware extends Middleware {
 
     this.logTitle("Sfa Packages Version");
     this.logItems(
-      this.depsService.getProjectSfaDeps(path.join(process.cwd(), "package.json"))
+      this.depsService.getProjectSfaDeps(
+        path.join(process.cwd(), "package.json")
+      )
     );
     await this.next();
   }

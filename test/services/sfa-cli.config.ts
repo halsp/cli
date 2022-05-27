@@ -1,6 +1,6 @@
 import { Configuration, defineConfig } from "../../src/configuration";
 
-export default defineConfig((mode) => {
+export default defineConfig(({ mode }) => {
   return <Configuration>{
     mode: mode,
     services: {

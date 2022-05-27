@@ -1,6 +1,6 @@
 import { defineConfig } from "@sfajs/cli";
 
-export default defineConfig((mode) => ({
+export default defineConfig(() => ({
   build: {
     assets: ["src/views"],
   },

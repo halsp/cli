@@ -1,6 +1,7 @@
 import { defineConfig } from "@sfajs/cli";
+import path from "path";
 
-export default defineConfig({
+export default defineConfig(({ dirname }) => ({
   build: {
     assets: [
       "default/**/*",
@@ -13,7 +14,7 @@ export default defineConfig({
       },
       {
         include: "root/**/*",
-        root: "src",
+        root: path.join(dirname, "src"),
       },
       {
         include: "outDir/**/*",
@@ -21,4 +22,4 @@ export default defineConfig({
       },
     ],
   },
-});
+}));

@@ -2,7 +2,7 @@ import ts from "typescript";
 import { Context } from "@sfajs/pipe";
 import { HttpContext } from "@sfajs/core";
 import path from "path";
-import { Configuration } from "../configuration";
+import { Configuration, ConfigEnv } from "../configuration";
 import { Inject } from "@sfajs/inject";
 import { ReadService } from "./read.service";
 import { TsconfigService } from "./tsconfig.service";
@@ -61,17 +61,9 @@ export class ConfigService {
     if (this.configFilePath) {
       code = this.readService.readTxt(this.configFilePath);
       if (code) {
-        code = ts.transpile(
-          code,
-          {
-            module: ts.ModuleKind.CommonJS,
-            target: ts.ScriptTarget.ES2017,
-            inlineSourceMap: true,
-            inlineSources: true,
-            rootDir: process.cwd(),
-          },
-          this.configFilePath
-        );
+        const { options } = this.tsconfigService.parsedCommandLine;
+        code = ts.transpile(code, options, this.configFilePath);
+        console.log("code", options, code);
       }
     }
 
@@ -79,19 +71,24 @@ export class ConfigService {
       return {};
     }
 
+    const configOptions: ConfigEnv = {
+      mode: this.mode,
+      dirname: path.dirname(this.configFilePath),
+      command: this.ctx.command,
+    };
     const module = this.getModuleFromString(code);
     if (module.default) {
-      return module.default(this.mode);
+      return module.default(configOptions);
     } else if (module.exports) {
-      return module.exports(this.mode);
+      return module.exports(configOptions);
     } else {
       return {};
     }
   }
 
   private getModuleFromString(bundle: string): {
-    default?: (mode: string) => Configuration;
-    exports?: (mode: string) => Configuration;
+    default?: (options: ConfigEnv) => Configuration;
+    exports?: (options: ConfigEnv) => Configuration;
   } {
     const m: any = {};
     const wrapper = module.wrap(bundle);

@@ -1,4 +1,5 @@
 import ts from "typescript";
+import { CommandType } from "./utils/command-type";
 
 type Transformer = ts.TransformerFactory<any> | ts.CustomTransformerFactory;
 
@@ -14,6 +15,11 @@ export type AssetConfig =
       root?: string;
     }
   | string;
+export type ConfigEnv = {
+  mode: string;
+  dirname: string;
+  command: CommandType;
+};
 
 export interface Configuration {
   readonly build?: {
@@ -46,13 +52,13 @@ export interface ConfigurationOptions {
 
 export function defineConfig(
   config: Configuration
-): (mode: string) => Configuration;
+): (options: ConfigEnv) => Configuration;
 export function defineConfig(
-  config: (mode: string) => Configuration
-): (mode: string) => Configuration;
+  config: (options: ConfigEnv) => Configuration
+): (options: ConfigEnv) => Configuration;
 export function defineConfig(
-  config: Configuration | ((mode: string) => Configuration)
-): (mode: string) => Configuration {
+  config: Configuration | ((options: ConfigEnv) => Configuration)
+): (options: ConfigEnv) => Configuration {
   if (typeof config == "function") {
     return config;
   } else {

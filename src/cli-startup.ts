@@ -4,6 +4,7 @@ import { HookType, HttpContext, SfaRequest, Startup } from "@sfajs/core";
 import {
   COMMAND_ARGS_METADATA,
   COMMAND_OPTIONS_METADATA,
+  COMMAND_TYPE_METADATA,
   HOOK_EXCEPTION,
 } from "./constant";
 import { TsconfigService } from "./services/tsconfig.service";
@@ -19,9 +20,11 @@ import { CreateTemplateService } from "./services/create-template.service";
 import { DepsService } from "./services/deps.service";
 import { CreateEnvService } from "./services/create-env.service";
 import { PluginSelectService } from "./services/plugin-select.service";
+import { CommandType } from "./utils/command-type";
 
 declare module "@sfajs/core" {
   interface HttpContext {
+    get command(): CommandType;
     get commandArgs(): Record<string, string>;
     get commandOptions(): Record<string, string | boolean>;
 
@@ -44,6 +47,15 @@ Object.defineProperty(HttpContext.prototype, "commandOptions", {
   get: function () {
     const ctx = this as HttpContext;
     return ctx.startup[COMMAND_OPTIONS_METADATA];
+  },
+});
+
+Object.defineProperty(HttpContext.prototype, "command", {
+  configurable: false,
+  enumerable: false,
+  get: function () {
+    const ctx = this as HttpContext;
+    return ctx.startup[COMMAND_TYPE_METADATA];
   },
 });
 
