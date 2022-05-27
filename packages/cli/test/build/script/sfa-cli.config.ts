@@ -1,6 +1,6 @@
 import { Configuration, defineConfig } from "@sfajs/cli";
 
-export default defineConfig((mode) => {
+export default defineConfig(({ mode }) => {
   return {
     build: {
       prebuild: [

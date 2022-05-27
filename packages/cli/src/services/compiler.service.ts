@@ -26,7 +26,7 @@ export class CompilerService {
       getNewLine: () => this.tsBinary.sys.newLine,
     };
     const { options, fileNames, projectReferences } =
-      this.tsconfigService.getParsedCommandLine();
+      this.tsconfigService.parsedCommandLine;
 
     const createProgram =
       this.tsBinary.createIncrementalProgram || this.tsBinary.createProgram;

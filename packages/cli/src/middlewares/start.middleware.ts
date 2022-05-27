@@ -1,4 +1,4 @@
-import { isUndefined, Middleware } from "@sfajs/core";
+import { isUndefined } from "@sfajs/core";
 import { Inject } from "@sfajs/inject";
 import path from "path";
 import * as fs from "fs";
@@ -8,9 +8,15 @@ import killProcess from "tree-kill";
 import { CommandService } from "../services/command.service";
 import { START_DEV_FILE_NAME } from "../constant";
 import { treeKillSync } from "../utils/tree-kill";
+import { BaseMiddlware } from "./base.middleware";
+import { CommandType } from "../utils/command-type";
 
 // TODO: remove dist
-export class StartMiddleware extends Middleware {
+export class StartMiddleware extends BaseMiddlware {
+  override get command(): CommandType {
+    return "start";
+  }
+
   @Inject
   private readonly tsconfigService!: TsconfigService;
   @Inject
@@ -53,7 +59,9 @@ export class StartMiddleware extends Middleware {
     );
   }
 
-  async invoke(): Promise<void> {
+  override async invoke(): Promise<void> {
+    super.invoke();
+
     this.ctx.res.setBody({
       onWatchSuccess: this.createOnSuccessHook(),
     });

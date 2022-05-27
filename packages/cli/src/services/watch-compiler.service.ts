@@ -33,7 +33,7 @@ export class WatchCompilerService {
     if (this.preserveWatchOutput) {
       tsCompilerOptions.preserveWatchOutput = true;
     }
-    const { projectReferences } = this.tsconfigService.getParsedCommandLine();
+    const { projectReferences } = this.tsconfigService.parsedCommandLine;
 
     const origDiagnosticReporter = (
       this.tsBinary as any

@@ -1,6 +1,11 @@
-import { Middleware } from "@sfajs/core";
+import { CommandType } from "../utils/command-type";
+import { BaseMiddlware } from "./base.middleware";
 
-export class UpdateMiddleware extends Middleware {
+export class UpdateMiddleware extends BaseMiddlware {
+  override get command(): CommandType {
+    return "update";
+  }
+
   get name() {
     return this.ctx.commandArgs.name;
   }
@@ -9,7 +14,9 @@ export class UpdateMiddleware extends Middleware {
     return this.ctx.commandArgs.template;
   }
 
-  async invoke(): Promise<void> {
+  override async invoke(): Promise<void> {
+    super.invoke();
+
     console.log("TODO");
   }
 }

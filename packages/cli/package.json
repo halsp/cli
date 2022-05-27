@@ -21,7 +21,7 @@
     "publish:beta": "npm run build && npm publish --tag=beta --access=public",
     "test": "npm run build && jest",
     "tests": "sh scripts/tests.sh",
-    "lint": "eslint src test --ext .ts",
+    "lint": "eslint src --ext .ts",
     "dev": "npm run build && npm uninstall @sfajs/cli -g && npm link"
   },
   "author": "hal-wang",

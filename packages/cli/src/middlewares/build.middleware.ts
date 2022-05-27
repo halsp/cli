@@ -1,22 +1,24 @@
-import { Middleware } from "@sfajs/core";
 import { Inject } from "@sfajs/inject";
 import path from "path";
 import { AssetsService } from "../services/assets.service";
 import { CommandService } from "../services/command.service";
 import { CompilerService } from "../services/compiler.service";
 import { ConfigService } from "../services/config.service";
-import { FileService } from "../services/file.service";
 import { TsconfigService } from "../services/tsconfig.service";
 import { WatchCompilerService } from "../services/watch-compiler.service";
 import * as fs from "fs";
+import { BaseMiddlware } from "./base.middleware";
+import { CommandType } from "../utils/command-type";
 
-export class BuildMiddlware extends Middleware {
+export class BuildMiddlware extends BaseMiddlware {
+  override get command(): CommandType {
+    return "build";
+  }
+
   @Inject
   private readonly tsconfigService!: TsconfigService;
   @Inject
   private readonly configService!: ConfigService;
-  @Inject
-  private readonly fileService!: FileService;
   @Inject
   private readonly compilerService!: CompilerService;
   @Inject
@@ -47,7 +49,9 @@ export class BuildMiddlware extends Middleware {
     );
   }
 
-  async invoke(): Promise<void> {
+  override async invoke(): Promise<void> {
+    super.invoke();
+
     if (!(await this.execPrebuilds())) {
       return;
     }
