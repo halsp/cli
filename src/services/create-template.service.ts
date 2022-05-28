@@ -27,7 +27,7 @@ export class CreateTemplateService {
     return this.createEnvService.targetDir;
   }
   private get sourceDir() {
-    return path.join(__dirname, "../../template/project");
+    return path.join(__dirname, "../../template");
   }
 
   public create(plugins: Plugin[]) {

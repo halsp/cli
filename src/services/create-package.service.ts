@@ -54,10 +54,7 @@ export class CreatePackageService {
   }
 
   private getPluginConfig(plugins: Plugin[]) {
-    const file = path.join(
-      __dirname,
-      "../../template/project/package.plugin.json"
-    );
+    const file = path.join(__dirname, "../../template/package.plugin.json");
     // eslint-disable-next-line @typescript-eslint/no-var-requires
     const config: Record<string, string | boolean> = require(file);
 
@@ -71,7 +68,7 @@ export class CreatePackageService {
   }
 
   private getPackage(): any {
-    const file = path.join(__dirname, "../../template/project/package.json");
+    const file = path.join(__dirname, "../../template/package.json");
     // eslint-disable-next-line @typescript-eslint/no-var-requires
     return require(file);
   }
