@@ -1,6 +1,7 @@
-import { defineConfig } from "@sfajs/cli";
 import path from "path";
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const { defineConfig } = require("../../src/configuration");
 export default defineConfig(({ dirname }) => ({
   build: {
     assets: [

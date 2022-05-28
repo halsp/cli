@@ -8,6 +8,7 @@ import { CommandType } from "../utils/command-type";
 import { BaseMiddlware } from "./base.middleware";
 import { CreatePackageService } from "../services/create-package.service";
 import { CreateConfigService } from "../services/create-config.service";
+import path from "path";
 
 export class CreateMiddleware extends BaseMiddlware {
   override get command(): CommandType {
@@ -41,11 +42,22 @@ export class CreateMiddleware extends BaseMiddlware {
       }
     }
 
+    if (!fs.existsSync(this.targetDir)) {
+      fs.mkdirSync(this.targetDir, {
+        recursive: true,
+      });
+    }
+
     const plugins = await this.pluginSelectService.select();
 
     await this.createPackageService.create(plugins);
     await this.createConfigService.create();
-    this.createTemplateService.create(plugins);
+
+    const fixedPlugins = this.pluginSelectService.fixPlugins(
+      plugins,
+      path.join(this.targetDir)
+    );
+    this.createTemplateService.create(fixedPlugins);
     await this.createEnvService.create();
 
     await this.next();

@@ -1,7 +1,6 @@
 import { Inject } from "@sfajs/inject";
 import inquirer from "inquirer";
 import { DepsService } from "./deps.service";
-import path from "path";
 
 export type Plugin =
   | "inject"
@@ -46,12 +45,12 @@ export class PluginSelectService {
           },
           {
             value: "pipe",
-            name: "管道，用于参数格式化 (@sfajs/pipe)",
+            name: "管道 (用于参数格式化) (@sfajs/pipe)",
             checked: true,
           },
           {
             value: "filter",
-            name: "过滤器，用于拦截请求 (@sfajs/filter)",
+            name: "过滤器 (用于拦截请求) (@sfajs/filter)",
           },
           {
             value: "testing",
@@ -72,17 +71,14 @@ export class PluginSelectService {
         ],
       },
     ]);
-    return this.configPlugins(plugins);
+    return plugins;
   }
 
-  private configPlugins(plugins: Plugin[]) {
+  public fixPlugins(plugins: Plugin[], ...paths: string[]): Plugin[] {
     const result: Plugin[] = [...plugins];
     plugins.forEach((plugin) => {
       this.depsService
-        .getPackageSfaDeps(`@sfajs/${plugin}`, [
-          path.join(__dirname, "../.."),
-          ...module.paths,
-        ])
+        .getPackageSfaDeps(`@sfajs/${plugin}`, paths)
         .map((item) => item.key.replace(/^@sfajs\//, "") as Plugin)
         .forEach((dep) => {
           if (!result.includes(dep)) {

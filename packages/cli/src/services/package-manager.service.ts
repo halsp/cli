@@ -70,9 +70,9 @@ export class PackageManagerService {
     try {
       await this.run(pm, "install", dir);
       this.loadingService.succeed();
-      console.info("Installation is complete");
+      console.info("Installation complete");
     } catch {
-      this.loadingService.fail();
+      this.loadingService.fail("Installation failed");
     }
   }
 }
