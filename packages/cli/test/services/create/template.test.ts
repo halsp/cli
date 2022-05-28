@@ -42,11 +42,13 @@ async function testTemplateDefault(
       await beforeFn();
     }
 
-    service.create(
-      plugins,
-      path.join(__dirname, "dist/template"),
-      path.join(__dirname, "template")
-    );
+    Object.defineProperty(service, "targetDir", {
+      get: () => path.join(__dirname, "dist/template"),
+    });
+    Object.defineProperty(service, "sourceDir", {
+      get: () => path.join(__dirname, "template"),
+    });
+    service.create(plugins);
     expect(fs.existsSync("dist")).toBeTruthy();
 
     if (fs.existsSync(`dist/template/${file}`)) {
@@ -118,7 +120,10 @@ test(`default template`, async () => {
       force: true,
     });
 
-    service.create([], path.join(__dirname, "dist/default"));
+    Object.defineProperty(service, "targetDir", {
+      get: () => path.join(__dirname, "dist/default"),
+    });
+    service.create([]);
     expect(fs.existsSync("dist/default")).toBeTruthy();
     expect(fs.existsSync("dist/default/.eslintrc.js")).toBeTruthy();
     expect(fs.existsSync("dist/default/LICENSE")).toBeTruthy();
@@ -150,11 +155,12 @@ test(`sourceDir not exist`, async () => {
       force: true,
     });
 
-    service.create(
-      [],
-      path.join(__dirname, "dist/not-exist"),
-      path.join(__dirname, "not-exist")
-    );
+    Object.defineProperty(service, "targetDir", {
+      get: () => path.join(__dirname, "dist/not-exist"),
+    });
+    Object.defineProperty(service, "sourceDir", {
+      get: () => path.join(__dirname, "not-exist"),
+    });
     expect(fs.existsSync("dist/not-exist")).toBeFalsy();
   });
 });
