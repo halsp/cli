@@ -5,23 +5,23 @@ export default defineConfig(({ mode }) => {
   return {
     build: {
       prebuild: [
-        (cfg) => {
-          cfg["prebuild1"] = true;
+        (ctx) => {
+          ctx["prebuild1"] = true;
         },
-        (cfg) => {
-          cfg["prebuild2"] = true;
+        (ctx) => {
+          ctx["prebuild2"] = true;
           return mode == "production";
         },
-        (cfg) => {
-          cfg["prebuild3"] = true;
+        (ctx) => {
+          ctx["prebuild3"] = true;
         },
       ],
       postbuild: [
-        (cfg) => {
-          cfg["postbuild1"] = true;
+        (ctx) => {
+          ctx["postbuild1"] = true;
         },
-        (cfg) => {
-          cfg["postbuild2"] = true;
+        (ctx) => {
+          ctx["postbuild2"] = true;
         },
       ],
     },
