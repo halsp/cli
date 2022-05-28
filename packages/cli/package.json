@@ -44,8 +44,6 @@
     "tree-kill": "^1.2.2"
   },
   "devDependencies": {
-    "@sfajs/alifunc": "^1.0.5",
-    "@sfajs/cloudbase": "^1.1.2",
     "@sfajs/testing": "^0.0.1-beta.3",
     "@types/figlet": "^1.5.4",
     "@types/inquirer": "^8.2.1",
