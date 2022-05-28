@@ -16,7 +16,7 @@ export class CreateEnvService {
   private readonly fileService!: FileService;
 
   public get templateEnvDir() {
-    return path.join(__dirname, `../../template/env`);
+    return path.join(__dirname, `../../env`);
   }
   private get name() {
     return this.ctx.commandArgs.name;
@@ -70,7 +70,7 @@ export class CreateEnvService {
     const { env } = await inquirer.prompt([
       {
         type: "list",
-        message: "Select environment",
+        message: "Pick the environment to run application:",
         name: "env",
         default: "http",
         choices: envs,

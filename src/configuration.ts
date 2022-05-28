@@ -21,6 +21,8 @@ export type ConfigEnv = {
   command: CommandType;
 };
 
+export type PackageManager = "yarn" | "npm" | "pnpm" | "cnpm";
+
 export interface Configuration {
   readonly build?: {
     readonly prebuild?: Prebuild[];
@@ -42,6 +44,7 @@ export interface Configuration {
     readonly port?: number;
   };
   readonly startupFile?: string;
+  readonly packageManager?: string;
 }
 
 export interface ConfigurationOptions {

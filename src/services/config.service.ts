@@ -52,7 +52,7 @@ export class ConfigService {
     return this.#value;
   }
 
-  get mode() {
+  public get mode() {
     return this.ctx.getCommandOption<string>("mode") ?? "production";
   }
 
