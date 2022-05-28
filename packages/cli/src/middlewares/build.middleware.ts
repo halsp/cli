@@ -86,7 +86,7 @@ export class BuildMiddlware extends BaseMiddlware {
   private async execPrebuilds(): Promise<boolean> {
     if (this.config.build?.prebuild) {
       for (const fn of this.config.build.prebuild) {
-        if ((await fn(this.config)) == false) {
+        if ((await fn(this.ctx)) == false) {
           return false;
         }
       }
@@ -97,7 +97,7 @@ export class BuildMiddlware extends BaseMiddlware {
   private async execPostbuilds() {
     if (this.config.build?.postbuild) {
       for (const fn of this.config.build.postbuild) {
-        await fn(this.config);
+        await fn(this.ctx);
       }
     }
   }

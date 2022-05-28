@@ -2,8 +2,6 @@ import { runin } from "@sfajs/testing";
 import { CliStartup } from "../../src/cli-startup";
 import { BuildMiddlware } from "../../src/middlewares/build.middleware";
 import * as fs from "fs";
-import { parseInject } from "@sfajs/inject";
-import { ConfigService } from "../../src/services/config.service";
 
 test(`build script`, async () => {
   let callCount = 0;
@@ -12,13 +10,11 @@ test(`build script`, async () => {
       .use(async (ctx, next) => {
         await next();
 
-        const configService = await parseInject(ctx, ConfigService);
-        const cfg = configService.value;
-        expect(cfg["prebuild1"]).toBeTruthy();
-        expect(cfg["prebuild2"]).toBeTruthy();
-        expect(cfg["prebuild3"]).toBeTruthy();
-        expect(cfg["postbuild1"]).toBeTruthy();
-        expect(cfg["postbuild1"]).toBeTruthy();
+        expect(ctx["prebuild1"]).toBeTruthy();
+        expect(ctx["prebuild2"]).toBeTruthy();
+        expect(ctx["prebuild3"]).toBeTruthy();
+        expect(ctx["postbuild1"]).toBeTruthy();
+        expect(ctx["postbuild1"]).toBeTruthy();
         callCount++;
       })
       .add(BuildMiddlware)
@@ -40,13 +36,11 @@ test(`build script failed`, async () => {
       .use(async (ctx, next) => {
         await next();
 
-        const configService = await parseInject(ctx, ConfigService);
-        const cfg = configService.value;
-        expect(cfg["prebuild1"]).toBeTruthy();
-        expect(cfg["prebuild2"]).toBeTruthy();
-        expect(cfg["prebuild3"]).toBeUndefined();
-        expect(cfg["postbuild1"]).toBeUndefined();
-        expect(cfg["postbuild1"]).toBeUndefined();
+        expect(ctx["prebuild1"]).toBeTruthy();
+        expect(ctx["prebuild2"]).toBeTruthy();
+        expect(ctx["prebuild3"]).toBeUndefined();
+        expect(ctx["postbuild1"]).toBeUndefined();
+        expect(ctx["postbuild1"]).toBeUndefined();
         callCount++;
       })
       .add(BuildMiddlware)

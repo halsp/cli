@@ -1,12 +1,13 @@
+import { HttpContext } from "@sfajs/core";
 import ts from "typescript";
 import { CommandType } from "./utils/command-type";
 
 type Transformer = ts.TransformerFactory<any> | ts.CustomTransformerFactory;
 
 export type Prebuild = (
-  config: Configuration
+  ctx: HttpContext
 ) => Promise<boolean> | boolean | Promise<void> | void;
-export type Postbuild = (config: Configuration) => Promise<void> | void;
+export type Postbuild = (ctx: HttpContext) => Promise<void> | void;
 export type AssetConfig =
   | {
       include: string | string[];
