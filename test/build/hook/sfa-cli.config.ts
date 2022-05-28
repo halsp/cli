@@ -1,6 +1,7 @@
-import { defineConfig } from "@sfajs/cli";
 import * as ts from "typescript";
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const { defineConfig } = require("../../src/configuration");
 const dict: any = {};
 
 export default defineConfig(() => ({

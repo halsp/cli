@@ -8,6 +8,15 @@ import { Plugin } from "./plugin-select.service";
 import * as fs from "fs";
 import { PackageManagerService } from "./package-manager.service";
 
+type PluginConfig = {
+  dependencies: Record<string, string | boolean | undefined>;
+  constant: string[];
+};
+type FixedPluginConfig = {
+  dependencies: Record<string, boolean | undefined>;
+  constant: string[];
+};
+
 export class CreatePackageService {
   @Context
   private readonly ctx!: HttpContext;
@@ -29,10 +38,11 @@ export class CreatePackageService {
     const pkg = this.getPackage();
     const pluginConfig = this.getPluginConfig(plugins);
 
-    pkg.name = this.name;
+    this.setDeps(pkg.dependencies, plugins, pluginConfig);
+    this.setDeps(pkg.devDependencies, plugins, pluginConfig);
 
-    this.removeDeps(pkg.dependencies, plugins, pluginConfig);
-    this.removeDeps(pkg.devDependencies, plugins, pluginConfig);
+    this.setCliVersion(pkg);
+    pkg.name = this.name;
 
     const filePath = path.join(this.targetDir, "package.json");
     fs.writeFileSync(filePath, JSON.stringify(pkg));
@@ -42,19 +52,25 @@ export class CreatePackageService {
     this.ctx.bag("PACKAGE_MANAGER", pm);
   }
 
-  private removeDeps(
+  private setDeps(
     deps: Record<string, string>,
     plugins: Plugin[],
-    pluginConfig: Record<string, boolean>
+    pluginConfig: FixedPluginConfig
   ) {
+    const { constant, dependencies } = pluginConfig;
+
     Object.keys(deps)
+      .filter((k) => k.startsWith("@sfajs/"))
+      .filter((k) => !constant.some((c) => `@sfajs/${c}` == k))
       .filter((k) => !plugins.some((p) => `@sfajs/${p}` == k))
       .forEach((key) => {
         delete deps[key];
       });
 
     Object.keys(deps)
-      .filter((k) => pluginConfig[k] == false)
+      .filter((k) => k.startsWith("@sfajs/"))
+      .filter((k) => !constant.some((c) => `@sfajs/${c}` == k))
+      .filter((k) => dependencies[k] == false)
       .forEach((key) => {
         delete deps[key];
       });
@@ -63,20 +79,34 @@ export class CreatePackageService {
   private getPluginConfig(plugins: Plugin[]) {
     const file = path.join(__dirname, "../../template/package.plugin.json");
     // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const config: Record<string, string | boolean> = require(file);
+    const config: PluginConfig = require(file);
 
-    for (const key in config) {
-      const value = config[key] as string;
+    for (const key in config.dependencies) {
+      const value = config.dependencies[key] as string;
       const newValue = this.expressionService.calcPlugins(value, plugins);
-      config[key] = newValue;
+      config.dependencies[key] = newValue;
     }
 
-    return config as Record<string, boolean>;
+    return config as FixedPluginConfig;
   }
 
   private getPackage(): any {
     const file = path.join(__dirname, "../../template/package.json");
     // eslint-disable-next-line @typescript-eslint/no-var-requires
     return require(file);
+  }
+
+  private setCliVersion(pkg: Record<string, any>): any {
+    const file = path.join(__dirname, "../../package.json");
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const cliPkg = require(file);
+    const version = cliPkg.version;
+
+    if (Object.keys(pkg.dependencies).includes("@sfajs/cli")) {
+      pkg.dependencies["@sfajs/cli"] = `^${version}`;
+    }
+    if (Object.keys(pkg.devDependencies).includes("@sfajs/cli")) {
+      pkg.devDependencies["@sfajs/cli"] = `^${version}`;
+    }
   }
 }

@@ -1,3 +1,6 @@
 {
-  "ejs": "view"
+  "dependencies": {
+    "ejs": "view"
+  },
+  "constant": ["core", "cli"]
 }

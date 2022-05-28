@@ -32,11 +32,6 @@ export class CreateTemplateService {
 
   public create(plugins: Plugin[]) {
     if (!fs.existsSync(this.sourceDir)) return;
-    if (!fs.existsSync(this.targetDir)) {
-      fs.mkdirSync(this.targetDir, {
-        recursive: true,
-      });
-    }
 
     const paths = walk.sync({
       path: this.sourceDir,

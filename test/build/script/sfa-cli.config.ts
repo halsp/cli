@@ -1,4 +1,5 @@
-import { Configuration, defineConfig } from "@sfajs/cli";
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const { defineConfig } = require("../../src/configuration");
 
 export default defineConfig(({ mode }) => {
   return {
@@ -24,5 +25,5 @@ export default defineConfig(({ mode }) => {
         },
       ],
     },
-  } as Configuration;
+  };
 });
