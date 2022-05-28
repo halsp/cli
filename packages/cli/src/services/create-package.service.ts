@@ -6,6 +6,7 @@ import { CreateEnvService } from "./create-env.service";
 import { ExpressionService } from "./expression.service";
 import { Plugin } from "./plugin-select.service";
 import * as fs from "fs";
+import { PackageManagerService } from "./package-manager.service";
 
 export class CreatePackageService {
   @Context
@@ -14,6 +15,8 @@ export class CreatePackageService {
   private readonly expressionService!: ExpressionService;
   @Inject
   private readonly createEnvService!: CreateEnvService;
+  @Inject
+  private readonly packageManagerService!: PackageManagerService;
 
   private get name() {
     return this.ctx.commandArgs.name;
@@ -22,7 +25,7 @@ export class CreatePackageService {
     return this.createEnvService.targetDir;
   }
 
-  public create(plugins: Plugin[]): void {
+  public async create(plugins: Plugin[]): Promise<void> {
     const pkg = this.getPackage();
     const pluginConfig = this.getPluginConfig(plugins);
 
@@ -33,6 +36,10 @@ export class CreatePackageService {
 
     const filePath = path.join(this.targetDir, "package.json");
     fs.writeFileSync(filePath, JSON.stringify(pkg));
+
+    const pm = await this.packageManagerService.pickPackageManager();
+    await this.packageManagerService.install(pm, this.targetDir);
+    this.ctx.bag("PACKAGE_MANAGER", pm);
   }
 
   private removeDeps(
