@@ -6,6 +6,7 @@ import { CreateEnvService } from "../services/create-env.service";
 import { PluginSelectService } from "../services/plugin-select.service";
 import { CommandType } from "../utils/command-type";
 import { BaseMiddlware } from "./base.middleware";
+import { CreatePackageService } from "../services/create-package.service";
 
 export class CreateMiddleware extends BaseMiddlware {
   override get command(): CommandType {
@@ -16,6 +17,8 @@ export class CreateMiddleware extends BaseMiddlware {
   private readonly createTemplateService!: CreateTemplateService;
   @Inject
   private readonly createEnvService!: CreateEnvService;
+  @Inject
+  private readonly createPackageService!: CreatePackageService;
   @Inject
   private readonly pluginSelectService!: PluginSelectService;
   @Inject
@@ -36,7 +39,8 @@ export class CreateMiddleware extends BaseMiddlware {
     }
 
     const plugins = await this.pluginSelectService.select();
-    this.createTemplateService.create(plugins, this.targetDir);
+    this.createTemplateService.create(plugins);
+    this.createPackageService.create(plugins);
 
     await this.createEnvService.create();
 

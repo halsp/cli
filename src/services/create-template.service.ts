@@ -4,10 +4,12 @@ import { FileService } from "./file.service";
 import { Plugin } from "./plugin-select.service";
 import * as fs from "fs";
 import walk from "ignore-walk";
+import { ExpressionService } from "./expression.service";
+import { CreateEnvService } from "./create-env.service";
 
 // plugin inject|router
 const commentPluginStartRegExp = /^\s*\/{2,}\s*\{\s*/;
-// plugin-end
+// plugin end
 const commentPluginEndRegExp = /^\s*\/{2,}\s*\}\s*/;
 const importRegExp =
   /^import\s(\"@sfajs\/(.+?)\")|(.+?\sfrom\s\"@sfajs\/(.+?)\");$/;
@@ -16,34 +18,37 @@ const uslessRegExp = /\/{2,}\s*\!\s*/;
 export class CreateTemplateService {
   @Inject
   private readonly fileService!: FileService;
+  @Inject
+  private readonly expressionService!: ExpressionService;
+  @Inject
+  private readonly createEnvService!: CreateEnvService;
 
-  public create(plugins: Plugin[], targetDir: string, sourceDir?: string) {
-    if (!sourceDir) {
-      sourceDir = path.join(__dirname, "../../template/project");
-    }
-    if (!fs.existsSync(sourceDir)) return;
-    if (!fs.existsSync(targetDir)) {
-      fs.mkdirSync(targetDir, {
+  private get targetDir() {
+    return this.createEnvService.targetDir;
+  }
+  private get sourceDir() {
+    return path.join(__dirname, "../../template/project");
+  }
+
+  public create(plugins: Plugin[]) {
+    if (!fs.existsSync(this.sourceDir)) return;
+    if (!fs.existsSync(this.targetDir)) {
+      fs.mkdirSync(this.targetDir, {
         recursive: true,
       });
     }
 
     const paths = walk.sync({
-      path: sourceDir,
-      ignoreFiles: [".gitignore"],
+      path: this.sourceDir,
+      ignoreFiles: [".gitignore", ".sfaignore"],
     });
-    this.copyTemplate(sourceDir, targetDir, plugins, paths);
+    this.copyTemplate(plugins, paths);
   }
 
-  public copyTemplate(
-    sourceDir: string,
-    targetDir: string,
-    plugins: Plugin[],
-    paths: string[]
-  ) {
+  private copyTemplate(plugins: Plugin[], paths: string[]) {
     for (const p of paths) {
-      const sourceFile = path.join(sourceDir, p);
-      const targetFile = path.join(targetDir, p);
+      const sourceFile = path.join(this.sourceDir, p);
+      const targetFile = path.join(this.targetDir, p);
       this.fileService.createDir(targetFile);
 
       let content: string | null = fs.readFileSync(sourceFile, "utf-8");
@@ -88,7 +93,7 @@ export class CreateTemplateService {
       }
 
       const expression = lines[start].replace(commentPluginStartRegExp, "");
-      if (this.calcExpression(expression, plugins)) {
+      if (this.expressionService.calcPlugins(expression, plugins)) {
         lines.splice(end, 1);
         lines.splice(start, 1);
       } else {
@@ -128,14 +133,5 @@ export class CreateTemplateService {
         lines.splice(importIndex, 1);
       }
     }
-  }
-
-  private calcExpression(expression: string, plugins: Plugin[]) {
-    plugins.forEach((plugin) => {
-      expression = expression.replace(new RegExp(plugin, "g"), "↑");
-    });
-    expression = expression.replace(/[a-zA-Z]+/g, "false");
-    expression = expression.replace(new RegExp("↑", "g"), "true");
-    return eval(expression) as boolean;
   }
 }

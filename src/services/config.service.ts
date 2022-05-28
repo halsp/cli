@@ -63,7 +63,6 @@ export class ConfigService {
       if (code) {
         const { options } = this.tsconfigService.parsedCommandLine;
         code = ts.transpile(code, options, this.configFilePath);
-        console.log("code", options, code);
       }
     }
 

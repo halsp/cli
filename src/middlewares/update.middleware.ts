@@ -6,14 +6,6 @@ export class UpdateMiddleware extends BaseMiddlware {
     return "update";
   }
 
-  get name() {
-    return this.ctx.commandArgs.name;
-  }
-
-  get template() {
-    return this.ctx.commandArgs.template;
-  }
-
   override async invoke(): Promise<void> {
     super.invoke();
 

@@ -21,6 +21,7 @@ import { DepsService } from "./services/deps.service";
 import { CreateEnvService } from "./services/create-env.service";
 import { PluginSelectService } from "./services/plugin-select.service";
 import { CommandType } from "./utils/command-type";
+import { CreatePackageService } from "./services/create-package.service";
 
 declare module "@sfajs/core" {
   interface HttpContext {
@@ -92,7 +93,8 @@ export class CliStartup extends Startup {
       .inject(CreateTemplateService)
       .inject(CreateEnvService)
       .inject(PluginSelectService)
-      .inject(DepsService);
+      .inject(DepsService)
+      .inject(CreatePackageService);
   }
 
   async run() {

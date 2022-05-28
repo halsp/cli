@@ -1,0 +1,3 @@
+.sfaignore
+package.plugin.json
+package.json
