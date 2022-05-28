@@ -15,16 +15,19 @@ export class CreateConfigService {
   private get targetDir() {
     return this.createEnvService.targetDir;
   }
+  private get targetFile() {
+    return path.join(this.targetDir, "sfa-cli.config.ts");
+  }
+  private get sourceFile() {
+    return path.join(__dirname, "../../template/sfa-cli.config.ts");
+  }
 
   public async create(): Promise<void> {
-    const sourceFile = path.join(__dirname, "../../template/sfa-cli.config.ts");
-    const targetFile = path.join(this.targetDir, "sfa-cli.config.ts");
-
-    let code = fs.readFileSync(sourceFile, "utf-8");
+    let code = fs.readFileSync(this.sourceFile, "utf-8");
 
     const pm = this.ctx.bag<PackageManager>("PACKAGE_MANAGER");
     code = code.replace("{{PACKAGE_MANAGER}}", pm);
 
-    fs.writeFileSync(targetFile, code);
+    fs.writeFileSync(this.targetFile, code);
   }
 }

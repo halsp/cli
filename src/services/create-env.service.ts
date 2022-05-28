@@ -15,11 +15,11 @@ export class CreateEnvService {
   @Inject
   private readonly fileService!: FileService;
 
-  public get templateEnvDir() {
-    return path.join(__dirname, `../../env`);
-  }
   private get name() {
     return this.ctx.commandArgs.name;
+  }
+  public get sourceDir() {
+    return path.join(__dirname, `../../env`);
   }
   public get targetDir() {
     return path.join(process.cwd(), this.name);
@@ -27,7 +27,7 @@ export class CreateEnvService {
 
   public async create() {
     const env = await this.getEnv();
-    const sourceFilePath = path.join(this.templateEnvDir, `${env}.ts`);
+    const sourceFilePath = path.join(this.sourceDir, `${env}.ts`);
     const targetFilePath = path.join(this.targetDir, `src/index.ts`);
 
     if (fs.existsSync(targetFilePath)) {
@@ -46,14 +46,15 @@ export class CreateEnvService {
 
   private async getEnv(): Promise<string> {
     const envs = fs
-      .readdirSync(this.templateEnvDir)
+      .readdirSync(this.sourceDir)
+      .filter((file) => file.endsWith(".ts"))
       .filter((file) => !file.endsWith("startup.ts"))
       .filter((file) => {
-        const stat = fs.statSync(path.join(this.templateEnvDir, file));
+        const stat = fs.statSync(path.join(this.sourceDir, file));
         return stat.isFile();
       })
       .map((file) => {
-        const filePath = path.join(this.templateEnvDir, file);
+        const filePath = path.join(this.sourceDir, file);
         const name = fs
           .readFileSync(filePath, "utf-8")
           .replace(/\r\n/g, "\n")
