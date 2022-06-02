@@ -14,8 +14,8 @@ async function testTemplate(
     await new CliStartup()
       .use(async (ctx) => {
         const service = await parseInject(ctx, CreateTemplateService);
-        if (!fs.existsSync("./dist")) {
-          fs.mkdirSync("./dist");
+        if (!fs.existsSync("./.sfa-cache")) {
+          fs.mkdirSync("./.sfa-cache");
         }
 
         await fn(service);
