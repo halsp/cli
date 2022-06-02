@@ -18,6 +18,9 @@ export class TsconfigService {
   get filePath() {
     return path.resolve(process.cwd(), this.fileName);
   }
+  get cacheDir() {
+    return ".sfa-cache";
+  }
   get outDir() {
     return this.value.compilerOptions?.outDir || "dist";
   }

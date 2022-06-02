@@ -20,8 +20,8 @@ test(`build script`, async () => {
       .add(BuildMiddlware)
       .run();
 
-    expect(fs.existsSync("./dist")).toBeTruthy();
-    expect(fs.existsSync("./dist/build-test.js")).toBeTruthy();
+    expect(fs.existsSync("./.sfa-cache")).toBeTruthy();
+    expect(fs.existsSync("./.sfa-cache/build-test.js")).toBeTruthy();
     callCount++;
   });
   expect(callCount).toBe(2);
@@ -46,8 +46,7 @@ test(`build script failed`, async () => {
       .add(BuildMiddlware)
       .run();
 
-    expect(fs.existsSync("./dist")).toBeTruthy();
-    expect(fs.existsSync("./dist/build-test.js")).toBeTruthy();
+    expect(fs.existsSync("./.sfa-cache")).toBeFalsy();
     callCount++;
   });
   expect(callCount).toBe(2);

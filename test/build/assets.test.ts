@@ -7,18 +7,18 @@ import { AssetsService } from "../../src/services/assets.service";
 import { WatchCompilerService } from "../../src/services/watch-compiler.service";
 
 function expectFiles() {
-  expect(fs.existsSync("./dist")).toBeTruthy();
-  expect(fs.existsSync("./dist/default/test.txt")).toBeTruthy();
-  expect(fs.readFileSync("./dist/default/test.txt", "utf-8")).toBe(
+  expect(fs.existsSync("./.sfa-cache")).toBeTruthy();
+  expect(fs.existsSync("./.sfa-cache/default/test.txt")).toBeTruthy();
+  expect(fs.readFileSync("./.sfa-cache/default/test.txt", "utf-8")).toBe(
     "test-build"
   );
-  expect(fs.existsSync("./dist/build-test.js")).toBeTruthy();
+  expect(fs.existsSync("./.sfa-cache/build-test.js")).toBeTruthy();
 
-  expect(fs.existsSync("./dist/root/test.txt")).toBeTruthy();
-  expect(fs.existsSync("./dist/include/test.txt")).toBeTruthy();
-  expect(fs.existsSync("./dist/test/outDir/test.txt")).toBeTruthy();
+  expect(fs.existsSync("./.sfa-cache/root/test.txt")).toBeTruthy();
+  expect(fs.existsSync("./.sfa-cache/include/test.txt")).toBeTruthy();
+  expect(fs.existsSync("./.sfa-cache/test/outDir/test.txt")).toBeTruthy();
 
-  expect(fs.existsSync("./dist/exclude/test.txt")).toBeFalsy();
+  expect(fs.existsSync("./.sfa-cache/exclude/test.txt")).toBeFalsy();
 }
 
 test(`build assets`, async () => {
@@ -40,13 +40,13 @@ test(`build command assets`, async () => {
       .add(BuildMiddlware)
       .run();
 
-    expect(fs.existsSync("./dist")).toBeTruthy();
-    expect(fs.existsSync("./dist/default")).toBeTruthy();
-    expect(fs.existsSync("./dist/default/test.txt")).toBeTruthy();
-    expect(fs.readFileSync("./dist/default/test.txt", "utf-8")).toBe(
+    expect(fs.existsSync("./.sfa-cache")).toBeTruthy();
+    expect(fs.existsSync("./.sfa-cache/default")).toBeTruthy();
+    expect(fs.existsSync("./.sfa-cache/default/test.txt")).toBeTruthy();
+    expect(fs.readFileSync("./.sfa-cache/default/test.txt", "utf-8")).toBe(
       "test-build"
     );
-    expect(fs.existsSync("./dist/build-test.js")).toBeTruthy();
+    expect(fs.existsSync("./.sfa-cache/build-test.js")).toBeTruthy();
     worked = true;
   });
   expect(worked).toBeTruthy();
@@ -56,7 +56,7 @@ function runWatchAssetsTest(type: "add" | "edit" | "unlink") {
   test(`watch assets ${type}`, async () => {
     const cacheFileName = `test-cache-${type}.txt`;
     const cacheSourceFile = `./default/${cacheFileName}`;
-    const cacheTargetFile = `./dist/default/${cacheFileName}`;
+    const cacheTargetFile = `./.sfa-cache/default/${cacheFileName}`;
     const cacheFileContent = "watchAssets";
     const cacheFileEditContent = "Edit";
     let callCount = 0;

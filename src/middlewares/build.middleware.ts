@@ -31,8 +31,8 @@ export class BuildMiddlware extends BaseMiddlware {
   private get config() {
     return this.configService.value;
   }
-  private get outDir() {
-    return this.tsconfigService.outDir;
+  private get cacheDir() {
+    return this.tsconfigService.cacheDir;
   }
   private get watch() {
     return this.commandService.getOptionOrConfigValue<boolean>(
@@ -41,37 +41,36 @@ export class BuildMiddlware extends BaseMiddlware {
       false
     );
   }
-  private get deleteOutDir() {
-    return this.commandService.getOptionOrConfigValue<boolean>(
-      "deleteOutDir",
-      "build.deleteOutDir",
-      true
-    );
-  }
 
   override async invoke(): Promise<void> {
     super.invoke();
+
+    await fs.promises.rm(path.resolve(process.cwd(), this.cacheDir), {
+      recursive: true,
+      force: true,
+    });
 
     if (!(await this.execPrebuilds())) {
       return;
     }
 
-    if (this.deleteOutDir) {
-      fs.rmSync(path.join(process.cwd(), this.outDir), {
-        recursive: true,
-        force: true,
-      });
-    }
+    fs.rmSync(path.join(process.cwd(), this.cacheDir), {
+      recursive: true,
+      force: true,
+    });
 
     let compilerResult: boolean;
     if (this.watch) {
-      compilerResult = this.watchCompilerService.compiler(async () => {
-        this.assetsService.copy();
-        await this.execPostbuilds();
-        this.ctx.res.body?.onWatchSuccess();
-      });
+      compilerResult = this.watchCompilerService.compiler(
+        this.cacheDir,
+        async () => {
+          this.assetsService.copy();
+          await this.execPostbuilds();
+          this.ctx.res.body?.onWatchSuccess();
+        }
+      );
     } else {
-      compilerResult = this.compilerService.compiler();
+      compilerResult = this.compilerService.compiler(this.cacheDir);
       if (compilerResult) {
         this.assetsService.copy();
         await this.execPostbuilds();
