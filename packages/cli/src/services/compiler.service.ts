@@ -19,7 +19,7 @@ export class CompilerService {
     return this.configService.value;
   }
 
-  compiler() {
+  compiler(outDir: string) {
     const formatHost: ts.FormatDiagnosticsHost = {
       getCanonicalFileName: (path) => path,
       getCurrentDirectory: this.tsBinary.sys.getCurrentDirectory,
@@ -33,7 +33,9 @@ export class CompilerService {
     const buildProgram = createProgram.call(ts, {
       rootNames: fileNames,
       projectReferences,
-      options,
+      options: Object.assign({}, options, {
+        outDir,
+      }),
     });
     const program = buildProgram.getProgram();
 

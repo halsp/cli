@@ -22,8 +22,8 @@ export class StartMiddleware extends BaseMiddlware {
   @Inject
   private readonly commandService!: CommandService;
 
-  private get outDir() {
-    return this.tsconfigService.outDir;
+  private get cacheDir() {
+    return this.tsconfigService.cacheDir;
   }
   private get debug() {
     return this.commandService.getOptionOrConfigValue<boolean>(
@@ -103,7 +103,7 @@ export class StartMiddleware extends BaseMiddlware {
   private spawnChildProcess(binaryToRun: string) {
     let outputFilePath = path.resolve(
       process.cwd(),
-      this.outDir,
+      this.cacheDir,
       this.startupFile
     );
     if (!fs.existsSync(outputFilePath)) {
@@ -133,7 +133,7 @@ export class StartMiddleware extends BaseMiddlware {
     return spawn(binaryToRun, processArgs, {
       stdio: "inherit",
       shell: true,
-      cwd: this.outDir,
+      cwd: this.cacheDir,
     });
   }
 
@@ -154,7 +154,7 @@ export class StartMiddleware extends BaseMiddlware {
     code = code.replace("{{MODE}}", this.mode);
     code = code.replace("{{PORT}}", this.port);
     fs.writeFileSync(
-      path.resolve(process.cwd(), this.outDir, START_DEV_FILE_NAME),
+      path.resolve(process.cwd(), this.cacheDir, START_DEV_FILE_NAME),
       code
     );
   }

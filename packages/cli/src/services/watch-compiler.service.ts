@@ -28,8 +28,10 @@ export class WatchCompilerService {
     return this.ctx.getCommandOption<boolean>("preserveWatchOutput") == true;
   }
 
-  compiler(onSuccess?: () => void) {
-    const tsCompilerOptions: ts.CompilerOptions = {};
+  compiler(outDir: string, onSuccess?: () => void) {
+    const tsCompilerOptions: ts.CompilerOptions = {
+      outDir,
+    };
     if (this.preserveWatchOutput) {
       tsCompilerOptions.preserveWatchOutput = true;
     }
