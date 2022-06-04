@@ -45,7 +45,7 @@ export class CreatePackageService {
     pkg.name = this.name;
 
     const filePath = path.join(this.targetDir, "package.json");
-    fs.writeFileSync(filePath, JSON.stringify(pkg));
+    await fs.promises.writeFile(filePath, JSON.stringify(pkg));
 
     const pm = await this.packageManagerService.pickPackageManager();
     await this.packageManagerService.install(pm, this.targetDir);

@@ -15,7 +15,7 @@ export class TemplateMiddleware extends BaseMiddlware {
   }
 
   override async invoke(): Promise<void> {
-    super.invoke();
+    await super.invoke();
 
     console.log("TODO", this.template, this.name);
   }

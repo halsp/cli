@@ -4,7 +4,7 @@ import { CommandType } from "../utils/command-type";
 export abstract class BaseMiddlware extends Middleware {
   abstract get command(): CommandType;
 
-  override invoke() {
+  override async invoke() {
     this.ctx["COMMAND_TYPE_METADATA"] = this.command;
   }
 }

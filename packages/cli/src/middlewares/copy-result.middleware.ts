@@ -11,6 +11,8 @@ export class CopyResultMiddleware extends Middleware {
   private readonly tsconfigService!: TsconfigService;
   @Inject
   private readonly commandService!: CommandService;
+  @Inject
+  private readonly fileService!: FileService;
 
   private get outDir() {
     return this.tsconfigService.outDir;
@@ -33,6 +35,9 @@ export class CopyResultMiddleware extends Middleware {
         force: true,
       });
     }
+
+    await this.fileService.createDir(this.outDir);
+
     await fs.promises.rename(
       path.resolve(process.cwd(), this.cacheDir),
       path.resolve(process.cwd(), this.outDir)

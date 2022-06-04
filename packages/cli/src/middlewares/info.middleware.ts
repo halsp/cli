@@ -21,7 +21,7 @@ export class InfoMiddleware extends BaseMiddlware {
   }
 
   override async invoke(): Promise<void> {
-    super.invoke();
+    await super.invoke();
 
     const text = figlet.textSync("SFAJSCLI");
     this.log("\n");

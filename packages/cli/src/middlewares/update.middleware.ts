@@ -7,7 +7,7 @@ export class UpdateMiddleware extends BaseMiddlware {
   }
 
   override async invoke(): Promise<void> {
-    super.invoke();
+    await super.invoke();
 
     console.log("TODO");
   }

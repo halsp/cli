@@ -60,7 +60,7 @@ export class StartMiddleware extends BaseMiddlware {
   }
 
   override async invoke(): Promise<void> {
-    super.invoke();
+    await super.invoke();
 
     this.ctx.res.setBody({
       onWatchSuccess: this.createOnSuccessHook(),

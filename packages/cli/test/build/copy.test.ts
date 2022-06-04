@@ -4,7 +4,7 @@ import { BuildMiddlware } from "../../src/middlewares/build.middleware";
 import { CopyResultMiddleware } from "../../src/middlewares/copy-result.middleware";
 import * as fs from "fs";
 
-test(`build script`, async () => {
+test(`copy cache`, async () => {
   let callCount = 0;
   await runin(`test/build/copy`, async () => {
     await new CliStartup().add(BuildMiddlware).add(CopyResultMiddleware).run();
@@ -14,4 +14,4 @@ test(`build script`, async () => {
     callCount++;
   });
   expect(callCount).toBe(1);
-});
+}, 10000);

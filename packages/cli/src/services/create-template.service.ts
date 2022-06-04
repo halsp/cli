@@ -30,26 +30,29 @@ export class CreateTemplateService {
     return path.join(__dirname, "../../template");
   }
 
-  public create(plugins: Plugin[]) {
+  public async create(plugins: Plugin[]) {
     if (!fs.existsSync(this.sourceDir)) return;
 
-    const paths = walk.sync({
+    const paths = await walk({
       path: this.sourceDir,
       ignoreFiles: [".gitignore", ".sfaignore"],
     });
-    this.copyTemplate(plugins, paths);
+    await this.copyTemplate(plugins, paths);
   }
 
-  private copyTemplate(plugins: Plugin[], paths: string[]) {
+  private async copyTemplate(plugins: Plugin[], paths: string[]) {
     for (const p of paths) {
       const sourceFile = path.join(this.sourceDir, p);
       const targetFile = path.join(this.targetDir, p);
-      this.fileService.createDir(targetFile);
+      await this.fileService.createDir(targetFile);
 
-      let content: string | null = fs.readFileSync(sourceFile, "utf-8");
+      let content: string | null = await fs.promises.readFile(
+        sourceFile,
+        "utf-8"
+      );
       content = this.readFile(content, plugins);
       if (content != null) {
-        fs.writeFileSync(targetFile, content);
+        await fs.promises.writeFile(targetFile, content);
       }
     }
   }

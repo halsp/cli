@@ -48,7 +48,7 @@ async function testTemplateDefault(
     Object.defineProperty(service, "sourceDir", {
       get: () => path.join(__dirname, "template"),
     });
-    service.create(plugins);
+    await service.create(plugins);
     expect(fs.existsSync("dist")).toBeTruthy();
 
     if (fs.existsSync(`dist/template/${file}`)) {
@@ -114,7 +114,7 @@ test(`crlf`, async () => {
 });
 
 test(`default template`, async () => {
-  await testTemplate((service) => {
+  await testTemplate(async (service) => {
     fs.rmSync("./dist/default", {
       recursive: true,
       force: true,
@@ -123,7 +123,7 @@ test(`default template`, async () => {
     Object.defineProperty(service, "targetDir", {
       get: () => path.join(__dirname, "dist/default"),
     });
-    service.create([]);
+    await service.create([]);
     expect(fs.existsSync("dist/default")).toBeTruthy();
     expect(fs.existsSync("dist/default/.eslintrc.js")).toBeTruthy();
     expect(fs.existsSync("dist/default/LICENSE")).toBeTruthy();
