@@ -1,5 +1,5 @@
 import { HttpContext } from "@sfajs/core";
-import ts from "typescript";
+import * as ts from "typescript";
 import { CommandType } from "./utils/command-type";
 
 type Transformer = ts.TransformerFactory<any> | ts.CustomTransformerFactory;

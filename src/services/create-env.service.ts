@@ -41,7 +41,7 @@ export class CreateEnvService {
       .readFileSync(sourceFilePath, "utf-8")
       .replace(commentEnvLineRegExp, "")
       .trimStart();
-    fs.writeFileSync(targetFilePath, code);
+    await fs.promises.writeFile(targetFilePath, code);
   }
 
   private async getEnv(): Promise<string> {

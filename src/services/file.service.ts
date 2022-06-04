@@ -34,11 +34,11 @@ export class FileService {
     return overwrite as boolean;
   }
 
-  public createDir(p: string) {
+  public async createDir(p: string) {
     const dirname = path.dirname(p);
 
     if (!fs.existsSync(dirname)) {
-      fs.mkdirSync(dirname, {
+      await fs.promises.mkdir(dirname, {
         recursive: true,
       });
     }

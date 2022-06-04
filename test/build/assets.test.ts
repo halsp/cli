@@ -144,7 +144,7 @@ function runWatchAssetsTest(type: "add" | "edit" | "unlink") {
         .use(async (ctx, next) => {
           await next();
 
-          fs.writeFileSync(cacheSourceFile, cacheFileContent);
+          await fs.promises.writeFile(cacheSourceFile, cacheFileContent);
           await testWaiting(() => !fs.existsSync(cacheTargetFile));
 
           expect(fs.existsSync(cacheTargetFile)).toBeTruthy();

@@ -105,19 +105,19 @@ export class AssetsService {
     await Promise.all(this.watchers.map((watcher) => watcher.close()));
   }
 
-  public copy() {
+  public async copy() {
     if (!this.assets.length) return;
 
     for (const asset of this.assets) {
       if (this.watchAssets) {
         this.watchAsset(asset);
       } else {
-        this.globCopy(asset);
+        await this.globCopy(asset);
       }
     }
   }
 
-  private globCopy(asset: FixedAsset) {
+  private async globCopy(asset: FixedAsset) {
     const paths = glob.sync(asset.include, {
       ignore: asset.exclude,
       cwd: asset.root,
@@ -128,8 +128,8 @@ export class AssetsService {
       const sourceFile = path.join(asset.root, p);
       const targetFile = path.join(asset.outDir, p);
 
-      this.fileService.createDir(targetFile);
-      fs.copyFileSync(sourceFile, targetFile);
+      await this.fileService.createDir(targetFile);
+      await fs.promises.copyFile(sourceFile, targetFile);
     }
   }
 
@@ -140,15 +140,15 @@ export class AssetsService {
     const getSourcePath = (file: string) => {
       return path.join(asset.root, file);
     };
-    const onChange = (filePath: string) => {
+    const onChange = async (filePath: string) => {
       const targetPath = getTargetPath(filePath);
       const sourcePath = getSourcePath(filePath);
-      this.fileService.createDir(targetPath);
-      fs.copyFileSync(sourcePath, targetPath);
+      await this.fileService.createDir(targetPath);
+      await fs.promises.copyFile(sourcePath, targetPath);
     };
-    const onUnlink = (filePath: string) => {
+    const onUnlink = async (filePath: string) => {
       const targetPath = getTargetPath(filePath);
-      fs.unlinkSync(targetPath);
+      await fs.promises.unlink(targetPath);
     };
 
     const watcher = chokidar

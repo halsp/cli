@@ -43,7 +43,7 @@ export class BuildMiddlware extends BaseMiddlware {
   }
 
   override async invoke(): Promise<void> {
-    super.invoke();
+    await super.invoke();
 
     await fs.promises.rm(path.resolve(process.cwd(), this.cacheDir), {
       recursive: true,
@@ -54,7 +54,7 @@ export class BuildMiddlware extends BaseMiddlware {
       return;
     }
 
-    fs.rmSync(path.join(process.cwd(), this.cacheDir), {
+    await fs.promises.rm(path.join(process.cwd(), this.cacheDir), {
       recursive: true,
       force: true,
     });
@@ -64,7 +64,7 @@ export class BuildMiddlware extends BaseMiddlware {
       compilerResult = this.watchCompilerService.compiler(
         this.cacheDir,
         async () => {
-          this.assetsService.copy();
+          await this.assetsService.copy();
           await this.execPostbuilds();
           this.ctx.res.body?.onWatchSuccess();
         }
@@ -72,7 +72,7 @@ export class BuildMiddlware extends BaseMiddlware {
     } else {
       compilerResult = this.compilerService.compiler(this.cacheDir);
       if (compilerResult) {
-        this.assetsService.copy();
+        await this.assetsService.copy();
         await this.execPostbuilds();
       }
     }

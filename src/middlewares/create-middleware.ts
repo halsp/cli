@@ -33,7 +33,7 @@ export class CreateMiddleware extends BaseMiddlware {
   }
 
   override async invoke(): Promise<void> {
-    super.invoke();
+    await super.invoke();
 
     if (fs.existsSync(this.targetDir)) {
       const message = `Target directory ${this.targetDir} already exists. Overwrite?`;
@@ -57,7 +57,7 @@ export class CreateMiddleware extends BaseMiddlware {
       plugins,
       path.join(this.targetDir)
     );
-    this.createTemplateService.create(fixedPlugins);
+    await this.createTemplateService.create(fixedPlugins);
     await this.createEnvService.create();
 
     await this.next();

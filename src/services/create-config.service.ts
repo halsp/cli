@@ -23,11 +23,11 @@ export class CreateConfigService {
   }
 
   public async create(): Promise<void> {
-    let code = fs.readFileSync(this.sourceFile, "utf-8");
+    let code = await fs.promises.readFile(this.sourceFile, "utf-8");
 
     const pm = this.ctx.bag<PackageManager>("PACKAGE_MANAGER");
     code = code.replace("{{PACKAGE_MANAGER}}", pm);
 
-    fs.writeFileSync(this.targetFile, code);
+    await fs.promises.writeFile(this.targetFile, code);
   }
 }
