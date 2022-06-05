@@ -5,12 +5,16 @@ import * as fs from "fs";
 import { PackageManager } from "../configuration";
 import { Context } from "@sfajs/pipe";
 import { HttpContext } from "@sfajs/core";
+import { CreateTemplateService } from "./create-template.service";
+import { Plugin } from "./plugin-select.service";
 
 export class CreateConfigService {
   @Context
   private readonly ctx!: HttpContext;
   @Inject
   private readonly createEnvService!: CreateEnvService;
+  @Inject
+  private readonly createTemplateService!: CreateTemplateService;
 
   private get targetDir() {
     return this.createEnvService.targetDir;
@@ -22,11 +26,13 @@ export class CreateConfigService {
     return path.join(__dirname, "../../template/sfa-cli.config.ts");
   }
 
-  public async create(): Promise<void> {
+  public async create(plugins: Plugin[]): Promise<void> {
     let code = await fs.promises.readFile(this.sourceFile, "utf-8");
 
     const pm = this.ctx.bag<PackageManager>("PACKAGE_MANAGER");
     code = code.replace("{{PACKAGE_MANAGER}}", pm);
+
+    code = this.createTemplateService.readFile(code, plugins) as string;
 
     await fs.promises.writeFile(this.targetFile, code);
   }

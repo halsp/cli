@@ -57,7 +57,7 @@ export class CreateTemplateService {
     }
   }
 
-  private readFile(code: string, plugins: Plugin[]): string | null {
+  public readFile(code: string, plugins: Plugin[]): string | null {
     const lines = code.trimStart().replace(/\r\n/g, "\n").split("\n");
 
     this.removeCommentLine(lines, plugins);
