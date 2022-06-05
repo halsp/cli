@@ -76,9 +76,9 @@ export class StartMiddleware extends BaseMiddlware {
       () => childProcessRef && treeKillSync(childProcessRef.pid)
     );
 
-    return () => {
+    return async () => {
       if (isUndefined(this.ctx.commandOptions["enterFile"])) {
-        this.copyEnterFile();
+        await this.copyEnterFile();
       }
 
       if (childProcessRef) {
@@ -146,14 +146,14 @@ export class StartMiddleware extends BaseMiddlware {
     }
   }
 
-  private copyEnterFile() {
-    let code = fs.readFileSync(
+  private async copyEnterFile() {
+    let code = await fs.promises.readFile(
       path.join(__dirname, "../utils/run-startup.js"),
       "utf-8"
     );
     code = code.replace("{{MODE}}", this.mode);
     code = code.replace("{{PORT}}", this.port);
-    fs.writeFileSync(
+    await fs.promises.writeFile(
       path.resolve(process.cwd(), this.cacheDir, START_DEV_FILE_NAME),
       code
     );
