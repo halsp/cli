@@ -23,6 +23,13 @@ export class InfoMiddleware extends BaseMiddlware {
   override async invoke(): Promise<void> {
     await super.invoke();
 
+    const pkg = JSON.parse(
+      await fs.promises.readFile(
+        path.join(__dirname, "../../package.json"),
+        "utf-8"
+      )
+    );
+
     const text = figlet.textSync("SFAJSCLI");
     this.log("\n");
     this.log(chalk.rgb(0x19, 0xc9, 0xac)(text));
@@ -51,9 +58,7 @@ export class InfoMiddleware extends BaseMiddlware {
     this.logItems([
       {
         key: "Sfa CLI Version",
-        value: JSON.parse(
-          fs.readFileSync(path.join(__dirname, "../../package.json")).toString()
-        ).version,
+        value: pkg.version,
       },
     ]);
 

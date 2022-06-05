@@ -43,7 +43,7 @@ export class CreateMiddleware extends BaseMiddlware {
     }
 
     if (!fs.existsSync(this.targetDir)) {
-      fs.mkdirSync(this.targetDir, {
+      await fs.promises.mkdir(this.targetDir, {
         recursive: true,
       });
     }

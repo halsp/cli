@@ -1,6 +1,6 @@
 {
   "name": "@sfajs/cli",
-  "version": "0.0.1-beta.4",
+  "version": "0.0.1-beta.5",
   "description": "sfajs 的命令行脚手架工具",
   "homepage": "https://github.com/sfajs/cli",
   "repository": {
@@ -68,6 +68,7 @@
     "/.github/*",
     "/bin/*",
     "/dist/*",
+    "/env/*",
     "/scripts/*",
     "/src/*",
     "/template/*",
