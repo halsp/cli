@@ -1,4 +1,4 @@
-import { Plugin } from "./plugin-select.service";
+import { Plugin } from "../types";
 
 export class ExpressionService {
   public calcPlugins(expression: string, plugins: Plugin[]) {

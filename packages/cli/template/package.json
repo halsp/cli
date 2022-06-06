@@ -1,7 +1,7 @@
 {
   "name": "name",
   "version": "0.0.1",
-  "description": "@sfajs/cli 创建的项目",
+  "description": "@sfajs/cli 项目",
   "homepage": "https://github.com/sfajs/sfa",
   "repository": {
     "type": "git",

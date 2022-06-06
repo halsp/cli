@@ -3,13 +3,14 @@ import { Inject } from "@sfajs/inject";
 import { Context } from "@sfajs/pipe";
 import path from "path";
 import { CreateEnvService } from "./create-env.service";
-import { Plugin } from "./plugin-select.service";
 import * as fs from "fs";
 import { PackageManagerService } from "./package-manager.service";
 import {
   CreatePluginService,
   FixedPluginConfig,
 } from "./create-plugin.service";
+import prettier from "prettier";
+import { Plugin } from "../types";
 
 export class CreatePackageService {
   @Context
@@ -41,7 +42,12 @@ export class CreatePackageService {
     pkg.name = this.name;
 
     const filePath = path.join(this.targetDir, "package.json");
-    await fs.promises.writeFile(filePath, JSON.stringify(pkg));
+    await fs.promises.writeFile(
+      filePath,
+      prettier.format(JSON.stringify(pkg), {
+        parser: "json",
+      })
+    );
 
     const pm = await this.packageManagerService.pickPackageManager();
     await this.packageManagerService.install(pm, this.targetDir);

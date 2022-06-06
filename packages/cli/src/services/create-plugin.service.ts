@@ -2,17 +2,17 @@ import { Inject } from "@sfajs/inject";
 import * as fs from "fs";
 import path from "path";
 import { ExpressionService } from "./expression.service";
-import { Plugin } from "./plugin-select.service";
 import glob from "glob";
+import { Plugin } from "../types";
 
 type PluginConfig = {
   dependencies: Record<string, string | boolean | undefined>;
-  constant: string[];
+  constant: Plugin[];
   files: Record<string, string | boolean | undefined>;
 };
 export type FixedPluginConfig = {
   dependencies: Record<string, boolean | undefined>;
-  constant: string[];
+  constant: Plugin[];
   files: Record<string, boolean | undefined>;
 };
 
@@ -47,9 +47,12 @@ export class CreatePluginService {
   public async excludePluginFiles(plugins: Plugin[]) {
     const { files } = await this.getPluginConfig(plugins);
     const result: string[] = [];
-    for (const include of Object.keys(files).filter((key) => !files[key])) {
-      const paths = glob.sync(include, {
-        ignore: include,
+    for (const excludes in files) {
+      if (files[excludes]) {
+        continue;
+      }
+
+      const paths = glob.sync(excludes, {
         cwd: this.sourceDir,
         dot: true,
         nodir: true,

@@ -1,24 +1,13 @@
 import { Inject } from "@sfajs/inject";
 import inquirer from "inquirer";
+import { Plugin } from "../types";
 import { DepsService } from "./deps.service";
-
-export type Plugin =
-  | "inject"
-  | "router"
-  | "views"
-  | "mva"
-  | "pipe"
-  | "filter"
-  | "testing"
-  | "static"
-  | "swagger"
-  | "jwt";
 
 export class PluginSelectService {
   @Inject
   private readonly depsService!: DepsService;
 
-  public async select() {
+  public async select(): Promise<Plugin[]> {
     const { plugins } = await inquirer.prompt([
       {
         type: "checkbox",

@@ -5,6 +5,7 @@ import path from "path";
 import { Inject } from "@sfajs/inject";
 import { FileService } from "./file.service";
 import { Context } from "@sfajs/pipe";
+import { Env } from "../types";
 
 const commentEnvStartRegExp = /^\s*\/{2,}\s+/;
 const commentEnvLineRegExp = /^\s*\/{2,}\s+.+/;
@@ -32,13 +33,6 @@ export class CreateEnvService {
 
     await this.fileService.createDir(targetFilePath);
 
-    if (fs.existsSync(targetFilePath)) {
-      const message = `The environment file already exists. Overwrite?`;
-      if (!(await this.fileService.isOverwrite(message))) {
-        return;
-      }
-    }
-
     const code = fs
       .readFileSync(sourceFilePath, "utf-8")
       .replace(commentEnvLineRegExp, "")
@@ -47,7 +41,7 @@ export class CreateEnvService {
     return env;
   }
 
-  private async getEnv(): Promise<string> {
+  private async getEnv(): Promise<Env> {
     const envs = fs
       .readdirSync(this.sourceDir)
       .filter((file) => file.endsWith(".ts"))

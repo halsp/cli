@@ -41,7 +41,8 @@
     "inquirer": "^8.2.4",
     "ora": "5.4.1",
     "reflect-metadata": "^0.1.13",
-    "tree-kill": "^1.2.2"
+    "tree-kill": "^1.2.2",
+    "prettier": "^2.6.2"
   },
   "devDependencies": {
     "@sfajs/testing": "^0.0.1-beta.3",
@@ -57,7 +58,6 @@
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.0.0",
     "jest": "^28.1.0",
-    "prettier": "^2.6.2",
     "ts-jest": "^28.0.2",
     "typescript": "^4.6.4"
   },
