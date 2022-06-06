@@ -30,6 +30,8 @@ export class CreateEnvService {
     const sourceFilePath = path.join(this.sourceDir, `${env}.ts`);
     const targetFilePath = path.join(this.targetDir, `src/index.ts`);
 
+    await this.fileService.createDir(targetFilePath);
+
     if (fs.existsSync(targetFilePath)) {
       const message = `The environment file already exists. Overwrite?`;
       if (!(await this.fileService.isOverwrite(message))) {
@@ -42,6 +44,7 @@ export class CreateEnvService {
       .replace(commentEnvLineRegExp, "")
       .trimStart();
     await fs.promises.writeFile(targetFilePath, code);
+    return env;
   }
 
   private async getEnv(): Promise<string> {
