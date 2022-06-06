@@ -49,8 +49,9 @@ export class CreateMiddleware extends BaseMiddlware {
     }
 
     const plugins = await this.pluginSelectService.select();
+    const env = await this.createEnvService.create();
 
-    await this.createPackageService.create(plugins);
+    await this.createPackageService.create([...plugins, env]);
 
     const fixedPlugins = this.pluginSelectService.fixPlugins(
       plugins,
@@ -58,7 +59,6 @@ export class CreateMiddleware extends BaseMiddlware {
     );
     await this.createConfigService.create(fixedPlugins);
     await this.createTemplateService.create(fixedPlugins);
-    await this.createEnvService.create();
 
     await this.next();
   }
