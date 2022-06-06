@@ -3,8 +3,8 @@ import { runin } from "@sfajs/testing";
 import path from "path";
 import { CliStartup } from "../../../src/cli-startup";
 import { CreateTemplateService } from "../../../src/services/create-template.service";
-import { Plugin } from "../../../src/services/plugin-select.service";
 import * as fs from "fs";
+import { Plugin } from "../../../src/types";
 
 async function testTemplate(
   fn: (service: CreateTemplateService) => void | Promise<void>
