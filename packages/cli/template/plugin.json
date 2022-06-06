@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "ejs": "views"
+  },
+  "constant": ["core", "cli"],
+  "files": {
+    "static/*": "static",
+    "src/views/*": "views"
+  }
+}

@@ -6,6 +6,7 @@ import * as fs from "fs";
 import walk from "ignore-walk";
 import { ExpressionService } from "./expression.service";
 import { CreateEnvService } from "./create-env.service";
+import { CreatePluginService } from "./create-plugin.service";
 
 // plugin inject|router
 const commentPluginStartRegExp = /^\s*\/{2,}\s*\{\s*/;
@@ -22,6 +23,8 @@ export class CreateTemplateService {
   private readonly expressionService!: ExpressionService;
   @Inject
   private readonly createEnvService!: CreateEnvService;
+  @Inject
+  private readonly createPluginService!: CreatePluginService;
 
   private get targetDir() {
     return this.createEnvService.targetDir;
@@ -33,10 +36,13 @@ export class CreateTemplateService {
   public async create(plugins: Plugin[]) {
     if (!fs.existsSync(this.sourceDir)) return;
 
-    const paths = await walk({
+    const exclude = await this.createPluginService.excludePluginFiles(plugins);
+    let paths = await walk({
       path: this.sourceDir,
       ignoreFiles: [".gitignore", ".sfaignore"],
     });
+    console.log("path", paths, exclude);
+    paths = paths.filter((p) => !exclude.some((e) => e == p));
     await this.copyTemplate(plugins, paths);
   }
 
