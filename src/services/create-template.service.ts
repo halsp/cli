@@ -1,12 +1,13 @@
 import { Inject } from "@sfajs/inject";
 import path from "path";
 import { FileService } from "./file.service";
-import { Plugin } from "./plugin-select.service";
 import * as fs from "fs";
 import walk from "ignore-walk";
 import { ExpressionService } from "./expression.service";
 import { CreateEnvService } from "./create-env.service";
 import { CreatePluginService } from "./create-plugin.service";
+import prettier from "prettier";
+import { Plugin } from "../types";
 
 // plugin inject|router
 const commentPluginStartRegExp = /^\s*\/{2,}\s*\{\s*/;
@@ -41,7 +42,6 @@ export class CreateTemplateService {
       path: this.sourceDir,
       ignoreFiles: [".gitignore", ".sfaignore"],
     });
-    console.log("path", paths, exclude);
     paths = paths.filter((p) => !exclude.some((e) => e == p));
     await this.copyTemplate(plugins, paths);
   }
@@ -58,6 +58,11 @@ export class CreateTemplateService {
       );
       content = this.readFile(content, plugins);
       if (content != null) {
+        if (sourceFile.endsWith(".ts")) {
+          content = prettier.format(content, {
+            parser: "typescript",
+          });
+        }
         await fs.promises.writeFile(targetFile, content);
       }
     }

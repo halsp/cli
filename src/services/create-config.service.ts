@@ -6,7 +6,7 @@ import { PackageManager } from "../configuration";
 import { Context } from "@sfajs/pipe";
 import { HttpContext } from "@sfajs/core";
 import { CreateTemplateService } from "./create-template.service";
-import { Plugin } from "./plugin-select.service";
+import { Plugin } from "../types";
 
 export class CreateConfigService {
   @Context

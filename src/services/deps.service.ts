@@ -3,29 +3,44 @@ import * as fs from "fs";
 export type DepItem = { key: string; value: string };
 
 export class DepsService {
-  public getPackageSfaDeps(pkg: string, paths = [process.cwd()]): DepItem[] {
+  public getPackageSfaDeps(
+    pkg: string,
+    paths = [process.cwd()],
+    containsDev = false,
+    containsChildDev = false
+  ): DepItem[] {
     const path = this.getPackagePath(pkg, paths);
-    return this.getSfaDeps(path, [], paths);
+    return this.getSfaDeps(path, [], paths, containsDev, containsChildDev);
   }
 
   public getProjectSfaDeps(
     packagePath: string,
-    paths = [process.cwd()]
+    paths = [process.cwd()],
+    containsDev = true,
+    containsChildDev = true
   ): DepItem[] {
-    return this.getSfaDeps(packagePath, [], paths);
+    return this.getSfaDeps(
+      packagePath,
+      [],
+      paths,
+      containsDev,
+      containsChildDev
+    );
   }
 
   private getSfaDeps(
     packagePath: string,
     parentResult: DepItem[],
-    paths = [process.cwd()]
+    paths: string[],
+    containsDev: boolean,
+    containsChildDev: boolean
   ) {
     const result: DepItem[] = [];
     const value = JSON.parse(fs.readFileSync(packagePath, "utf-8"));
     const deps = Object.assign(
       {},
       value.dependencies ?? {},
-      value.devDependencies ?? {}
+      containsDev ? value.devDependencies ?? {} : {}
     );
     const pkgs = Object.keys(deps)
       .filter(
@@ -42,7 +57,15 @@ export class DepsService {
 
     pkgs.forEach((pkg) => {
       const depPackagePath = this.getPackagePath(pkg.key, paths);
-      result.push(...this.getSfaDeps(depPackagePath, result, paths));
+      result.push(
+        ...this.getSfaDeps(
+          depPackagePath,
+          result,
+          paths,
+          containsChildDev,
+          containsChildDev
+        )
+      );
     });
     return result;
   }
