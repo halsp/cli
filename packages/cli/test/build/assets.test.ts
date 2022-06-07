@@ -92,10 +92,8 @@ function runWatchAssetsTest(type: "add" | "edit" | "unlink") {
           }
         })
         .use(async (ctx, next) => {
-          ctx.res.setBody({
-            onWatchSuccess: () => {
-              callCount++;
-            },
+          ctx.bag("onWatchSuccess", () => {
+            callCount++;
           });
 
           try {

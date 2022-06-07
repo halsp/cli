@@ -19,10 +19,8 @@ test(`empty config`, async () => {
   await runin(`test/build/empty-config`, async () => {
     await new CliStartup(undefined, { watch: true })
       .use(async (ctx, next) => {
-        ctx.res.setBody({
-          onWatchSuccess: () => {
-            callCount++;
-          },
+        ctx.bag("onWatchSuccess", () => {
+          callCount++;
         });
 
         try {

@@ -56,7 +56,7 @@ export class CreateMiddleware extends BaseMiddlware {
 
     await this.createPackageService.create(plugins);
 
-    const fixedPlugins = this.pluginSelectService.fixPlugins(
+    const fixedPlugins = await this.pluginSelectService.fixPlugins(
       plugins,
       path.join(this.targetDir)
     );

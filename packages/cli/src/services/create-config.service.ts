@@ -7,6 +7,7 @@ import { Context } from "@sfajs/pipe";
 import { HttpContext } from "@sfajs/core";
 import { CreateTemplateService } from "./create-template.service";
 import { Plugin } from "../types";
+import prettier from "prettier";
 
 export class CreateConfigService {
   @Context
@@ -33,6 +34,9 @@ export class CreateConfigService {
     code = code.replace("{{PACKAGE_MANAGER}}", pm);
 
     code = this.createTemplateService.readFile(code, plugins) as string;
+    code = prettier.format(code, {
+      parser: "typescript",
+    });
 
     await fs.promises.writeFile(this.targetFile, code);
   }

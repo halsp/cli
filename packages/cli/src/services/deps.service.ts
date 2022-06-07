@@ -36,22 +36,26 @@ export class DepsService {
     containsChildDev: boolean
   ) {
     const result: DepItem[] = [];
-    const value = JSON.parse(fs.readFileSync(packagePath, "utf-8"));
-    const deps = Object.assign(
-      {},
-      value.dependencies ?? {},
-      containsDev ? value.devDependencies ?? {} : {}
-    );
-    const pkgs = Object.keys(deps)
-      .filter(
-        (name) =>
-          name.startsWith("@sfajs/") &&
-          !parentResult.some((exist) => exist.key == name)
-      )
-      .map((name) => ({
-        key: name,
-        value: deps[name],
-      }));
+    const pkg = JSON.parse(fs.readFileSync(packagePath, "utf-8"));
+
+    function getPkgs(dependencies: Record<string, string>) {
+      const deps = dependencies ?? {};
+      return Object.keys(deps)
+        .filter(
+          (name) =>
+            name.startsWith("@sfajs/") &&
+            !parentResult.some((exist) => exist.key == name)
+        )
+        .map((name) => ({
+          key: name,
+          value: deps[name],
+        }));
+    }
+
+    const pkgs = getPkgs(pkg.dependencies);
+    if (containsDev) {
+      pkgs.push(...getPkgs(pkg.devDependencies));
+    }
 
     result.push(...pkgs);
 

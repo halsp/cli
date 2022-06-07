@@ -10,7 +10,7 @@ export class BuildCommand extends BaseCommand {
     command
       .command("build")
       .alias("b")
-      .setBuildOptions()
+      .setBuildOptions("production")
       .description("Build sfa application.")
       .action(async (command: Record<string, boolean | string>) => {
         await new CliStartup(undefined, command)

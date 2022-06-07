@@ -2,15 +2,15 @@ import { Command } from "commander";
 
 declare module "commander" {
   interface Command {
-    setBuildOptions(): Command;
+    setBuildOptions(defaultMode: string): Command;
   }
 }
 
-Command.prototype.setBuildOptions = function () {
+Command.prototype.setBuildOptions = function (defaultMode: string) {
   return this.option(
     "-m, --mode [mode]",
     "Run mode (e.g., development,production).",
-    "production"
+    defaultMode
   )
     .option(
       "-c, --config [path]",
