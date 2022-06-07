@@ -6,6 +6,7 @@ import "@sfajs/mva";
 import "@sfajs/filter";
 import { swaggerJSDoc } from "@sfajs/swagger";
 import * as fs from "fs";
+import path from "path";
 // {filter
 import { GlobalActionFilter } from "./filters/global.action.filter";
 // }
@@ -14,6 +15,7 @@ export default <T extends Startup>(startup: T, mode?: string) =>
   startup
     .use(async (ctx, next) => {
       ctx.res.setHeader("version", version);
+      ctx.res.setHeader("mode", mode ?? "");
       await next();
     })
     // { inject
@@ -39,7 +41,7 @@ export default <T extends Startup>(startup: T, mode?: string) =>
 function getSwaggerOptions() {
   return <swaggerJSDoc.Options>{
     definition: {
-      openapi: version,
+      openapi: "3.0.n",
       info: {
         title: "NewApplication",
         description: "A new application",
@@ -115,10 +117,13 @@ function getSwaggerOptions() {
 // }
 
 const version = (() => {
-  let path = "./package.json";
-  while (!fs.existsSync(path)) {
-    path = "../" + path;
+  const pkgName = "package.json";
+  let dir = __dirname;
+  let filePath = path.join(dir, pkgName);
+  while (!fs.existsSync(filePath)) {
+    dir = path.dirname(dir);
+    filePath = path.join(dir, pkgName);
   }
-  const pkgStr = fs.readFileSync(path, "utf-8");
+  const pkgStr = fs.readFileSync(filePath, "utf-8");
   return JSON.parse(pkgStr).version;
 })();

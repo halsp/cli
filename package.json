@@ -40,17 +40,19 @@
     "ignore-walk": "^5.0.1",
     "inquirer": "^8.2.4",
     "ora": "5.4.1",
+    "prettier": "^2.6.2",
     "reflect-metadata": "^0.1.13",
-    "tree-kill": "^1.2.2",
-    "prettier": "^2.6.2"
+    "shelljs": "^0.8.5",
+    "tree-kill": "^1.2.2"
   },
   "devDependencies": {
     "@sfajs/testing": "^0.0.1-beta.3",
     "@types/figlet": "^1.5.4",
+    "@types/ignore-walk": "^4.0.0",
     "@types/inquirer": "^8.2.1",
     "@types/jest": "^27.5.1",
     "@types/node": "^17.0.35",
-    "@types/ignore-walk": "^4.0.0",
+    "@types/shelljs": "^0.8.11",
     "@typescript-eslint/eslint-plugin": "^5.25.0",
     "@typescript-eslint/parser": "^5.25.0",
     "codecov": "^3.8.3",

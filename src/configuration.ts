@@ -43,6 +43,7 @@ export interface Configuration {
   };
   readonly start?: {
     readonly port?: number;
+    readonly binaryToRun?: string;
   };
   readonly startupFile?: string;
   readonly packageManager?: string;

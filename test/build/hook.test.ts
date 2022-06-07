@@ -33,10 +33,8 @@ test(`watch build hooks`, async () => {
   await runin(`test/build/hook`, async () => {
     await new CliStartup(undefined, { watch: true })
       .use(async (ctx, next) => {
-        ctx.res.setBody({
-          onWatchSuccess: () => {
-            callCount++;
-          },
+        ctx.bag("onWatchSuccess", () => {
+          callCount++;
         });
 
         try {

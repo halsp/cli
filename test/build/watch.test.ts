@@ -20,10 +20,8 @@ function runTest(options: {
       })
         .use(async (ctx, next) => {
           if (options.callback) {
-            ctx.res.setBody({
-              onWatchSuccess: () => {
-                callCount++;
-              },
+            ctx.bag("onWatchSuccess", () => {
+              callCount++;
             });
           }
           try {

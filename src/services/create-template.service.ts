@@ -50,7 +50,6 @@ export class CreateTemplateService {
     for (const p of paths) {
       const sourceFile = path.join(this.sourceDir, p);
       const targetFile = path.join(this.targetDir, p);
-      await this.fileService.createDir(targetFile);
 
       let content: string | null = await fs.promises.readFile(
         sourceFile,
@@ -63,6 +62,7 @@ export class CreateTemplateService {
             parser: "typescript",
           });
         }
+        await this.fileService.createDir(targetFile);
         await fs.promises.writeFile(targetFile, content);
       }
     }
@@ -140,6 +140,7 @@ export class CreateTemplateService {
       const importName = (regArr[2] ?? regArr[4]) as Plugin;
       if (!plugins.includes(importName)) {
         lines.splice(importIndex, 1);
+        importIndex--;
       }
     }
   }

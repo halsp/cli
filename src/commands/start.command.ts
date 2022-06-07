@@ -10,7 +10,12 @@ export class StartCommand extends BaseCommand {
     command
       .command("start")
       .alias("s")
-      .setBuildOptions()
+      .setBuildOptions("development")
+      .option(
+        "-b, --binaryToRun [program]",
+        "Binary to run application (e.g., node, ts-node).",
+        "node"
+      )
       .option("-p, --port [port]", "The port on http listens", "2333")
       .description("Run sfa application.")
       .action(async (command: Record<string, boolean | string>) => {

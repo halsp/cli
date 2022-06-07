@@ -10,8 +10,8 @@ import { START_DEV_FILE_NAME } from "../constant";
 import { treeKillSync } from "../utils/tree-kill";
 import { BaseMiddlware } from "./base.middleware";
 import { CommandType } from "../utils/command-type";
+import shell from "shelljs";
 
-// TODO: remove dist
 export class StartMiddleware extends BaseMiddlware {
   override get command(): CommandType {
     return "start";
@@ -58,18 +58,43 @@ export class StartMiddleware extends BaseMiddlware {
       "2333"
     );
   }
+  private get watch() {
+    return this.commandService.getOptionOrConfigValue<boolean>(
+      "watch",
+      "build.watch",
+      false
+    );
+  }
+  private get binaryToRun() {
+    return this.commandService.getOptionOrConfigValue<string>(
+      "binaryToRun",
+      "start.binaryToRun",
+      "node"
+    );
+  }
 
   override async invoke(): Promise<void> {
     await super.invoke();
 
-    this.ctx.res.setBody({
-      onWatchSuccess: this.createOnSuccessHook(),
-    });
+    if (this.watch) {
+      this.ctx.bag("onWatchSuccess", this.createOnWatchSuccess);
+    }
 
     await this.next();
+
+    if (!this.watch) {
+      if (isUndefined(this.ctx.commandOptions["enterFile"])) {
+        await this.copyEnterFile();
+      }
+
+      const processArgs = this.getProcessArgs();
+      shell.exec(`${this.binaryToRun} ${processArgs.join(" ")}`, {
+        cwd: this.cacheDir,
+      });
+    }
   }
 
-  private createOnSuccessHook(binaryToRun = "node") {
+  private createOnWatchSuccess() {
     let childProcessRef: any;
     process.on(
       "exit",
@@ -84,14 +109,14 @@ export class StartMiddleware extends BaseMiddlware {
       if (childProcessRef) {
         childProcessRef.removeAllListeners("exit");
         childProcessRef.on("exit", () => {
-          childProcessRef = this.spawnChildProcess(binaryToRun);
+          childProcessRef = this.spawnChildProcess();
           childProcessRef.on("exit", () => (childProcessRef = undefined));
         });
 
         childProcessRef.stdin && childProcessRef.stdin.pause();
         killProcess(childProcessRef.pid);
       } else {
-        childProcessRef = this.spawnChildProcess(binaryToRun);
+        childProcessRef = this.spawnChildProcess();
         childProcessRef.on("exit", (code: number) => {
           process.exitCode = code;
           childProcessRef = undefined;
@@ -100,7 +125,16 @@ export class StartMiddleware extends BaseMiddlware {
     };
   }
 
-  private spawnChildProcess(binaryToRun: string) {
+  private spawnChildProcess() {
+    const processArgs = this.getProcessArgs();
+    return spawn(this.binaryToRun, processArgs, {
+      stdio: "inherit",
+      shell: true,
+      cwd: this.cacheDir,
+    });
+  }
+
+  private getProcessArgs() {
     let outputFilePath = path.resolve(
       process.cwd(),
       this.cacheDir,
@@ -129,12 +163,7 @@ export class StartMiddleware extends BaseMiddlware {
     if (this.isSourceMapSupportPkgAvailable()) {
       processArgs.unshift("-r source-map-support/register");
     }
-
-    return spawn(binaryToRun, processArgs, {
-      stdio: "inherit",
-      shell: true,
-      cwd: this.cacheDir,
-    });
+    return processArgs;
   }
 
   private isSourceMapSupportPkgAvailable() {
