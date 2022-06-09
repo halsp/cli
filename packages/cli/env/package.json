@@ -1,8 +1,8 @@
 {
   "name": "env",
   "dependencies": {
-    "@sfajs/alifunc": "^1.0.5",
-    "@sfajs/cloudbase": "^1.1.2",
-    "@sfajs/http": "^1.1.0"
+    "@sfajs/alifunc": "*",
+    "@sfajs/cloudbase": "*",
+    "@sfajs/http": "*"
   }
 }
