@@ -1,3 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const { defineConfig } = require("../../src/configuration");
+import { defineConfig } from "../../../src";
+
 export default defineConfig(() => ({}));

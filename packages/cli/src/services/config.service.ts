@@ -1,21 +1,15 @@
-import * as ts from "typescript";
 import { Context } from "@sfajs/pipe";
 import { HttpContext } from "@sfajs/core";
 import path from "path";
 import { Configuration, ConfigEnv } from "../configuration";
 import { Inject } from "@sfajs/inject";
 import { ReadService } from "./read.service";
-import { TsconfigService } from "./tsconfig.service";
-import module from "module";
-import vm from "vm";
 
 export class ConfigService {
   @Context
   private readonly ctx!: HttpContext;
   @Inject
   private readonly readService!: ReadService;
-  @Inject
-  private readonly tsconfigService!: TsconfigService;
 
   #configFileName: string | undefined = undefined;
   get configFileName() {
@@ -44,58 +38,66 @@ export class ConfigService {
     }
   }
 
-  #value: Configuration | undefined = undefined;
-  get value(): Configuration {
-    if (this.#value == undefined) {
-      this.#value = this.loadConfig();
-    }
-    return this.#value;
-  }
-
   public get mode() {
     return this.ctx.getCommandOption<string>("mode") ?? "production";
   }
 
-  private loadConfig(): Configuration {
-    let code: string | undefined = undefined;
-    if (this.configFilePath) {
-      code = this.readService.readTxt(this.configFilePath);
-      if (code) {
-        const { options } = this.tsconfigService.parsedCommandLine;
-        code = ts.transpile(code, options, this.configFilePath);
-      }
-    }
+  #value: Configuration | undefined = undefined;
+  get value(): Configuration {
+    return this.#value ?? {};
+  }
 
-    if (!code) {
-      return {};
-    }
-
-    const configOptions: ConfigEnv = {
-      mode: this.mode,
-      dirname: path.dirname(this.configFilePath),
-      command: this.ctx.command,
-    };
-    const module = this.getModuleFromString(code);
-    if (module.default) {
-      return module.default(configOptions);
-    } else if (module.exports) {
-      return module.exports(configOptions);
-    } else {
-      return {};
+  public async init() {
+    if (!this.#value) {
+      this.#value = await this.loadConfig();
     }
   }
 
-  private getModuleFromString(bundle: string): {
-    default?: (options: ConfigEnv) => Configuration;
-    exports?: (options: ConfigEnv) => Configuration;
-  } {
-    const m: any = {};
-    const wrapper = module.wrap(bundle);
-    const script = new vm.Script(wrapper, {
-      displayErrors: true,
-    });
-    const result = script.runInThisContext();
-    result.call(m, m, require, m);
-    return m;
+  private async loadConfig(): Promise<Configuration> {
+    if (!this.configFilePath) {
+      return {};
+    }
+
+    const registerer = await this.registerTsNode();
+    registerer.enabled(true);
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
+      const module = require(this.configFilePath);
+      const configOptions: ConfigEnv = {
+        mode: this.mode,
+        dirname: path.dirname(this.configFilePath),
+        command: this.ctx.command,
+      };
+      if (typeof module == "function") {
+        return module(configOptions);
+      } else if (module.default) {
+        return module.default(configOptions);
+      } else {
+        return {};
+      }
+    } finally {
+      registerer.enabled(false);
+    }
+  }
+
+  private async registerTsNode() {
+    try {
+      const tsNode = await import("ts-node");
+      return tsNode.register({
+        compilerOptions: {
+          module: "CommonJS",
+        },
+        moduleTypes: {
+          "**": "cjs",
+        },
+      });
+    } catch (e: any) {
+      if (e.code === "ERR_MODULE_NOT_FOUND") {
+        throw new Error(
+          `Jest: 'ts-node' is required for the TypeScript configuration files. Make sure it is installed\nError: ${e.message}`
+        );
+      }
+      throw e;
+    }
   }
 }
