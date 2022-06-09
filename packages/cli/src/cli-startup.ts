@@ -9,7 +9,6 @@ import {
 } from "./constant";
 import { TsconfigService } from "./services/tsconfig.service";
 import { ConfigService } from "./services/config.service";
-import { ReadService } from "./services/read.service";
 import { TsLoaderService } from "./services/ts-loader.service";
 import { FileService } from "./services/file.service";
 import { CompilerService } from "./services/compiler.service";
@@ -91,7 +90,6 @@ export class CliStartup extends Startup {
         await result.init();
         return result;
       })
-      .inject(ReadService)
       .inject(TsLoaderService)
       .inject(FileService)
       .inject(CompilerService)
