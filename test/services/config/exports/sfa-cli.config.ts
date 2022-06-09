@@ -1,8 +1,7 @@
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const { defineConfig } = require("../../src/configuration");
+import { defineConfig, Configuration } from "../../../../src";
 
 module.exports = defineConfig(({ mode }) => {
-  return {
+  return <Configuration>{
     mode: mode,
     exports: 1,
   };

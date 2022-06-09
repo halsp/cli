@@ -3,6 +3,7 @@ import { ConfigService } from "../../../src/services/config.service";
 import { runTest } from "../runTest";
 
 runTest(ConfigService, async (res, service) => {
+  await service.init();
   expect(service.mode).toBe("production");
   expect(service.configFilePath).toBe(
     path.resolve(process.cwd(), "sfa-cli.config.ts")
@@ -13,6 +14,7 @@ runTest(ConfigService, async (res, service) => {
 runTest(
   ConfigService,
   async (res, service) => {
+    await service.init();
     expect(service.mode).toBe("test");
     expect(service.configFilePath).toBe(
       path.resolve(process.cwd(), "custom.config.ts")

@@ -25,6 +25,7 @@ import { CreatePackageService } from "./services/create-package.service";
 import { PackageManagerService } from "./services/package-manager.service";
 import { LoadingService } from "./services/loading.service";
 import { CreateConfigService } from "./services/create-config.service";
+import { parseInject } from "@sfajs/inject";
 
 declare module "@sfajs/core" {
   interface HttpContext {
@@ -85,7 +86,11 @@ export class CliStartup extends Startup {
     })
       .useInject()
       .inject(TsconfigService)
-      .inject(ConfigService)
+      .inject(ConfigService, async (ctx) => {
+        const result = await parseInject(ctx, new ConfigService());
+        await result.init();
+        return result;
+      })
       .inject(ReadService)
       .inject(TsLoaderService)
       .inject(FileService)

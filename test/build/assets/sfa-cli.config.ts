@@ -1,7 +1,6 @@
 import path from "path";
+import { defineConfig } from "../../../src";
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const { defineConfig } = require("../../src/configuration");
 export default defineConfig(({ dirname }) => ({
   build: {
     assets: [
