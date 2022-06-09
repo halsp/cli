@@ -1,3 +1,3 @@
-import { defineConfig } from "../../../src";
+import { defineConfig } from "@sfajs/cli-common";
 
 export default defineConfig(() => ({}));

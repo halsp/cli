@@ -5,12 +5,12 @@ import * as fs from "fs";
 import { TsconfigService } from "../services/tsconfig.service";
 import { spawn } from "child_process";
 import killProcess from "tree-kill";
-import { CommandService } from "../services/command.service";
 import { START_DEV_FILE_NAME } from "../constant";
 import { treeKillSync } from "../utils/tree-kill";
 import { BaseMiddlware } from "./base.middleware";
-import { CommandType } from "../utils/command-type";
+import { CommandType } from "@sfajs/cli-common";
 import shell from "shelljs";
+import { ConfigService } from "../services/config.service";
 
 export class StartMiddleware extends BaseMiddlware {
   override get command(): CommandType {
@@ -20,27 +20,23 @@ export class StartMiddleware extends BaseMiddlware {
   @Inject
   private readonly tsconfigService!: TsconfigService;
   @Inject
-  private readonly commandService!: CommandService;
+  private readonly configService!: ConfigService;
 
   private get cacheDir() {
     return this.tsconfigService.cacheDir;
   }
   private get debug() {
-    return this.commandService.getOptionOrConfigValue<boolean>(
+    return this.configService.getOptionOrConfigValue<boolean>(
       "debug",
       "build.debug",
       false
     );
   }
   private get mode() {
-    return this.commandService.getOptionOrConfigValue<string>(
-      "mode",
-      "mode",
-      "production"
-    );
+    return this.configService.mode;
   }
   private get startupFile() {
-    const result = this.commandService.getOptionOrConfigValue<string>(
+    const result = this.configService.getOptionOrConfigValue<string>(
       "startupFile",
       "startupFile",
       START_DEV_FILE_NAME
@@ -52,21 +48,21 @@ export class StartMiddleware extends BaseMiddlware {
     }
   }
   private get port() {
-    return this.commandService.getOptionOrConfigValue<string>(
+    return this.configService.getOptionOrConfigValue<string>(
       "port",
       "start.port",
       "2333"
     );
   }
   private get watch() {
-    return this.commandService.getOptionOrConfigValue<boolean>(
+    return this.configService.getOptionOrConfigValue<boolean>(
       "watch",
       "build.watch",
       false
     );
   }
   private get binaryToRun() {
-    return this.commandService.getOptionOrConfigValue<string>(
+    return this.configService.getOptionOrConfigValue<string>(
       "binaryToRun",
       "start.binaryToRun",
       "node"

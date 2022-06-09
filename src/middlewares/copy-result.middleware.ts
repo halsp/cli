@@ -1,16 +1,16 @@
 import { Middleware } from "@sfajs/core";
 import { Inject } from "@sfajs/inject";
 import path from "path";
-import { CommandService } from "../services/command.service";
 import { FileService } from "../services/file.service";
 import { TsconfigService } from "../services/tsconfig.service";
 import * as fs from "fs";
+import { ConfigService } from "../services/config.service";
 
 export class CopyResultMiddleware extends Middleware {
   @Inject
   private readonly tsconfigService!: TsconfigService;
   @Inject
-  private readonly commandService!: CommandService;
+  private readonly configService!: ConfigService;
   @Inject
   private readonly fileService!: FileService;
 
@@ -21,7 +21,7 @@ export class CopyResultMiddleware extends Middleware {
     return this.tsconfigService.cacheDir;
   }
   private get deleteOutDir() {
-    return this.commandService.getOptionOrConfigValue<boolean>(
+    return this.configService.getOptionOrConfigValue<boolean>(
       "deleteOutDir",
       "build.deleteOutDir",
       true

@@ -20,7 +20,7 @@ import { CreateTemplateService } from "./services/create-template.service";
 import { DepsService } from "./services/deps.service";
 import { CreateEnvService } from "./services/create-env.service";
 import { PluginSelectService } from "./services/plugin-select.service";
-import { CommandType } from "./utils/command-type";
+import { CommandType } from "@sfajs/cli-common";
 import { CreatePackageService } from "./services/create-package.service";
 import { PackageManagerService } from "./services/package-manager.service";
 import { LoadingService } from "./services/loading.service";

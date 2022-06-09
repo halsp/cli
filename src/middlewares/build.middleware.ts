@@ -1,14 +1,13 @@
 import { Inject } from "@sfajs/inject";
 import path from "path";
 import { AssetsService } from "../services/assets.service";
-import { CommandService } from "../services/command.service";
 import { CompilerService } from "../services/compiler.service";
 import { ConfigService } from "../services/config.service";
 import { TsconfigService } from "../services/tsconfig.service";
 import { WatchCompilerService } from "../services/watch-compiler.service";
 import * as fs from "fs";
 import { BaseMiddlware } from "./base.middleware";
-import { CommandType } from "../utils/command-type";
+import { CommandType } from "@sfajs/cli-common";
 
 export class BuildMiddlware extends BaseMiddlware {
   override get command(): CommandType {
@@ -24,8 +23,6 @@ export class BuildMiddlware extends BaseMiddlware {
   @Inject
   private readonly watchCompilerService!: WatchCompilerService;
   @Inject
-  private readonly commandService!: CommandService;
-  @Inject
   private readonly assetsService!: AssetsService;
 
   private get config() {
@@ -35,11 +32,19 @@ export class BuildMiddlware extends BaseMiddlware {
     return this.tsconfigService.cacheDir;
   }
   private get watch() {
-    return this.commandService.getOptionOrConfigValue<boolean>(
+    return this.configService.getOptionOrConfigValue<boolean>(
       "watch",
       "build.watch",
       false
     );
+  }
+  private get scriptOptions() {
+    return {
+      config: this.config,
+      command: this.command,
+      cacheDir: this.cacheDir,
+      mode: this.configService.mode,
+    };
   }
 
   override async invoke(): Promise<void> {
@@ -89,7 +94,7 @@ export class BuildMiddlware extends BaseMiddlware {
   private async execPrebuilds(): Promise<boolean> {
     if (this.config.build?.prebuild) {
       for (const fn of this.config.build.prebuild) {
-        if ((await fn(this.ctx)) == false) {
+        if ((await fn(this.scriptOptions)) == false) {
           return false;
         }
       }
@@ -100,7 +105,7 @@ export class BuildMiddlware extends BaseMiddlware {
   private async execPostbuilds() {
     if (this.config.build?.postbuild) {
       for (const fn of this.config.build.postbuild) {
-        await fn(this.ctx);
+        await fn(this.scriptOptions);
       }
     }
   }

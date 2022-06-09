@@ -27,6 +27,7 @@
   "author": "hal-wang",
   "license": "MIT",
   "dependencies": {
+    "@sfajs/cli-common": "^0.0.1-beta.1",
     "@sfajs/core": "^1.4.3",
     "@sfajs/http": "^1.1.1",
     "@sfajs/inject": "^1.0.7",

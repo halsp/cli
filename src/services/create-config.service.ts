@@ -2,7 +2,7 @@ import { Inject } from "@sfajs/inject";
 import path from "path";
 import { CreateEnvService } from "./create-env.service";
 import * as fs from "fs";
-import { PackageManager } from "../configuration";
+import { PackageManager } from "@sfajs/cli-common";
 import { Context } from "@sfajs/pipe";
 import { HttpContext } from "@sfajs/core";
 import { CreateTemplateService } from "./create-template.service";
