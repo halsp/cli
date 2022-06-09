@@ -2,7 +2,7 @@ import { Inject } from "@sfajs/inject";
 import chalk from "chalk";
 import { ChildProcess, spawn, SpawnOptions } from "child_process";
 import inquirer from "inquirer";
-import { PackageManager } from "../configuration";
+import { PackageManager } from "@sfajs/cli-common";
 import { LoadingService } from "./loading.service";
 
 export class PackageManagerService {

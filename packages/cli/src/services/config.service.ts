@@ -1,15 +1,18 @@
 import { Context } from "@sfajs/pipe";
-import { HttpContext } from "@sfajs/core";
+import { HttpContext, isUndefined } from "@sfajs/core";
 import path from "path";
-import { Configuration, ConfigEnv } from "../configuration";
+import { Configuration, ConfigEnv } from "@sfajs/cli-common";
 import { Inject } from "@sfajs/inject";
 import { ReadService } from "./read.service";
+import { CommandService } from "./command.service";
 
 export class ConfigService {
   @Context
   private readonly ctx!: HttpContext;
   @Inject
   private readonly readService!: ReadService;
+  @Inject
+  private readonly commandService!: CommandService;
 
   #configFileName: string | undefined = undefined;
   get configFileName() {
@@ -39,7 +42,7 @@ export class ConfigService {
   }
 
   public get mode() {
-    return this.ctx.getCommandOption<string>("mode") ?? "production";
+    return this.getOptionOrConfigValue<string>("mode", "mode", "production");
   }
 
   #value: Configuration | undefined = undefined;
@@ -65,7 +68,6 @@ export class ConfigService {
       const module = require(this.configFilePath);
       const configOptions: ConfigEnv = {
         mode: this.mode,
-        dirname: path.dirname(this.configFilePath),
         command: this.ctx.command,
       };
       if (typeof module == "function") {
@@ -99,5 +101,94 @@ export class ConfigService {
       }
       throw e;
     }
+  }
+
+  getConfigValue<T = any>(paths: string[] | string): T | undefined;
+  getConfigValue<T = any>(paths: string[] | string, defaultVal: T): T;
+  getConfigValue<T = any>(
+    paths: string[] | string,
+    defaultVal?: T
+  ): T | undefined {
+    if (!Array.isArray(paths)) {
+      paths = [paths];
+    }
+    for (const property of paths) {
+      const value = this.getDeepConfigValue(this.value, property);
+      if (!isUndefined(value)) {
+        return value;
+      }
+    }
+
+    return defaultVal;
+  }
+
+  private getDeepConfigValue<T = any>(
+    obj: any,
+    property: string
+  ): T | undefined {
+    if (!property || !obj) {
+      return undefined;
+    }
+
+    if (obj[property] != undefined) {
+      return obj[property];
+    }
+
+    if (!property.includes(".")) {
+      return undefined;
+    }
+
+    const firstFragment = property.replace(/\..*$/, "");
+    if (!obj[firstFragment]) {
+      return undefined;
+    }
+
+    return this.getDeepConfigValue(
+      obj[firstFragment],
+      property.replace(/^.*?\./, "")
+    );
+  }
+
+  getOptionOrConfigValue<T = any>(
+    optionCommands: string[] | string,
+    configPaths: string[] | string
+  ): T | undefined;
+  getOptionOrConfigValue<T = any>(
+    optionCommands: string[] | string,
+    configPaths: string[] | string,
+    defaultVal: T
+  ): T;
+  getOptionOrConfigValue<T extends string | boolean, U = any>(
+    optionCommands: string[] | string,
+    configPaths: string[] | string
+  ): T | U | undefined;
+  getOptionOrConfigValue<T extends string | boolean, U = any>(
+    optionCommands: string[] | string,
+    configPaths: string[] | string,
+    defaultVal: T | U
+  ): T | U;
+  getOptionOrConfigValue<T extends string | boolean, U = any>(
+    optionCommands: string[] | string,
+    configPaths: string[] | string,
+    defaultVal?: T | U
+  ): T | U | undefined {
+    if (!Array.isArray(optionCommands)) {
+      optionCommands = [optionCommands];
+    }
+    if (!Array.isArray(configPaths)) {
+      configPaths = [configPaths];
+    }
+
+    const optionValue = this.commandService.getOptionVlaue<T>(optionCommands);
+    if (!isUndefined(optionValue)) {
+      return optionValue;
+    }
+
+    const configValue = this.getConfigValue<U>(configPaths);
+    if (!isUndefined(configValue)) {
+      return configValue;
+    }
+
+    return defaultVal;
   }
 }

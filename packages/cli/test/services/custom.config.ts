@@ -1,4 +1,4 @@
-import { Configuration, defineConfig } from "../../src/configuration";
+import { defineConfig, Configuration } from "@sfajs/cli-common";
 
 export default defineConfig(<Configuration>{
   custom: 1,

@@ -1,26 +1,26 @@
-import { defineConfig } from "../../../src";
+import { defineConfig } from "@sfajs/cli-common";
 
 export default defineConfig(({ mode }) => {
   return {
     build: {
       prebuild: [
-        (ctx) => {
-          ctx["prebuild1"] = true;
+        ({ config }) => {
+          config["prebuild1"] = true;
         },
-        (ctx) => {
-          ctx["prebuild2"] = true;
+        ({ config }) => {
+          config["prebuild2"] = true;
           return mode == "production";
         },
-        (ctx) => {
-          ctx["prebuild3"] = true;
+        ({ config }) => {
+          config["prebuild3"] = true;
         },
       ],
       postbuild: [
-        (ctx) => {
-          ctx["postbuild1"] = true;
+        ({ config }) => {
+          config["postbuild1"] = true;
         },
-        (ctx) => {
-          ctx["postbuild2"] = true;
+        ({ config }) => {
+          config["postbuild2"] = true;
         },
       ],
     },

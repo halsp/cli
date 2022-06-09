@@ -6,7 +6,7 @@ import path from "path";
 import { DepsService } from "../services/deps.service";
 import { Inject } from "@sfajs/inject";
 import { BaseMiddlware } from "./base.middleware";
-import { CommandType } from "../utils/command-type";
+import { CommandType } from "@sfajs/cli-common";
 
 export class InfoMiddleware extends BaseMiddlware {
   override get command(): CommandType {

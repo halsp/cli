@@ -1,12 +1,12 @@
 import { Inject } from "@sfajs/inject";
 import path from "path";
-import { CommandService } from "./command.service";
 import { TsconfigService } from "./tsconfig.service";
 import * as chokidar from "chokidar";
 import * as fs from "fs";
-import { AssetConfig } from "../configuration";
+import { AssetConfig } from "@sfajs/cli-common";
 import glob from "glob";
 import { FileService } from "./file.service";
+import { ConfigService } from "./config.service";
 
 type FixedAsset = {
   include: string;
@@ -19,14 +19,14 @@ export class AssetsService {
   @Inject
   private readonly tsconfigService!: TsconfigService;
   @Inject
-  private readonly commandService!: CommandService;
+  private readonly configService!: ConfigService;
   @Inject
   private readonly fileService!: FileService;
 
   private readonly watchers: chokidar.FSWatcher[] = [];
 
   public get assets(): FixedAsset[] {
-    let assCfg = this.commandService.getOptionOrConfigValue<
+    let assCfg = this.configService.getOptionOrConfigValue<
       string,
       AssetConfig[]
     >("assets", "build.assets", []);
@@ -87,14 +87,14 @@ export class AssetsService {
     return this.tsconfigService.cacheDir;
   }
   private get watch() {
-    return this.commandService.getOptionOrConfigValue<boolean>(
+    return this.configService.getOptionOrConfigValue<boolean>(
       "watch",
       "build.watch",
       false
     );
   }
   private get watchAssets() {
-    return this.commandService.getOptionOrConfigValue<boolean>(
+    return this.configService.getOptionOrConfigValue<boolean>(
       "watchAssets",
       "build.watchAssets",
       this.watch

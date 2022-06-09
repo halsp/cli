@@ -1,5 +1,5 @@
-import { CommandType } from "../utils/command-type";
 import { BaseMiddlware } from "./base.middleware";
+import { CommandType } from "@sfajs/cli-common";
 
 export class UpdateMiddleware extends BaseMiddlware {
   override get command(): CommandType {

@@ -1,5 +1,5 @@
 import { Middleware } from "@sfajs/core";
-import { CommandType } from "../utils/command-type";
+import { CommandType } from "@sfajs/cli-common";
 
 export abstract class BaseMiddlware extends Middleware {
   abstract get command(): CommandType;
