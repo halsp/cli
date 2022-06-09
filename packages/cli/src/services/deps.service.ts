@@ -10,32 +10,40 @@ export class DepsService {
     containsChildDev = false
   ): DepItem[] {
     const path = this.getPackagePath(pkg, paths);
-    return this.getSfaDeps(path, [], paths, containsDev, containsChildDev);
+    return this.getSfaDeps(path, paths, containsDev, containsChildDev);
   }
 
   public getProjectSfaDeps(
     packagePath: string,
     paths = [process.cwd()],
     containsDev = true,
-    containsChildDev = true
+    containsChildDev = false
   ): DepItem[] {
-    return this.getSfaDeps(
-      packagePath,
-      [],
-      paths,
-      containsDev,
-      containsChildDev
-    );
+    return this.getSfaDeps(packagePath, paths, containsDev, containsChildDev);
   }
 
   private getSfaDeps(
     packagePath: string,
-    parentResult: DepItem[],
     paths: string[],
     containsDev: boolean,
     containsChildDev: boolean
   ) {
+    if (!containsDev) {
+      containsChildDev = false;
+    }
+
     const result: DepItem[] = [];
+    this.loadSfaDeps(result, packagePath, paths, containsDev, containsChildDev);
+    return result;
+  }
+
+  private loadSfaDeps(
+    result: DepItem[],
+    packagePath: string,
+    paths: string[],
+    containsDev: boolean,
+    containsChildDev: boolean
+  ) {
     const pkg = JSON.parse(fs.readFileSync(packagePath, "utf-8"));
 
     function getPkgs(dependencies: Record<string, string>) {
@@ -44,7 +52,7 @@ export class DepsService {
         .filter(
           (name) =>
             name.startsWith("@sfajs/") &&
-            !parentResult.some((exist) => exist.key == name)
+            !result.some((exist) => exist.key == name)
         )
         .map((name) => ({
           key: name,
@@ -53,25 +61,26 @@ export class DepsService {
     }
 
     const pkgs = getPkgs(pkg.dependencies);
-    if (containsDev) {
-      pkgs.push(...getPkgs(pkg.devDependencies));
-    }
+    const devPkgs = getPkgs(pkg.devDependencies);
 
     result.push(...pkgs);
+    if (containsDev) {
+      result.push(...devPkgs);
+    }
+    if (containsDev && containsChildDev) {
+      pkgs.push(...devPkgs);
+    }
 
     pkgs.forEach((pkg) => {
       const depPackagePath = this.getPackagePath(pkg.key, paths);
-      result.push(
-        ...this.getSfaDeps(
-          depPackagePath,
-          result,
-          paths,
-          containsChildDev,
-          containsChildDev
-        )
+      this.loadSfaDeps(
+        result,
+        depPackagePath,
+        paths,
+        containsChildDev,
+        containsChildDev
       );
     });
-    return result;
   }
 
   public getPackagePath(pkg: string, paths = [process.cwd()]) {
