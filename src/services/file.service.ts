@@ -43,4 +43,13 @@ export class FileService {
       });
     }
   }
+
+  public existAny(names: string[]) {
+    for (const name of names) {
+      const file = path.resolve(process.cwd(), name);
+      if (fs.existsSync(file)) {
+        return name;
+      }
+    }
+  }
 }

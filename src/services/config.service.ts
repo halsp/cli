@@ -3,14 +3,14 @@ import { HttpContext, isUndefined } from "@sfajs/core";
 import path from "path";
 import { Configuration, ConfigEnv } from "@sfajs/cli-common";
 import { Inject } from "@sfajs/inject";
-import { ReadService } from "./read.service";
 import { CommandService } from "./command.service";
+import { FileService } from "./file.service";
 
 export class ConfigService {
   @Context
   private readonly ctx!: HttpContext;
   @Inject
-  private readonly readService!: ReadService;
+  private readonly fileService!: FileService;
   @Inject
   private readonly commandService!: CommandService;
 
@@ -22,7 +22,7 @@ export class ConfigService {
         this.#configFileName = optionsConfigName;
       } else {
         this.#configFileName =
-          this.readService.existAny([
+          this.fileService.existAny([
             "sfa-cli.config.ts",
             "sfacli.config.ts",
             "sfa-cli.ts",
