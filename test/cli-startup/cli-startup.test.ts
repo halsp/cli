@@ -11,7 +11,7 @@ function testCliStartup(args?: any, options?: any) {
           ctx.ok({
             options: ctx.commandOptions,
             args: ctx.commandArgs,
-            a: ctx.getCommandOption("a"),
+            a: ctx.commandOptions["a"],
           });
         })
         .run();

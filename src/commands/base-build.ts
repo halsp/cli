@@ -17,6 +17,11 @@ Command.prototype.setBuildOptions = function (defaultMode: string) {
       "Path to sfa-cli configuration file.",
       "sfa-cli.config.ts"
     )
+    .option("-jc, --jsonConfig [json]", "Json string of sfa-cli configuration.")
+    .option(
+      "-fc, --funcConfig [function]",
+      "Function string to build sfa-cli configuration."
+    )
     .option(
       "-tc, --tsconfig [path]",
       "Path to tsconfig.json file.",

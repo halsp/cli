@@ -5,15 +5,21 @@ import { HttpContext } from "@sfajs/core";
 import path from "path";
 import { Inject } from "@sfajs/inject";
 import { TsLoaderService } from "./ts-loader.service";
+import { CommandService } from "./command.service";
 
 export class TsconfigService {
   @Context
   private readonly ctx!: HttpContext;
   @Inject
   private readonly tsLoaderService!: TsLoaderService;
+  @Inject
+  private readonly commandService!: CommandService;
 
   get fileName() {
-    return this.ctx.getCommandOption<string>("tsconfigFile") ?? "tsconfig.json";
+    return (
+      this.commandService.getOptionVlaue<string>("tsconfigFile") ??
+      "tsconfig.json"
+    );
   }
   get filePath() {
     return path.resolve(process.cwd(), this.fileName);
