@@ -31,8 +31,6 @@ declare module "@sfajs/core" {
     get command(): CommandType;
     get commandArgs(): Record<string, string>;
     get commandOptions(): Record<string, string | boolean>;
-
-    getCommandOption<T extends string | boolean>(key: string): T;
   }
 }
 
@@ -62,12 +60,6 @@ Object.defineProperty(HttpContext.prototype, "command", {
     return ctx.startup[COMMAND_TYPE_METADATA];
   },
 });
-
-HttpContext.prototype.getCommandOption = function <T extends string | boolean>(
-  key: string
-): T {
-  return this.commandOptions[key] as T;
-};
 
 export class CliStartup extends Startup {
   constructor(

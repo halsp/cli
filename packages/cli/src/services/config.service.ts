@@ -15,30 +15,47 @@ export class ConfigService {
   private readonly commandService!: CommandService;
 
   #configFileName: string | undefined = undefined;
-  get configFileName() {
+  private get configFileName() {
     if (this.#configFileName == undefined) {
-      const optionsConfigName = this.ctx.getCommandOption<string>("configName");
+      const optionsConfigName =
+        this.commandService.getOptionVlaue<string>("configName");
       if (optionsConfigName) {
         this.#configFileName = optionsConfigName;
       } else {
-        this.#configFileName =
-          this.fileService.existAny([
-            "sfa-cli.config.ts",
-            "sfacli.config.ts",
-            "sfa-cli.ts",
-            "sfacli.ts",
-          ]) ?? "";
+        const exts = ["ts", "js", "json"];
+        const names = [
+          "sfa-cli.config",
+          "sfacli.config",
+          "sfa-cli",
+          "sfacli",
+
+          "sfa-cli-config",
+          "sfacli-config",
+
+          "sfa_cli.config",
+          "sfacli_config",
+          "sfa_cli_config",
+          "sfa_cli",
+        ];
+
+        const files: string[] = [];
+        names.forEach((name) => {
+          exts.forEach((ext) => {
+            files.push(`${name}.${ext}`);
+          });
+        });
+
+        this.#configFileName = this.fileService.existAny(files) ?? "";
       }
     }
     return this.#configFileName;
   }
 
-  get configFilePath() {
-    if (this.configFileName) {
-      return path.resolve(process.cwd(), this.configFileName);
-    } else {
-      return "";
-    }
+  private get configEnv(): ConfigEnv {
+    return {
+      mode: this.mode,
+      command: this.ctx.command,
+    };
   }
 
   public get mode() {
@@ -46,7 +63,7 @@ export class ConfigService {
   }
 
   #value: Configuration | undefined = undefined;
-  get value(): Configuration {
+  public get value(): Configuration {
     return this.#value ?? {};
   }
 
@@ -57,28 +74,63 @@ export class ConfigService {
   }
 
   private async loadConfig(): Promise<Configuration> {
-    if (!this.configFilePath) {
-      return {};
+    const jsonConfig = this.commandService.getOptionVlaue<string>("jsonConfig");
+    if (jsonConfig) {
+      return JSON.parse(jsonConfig);
     }
 
-    const registerer = await this.registerTsNode();
-    registerer.enabled(true);
-    try {
-      // eslint-disable-next-line @typescript-eslint/no-var-requires
-      const module = require(this.configFilePath);
-      const configOptions: ConfigEnv = {
-        mode: this.mode,
-        command: this.ctx.command,
-      };
-      if (typeof module == "function") {
-        return module(configOptions);
-      } else if (module.default) {
-        return module.default(configOptions);
-      } else {
-        return {};
+    const funcConfig = this.commandService.getOptionVlaue<string>("funcConfig");
+    if (funcConfig) {
+      return new Function(`return ${funcConfig}`)()(this.configEnv);
+    }
+
+    const configFilePath = this.configFileName
+      ? path.resolve(process.cwd(), this.configFileName)
+      : undefined;
+    if (configFilePath) {
+      const config = await this.readConfigFile(configFilePath);
+      if (config) {
+        return config;
       }
-    } finally {
-      registerer.enabled(false);
+    }
+
+    return {};
+  }
+
+  private async readConfigFile(
+    configFilePath: string
+  ): Promise<Configuration | undefined> {
+    const jsJson = this.configFileName.toLowerCase().endsWith(".json");
+    if (jsJson) {
+      return require(configFilePath);
+    }
+
+    const isTS = this.configFileName.toLowerCase().endsWith(".ts");
+    if (isTS) {
+      const registerer = await this.registerTsNode();
+      registerer.enabled(true);
+      try {
+        return this.requireConfig(configFilePath);
+      } finally {
+        registerer.enabled(false);
+      }
+    }
+
+    const isJS = this.configFileName.toLowerCase().endsWith(".js");
+    if (isJS) {
+      return this.requireConfig(configFilePath);
+    }
+  }
+
+  private async requireConfig(configFilePath: string) {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const module = require(configFilePath);
+    if (typeof module == "function") {
+      return module(this.configEnv);
+    } else if (module.default) {
+      return module.default(this.configEnv);
+    } else {
+      return {};
     }
   }
 

@@ -10,8 +10,6 @@ test(`config file not exist`, async () => {
       .use(async (ctx) => {
         const service = await parseInject(ctx, ConfigService);
         expect(service.mode).toBe("production");
-        expect(service.configFileName).toBe("");
-        expect(service.configFilePath).toBe("");
         expect(service.value).toEqual({});
         worked = true;
       })

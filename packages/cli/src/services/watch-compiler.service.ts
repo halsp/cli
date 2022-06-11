@@ -2,6 +2,7 @@ import { HttpContext } from "@sfajs/core";
 import { Inject } from "@sfajs/inject";
 import { Context } from "@sfajs/pipe";
 import * as ts from "typescript";
+import { CommandService } from "./command.service";
 import { ConfigService } from "./config.service";
 import { TsLoaderService } from "./ts-loader.service";
 import { TsconfigService } from "./tsconfig.service";
@@ -15,6 +16,8 @@ export class WatchCompilerService {
   private readonly configService!: ConfigService;
   @Inject
   private readonly tsLoaderService!: TsLoaderService;
+  @Inject
+  private readonly commandService!: CommandService;
 
   private watcher?: ts.WatchOfConfigFile<ts.EmitAndSemanticDiagnosticsBuilderProgram>;
 
@@ -25,7 +28,9 @@ export class WatchCompilerService {
     return this.configService.value;
   }
   private get preserveWatchOutput() {
-    return this.ctx.getCommandOption<boolean>("preserveWatchOutput") == true;
+    return (
+      this.commandService.getOptionVlaue<boolean>("preserveWatchOutput") == true
+    );
   }
 
   compiler(outDir: string, onSuccess?: () => void) {
