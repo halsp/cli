@@ -19,7 +19,7 @@ export class PluginSelectService {
         type: "checkbox",
         message: "Select plugins",
         name: "plugins",
-        choices: allPlugins.filter((p) => ({
+        choices: allPlugins.map((p) => ({
           value: p.value,
           name: p.name,
           checked: p.default,

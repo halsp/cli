@@ -50,8 +50,6 @@ export class CreateMiddleware extends BaseMiddlware {
 
     const plugins = await this.pluginSelectService.select();
     const env = await this.createEnvService.create();
-    plugins.push("core");
-    plugins.push("cli");
     plugins.push(env);
 
     await this.createPackageService.create(plugins);
