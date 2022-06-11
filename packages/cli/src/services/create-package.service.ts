@@ -10,7 +10,7 @@ import {
   FixedPluginConfig,
 } from "./create-plugin.service";
 import prettier from "prettier";
-import { Plugin } from "../types";
+import { Plugin } from "../utils/plugins";
 
 export class CreatePackageService {
   @Context

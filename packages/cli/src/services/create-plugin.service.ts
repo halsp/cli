@@ -3,7 +3,7 @@ import * as fs from "fs";
 import path from "path";
 import { ExpressionService } from "./expression.service";
 import glob from "glob";
-import { Plugin } from "../types";
+import { Plugin } from "../utils/plugins";
 
 type PluginConfig = {
   dependencies: Record<string, string | boolean | undefined>;

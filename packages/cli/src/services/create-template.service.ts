@@ -7,7 +7,7 @@ import { ExpressionService } from "./expression.service";
 import { CreateEnvService } from "./create-env.service";
 import { CreatePluginService } from "./create-plugin.service";
 import prettier from "prettier";
-import { Plugin } from "../types";
+import { Plugin } from "../utils/plugins";
 
 // plugin inject|router
 const commentPluginStartRegExp = /^\s*\/{2,}\s*\{\s*/;

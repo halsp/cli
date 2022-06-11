@@ -6,9 +6,9 @@ import { PackageManager } from "@sfajs/cli-common";
 import { Context } from "@sfajs/pipe";
 import { HttpContext } from "@sfajs/core";
 import { CreateTemplateService } from "./create-template.service";
-import { Plugin } from "../types";
 import prettier from "prettier";
 import { FileService } from "./file.service";
+import { Plugin } from "../utils/plugins";
 
 export class CreateConfigService {
   @Context
