@@ -8,6 +8,7 @@ import { HttpContext } from "@sfajs/core";
 import { CreateTemplateService } from "./create-template.service";
 import { Plugin } from "../types";
 import prettier from "prettier";
+import { FileService } from "./file.service";
 
 export class CreateConfigService {
   @Context
@@ -16,6 +17,8 @@ export class CreateConfigService {
   private readonly createEnvService!: CreateEnvService;
   @Inject
   private readonly createTemplateService!: CreateTemplateService;
+  @Inject
+  private readonly fileService!: FileService;
 
   private get targetDir() {
     return this.createEnvService.targetDir;
@@ -38,6 +41,7 @@ export class CreateConfigService {
       parser: "typescript",
     });
 
+    await this.fileService.createDir(this.targetFile);
     await fs.promises.writeFile(this.targetFile, code);
   }
 }
