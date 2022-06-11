@@ -5,7 +5,7 @@ import path from "path";
 import { Inject } from "@sfajs/inject";
 import { FileService } from "./file.service";
 import { Context } from "@sfajs/pipe";
-import { Env } from "../types";
+import { Env } from "../utils/plugins";
 
 const commentEnvStartRegExp = /^\s*\/{2,}\s+/;
 const commentEnvLineRegExp = /^\s*\/{2,}\s+.+/;
