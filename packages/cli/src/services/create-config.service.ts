@@ -34,7 +34,7 @@ export class CreateConfigService {
     let code = await fs.promises.readFile(this.sourceFile, "utf-8");
 
     const pm = this.ctx.bag<PackageManager>("PACKAGE_MANAGER");
-    code = code.replace("{{PACKAGE_MANAGER}}", pm);
+    code = code.replace(/\"\{\{PACKAGE_MANAGER\}\}\" as \S+/, `"${pm}"`);
 
     code = this.createTemplateService.readFile(code, plugins) as string;
     code = prettier.format(code, {

@@ -21,5 +21,5 @@ export default defineConfig(() => ({
     postbuild: [routerPostBuild],
     //}
   },
-  packageManager: "{{PACKAGE_MANAGER}}",
+  packageManager: "{{PACKAGE_MANAGER}}" as any,
 }));

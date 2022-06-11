@@ -7,7 +7,7 @@ import { ExpressionService } from "./expression.service";
 import { CreateEnvService } from "./create-env.service";
 import { CreatePluginService } from "./create-plugin.service";
 import prettier from "prettier";
-import { Plugin } from "../utils/plugins";
+import { isPlugin, Plugin } from "../utils/plugins";
 
 // plugin inject|router
 const commentPluginStartRegExp = /^\s*\/{2,}\s*\{\s*/;
@@ -138,7 +138,7 @@ export class CreateTemplateService {
       }
       const regArr = importRegExp.exec(lines[importIndex]) as RegExpExecArray;
       const importName = (regArr[2] ?? regArr[4]) as Plugin;
-      if (!plugins.includes(importName)) {
+      if (!plugins.includes(importName) && isPlugin(importName)) {
         lines.splice(importIndex, 1);
         importIndex--;
       }

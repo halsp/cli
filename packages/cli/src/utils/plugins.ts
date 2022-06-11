@@ -62,3 +62,7 @@ export const allPlugins: PluginItem[] = [
     name: "jwt 身份验证中间件 (@sfajs/jwt)",
   },
 ];
+
+export function isPlugin(name: string) {
+  return allPlugins.some((p) => p.value == name || `@sfajs/${p.value}` == name);
+}
