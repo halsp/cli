@@ -1,6 +1,6 @@
 {
   "name": "@sfajs/cli-common",
-  "version": "0.0.1-beta.1",
+  "version": "0.0.1",
   "description": "@sfajs/cli 基础功能",
   "homepage": "https://github.com/sfajs/cli-common",
   "repository": {
@@ -31,7 +31,7 @@
   },
   "devDependencies": {
     "@types/jest": "^28.1.1",
-    "@types/node": "^17.0.40",
+    "@types/node": "^17.0.42",
     "@typescript-eslint/eslint-plugin": "^5.27.1",
     "@typescript-eslint/parser": "^5.27.1",
     "codecov": "^3.8.3",
