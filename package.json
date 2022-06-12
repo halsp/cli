@@ -1,6 +1,6 @@
 {
   "name": "@sfajs/cli",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "sfajs 的命令行脚手架工具",
   "homepage": "https://github.com/sfajs/cli",
   "repository": {
@@ -27,7 +27,7 @@
   "author": "hal-wang",
   "license": "MIT",
   "dependencies": {
-    "@sfajs/cli-common": "^0.0.1-beta.1",
+    "@sfajs/cli-common": "^0.0.1",
     "@sfajs/core": "^1.4.3",
     "@sfajs/http": "^1.1.1",
     "@sfajs/inject": "^1.0.7",
@@ -52,7 +52,7 @@
     "@types/ignore-walk": "^4.0.0",
     "@types/inquirer": "^8.2.1",
     "@types/jest": "^28.1.1",
-    "@types/node": "^17.0.41",
+    "@types/node": "^17.0.42",
     "@types/shelljs": "^0.8.11",
     "@typescript-eslint/eslint-plugin": "^5.27.1",
     "@typescript-eslint/parser": "^5.27.1",
@@ -70,10 +70,14 @@
     "@sfajs/http": "~1",
     "@sfajs/inject": "~1",
     "@sfajs/pipe": "~1",
+    "@sfajs/cli-common": "~1",
     "ts-node": ">=9.0.0"
   },
   "peerDependenciesMeta": {
     "ts-node": {
+      "optional": true
+    },
+    "@sfajs/cli-common": {
       "optional": true
     }
   },
