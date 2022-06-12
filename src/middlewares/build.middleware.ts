@@ -7,7 +7,8 @@ import { TsconfigService } from "../services/tsconfig.service";
 import { WatchCompilerService } from "../services/watch-compiler.service";
 import * as fs from "fs";
 import { BaseMiddlware } from "./base.middleware";
-import { CommandType } from "@sfajs/cli-common";
+import { CommandType, Postbuild, Prebuild } from "@sfajs/cli-common";
+import { DepsService } from "../services/deps.service";
 
 export class BuildMiddlware extends BaseMiddlware {
   override get command(): CommandType {
@@ -24,6 +25,8 @@ export class BuildMiddlware extends BaseMiddlware {
   private readonly watchCompilerService!: WatchCompilerService;
   @Inject
   private readonly assetsService!: AssetsService;
+  @Inject
+  private readonly depsService!: DepsService;
 
   private get config() {
     return this.configService.value;
@@ -92,21 +95,53 @@ export class BuildMiddlware extends BaseMiddlware {
   }
 
   private async execPrebuilds(): Promise<boolean> {
-    if (this.config.build?.prebuild) {
-      for (const fn of this.config.build.prebuild) {
-        if ((await fn(this.scriptOptions)) == false) {
-          return false;
-        }
+    const internalPrebuild = this.getPluginScripts("prebuild");
+
+    for (const fn of [
+      ...internalPrebuild,
+      ...(this.config.build?.prebuild ?? []),
+    ]) {
+      if ((await fn(this.scriptOptions)) == false) {
+        return false;
       }
     }
     return true;
   }
 
   private async execPostbuilds() {
-    if (this.config.build?.postbuild) {
-      for (const fn of this.config.build.postbuild) {
-        await fn(this.scriptOptions);
-      }
+    const internalPostbuild = this.getPluginScripts("postbuild");
+
+    for (const fn of [
+      ...internalPostbuild,
+      ...(this.config.build?.postbuild ?? []),
+    ]) {
+      await fn(this.scriptOptions);
     }
+  }
+
+  private getPluginScripts(name: "postbuild"): Postbuild[];
+  private getPluginScripts(name: "prebuild"): Prebuild[];
+  private getPluginScripts(name: "prebuild" | "postbuild") {
+    const pkgPath = path.join(process.cwd(), "package.json");
+    if (!fs.existsSync(pkgPath)) {
+      return [];
+    }
+    const deps = this.depsService.getProjectSfaDeps(
+      path.join(process.cwd(), "package.json"),
+      undefined,
+      true,
+      true
+    );
+    return deps
+      .map((dep) => {
+        try {
+          // eslint-disable-next-line @typescript-eslint/no-var-requires
+          const module = require(dep.key);
+          return module[name] as Postbuild | Prebuild;
+        } catch {
+          return undefined;
+        }
+      })
+      .filter((script) => !!script);
   }
 }
