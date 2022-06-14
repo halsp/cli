@@ -4,11 +4,13 @@ import "@sfajs/swagger";
 import "@sfajs/inject";
 import "@sfajs/mva";
 import "@sfajs/filter";
-import { swaggerJSDoc } from "@sfajs/swagger";
 import * as fs from "fs";
 import path from "path";
 // {filter
 import { GlobalActionFilter } from "./filters/global.action.filter";
+// }
+// { swagger
+import { getSwaggerOptions } from "./utils/swagger";
 // }
 
 export default <T extends Startup>(startup: T, mode?: string) =>
@@ -23,7 +25,7 @@ export default <T extends Startup>(startup: T, mode?: string) =>
     // }
     // { swagger
     .useSwagger({
-      options: getSwaggerOptions(),
+      options: getSwaggerOptions(version),
     })
     // }
     // {filter
@@ -35,85 +37,6 @@ export default <T extends Startup>(startup: T, mode?: string) =>
     // }
     // { router&&!mva
     .useRouter();
-// }
-
-// { swagger
-function getSwaggerOptions() {
-  return <swaggerJSDoc.Options>{
-    definition: {
-      openapi: "3.0.n",
-      info: {
-        title: "NewApplication",
-        description: "A new application",
-        version: version,
-        license: {
-          name: "MIT",
-        },
-        contact: {
-          email: "hi@hal.wang",
-        },
-      },
-      servers: [
-        {
-          url: "/",
-        },
-      ],
-      schemes: ["https"],
-      tags: [
-        {
-          name: "user",
-        },
-      ],
-      components: {
-        schemas: {
-          user: {
-            type: "object",
-            properties: {
-              id: {
-                type: "integer",
-                description: "Automatically generated ID",
-              },
-              password: {
-                type: "string",
-                description: "Plaintext password",
-              },
-            },
-          },
-        },
-        securitySchemes: {
-          password: {
-            type: "apiKey",
-            in: "header",
-            name: "Authorization",
-          },
-        },
-        parameters: {
-          page: {
-            in: "query",
-            required: false,
-            name: "page",
-            schema: {
-              type: "integer",
-              minimum: 1,
-              default: 1,
-            },
-          },
-          limit: {
-            in: "query",
-            required: false,
-            name: "limit",
-            schema: {
-              type: "integer",
-              minimum: 1,
-              default: 20,
-            },
-          },
-        },
-      },
-    },
-    apis: ["actions/**/*.js"],
-  };
-}
 // }
 
 const version = (() => {
