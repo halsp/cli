@@ -1,7 +1,6 @@
 import * as ts from "typescript";
 import { Postbuild, Prebuild } from "./build-scripts";
 import { AssetConfig } from "./assets-config";
-import { PackageManager } from "./package-manager";
 
 export type Transformer =
   | ts.TransformerFactory<any>
@@ -29,5 +28,5 @@ export interface Configuration {
     readonly binaryToRun?: string;
   };
   readonly startupFile?: string;
-  readonly packageManager?: PackageManager;
+  readonly packageManager?: string;
 }
