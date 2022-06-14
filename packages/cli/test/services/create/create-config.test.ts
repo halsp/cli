@@ -1,5 +1,5 @@
 import { parseInject } from "@sfajs/inject";
-import { runin } from "@sfajs/testing";
+import { runin } from "../../utils";
 import path from "path";
 import { CliStartup } from "../../../src/cli-startup";
 import { CreateConfigService } from "../../../src/services/create-config.service";

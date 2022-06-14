@@ -1,6 +1,6 @@
 import { ConfigService } from "../../../src/services/config.service";
 import { runTest } from "../runTest";
-import { runin } from "@sfajs/testing";
+import { runin } from "../../utils";
 import { CliStartup } from "../../../src/cli-startup";
 import { parseInject } from "@sfajs/inject";
 import * as fs from "fs";
