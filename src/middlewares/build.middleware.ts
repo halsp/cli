@@ -127,10 +127,7 @@ export class BuildMiddlware extends BaseMiddlware {
       return [];
     }
     const deps = this.depsService.getProjectSfaDeps(
-      path.join(process.cwd(), "package.json"),
-      undefined,
-      true,
-      true
+      path.join(process.cwd(), "package.json")
     );
     return deps
       .map((dep) => {
