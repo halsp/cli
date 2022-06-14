@@ -11,6 +11,11 @@ export class CreateCommand extends BaseCommand {
       .alias("c")
       .description("Generate sfa application")
       .setCreateOptions()
+      .option(
+        "-ps, --plugins [plugins]",
+        "Plugins to add (e.g. view,router,inject)"
+      )
+      .option("-ps, --skip-plugins", "No plugins will be added")
       .action(
         async (name: string, command: Record<string, boolean | string>) => {
           await new CliStartup({ name }, command).add(CreateMiddleware).run();

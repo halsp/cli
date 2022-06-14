@@ -9,22 +9,19 @@ declare module "commander" {
 
 Command.prototype.setCreateOptions = function () {
   return this.option(
-    "-sg, --skip-git",
-    "Skip git repository initialization. ",
+    "-f, --force",
+    "Force create application, delete existing files. ",
     false
   )
+    .option("-sg, --skip-git", "Skip git repository initialization. ", false)
+    .option("-e, --env [env]", "The environment to run application")
+    .option("--skip-env [env]", "No running environment", false)
     .option(
-      "-si, --skip-install|--skipInstall",
-      "Skip package installation.",
-      false
+      "-pm, --package-manager [package-manager]",
+      "Specify package manager. (npm/yarn/pnpm/cnpm)"
     )
     .option(
-      "-p, --package-manager|--packageManager [package-manager]",
-      "Specify package manager. (npm/yarn/pnpm/cnpm)",
-      "npm"
-    )
-    .option(
-      "-cv, --cli-version|--cliVersion [version]",
+      "-cv, --cli-version [version]",
       "Version of @sfajs/cli",
       getCliVersion()
     );
