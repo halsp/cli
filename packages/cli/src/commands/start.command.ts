@@ -12,7 +12,7 @@ export class StartCommand extends BaseCommand {
       .alias("s")
       .setBuildOptions("development")
       .option(
-        "-b, --binaryToRun [program]",
+        "-b, --binary-to-run|--binaryToRun [program]",
         "Binary to run application (e.g., node, ts-node).",
         "node"
       )

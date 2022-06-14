@@ -11,6 +11,7 @@ import {
 } from "./create-plugin.service";
 import prettier from "prettier";
 import { Plugin } from "../utils/plugins";
+import { CommandService } from "./command.service";
 
 export class CreatePackageService {
   @Context
@@ -21,6 +22,8 @@ export class CreatePackageService {
   private readonly createEnvService!: CreateEnvService;
   @Inject
   private readonly packageManagerService!: PackageManagerService;
+  @Inject
+  private readonly commandService!: CommandService;
 
   private get name() {
     return this.ctx.commandArgs.name;
@@ -83,10 +86,10 @@ export class CreatePackageService {
   }
 
   private setCliVersion(pkg: Record<string, any>): any {
-    const file = path.join(__dirname, "../../package.json");
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const cliPkg = require(file);
-    const version = cliPkg.version;
+    const version = this.commandService.getOptionVlaue<string>([
+      "cli-version",
+      "cliVersion",
+    ]);
 
     if (Object.keys(pkg.dependencies).includes("@sfajs/cli")) {
       pkg.dependencies["@sfajs/cli"] = `^${version}`;
