@@ -5,7 +5,7 @@ export type Env = "http" | "cloudbase" | "alifunc";
 export type Plugin =
   | "inject"
   | "router"
-  | "views"
+  | "view"
   | "mva"
   | "pipe"
   | "filter"
@@ -29,8 +29,8 @@ export const allPlugins: PluginItem[] = [
     default: true,
   },
   {
-    value: "views",
-    name: "视图渲染 (@sfajs/views)",
+    value: "view",
+    name: "视图渲染 (@sfajs/view)",
   },
   {
     value: "mva",
