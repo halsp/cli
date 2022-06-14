@@ -6,6 +6,7 @@ import { Inject } from "@sfajs/inject";
 import { FileService } from "./file.service";
 import { Context } from "@sfajs/pipe";
 import { Env } from "../utils/plugins";
+import { CommandService } from "./command.service";
 
 const commentEnvStartRegExp = /^\s*\/{2,}\s+/;
 const commentEnvLineRegExp = /^\s*\/{2,}\s+.+/;
@@ -15,6 +16,8 @@ export class CreateEnvService {
   private readonly ctx!: HttpContext;
   @Inject
   private readonly fileService!: FileService;
+  @Inject
+  private readonly commandService!: CommandService;
 
   private get name() {
     return this.ctx.commandArgs.name;
@@ -26,7 +29,7 @@ export class CreateEnvService {
     return path.join(process.cwd(), this.name);
   }
 
-  public async create() {
+  public async create(): Promise<Env | undefined> {
     const env = await this.getEnv();
     const sourceFilePath = path.join(this.sourceDir, `${env}.ts`);
     const targetFilePath = path.join(this.targetDir, `src/index.ts`);
@@ -41,9 +44,25 @@ export class CreateEnvService {
     return env;
   }
 
-  private async getEnv(): Promise<Env> {
-    const envs = fs
-      .readdirSync(this.sourceDir)
+  private async getEnv(): Promise<Env | undefined> {
+    if (this.commandService.getOptionVlaue<boolean>("skip-env")) {
+      return undefined;
+    }
+
+    let env: Env;
+    const envs = await this.getExistEnvs();
+    env = this.commandService.getOptionVlaue<string>("env") as Env;
+    if (env && !envs.some((e) => e.value == env)) {
+      throw new Error("The env is not exist");
+    }
+    if (!env) {
+      env = await this.getEnvByInquirer(envs);
+    }
+    return env;
+  }
+
+  private async getExistEnvs() {
+    return (await fs.promises.readdir(this.sourceDir))
       .filter((file) => file.endsWith(".ts"))
       .filter((file) => !file.endsWith("startup.ts"))
       .filter((file) => {
@@ -64,7 +83,11 @@ export class CreateEnvService {
           value: env,
         };
       });
+  }
 
+  private async getEnvByInquirer(
+    envs: { name: string; value: string }[]
+  ): Promise<Env> {
     const { env } = await inquirer.prompt([
       {
         type: "list",

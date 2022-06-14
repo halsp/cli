@@ -9,6 +9,8 @@ import { BaseMiddlware } from "./base.middleware";
 import { CreatePackageService } from "../services/create-package.service";
 import { CreateConfigService } from "../services/create-config.service";
 import path from "path";
+import { CommandService } from "../services/command.service";
+import { allPlugins, Plugin } from "../utils/plugins";
 
 export class CreateMiddleware extends BaseMiddlware {
   override get command(): CommandType {
@@ -27,6 +29,8 @@ export class CreateMiddleware extends BaseMiddlware {
   private readonly pluginSelectService!: PluginSelectService;
   @Inject
   private readonly fileService!: FileService;
+  @Inject
+  private readonly commandService!: CommandService;
 
   private get targetDir() {
     return this.createEnvService.targetDir;
@@ -36,9 +40,17 @@ export class CreateMiddleware extends BaseMiddlware {
     await super.invoke();
 
     if (fs.existsSync(this.targetDir)) {
-      const message = `Target directory ${this.targetDir} already exists. Overwrite?`;
-      if (!(await this.fileService.isOverwrite(message))) {
-        return;
+      const force = this.commandService.getOptionVlaue<boolean>("force");
+      if (force) {
+        await fs.promises.rm(this.targetDir, {
+          force: true,
+          recursive: true,
+        });
+      } else {
+        const message = `Target directory ${this.targetDir} already exists. Overwrite?`;
+        if (!(await this.fileService.isOverwrite(message))) {
+          return;
+        }
       }
     }
 
@@ -48,9 +60,11 @@ export class CreateMiddleware extends BaseMiddlware {
       });
     }
 
-    const plugins = await this.pluginSelectService.select();
+    const plugins = await this.getPlugins();
     const env = await this.createEnvService.create();
-    plugins.push(env);
+    if (env) {
+      plugins.push(env);
+    }
 
     await this.createPackageService.create(plugins);
 
@@ -62,5 +76,25 @@ export class CreateMiddleware extends BaseMiddlware {
     await this.createTemplateService.create(fixedPlugins);
 
     await this.next();
+  }
+
+  private async getPlugins() {
+    if (this.commandService.getOptionVlaue<boolean>("skip-plugins")) {
+      return [];
+    }
+
+    let plugins: Plugin[];
+    const argPlugins = this.commandService.getOptionVlaue<string>("plugins");
+    if (argPlugins) {
+      plugins = argPlugins
+        .split(/\b|,/)
+        .map((item) => item.trim())
+        .filter((item) => !!item)
+        .map((item) => item as Plugin)
+        .filter((item) => allPlugins.some((ap) => ap.value == item));
+    } else {
+      plugins = await this.pluginSelectService.select();
+    }
+    return plugins;
   }
 }

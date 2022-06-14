@@ -18,11 +18,11 @@ Command.prototype.setBuildOptions = function (defaultMode: string) {
       "sfa-cli.config.ts"
     )
     .option(
-      "-jc, --json-config|--jsonConfig [json]",
+      "-jc, --json-config [json]",
       "Json string of sfa-cli configuration."
     )
     .option(
-      "-fc, --func-config|--funcConfig [function]",
+      "-fc, --func-config [function]",
       "Function string to build sfa-cli configuration."
     )
     .option(
@@ -32,7 +32,7 @@ Command.prototype.setBuildOptions = function (defaultMode: string) {
     )
     .option("-w, --watch", "Run in watch mode (live-reload).", false)
     .option(
-      "-wa, --watch-assets|--watchAssets",
+      "-wa, --watch-assets",
       "Watch non-ts (e.g., .views) files mode.",
       false
     );

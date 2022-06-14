@@ -52,7 +52,11 @@ export class CreatePackageService {
       })
     );
 
-    const pm = await this.packageManagerService.pickPackageManager();
+    let pm = this.commandService.getOptionVlaue<string>("package-manager");
+    if (!pm) {
+      pm = await this.packageManagerService.pickPackageManager();
+    }
+
     await this.packageManagerService.install(pm, this.targetDir);
     this.ctx.bag("PACKAGE_MANAGER", pm);
   }
@@ -86,16 +90,13 @@ export class CreatePackageService {
   }
 
   private setCliVersion(pkg: Record<string, any>): any {
-    const version = this.commandService.getOptionVlaue<string>([
-      "cli-version",
-      "cliVersion",
-    ]);
-
+    const version = this.commandService.getOptionVlaue<string>("cli-version");
+    console.log("version", version);
     if (Object.keys(pkg.dependencies).includes("@sfajs/cli")) {
-      pkg.dependencies["@sfajs/cli"] = `^${version}`;
+      pkg.dependencies["@sfajs/cli"] = version;
     }
     if (Object.keys(pkg.devDependencies).includes("@sfajs/cli")) {
-      pkg.devDependencies["@sfajs/cli"] = `^${version}`;
+      pkg.devDependencies["@sfajs/cli"] = version;
     }
   }
 }
