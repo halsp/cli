@@ -18,6 +18,6 @@ export default defineConfig(() => {
         //}
       ],
     },
-    packageManager: "{{PACKAGE_MANAGER}}" as any,
+    packageManager: "{{PACKAGE_MANAGER}}",
   };
 });

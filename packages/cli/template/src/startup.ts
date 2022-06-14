@@ -5,6 +5,7 @@ import "@sfajs/inject";
 import "@sfajs/mva";
 import "@sfajs/filter";
 import "@sfajs/static";
+import "@sfajs/jwt";
 import * as fs from "fs";
 import path from "path";
 // {filter
@@ -13,6 +14,8 @@ import { GlobalActionFilter } from "./filters/global.action.filter";
 // { swagger
 import { getSwaggerOptions } from "./utils/swagger";
 // }
+import { parseInject } from "@sfajs/inject";
+import { JwtService } from "@sfajs/jwt";
 
 export default <T extends Startup>(startup: T, mode?: string) =>
   startup
@@ -35,6 +38,22 @@ export default <T extends Startup>(startup: T, mode?: string) =>
       dir: "static",
       prefix: "s",
     })
+    //}
+    //{jwt
+    .useJwt({
+      secret: "jwt-secret",
+    })
+    .use(async (ctx, next) => {
+      const jwtService = await parseInject(ctx, JwtService);
+      const testJwt = await jwtService.sign({
+        id: 1,
+      });
+      // just for jwt test
+      ctx.req.setHeader("Authorization", "Bearer " + testJwt);
+      await next();
+    })
+    // default verify
+    .useJwtVerify()
     //}
     // {filter
     .useFilter()
