@@ -8,5 +8,4 @@ export {
   Postbuild,
   Prebuild,
   ScriptOptions,
-  PackageManager,
 } from "@sfajs/cli-common";

@@ -2,7 +2,6 @@ import { Inject } from "@sfajs/inject";
 import path from "path";
 import { CreateEnvService } from "./create-env.service";
 import * as fs from "fs";
-import { PackageManager } from "@sfajs/cli-common";
 import { Context } from "@sfajs/pipe";
 import { HttpContext } from "@sfajs/core";
 import { CreateTemplateService } from "./create-template.service";
@@ -33,8 +32,8 @@ export class CreateConfigService {
   public async create(plugins: Plugin[]): Promise<void> {
     let code = await fs.promises.readFile(this.sourceFile, "utf-8");
 
-    const pm = this.ctx.bag<PackageManager>("PACKAGE_MANAGER");
-    code = code.replace(/\"\{\{PACKAGE_MANAGER\}\}\" as \S+/, `"${pm}"`);
+    const pm = this.ctx.bag<string>("PACKAGE_MANAGER");
+    code = code.replace("{{PACKAGE_MANAGER}}", pm);
 
     code = this.createTemplateService.readFile(code, plugins) as string;
     code = prettier.format(code, {

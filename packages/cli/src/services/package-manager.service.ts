@@ -2,14 +2,13 @@ import { Inject } from "@sfajs/inject";
 import chalk from "chalk";
 import { ChildProcess, spawn, SpawnOptions } from "child_process";
 import inquirer from "inquirer";
-import { PackageManager } from "@sfajs/cli-common";
 import { LoadingService } from "./loading.service";
 
 export class PackageManagerService {
   @Inject
   private readonly loadingService!: LoadingService;
 
-  public async pickPackageManager(): Promise<PackageManager> {
+  public async pickPackageManager(): Promise<string> {
     const { mng } = await inquirer.prompt([
       {
         type: "list",
@@ -41,7 +40,7 @@ export class PackageManagerService {
   }
 
   public async run(
-    pm: PackageManager,
+    pm: string,
     command: string,
     cwd: string = process.cwd()
   ): Promise<null | string> {
@@ -65,7 +64,7 @@ export class PackageManagerService {
     });
   }
 
-  public async install(pm: PackageManager, dir: string) {
+  public async install(pm: string, dir: string) {
     this.loadingService.start(`Installation in progress...`);
     try {
       await this.run(pm, "install", dir);
