@@ -3,37 +3,25 @@ import * as fs from "fs";
 export type DepItem = { key: string; value: string };
 
 export class DepsService {
-  public getPackageSfaDeps(
-    pkg: string,
-    paths = [process.cwd()],
-    containsDev = false,
-    containsChildDev = false
-  ): DepItem[] {
+  public getPackageSfaDeps(pkg: string, paths = [process.cwd()]): DepItem[] {
     const path = this.getPackagePath(pkg, paths);
-    return this.getSfaDeps(path, paths, containsDev, containsChildDev);
+    return this.getSfaDeps(path, paths, false);
   }
 
   public getProjectSfaDeps(
     packagePath: string,
-    paths = [process.cwd()],
-    containsDev = true,
-    containsChildDev = false
+    paths = [process.cwd()]
   ): DepItem[] {
-    return this.getSfaDeps(packagePath, paths, containsDev, containsChildDev);
+    return this.getSfaDeps(packagePath, paths, true);
   }
 
   private getSfaDeps(
     packagePath: string,
     paths: string[],
-    containsDev: boolean,
-    containsChildDev: boolean
+    containsDev: boolean
   ) {
-    if (!containsDev) {
-      containsChildDev = false;
-    }
-
     const result: DepItem[] = [];
-    this.loadSfaDeps(result, packagePath, paths, containsDev, containsChildDev);
+    this.loadSfaDeps(result, packagePath, paths, containsDev);
     return result;
   }
 
@@ -41,8 +29,7 @@ export class DepsService {
     result: DepItem[],
     packagePath: string,
     paths: string[],
-    containsDev: boolean,
-    containsChildDev: boolean
+    containsDev: boolean
   ) {
     const pkg = JSON.parse(fs.readFileSync(packagePath, "utf-8"));
 
@@ -67,19 +54,10 @@ export class DepsService {
     if (containsDev) {
       result.push(...devPkgs);
     }
-    if (containsDev && containsChildDev) {
-      pkgs.push(...devPkgs);
-    }
 
     pkgs.forEach((pkg) => {
       const depPackagePath = this.getPackagePath(pkg.key, paths);
-      this.loadSfaDeps(
-        result,
-        depPackagePath,
-        paths,
-        containsChildDev,
-        containsChildDev
-      );
+      this.loadSfaDeps(result, depPackagePath, paths, false);
     });
   }
 
