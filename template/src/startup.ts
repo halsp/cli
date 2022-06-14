@@ -15,8 +15,11 @@ import { GlobalActionFilter } from "./filters/global.action.filter";
 // { swagger
 import { getSwaggerOptions } from "./utils/swagger";
 // }
-import { parseInject } from "@sfajs/inject";
 import { JwtService } from "@sfajs/jwt";
+// { inject
+import { parseInject } from "@sfajs/inject";
+import { UserService } from "./services/user.service";
+// }
 
 export default <T extends Startup>(startup: T, mode?: string) =>
   startup
@@ -27,6 +30,19 @@ export default <T extends Startup>(startup: T, mode?: string) =>
     })
     // { inject
     .useInject()
+    /// { !router
+    .use(async (ctx, next) => {
+      const userService = await parseInject(ctx, UserService);
+      const userInfo = userService.getUserInfo();
+      //// { view
+      ctx.setHeader("injectUserInfo", JSON.stringify(userInfo));
+      //// }
+      //// { !view
+      ctx.ok(userInfo);
+      //// }
+      await next();
+    })
+    /// }
     // }
     // { swagger
     .useSwagger({
@@ -65,6 +81,15 @@ export default <T extends Startup>(startup: T, mode?: string) =>
     // }
     //{view && !mva
     .useView()
+    ///{!router
+    .use(async (ctx, next) => {
+      await ctx.view("user", {
+        id: 1,
+        email: "hi@hal.wang",
+      });
+      await next();
+    })
+    ///}
     //}
     // { router && !mva
     .useRouter();

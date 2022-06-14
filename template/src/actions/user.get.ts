@@ -56,18 +56,37 @@ export default class extends Action {
   private readonly host!: string;
   //}
 
-  invoke(): void | Promise<void> {
-    //{inject
-    const userInfo = this.userService.getUserInfo();
-    this.ok(userInfo);
-    //}
+  async invoke(): Promise<void> {
+    //!
+    {
+      //{inject
+      const userInfo = this.userService.getUserInfo();
+      ///{ view && !mva
+      await this.view("user", userInfo);
+      ///}
+      ///{!view || mva
+      this.ok(userInfo);
+      ///}
+      //}
+      //!
+    }
 
-    //{!inject
-    this.ok({
-      id: 1,
-      email: "hi@hal.wang",
-    });
-    //}
+    //!
+    {
+      //{!inject
+      const userInfo = {
+        id: 1,
+        email: "hi@hal.wang",
+      };
+      ///{ view && !mva
+      await this.view("user", userInfo);
+      ///}
+      ///{!view || mva
+      this.ok(userInfo);
+      ///}
+      //}
+      //!
+    }
   }
 }
 //}
