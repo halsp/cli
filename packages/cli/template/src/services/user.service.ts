@@ -1,5 +1,7 @@
 //{inject
+//{pipe
 import { HttpContext } from "@sfajs/core";
+//}
 import { Context } from "@sfajs/pipe";
 
 export class UserService {
@@ -9,7 +11,9 @@ export class UserService {
   //}
 
   public getUserInfo() {
+    //{pipe
     this.ctx.res.setHeader("test-header", "sfa");
+    //}
 
     return {
       id: 1,
