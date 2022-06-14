@@ -70,8 +70,6 @@ export class CreatePackageService {
       });
 
     Object.keys(deps)
-      .filter((k) => k.startsWith("@sfajs/"))
-      .filter((k) => !constant.some((c) => `@sfajs/${c}` == k))
       .filter((k) => dependencies[k] == false)
       .forEach((key) => {
         delete deps[key];
