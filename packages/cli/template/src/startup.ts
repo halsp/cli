@@ -4,6 +4,7 @@ import "@sfajs/swagger";
 import "@sfajs/inject";
 import "@sfajs/mva";
 import "@sfajs/filter";
+import "@sfajs/static";
 import * as fs from "fs";
 import path from "path";
 // {filter
@@ -28,6 +29,13 @@ export default <T extends Startup>(startup: T, mode?: string) =>
       options: getSwaggerOptions(version),
     })
     // }
+    //{static
+    // static homepage: /s
+    .useStatic({
+      dir: "static",
+      prefix: "s",
+    })
+    //}
     // {filter
     .useFilter()
     .useGlobalFilter(GlobalActionFilter)
