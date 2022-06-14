@@ -1,5 +1,5 @@
-import { defineConfig, PackageManager } from "@sfajs/cli-common";
+import { defineConfig } from "@sfajs/cli-common";
 
-export default defineConfig((e) => ({
-  packageManager: "{{PACKAGE_MANAGER}}" as PackageManager,
+export default defineConfig(() => ({
+  packageManager: "{{PACKAGE_MANAGER}}",
 }));
