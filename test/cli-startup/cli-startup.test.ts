@@ -1,5 +1,5 @@
 import { CliStartup } from "../../src/cli-startup";
-import { runin } from "@sfajs/testing";
+import { runin } from "../utils";
 import { isUndefined } from "@sfajs/core";
 
 function testCliStartup(args?: any, options?: any) {

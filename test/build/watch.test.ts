@@ -1,4 +1,4 @@
-import { runin } from "@sfajs/testing";
+import { runin } from "../utils";
 import { CliStartup } from "../../src/cli-startup";
 import { BuildMiddlware } from "../../src/middlewares/build.middleware";
 import * as fs from "fs";

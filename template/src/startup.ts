@@ -6,6 +6,7 @@ import "@sfajs/mva";
 import "@sfajs/filter";
 import "@sfajs/static";
 import "@sfajs/jwt";
+import "@sfajs/view";
 import * as fs from "fs";
 import path from "path";
 // {filter
@@ -62,7 +63,10 @@ export default <T extends Startup>(startup: T, mode?: string) =>
     // { mva
     .useMva()
     // }
-    // { router&&!mva
+    //{view && !mva
+    .useView()
+    //}
+    // { router && !mva
     .useRouter();
 // }
 

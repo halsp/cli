@@ -1,6 +1,6 @@
 import { CliStartup } from "../../src/cli-startup";
 import { InfoMiddleware } from "../../src/middlewares/info.middleware";
-import { runin } from "@sfajs/testing";
+import { runin } from "../utils";
 
 test(`info`, async () => {
   await new CliStartup(undefined, {

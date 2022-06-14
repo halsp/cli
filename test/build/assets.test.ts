@@ -1,10 +1,10 @@
-import { runin } from "@sfajs/testing";
 import { CliStartup } from "../../src/cli-startup";
 import { BuildMiddlware } from "../../src/middlewares/build.middleware";
 import * as fs from "fs";
 import { parseInject } from "@sfajs/inject";
 import { AssetsService } from "../../src/services/assets.service";
 import { WatchCompilerService } from "../../src/services/watch-compiler.service";
+import { runin } from "../utils";
 
 function expectFiles() {
   expect(fs.existsSync("./.sfa-cache")).toBeTruthy();

@@ -1,6 +1,6 @@
 import { HttpContext, ObjectConstructor } from "@sfajs/core";
 import { CliStartup } from "../../src/cli-startup";
-import { runin } from "@sfajs/testing";
+import { runin } from "../utils";
 import { parseInject } from "@sfajs/inject";
 
 export function runTest<T extends object = any>(
