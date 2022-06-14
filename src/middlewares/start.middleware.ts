@@ -73,7 +73,7 @@ export class StartMiddleware extends BaseMiddlware {
     await super.invoke();
 
     if (this.watch) {
-      this.ctx.bag("onWatchSuccess", this.createOnWatchSuccess);
+      this.ctx.bag("onWatchSuccess", this.createOnWatchSuccess.bind(this));
     }
 
     await this.next();
