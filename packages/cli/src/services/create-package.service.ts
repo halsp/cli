@@ -32,7 +32,7 @@ export class CreatePackageService {
     return this.createEnvService.targetDir;
   }
 
-  public async create(plugins: Plugin[]): Promise<void> {
+  public async create(plugins: Plugin[]): Promise<boolean> {
     const pkg = this.getPackage();
     const pluginConfig = await this.createPluginService.getPluginConfig(
       plugins
@@ -57,8 +57,8 @@ export class CreatePackageService {
       pm = await this.packageManagerService.pickPackageManager();
     }
 
-    await this.packageManagerService.install(pm, this.targetDir);
     this.ctx.bag("PACKAGE_MANAGER", pm);
+    return await this.packageManagerService.install(pm, this.targetDir);
   }
 
   private setDeps(

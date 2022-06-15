@@ -43,35 +43,31 @@ export class PackageManagerService {
     pm: string,
     command: string,
     cwd: string = process.cwd()
-  ): Promise<null | string> {
+  ): Promise<boolean> {
     const args: string[] = [command];
     const options: SpawnOptions = {
       cwd,
-      stdio: "pipe",
+      stdio: "inherit",
       shell: true,
     };
-    return new Promise<null | string>((resolve, reject) => {
+    return new Promise<boolean>((resolve) => {
       const child: ChildProcess = spawn(pm, args, options);
-      child.stdout?.on("data", (data) => resolve(data));
       child.on("close", (code) => {
-        if (code === 0) {
-          resolve(null);
-        } else {
-          console.error(chalk.red(`\nFailed to execute command: ${command}`));
-          reject();
-        }
+        resolve(!code);
       });
     });
   }
 
   public async install(pm: string, dir: string) {
     this.loadingService.start(`Installation in progress...`);
-    try {
-      await this.run(pm, "install", dir);
-      this.loadingService.succeed();
-      console.info("Installation complete");
-    } catch {
+    const runResult = await this.run(pm, "install", dir);
+    if (!runResult) {
       this.loadingService.fail("Installation failed");
+      return false;
     }
+
+    this.loadingService.succeed();
+    console.info(`Installation complete`);
+    return true;
   }
 }
