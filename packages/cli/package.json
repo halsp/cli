@@ -64,13 +64,22 @@
     "typescript": "^4.7.3"
   },
   "peerDependencies": {
-    "@sfajs/cli-common": "0.1.x",
+    "@sfajs/cli-common": "0.2.x",
     "@sfajs/core": "~1",
     "@sfajs/inject": "~1",
     "@sfajs/pipe": "~1",
     "ts-node": ">=9.0.0"
   },
   "peerDependenciesMeta": {
+    "@sfajs/core": {
+      "optional": true
+    },
+    "@sfajs/inject": {
+      "optional": true
+    },
+    "@sfajs/pipe": {
+      "optional": true
+    },
     "ts-node": {
       "optional": true
     },
