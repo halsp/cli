@@ -1,0 +1,7 @@
+contact_links:
+  - name: Document
+    url: https://sfajs.com
+    about: Find the answer in the document first.
+  - name: Questions & Discussions
+    url: https://github.com/sfajs/sfa/discussions
+    about: Use GitHub discussions for message-board style questions and discussions.

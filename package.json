@@ -1,6 +1,6 @@
 {
   "name": "@sfajs/cli-common",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "@sfajs/cli 基础功能",
   "homepage": "https://github.com/sfajs/cli-common",
   "repository": {
@@ -27,11 +27,11 @@
   "author": "hal-wang",
   "license": "MIT",
   "dependencies": {
-    "@sfajs/core": "^1.4.3"
+    "@sfajs/core": "^1.4.4"
   },
   "devDependencies": {
     "@types/jest": "^28.1.1",
-    "@types/node": "^17.0.43",
+    "@types/node": "^17.0.44",
     "@typescript-eslint/eslint-plugin": "^5.28.0",
     "@typescript-eslint/parser": "^5.28.0",
     "codecov": "^3.8.3",
