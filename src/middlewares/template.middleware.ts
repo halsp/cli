@@ -1,4 +1,4 @@
-import { CommandType } from "@sfajs/cli-common";
+import { CommandType } from "../configuration";
 import { BaseMiddlware } from "./base.middleware";
 
 export class TemplateMiddleware extends BaseMiddlware {
