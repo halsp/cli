@@ -5,7 +5,7 @@ import { CreateMiddleware } from "../../src/middlewares/create-middleware";
 import * as fs from "fs";
 
 function testTemplate(plugins: Plugin[]) {
-  const pluginsStr = plugins.join(",");
+  const pluginsStr = plugins.join("_");
   test(
     `create template ${pluginsStr}`,
     async () => {
@@ -29,6 +29,12 @@ function testTemplate(plugins: Plugin[]) {
         )
           .add(CreateMiddleware)
           .run();
+      });
+
+      expect(fs.existsSync(cacheDir)).toBeTruthy();
+      await fs.promises.rm(cacheDir, {
+        recursive: true,
+        force: true,
       });
     },
     1000 * 60 * 5
@@ -60,6 +66,8 @@ function testPlugins(count: number) {
   }
 }
 
-for (let i = 0; i < plugins.length; i++) {
-  testPlugins(i + 1);
-}
+// for (let i = 0; i < plugins.length; i++) {
+//   testPlugins(i + 1);
+// }
+
+testPlugins(plugins.length);
