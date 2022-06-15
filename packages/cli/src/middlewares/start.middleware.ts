@@ -173,7 +173,7 @@ export class StartMiddleware extends BaseMiddlware {
 
   private async copyEnterFile() {
     let code = await fs.promises.readFile(
-      path.join(__dirname, "../utils/run-startup.js"),
+      path.join(__dirname, "../enter/enter-startup.js"),
       "utf-8"
     );
     code = code.replace("{{MODE}}", this.mode);
