@@ -16,7 +16,7 @@ export function runTest<T extends object = any>(
         .use(async (ctx) => {
           const svc = await parseInject(ctx, service);
           expect(svc).not.toBeUndefined();
-          expectFn(ctx, svc);
+          await expectFn(ctx, svc);
           worked = true;
         })
         .run();

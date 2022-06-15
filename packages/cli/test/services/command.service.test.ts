@@ -2,7 +2,7 @@ import { CommandService } from "../../src/services/command.service";
 import { ConfigService } from "../../src/services/config.service";
 import { runTest } from "./runTest";
 
-runTest(ConfigService, async (res, service) => {
+runTest(ConfigService, async (ctx, service) => {
   expect(
     service.getOptionOrConfigValue("not-exist", "not-exist")
   ).toBeUndefined();
@@ -11,7 +11,7 @@ runTest(ConfigService, async (res, service) => {
 
 runTest(
   ConfigService,
-  async (res, service) => {
+  async (ctx, service) => {
     expect(service.getOptionOrConfigValue("from-command", "from-command")).toBe(
       1
     );
@@ -23,7 +23,7 @@ runTest(
 
 runTest(
   CommandService,
-  async (res, service) => {
+  async (ctx, service) => {
     expect(service.getOptionVlaue("from-command", "from-command")).toBe(1);
     return;
   },
@@ -31,7 +31,7 @@ runTest(
   { "from-command": 1 }
 );
 
-runTest(ConfigService, async (res, service) => {
+runTest(ConfigService, async (ctx, service) => {
   expect(
     service.getOptionOrConfigValue(
       "services.from-config",
@@ -41,14 +41,14 @@ runTest(ConfigService, async (res, service) => {
   return;
 });
 
-runTest(ConfigService, async (res, service) => {
+runTest(ConfigService, async (ctx, service) => {
   expect(
     service.getConfigValue("services.from-config", "services.from-config")
   ).toBe(1);
   return;
 });
 
-runTest(ConfigService, async (res, service) => {
+runTest(ConfigService, async (ctx, service) => {
   expect(
     service.getOptionOrConfigValue(
       "services1.from-config",
@@ -58,7 +58,7 @@ runTest(ConfigService, async (res, service) => {
   return;
 });
 
-runTest(ConfigService, async (res, service) => {
+runTest(ConfigService, async (ctx, service) => {
   expect(
     service.getOptionOrConfigValue("services.", "services.")
   ).toBeUndefined();
