@@ -11,7 +11,7 @@ async function testTemplate(
 ) {
   let worked = false;
   await runin("test/services/create", async () => {
-    await new CliStartup()
+    await new CliStartup({ name: "test" })
       .use(async (ctx) => {
         const service = await parseInject(ctx, CreateTemplateService);
         if (!fs.existsSync("./.sfa-cache")) {
@@ -42,6 +42,7 @@ async function testTemplateDefault(
       await beforeFn();
     }
 
+    expect((service["targetDir"] as string).endsWith("test")).toBeTruthy();
     Object.defineProperty(service, "targetDir", {
       get: () => path.join(__dirname, "dist/template"),
     });
@@ -161,6 +162,17 @@ test(`sourceDir not exist`, async () => {
     Object.defineProperty(service, "sourceDir", {
       get: () => path.join(__dirname, "not-exist"),
     });
+    expect(fs.existsSync("dist/not-exist")).toBeFalsy();
+  });
+});
+
+test(`error sourceDir`, async () => {
+  await testTemplate(async (service) => {
+    Object.defineProperty(service, "sourceDir", {
+      get: () => path.join(__dirname, "dist/not-exist"),
+    });
+
+    await service.create([]);
     expect(fs.existsSync("dist/not-exist")).toBeFalsy();
   });
 });
