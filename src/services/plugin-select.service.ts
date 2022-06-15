@@ -42,24 +42,29 @@ export class PluginSelectService {
     );
     const { dependencies, devDependencies } = pkg;
 
+    function add(plugin: Plugin) {
+      if (!result.includes(plugin)) {
+        result.push(plugin);
+      }
+    }
+
+    function addFromDeps(deps: any, plugin: Plugin) {
+      if (Object.keys(deps).some((dep) => dep == `@sfajs/${plugin}`)) {
+        add(plugin);
+      }
+    }
+
     plugins.forEach((plugin) => {
+      addFromDeps(dependencies, plugin);
+      addFromDeps(devDependencies, plugin);
+
       if (Object.keys(dependencies).some((dep) => dep == `@sfajs/${plugin}`)) {
         this.depsService
           .getPackageSfaDeps(`@sfajs/${plugin}`, paths)
           .map((item) => item.key.replace(/^@sfajs\//, "") as Plugin)
           .forEach((dep) => {
-            if (!result.includes(dep)) {
-              result.push(dep);
-            }
+            add(dep);
           });
-      }
-
-      if (
-        Object.keys(devDependencies).some((dep) => dep == `@sfajs/${plugin}`)
-      ) {
-        if (!result.includes(plugin)) {
-          result.push(plugin);
-        }
       }
     });
     return result;
