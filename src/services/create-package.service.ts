@@ -52,13 +52,18 @@ export class CreatePackageService {
       })
     );
 
+    const pm = await this.getPackageManager();
+    this.ctx.bag("PACKAGE_MANAGER", pm);
+
+    return await this.packageManagerService.install(pm, this.targetDir);
+  }
+
+  private async getPackageManager() {
     let pm = this.commandService.getOptionVlaue<string>("package-manager");
     if (!pm) {
       pm = await this.packageManagerService.pickPackageManager();
     }
-
-    this.ctx.bag("PACKAGE_MANAGER", pm);
-    return await this.packageManagerService.install(pm, this.targetDir);
+    return pm;
   }
 
   private setDeps(
@@ -66,6 +71,8 @@ export class CreatePackageService {
     plugins: Plugin[],
     pluginConfig: FixedPluginConfig
   ) {
+    if (!deps) return;
+
     const { constant, dependencies } = pluginConfig;
 
     Object.keys(deps)
@@ -89,16 +96,22 @@ export class CreatePackageService {
     return require(file);
   }
 
-  private setCliVersion(pkg: Record<string, any>): any {
+  private setCliVersion(pkg: Record<string, any>) {
     let version = this.commandService.getOptionVlaue<string>("cli-version");
     if (version == "cli-test") {
       version = path.join(__dirname, "../..");
     }
 
-    if (Object.keys(pkg.dependencies).includes("@sfajs/cli")) {
+    if (
+      pkg.dependencies &&
+      Object.keys(pkg.dependencies).includes("@sfajs/cli")
+    ) {
       pkg.dependencies["@sfajs/cli"] = version;
     }
-    if (Object.keys(pkg.devDependencies).includes("@sfajs/cli")) {
+    if (
+      pkg.devDependencies &&
+      Object.keys(pkg.devDependencies).includes("@sfajs/cli")
+    ) {
       pkg.devDependencies["@sfajs/cli"] = version;
     }
   }
