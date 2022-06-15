@@ -8,7 +8,7 @@ import killProcess from "tree-kill";
 import { START_DEV_FILE_NAME } from "../constant";
 import { treeKillSync } from "../utils/tree-kill";
 import { BaseMiddlware } from "./base.middleware";
-import { CommandType } from "@sfajs/cli-common";
+import { CommandType } from "../configuration";
 import shell from "shelljs";
 import { ConfigService } from "../services/config.service";
 

@@ -1,11 +1,10 @@
+export { defineConfig, ConfigEnv, Configuration } from "@sfajs/cli-common";
+
 export {
-  defineConfig,
-  ConfigEnv,
-  Configuration,
   Transformer,
   CommandType,
   AssetConfig,
   Postbuild,
   Prebuild,
   ScriptOptions,
-} from "@sfajs/cli-common";
+} from "./configuration";

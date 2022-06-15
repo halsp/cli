@@ -7,7 +7,7 @@ import { TsconfigService } from "../services/tsconfig.service";
 import { WatchCompilerService } from "../services/watch-compiler.service";
 import * as fs from "fs";
 import { BaseMiddlware } from "./base.middleware";
-import { CommandType, Postbuild, Prebuild } from "@sfajs/cli-common";
+import { CommandType, Postbuild, Prebuild } from "../configuration";
 import { DepsService } from "../services/deps.service";
 
 export class BuildMiddlware extends BaseMiddlware {

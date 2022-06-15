@@ -4,7 +4,7 @@ import { Inject } from "@sfajs/inject";
 import { FileService } from "../services/file.service";
 import { CreateEnvService } from "../services/create-env.service";
 import { PluginSelectService } from "../services/plugin-select.service";
-import { CommandType } from "@sfajs/cli-common";
+import { CommandType } from "../configuration";
 import { BaseMiddlware } from "./base.middleware";
 import { CreatePackageService } from "../services/create-package.service";
 import { CreateConfigService } from "../services/create-config.service";

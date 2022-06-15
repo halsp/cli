@@ -1,5 +1,4 @@
 import { Inject } from "@sfajs/inject";
-import chalk from "chalk";
 import { ChildProcess, spawn, SpawnOptions } from "child_process";
 import inquirer from "inquirer";
 import { LoadingService } from "./loading.service";
