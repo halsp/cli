@@ -1,3 +1,4 @@
 import { Startup } from "@sfajs/core";
 
-export default async <T extends Startup>(startup: T, mode?: string) => startup;
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export default async <T extends Startup>(startup: T, _mode?: string) => startup;
