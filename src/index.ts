@@ -1,2 +1,2 @@
 export { Configuration } from "./configuration";
-export { defineConfig } from "./define-config";
+export { defineConfig, ConfigEnv } from "./define-config";
