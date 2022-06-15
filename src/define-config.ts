@@ -1,10 +1,7 @@
-import { CommandType } from "./command-type";
 import { Configuration } from "./configuration";
 
-export type ConfigEnv = {
-  mode: string;
-  command: CommandType;
-};
+// eslint-disable-next-line @typescript-eslint/ban-types
+export type ConfigEnv = {};
 
 export function defineConfig(
   config: Configuration
@@ -15,9 +12,9 @@ export function defineConfig(
 export function defineConfig(
   config: Configuration | ((options: ConfigEnv) => Configuration)
 ): (options: ConfigEnv) => Configuration {
-  if (typeof config == "function") {
-    return config;
-  } else {
+  if (typeof config == "object") {
     return () => config;
+  } else {
+    return config;
   }
 }

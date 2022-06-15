@@ -5,10 +5,12 @@ test(`define config`, async () => {
     packageManager: "pnpm",
   });
   expect(
-    cfg({
-      mode: "test",
-      command: "start",
-    }).packageManager
+    (
+      cfg({
+        mode: "test",
+        command: "start",
+      }) as any
+    ).packageManager
   ).toBe("pnpm");
 });
 
@@ -20,16 +22,20 @@ test(`define func config`, async () => {
   });
 
   expect(
-    cfg({
-      mode: "test",
-      command: "start",
-    }).packageManager
+    (
+      cfg({
+        mode: "test",
+        command: "start",
+      }) as any
+    ).packageManager
   ).toBe("pnpm");
 
   expect(
-    cfg({
-      mode: "development",
-      command: "build",
-    }).packageManager
+    (
+      cfg({
+        mode: "development",
+        command: "build",
+      }) as any
+    ).packageManager
   ).toBe("cnpm");
 });

@@ -1,6 +1,6 @@
 {
   "name": "@sfajs/cli-common",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "@sfajs/cli 基础功能",
   "homepage": "https://github.com/sfajs/cli-common",
   "repository": {
