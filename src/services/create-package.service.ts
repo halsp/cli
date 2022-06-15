@@ -90,7 +90,11 @@ export class CreatePackageService {
   }
 
   private setCliVersion(pkg: Record<string, any>): any {
-    const version = this.commandService.getOptionVlaue<string>("cli-version");
+    let version = this.commandService.getOptionVlaue<string>("cli-version");
+    if (version == "cli-test") {
+      version = path.join(__dirname, "../..");
+    }
+
     if (Object.keys(pkg.dependencies).includes("@sfajs/cli")) {
       pkg.dependencies["@sfajs/cli"] = version;
     }
