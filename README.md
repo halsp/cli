@@ -31,7 +31,7 @@ npm install @sfajs/cli-common
 
 ## 贡献
 
-请阅读 [SfaJS Contributing Guide](https://github.com/sfajs/sfa/blob/main/CONTRIBUTING.md)
+请阅读 [SfaJS Contributing Guide](https://github.com/sfajs/core/blob/main/CONTRIBUTING.md)
 
 ### 贡献列表
 
