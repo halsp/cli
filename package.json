@@ -31,7 +31,7 @@
     "@sfajs/core": "^1.4.7",
     "@sfajs/inject": "^1.0.10",
     "@sfajs/pipe": "^1.1.6",
-    "chalk": "^4.1.2",
+    "chalk": "^5.0.1",
     "child_process": "^1.0.2",
     "chokidar": "^3.5.3",
     "commander": "^9.3.0",
