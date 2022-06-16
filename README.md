@@ -19,26 +19,6 @@
 
 `@sfajs/cli-common` 是 `@sfajs/cli` 的基础功能
 
-## 安装
-
-```
-npm install @sfajs/cli-common
-```
-
 ## 开始使用
 
 请访问 <https://sfajs.com>
-
-## 贡献
-
-请阅读 [SfaJS Contributing Guide](https://github.com/sfajs/core/blob/main/CONTRIBUTING.md)
-
-### 贡献列表
-
-<a href="https://github.com/sfajs/cli-common/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=sfajs/cli-common" />
-</a>
-
-## License
-
-@sfajs/cli-common is MIT licensed.
