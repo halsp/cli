@@ -7,7 +7,8 @@
     <a href="https://github.com/sfajs/cli-common/blob/main/LICENSE" target="_blank"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="GitHub license" /></a>
     <a href=""><img src="https://img.shields.io/npm/v/@sfajs/cli-common.svg" alt="npm version"></a>
     <a href=""><img src="https://badgen.net/npm/dt/@sfajs/cli-common" alt="npm downloads"></a>
-    <a href="#"><img src="https://github.com/sfajs/cli-common/actions/workflows/test.yml/badge.svg?branch=2.x" alt="Build Status"></a>
+    <a href="https://nodejs.org/en/about/releases/"><img src="https://img.shields.io/node/v/vite.svg" alt="node compatibility"></a>
+    <a href="#"><img src="https://github.com/sfajs/cli-common/actions/workflows/test.yml/badge.svg?branch=main" alt="Build Status"></a>
     <a href="https://codecov.io/gh/sfajs/cli-common/branch/main"><img src="https://img.shields.io/codecov/c/github/sfajs/cli-common/main.svg" alt="Test Coverage"></a>
     <a href="https://github.com/sfajs/cli-common/pulls"><img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg" alt="PRs Welcome"></a>
     <a href="https://gitpod.io/#https://github.com/sfajs/cli-common"><img src="https://img.shields.io/badge/Gitpod-Ready--to--Code-blue?logo=gitpod" alt="Gitpod Ready-to-Code"></a>
