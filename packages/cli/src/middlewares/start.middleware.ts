@@ -3,7 +3,7 @@ import { Inject } from "@sfajs/inject";
 import path from "path";
 import * as fs from "fs";
 import { TsconfigService } from "../services/tsconfig.service";
-import { spawn } from "child_process";
+import { ChildProcess, spawn } from "child_process";
 import killProcess from "tree-kill";
 import { START_DEV_FILE_NAME } from "../constant";
 import { treeKillSync } from "../utils/tree-kill";
@@ -73,7 +73,7 @@ export class StartMiddleware extends BaseMiddlware {
     await super.invoke();
 
     if (this.watch) {
-      this.ctx.bag("onWatchSuccess", this.createOnWatchSuccess.bind(this));
+      this.ctx.bag("onWatchSuccess", this.createOnWatchSuccess());
     }
 
     await this.next();
@@ -91,11 +91,19 @@ export class StartMiddleware extends BaseMiddlware {
   }
 
   private createOnWatchSuccess() {
-    let childProcessRef: any;
+    let childProcessRef: ChildProcess | undefined;
     process.on(
       "exit",
-      () => childProcessRef && treeKillSync(childProcessRef.pid)
+      () => childProcessRef?.pid && treeKillSync(childProcessRef.pid)
     );
+
+    const createChildProcess = () => {
+      childProcessRef = this.spawnChildProcess();
+      childProcessRef.on("exit", (code: number) => {
+        process.exitCode = code;
+        childProcessRef = undefined;
+      });
+    };
 
     return async () => {
       if (isUndefined(this.ctx.commandOptions["enterFile"])) {
@@ -105,18 +113,15 @@ export class StartMiddleware extends BaseMiddlware {
       if (childProcessRef) {
         childProcessRef.removeAllListeners("exit");
         childProcessRef.on("exit", () => {
-          childProcessRef = this.spawnChildProcess();
-          childProcessRef.on("exit", () => (childProcessRef = undefined));
+          createChildProcess();
         });
 
-        childProcessRef.stdin && childProcessRef.stdin.pause();
-        killProcess(childProcessRef.pid);
+        childProcessRef.stdin && childProcessRef.stdin.destroy();
+        if (childProcessRef.pid) {
+          killProcess(childProcessRef.pid);
+        }
       } else {
-        childProcessRef = this.spawnChildProcess();
-        childProcessRef.on("exit", (code: number) => {
-          process.exitCode = code;
-          childProcessRef = undefined;
-        });
+        createChildProcess();
       }
     };
   }
