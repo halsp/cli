@@ -2,7 +2,6 @@ import { Command } from "commander";
 import { CliStartup } from "../cli-startup";
 import { TemplateMiddleware } from "../middlewares/template.middleware";
 import { BaseCommand } from "./base.command";
-import "./base-create";
 
 export class TemplateCommand extends BaseCommand {
   register(command: Command): void {
@@ -10,7 +9,6 @@ export class TemplateCommand extends BaseCommand {
       .command("template [options] <template> <name>")
       .alias("t")
       .description("Generate a project from a remote template")
-      .setCreateOptions()
       .action(
         async (
           template: string,
