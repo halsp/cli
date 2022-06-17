@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   roots: ["<rootDir>/test"],
   testRegex: "test/(.+)\\.test\\.(jsx?|tsx?)$",
   transform: {
