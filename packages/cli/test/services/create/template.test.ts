@@ -127,7 +127,7 @@ test(`default template`, async () => {
     await service.create([]);
     expect(fs.existsSync("dist/default")).toBeTruthy();
     expect(fs.existsSync("dist/default/.eslintrc.js")).toBeTruthy();
-    expect(fs.existsSync("dist/default/LICENSE")).toBeTruthy();
+    expect(fs.existsSync("dist/default/jest.config.js")).toBeTruthy();
   });
 });
 
