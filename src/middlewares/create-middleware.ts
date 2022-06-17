@@ -11,7 +11,7 @@ import { CreateConfigService } from "../services/create-config.service";
 import path from "path";
 import { CommandService } from "../services/command.service";
 import { allPlugins, Plugin } from "../utils/plugins";
-import { CreateReadmeService } from "../services/copy-template-files.service";
+import { CopyBaseService } from "../services/copy-base-files.service";
 
 export class CreateMiddleware extends BaseMiddlware {
   override get command(): CommandType {
@@ -33,7 +33,7 @@ export class CreateMiddleware extends BaseMiddlware {
   @Inject
   private readonly commandService!: CommandService;
   @Inject
-  private readonly createReadmeService!: CreateReadmeService;
+  private readonly copyBaseService!: CopyBaseService;
 
   private get targetDir() {
     return this.createEnvService.targetDir;
@@ -71,7 +71,7 @@ export class CreateMiddleware extends BaseMiddlware {
 
     const createPackageResult = await this.createPackageService.create(plugins);
     if (!createPackageResult) return;
-    await this.createReadmeService.create();
+    await this.copyBaseService.copy();
 
     const fixedPlugins = await this.pluginSelectService.fixPlugins(
       plugins,
