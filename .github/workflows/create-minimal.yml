@@ -1,8 +1,10 @@
 name: "Create minimal"
 
 on:
-  release:
-    types: [created]
+  workflow_run:
+    workflows: ["Publish NPM"]
+    types:
+      - completed
   workflow_dispatch:
 
 jobs:
