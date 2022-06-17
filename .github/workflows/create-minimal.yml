@@ -1,3 +1,5 @@
+name: "Create minimal"
+
 on:
   release:
     types: [created]
@@ -9,6 +11,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+          fetch-depth: 0
       - uses: actions/setup-node@v2
         with:
           node-version: "16"
@@ -21,4 +26,4 @@ jobs:
           directory: minimal
           repository: sfajs/minimal
           force: true
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.PERSONAL_GITHUB_TOKEN }}
