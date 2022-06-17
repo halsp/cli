@@ -18,7 +18,9 @@ import { getSwaggerOptions } from "./utils/swagger";
 import { JwtService } from "@sfajs/jwt";
 // { inject
 import { parseInject } from "@sfajs/inject";
+/// { !router
 import { UserService } from "./services/user.service";
+/// }
 // }
 
 export default <T extends Startup>(startup: T, mode?: string) =>
