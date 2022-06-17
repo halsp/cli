@@ -1,0 +1,24 @@
+on:
+  release:
+    types: [created]
+  workflow_dispatch:
+
+jobs:
+  create-minimal:
+    if: github.repository == 'sfajs/cli'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: "16"
+          registry-url: https://registry.npmjs.org/
+      - run: sh scripts/create-minimal.sh
+
+      - name: push
+        uses: ad-m/github-push-action@master
+        with:
+          directory: minimal
+          repository: sfajs/minimal
+          force: true
+          github_token: ${{ secrets.GITHUB_TOKEN }}

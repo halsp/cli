@@ -3,7 +3,6 @@ import * as fs from "fs";
 import { FileService } from "./file.service";
 import path from "path";
 import { CreateEnvService } from "./create-env.service";
-import { Plugin } from "../utils/plugins";
 
 export class CreateReadmeService {
   @Inject
