@@ -1,6 +1,6 @@
 {
   "name": "@sfajs/cli",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "sfajs 的命令行脚手架工具",
   "homepage": "https://github.com/sfajs/cli",
   "repository": {
@@ -29,7 +29,7 @@
   "dependencies": {
     "@sfajs/cli-common": "^0.2.5",
     "@sfajs/core": "^1.4.7",
-    "@sfajs/inject": "^1.0.10",
+    "@sfajs/inject": "^1.1.0",
     "@sfajs/pipe": "^1.1.6",
     "chalk": "^4.1.2",
     "child_process": "^1.0.2",
@@ -55,13 +55,13 @@
     "@typescript-eslint/eslint-plugin": "^5.28.0",
     "@typescript-eslint/parser": "^5.28.0",
     "codecov": "^3.8.3",
-    "eslint": "^8.17.0",
+    "eslint": "^8.18.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.0.0",
     "jest": "^28.1.1",
     "ts-jest": "^28.0.5",
     "ts-node": "^10.8.1",
-    "typescript": "^4.7.3"
+    "typescript": "^4.7.4"
   },
   "peerDependencies": {
     "@sfajs/cli-common": "0.2.x",

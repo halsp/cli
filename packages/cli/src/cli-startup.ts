@@ -7,23 +7,8 @@ import {
   COMMAND_TYPE_METADATA,
   HOOK_EXCEPTION,
 } from "./constant";
-import { TsconfigService } from "./services/tsconfig.service";
 import { ConfigService } from "./services/config.service";
-import { TsLoaderService } from "./services/ts-loader.service";
-import { FileService } from "./services/file.service";
-import { CompilerService } from "./services/compiler.service";
-import { WatchCompilerService } from "./services/watch-compiler.service";
-import { CommandService } from "./services/command.service";
-import { AssetsService } from "./services/assets.service";
-import { CreateTemplateService } from "./services/create-template.service";
-import { DepsService } from "./services/deps.service";
-import { CreateEnvService } from "./services/create-env.service";
-import { PluginSelectService } from "./services/plugin-select.service";
 import { CommandType } from "./configuration";
-import { CreatePackageService } from "./services/create-package.service";
-import { PackageManagerService } from "./services/package-manager.service";
-import { LoadingService } from "./services/loading.service";
-import { CreateConfigService } from "./services/create-config.service";
 import { parseInject } from "@sfajs/inject";
 
 declare module "@sfajs/core" {
@@ -76,26 +61,11 @@ export class CliStartup extends Startup {
       return true;
     })
       .useInject()
-      .inject(TsconfigService)
       .inject(ConfigService, async (ctx) => {
         const result = await parseInject(ctx, new ConfigService());
         await result.init();
         return result;
-      })
-      .inject(TsLoaderService)
-      .inject(FileService)
-      .inject(CompilerService)
-      .inject(WatchCompilerService)
-      .inject(CommandService)
-      .inject(AssetsService)
-      .inject(CreateTemplateService)
-      .inject(CreateEnvService)
-      .inject(PluginSelectService)
-      .inject(DepsService)
-      .inject(CreatePackageService)
-      .inject(PackageManagerService)
-      .inject(LoadingService)
-      .inject(CreateConfigService);
+      });
   }
 
   async run() {

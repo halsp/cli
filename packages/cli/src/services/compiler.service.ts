@@ -1,5 +1,5 @@
 import { Inject } from "@sfajs/inject";
-import * as ts from "typescript";
+import ts from "typescript";
 import { ConfigService } from "./config.service";
 import { TsLoaderService } from "./ts-loader.service";
 import { TsconfigService } from "./tsconfig.service";
