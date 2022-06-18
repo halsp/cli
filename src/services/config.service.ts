@@ -5,6 +5,7 @@ import { Configuration, ConfigEnv } from "@sfajs/cli-common";
 import { Inject } from "@sfajs/inject";
 import { CommandService } from "./command.service";
 import { FileService } from "./file.service";
+import * as tsNode from "ts-node";
 
 export class ConfigService {
   @Context
@@ -135,24 +136,14 @@ export class ConfigService {
   }
 
   private async registerTsNode() {
-    try {
-      const tsNode = await import("ts-node");
-      return tsNode.register({
-        compilerOptions: {
-          module: "CommonJS",
-        },
-        moduleTypes: {
-          "**": "cjs",
-        },
-      });
-    } catch (e: any) {
-      if (e.code === "ERR_MODULE_NOT_FOUND") {
-        throw new Error(
-          `Jest: 'ts-node' is required for the TypeScript configuration files. Make sure it is installed\nError: ${e.message}`
-        );
-      }
-      throw e;
-    }
+    return tsNode.register({
+      compilerOptions: {
+        module: "CommonJS",
+      },
+      moduleTypes: {
+        "**": "cjs",
+      },
+    });
   }
 
   getConfigValue<T = any>(paths: string[] | string): T | undefined;
