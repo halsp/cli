@@ -1,4 +1,4 @@
-import * as ts from "typescript";
+import ts from "typescript";
 
 export class TsLoaderService {
   #tsBinary: typeof ts | undefined = undefined;

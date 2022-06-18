@@ -1,4 +1,4 @@
-import * as ts from "typescript";
+import ts from "typescript";
 import * as fs from "fs";
 import { Context } from "@sfajs/pipe";
 import { HttpContext } from "@sfajs/core";

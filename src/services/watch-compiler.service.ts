@@ -1,7 +1,7 @@
 import { HttpContext } from "@sfajs/core";
 import { Inject } from "@sfajs/inject";
 import { Context } from "@sfajs/pipe";
-import * as ts from "typescript";
+import ts from "typescript";
 import { CommandService } from "./command.service";
 import { ConfigService } from "./config.service";
 import { TsLoaderService } from "./ts-loader.service";
