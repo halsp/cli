@@ -2,7 +2,6 @@ import { Command } from "commander";
 import { BuildCommand } from "./commands/build.command";
 import { CreateCommand } from "./commands/create.command";
 import { InfoCommand } from "./commands/info.command";
-import { InitCommand } from "./commands/init.command";
 import { StartCommand } from "./commands/start.command";
 import { TemplateCommand } from "./commands/template.command";
 import { UpdateCommand } from "./commands/update.command";
@@ -15,7 +14,6 @@ program
   .version(require("../package").version);
 
 new CreateCommand().register(program);
-new InitCommand().register(program);
 new TemplateCommand().register(program);
 new BuildCommand().register(program);
 new StartCommand().register(program);
