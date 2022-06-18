@@ -1,17 +1,10 @@
 import ts from "typescript";
 import * as fs from "fs";
-import { Context } from "@sfajs/pipe";
-import { HttpContext } from "@sfajs/core";
 import path from "path";
 import { Inject } from "@sfajs/inject";
-import { TsLoaderService } from "./ts-loader.service";
 import { CommandService } from "./command.service";
 
 export class TsconfigService {
-  @Context
-  private readonly ctx!: HttpContext;
-  @Inject
-  private readonly tsLoaderService!: TsLoaderService;
   @Inject
   private readonly commandService!: CommandService;
 
@@ -29,9 +22,6 @@ export class TsconfigService {
   }
   get outDir() {
     return this.value.compilerOptions?.outDir || "dist";
-  }
-  private get tsBinary() {
-    return this.tsLoaderService.tsBinary;
   }
 
   #value: ts.TranspileOptions | undefined = undefined;
@@ -61,10 +51,10 @@ export class TsconfigService {
   ) {
     this.ensureTsconfigFile();
 
-    const parsedCmd = this.tsBinary.getParsedCommandLineOfConfigFile(
+    const parsedCmd = ts.getParsedCommandLineOfConfigFile(
       this.filePath,
       optionsToExtend,
-      this.tsBinary.sys as unknown as ts.ParseConfigFileHost,
+      ts.sys as unknown as ts.ParseConfigFileHost,
       extendedConfigCache,
       watchOptionsToExtend,
       extraFileExtensions

@@ -1,29 +1,19 @@
-import { HttpContext } from "@sfajs/core";
 import { Inject } from "@sfajs/inject";
-import { Context } from "@sfajs/pipe";
 import ts from "typescript";
 import { CommandService } from "./command.service";
 import { ConfigService } from "./config.service";
-import { TsLoaderService } from "./ts-loader.service";
 import { TsconfigService } from "./tsconfig.service";
 
 export class WatchCompilerService {
-  @Context
-  private readonly ctx!: HttpContext;
   @Inject
   private readonly tsconfigService!: TsconfigService;
   @Inject
   private readonly configService!: ConfigService;
   @Inject
-  private readonly tsLoaderService!: TsLoaderService;
-  @Inject
   private readonly commandService!: CommandService;
 
   private watcher?: ts.WatchOfConfigFile<ts.EmitAndSemanticDiagnosticsBuilderProgram>;
 
-  private get tsBinary() {
-    return this.tsLoaderService.tsBinary;
-  }
   private get config() {
     return this.configService.value;
   }
@@ -42,17 +32,19 @@ export class WatchCompilerService {
     }
     const { projectReferences } = this.tsconfigService.parsedCommandLine;
 
-    const origDiagnosticReporter = (
-      this.tsBinary as any
-    ).createDiagnosticReporter(this.tsBinary.sys, true);
-    const origWatchStatusReporter = (
-      this.tsBinary as any
-    ).createWatchStatusReporter(this.tsBinary.sys, true);
-    const host = this.tsBinary.createWatchCompilerHost(
+    const origDiagnosticReporter = (ts as any).createDiagnosticReporter(
+      ts.sys,
+      true
+    );
+    const origWatchStatusReporter = (ts as any).createWatchStatusReporter(
+      ts.sys,
+      true
+    );
+    const host = ts.createWatchCompilerHost(
       this.tsconfigService.filePath,
       tsCompilerOptions,
-      this.tsBinary.sys,
-      this.tsBinary.createEmitAndSemanticDiagnosticsBuilderProgram,
+      ts.sys,
+      ts.createEmitAndSemanticDiagnosticsBuilderProgram,
       this.createDiagnosticReporter(origDiagnosticReporter),
       this.createWatchStatusChanged(origWatchStatusReporter, onSuccess)
     );
@@ -113,7 +105,7 @@ export class WatchCompilerService {
       return program;
     };
 
-    this.watcher = this.tsBinary.createWatchProgram(host);
+    this.watcher = ts.createWatchProgram(host);
     return true;
   }
 

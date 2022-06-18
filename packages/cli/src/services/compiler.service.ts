@@ -1,7 +1,6 @@
 import { Inject } from "@sfajs/inject";
 import ts from "typescript";
 import { ConfigService } from "./config.service";
-import { TsLoaderService } from "./ts-loader.service";
 import { TsconfigService } from "./tsconfig.service";
 
 export class CompilerService {
@@ -9,12 +8,7 @@ export class CompilerService {
   private readonly tsconfigService!: TsconfigService;
   @Inject
   private readonly configService!: ConfigService;
-  @Inject
-  private readonly tsLoaderService!: TsLoaderService;
 
-  private get tsBinary() {
-    return this.tsLoaderService.tsBinary;
-  }
   private get config() {
     return this.configService.value;
   }
@@ -22,14 +16,13 @@ export class CompilerService {
   compiler(outDir: string) {
     const formatHost: ts.FormatDiagnosticsHost = {
       getCanonicalFileName: (path) => path,
-      getCurrentDirectory: this.tsBinary.sys.getCurrentDirectory,
-      getNewLine: () => this.tsBinary.sys.newLine,
+      getCurrentDirectory: ts.sys.getCurrentDirectory,
+      getNewLine: () => ts.sys.newLine,
     };
     const { options, fileNames, projectReferences } =
       this.tsconfigService.parsedCommandLine;
 
-    const createProgram =
-      this.tsBinary.createIncrementalProgram || this.tsBinary.createProgram;
+    const createProgram = ts.createIncrementalProgram || ts.createProgram;
     const buildProgram = createProgram.call(ts, {
       rootNames: fileNames,
       projectReferences,
@@ -75,20 +68,15 @@ export class CompilerService {
     emitResult: ts.EmitResult,
     formatHost: ts.FormatDiagnosticsHost
   ): number {
-    const diagnostics = this.tsBinary
+    const diagnostics = ts
       .getPreEmitDiagnostics(program as unknown as ts.Program)
       .concat(emitResult.diagnostics);
 
     if (diagnostics.length > 0) {
       console.error(
-        this.tsBinary.formatDiagnosticsWithColorAndContext(
-          diagnostics,
-          formatHost
-        )
+        ts.formatDiagnosticsWithColorAndContext(diagnostics, formatHost)
       );
-      console.info(
-        `Found ${diagnostics.length} error(s).` + this.tsBinary.sys.newLine
-      );
+      console.info(`Found ${diagnostics.length} error(s).` + ts.sys.newLine);
     }
     return diagnostics.length;
   }
