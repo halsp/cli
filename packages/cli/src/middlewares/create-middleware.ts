@@ -12,6 +12,7 @@ import path from "path";
 import { CommandService } from "../services/command.service";
 import { allPlugins, Plugin } from "../utils/plugins";
 import { CopyBaseService } from "../services/copy-base-files.service";
+import inquirer from "inquirer";
 
 export class CreateMiddleware extends BaseMiddlware {
   override get command(): CommandType {
@@ -41,6 +42,10 @@ export class CreateMiddleware extends BaseMiddlware {
 
   override async invoke(): Promise<void> {
     await super.invoke();
+
+    if (!(await this.checkName())) {
+      return;
+    }
 
     if (fs.existsSync(this.targetDir)) {
       const force = this.commandService.getOptionVlaue<boolean>("force");
@@ -101,5 +106,30 @@ export class CreateMiddleware extends BaseMiddlware {
       plugins = await this.pluginSelectService.select();
     }
     return plugins;
+  }
+
+  private async checkName(): Promise<boolean> {
+    if (this.ctx.commandArgs.name) {
+      return true;
+    }
+
+    const { name } = await inquirer.prompt([
+      {
+        type: "input",
+        message: "Project name:",
+        name: "name",
+        default: "sfa-project",
+        validate: (input) => {
+          const result = /^[^?v\*|""<>:/]{1,256}$/.test(input.trim());
+          if (result) {
+            return true;
+          } else {
+            return "Illegal name, please try again.";
+          }
+        },
+      },
+    ]);
+    this.ctx.commandArgs.name = name.trim();
+    return true;
   }
 }

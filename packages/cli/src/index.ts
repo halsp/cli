@@ -8,3 +8,5 @@ export {
   Prebuild,
   ScriptOptions,
 } from "./configuration";
+
+export { InitCommand } from "./commands/init.command";
