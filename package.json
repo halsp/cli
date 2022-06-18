@@ -1,6 +1,6 @@
 {
   "name": "create-sfa",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "sfajs 快速开始脚手架工具",
   "homepage": "https://github.com/sfajs/create-sfa",
   "repository": {
@@ -52,7 +52,7 @@
     }
   },
   "bin": {
-    "sfa": "bin/create-sfa.js"
+    "create-sfa": "bin/index.js"
   },
   "files": [
     "/.github/*",
