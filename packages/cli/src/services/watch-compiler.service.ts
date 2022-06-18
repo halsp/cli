@@ -1,6 +1,7 @@
+import { isUndefined } from "@sfajs/core";
 import { Inject } from "@sfajs/inject";
 import ts from "typescript";
-import { CommandService } from "./command.service";
+import { CompilerService } from "./compiler.service";
 import { ConfigService } from "./config.service";
 import { TsconfigService } from "./tsconfig.service";
 
@@ -10,7 +11,7 @@ export class WatchCompilerService {
   @Inject
   private readonly configService!: ConfigService;
   @Inject
-  private readonly commandService!: CommandService;
+  private readonly compilerService!: CompilerService;
 
   private watcher?: ts.WatchOfConfigFile<ts.EmitAndSemanticDiagnosticsBuilderProgram>;
 
@@ -18,18 +19,13 @@ export class WatchCompilerService {
     return this.configService.value;
   }
   private get preserveWatchOutput() {
-    return (
-      this.commandService.getOptionVlaue<boolean>("preserveWatchOutput") == true
+    return this.configService.getOptionOrConfigValue<boolean, boolean>(
+      "preserveWatchOutput",
+      "build.preserveWatchOutput"
     );
   }
 
   compiler(outDir: string, onSuccess?: () => void) {
-    const tsCompilerOptions: ts.CompilerOptions = {
-      outDir,
-    };
-    if (this.preserveWatchOutput) {
-      tsCompilerOptions.preserveWatchOutput = true;
-    }
     const { projectReferences } = this.tsconfigService.parsedCommandLine;
 
     const origDiagnosticReporter = (ts as any).createDiagnosticReporter(
@@ -40,9 +36,10 @@ export class WatchCompilerService {
       ts.sys,
       true
     );
+
     const host = ts.createWatchCompilerHost(
       this.tsconfigService.filePath,
-      tsCompilerOptions,
+      this.getCompilerOptions(outDir),
       ts.sys,
       ts.createEmitAndSemanticDiagnosticsBuilderProgram,
       this.createDiagnosticReporter(origDiagnosticReporter),
@@ -112,6 +109,19 @@ export class WatchCompilerService {
   stop() {
     this.watcher?.close();
     this.watcher = undefined;
+  }
+
+  private getCompilerOptions(outDir: string) {
+    const tsCompilerOptions: ts.CompilerOptions = {
+      outDir,
+    };
+    if (!isUndefined(this.compilerService.sourceMap)) {
+      tsCompilerOptions.sourceMap = this.compilerService.sourceMap;
+    }
+    if (!isUndefined(this.preserveWatchOutput)) {
+      tsCompilerOptions.preserveWatchOutput = this.preserveWatchOutput;
+    }
+    return tsCompilerOptions;
   }
 
   private createDiagnosticReporter(
