@@ -1,9 +1,13 @@
+import { HttpContext, isUndefined } from "@sfajs/core";
 import { Inject } from "@sfajs/inject";
+import { Context } from "@sfajs/pipe";
 import ts from "typescript";
 import { ConfigService } from "./config.service";
 import { TsconfigService } from "./tsconfig.service";
 
 export class CompilerService {
+  @Context
+  private readonly ctx!: HttpContext;
   @Inject
   private readonly tsconfigService!: TsconfigService;
   @Inject
@@ -11,6 +15,16 @@ export class CompilerService {
 
   private get config() {
     return this.configService.value;
+  }
+  public get sourceMap() {
+    if (this.ctx.command == "start") {
+      return true;
+    }
+
+    return this.configService.getOptionOrConfigValue<boolean, boolean>(
+      "sourceMap",
+      "build.sourceMap"
+    );
   }
 
   compiler(outDir: string) {
@@ -26,9 +40,7 @@ export class CompilerService {
     const buildProgram = createProgram.call(ts, {
       rootNames: fileNames,
       projectReferences,
-      options: Object.assign({}, options, {
-        outDir,
-      }),
+      options: this.getCompilerOptions(options, outDir),
     });
     const program = buildProgram.getProgram();
 
@@ -61,6 +73,16 @@ export class CompilerService {
       process.exit(1);
     }
     return !errorsCount;
+  }
+
+  private getCompilerOptions(options: ts.CompilerOptions, outDir: string) {
+    const opts: Record<string, any> = {
+      outDir,
+    };
+    if (!isUndefined(this.sourceMap)) {
+      opts.sourceMap = this.sourceMap;
+    }
+    return Object.assign({}, options, opts);
   }
 
   private reportAfterCompilationDiagnostic(

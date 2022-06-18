@@ -10,6 +10,7 @@ export class StartCommand extends BaseCommand {
     command
       .command("start")
       .alias("s")
+      .description("Run sfa application.")
       .setBuildOptions("development")
       .option(
         "-b, --binary-to-run [program]",
@@ -17,7 +18,6 @@ export class StartCommand extends BaseCommand {
         "node"
       )
       .option("-p, --port [port]", "The port on http listens", "2333")
-      .description("Run sfa application.")
       .action(async (command: Record<string, boolean | string>) => {
         await new CliStartup(undefined, command)
           .add(StartMiddleware)

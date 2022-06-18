@@ -52,8 +52,10 @@ declare module "@sfajs/cli-common" {
 
       readonly watch?: boolean;
       readonly watchAssets?: boolean;
+      readonly preserveWatchOutput?: boolean;
 
       readonly tsConfigPath?: string;
+      readonly sourceMap?: boolean;
     };
     readonly start?: {
       readonly port?: number;

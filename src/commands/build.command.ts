@@ -10,8 +10,14 @@ export class BuildCommand extends BaseCommand {
     command
       .command("build")
       .alias("b")
-      .setBuildOptions("production")
       .description("Build sfa application.")
+      .setBuildOptions("production")
+      .option("-sm, --sourceMap", "Whether to generate source map files.")
+      .option(
+        "-b, --binary-to-run [program]",
+        "Binary to run application (e.g., node, ts-node).",
+        "node"
+      )
       .action(async (command: Record<string, boolean | string>) => {
         await new CliStartup(undefined, command)
           .add(BuildMiddlware)

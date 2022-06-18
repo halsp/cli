@@ -17,7 +17,9 @@ import { getSwaggerOptions } from "./utils/swagger";
 // }
 import { JwtService } from "@sfajs/jwt";
 // { inject
+/// { !router || jwt
 import { parseInject } from "@sfajs/inject";
+/// }
 /// { !router
 import { UserService } from "./services/user.service";
 /// }
