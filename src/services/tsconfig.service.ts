@@ -8,13 +8,13 @@ export class TsconfigService {
   @Inject
   private readonly commandService!: CommandService;
 
-  get fileName() {
+  private get fileName() {
     return (
       this.commandService.getOptionVlaue<string>("tsconfigFile") ??
       "tsconfig.json"
     );
   }
-  get filePath() {
+  private get filePath() {
     return path.resolve(process.cwd(), this.fileName);
   }
   get cacheDir() {
