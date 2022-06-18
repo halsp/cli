@@ -2,7 +2,7 @@ import { TsconfigService } from "../../src/services/tsconfig.service";
 import { runTest } from "./runTest";
 
 runTest(TsconfigService, async (ctx, service) => {
-  expect(service.outDir).toBe("./dist");
+  expect(service.outDir).toBe("dist");
 });
 
 runTest(
