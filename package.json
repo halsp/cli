@@ -1,6 +1,6 @@
 {
   "name": "create-sfa",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "description": "sfajs 快速开始脚手架工具",
   "homepage": "https://github.com/sfajs/create-sfa",
   "repository": {
@@ -25,7 +25,7 @@
   "author": "hal-wang",
   "license": "MIT",
   "dependencies": {
-    "@sfajs/cli": "^0.1.1",
+    "@sfajs/cli": "^0.1.2",
     "commander": "^9.3.0"
   },
   "devDependencies": {
