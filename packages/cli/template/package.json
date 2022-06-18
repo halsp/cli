@@ -30,9 +30,9 @@
     "@sfajs/core": "^1.4.7",
     "@sfajs/filter": "^1.0.4",
     "@sfajs/http": "^1.1.2",
-    "@sfajs/inject": "^1.0.10",
+    "@sfajs/inject": "^1.1.0",
     "@sfajs/jwt": "^0.3.4",
-    "@sfajs/mva": "^1.4.3",
+    "@sfajs/mva": "^1.5.0",
     "@sfajs/pipe": "^1.1.6",
     "@sfajs/router": "^2.0.6",
     "@sfajs/static": "^1.1.1",
@@ -43,18 +43,17 @@
   "devDependencies": {
     "@sfajs/cli": "../",
     "@sfajs/testing": "^0.0.2",
-    "@types/jest": "^28.1.1",
+    "@types/jest": "^28.1.2",
     "@types/node": "^18.0.0",
     "@typescript-eslint/eslint-plugin": "^5.28.0",
     "@typescript-eslint/parser": "^5.28.0",
     "ejs": "^3.1.8",
-    "eslint": "^8.17.0",
+    "eslint": "^8.18.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.0.0",
     "jest": "^28.1.1",
     "prettier": "^2.7.1",
     "ts-jest": "^28.0.5",
-    "typescript": "^4.7.3",
-    "ts-node": "^10.8.1"
+    "typescript": "^4.7.4"
   }
 }
