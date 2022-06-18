@@ -29,7 +29,7 @@ Command.prototype.setCreateOptions = function () {
       "-ps, --plugins [plugins]",
       "Plugins to add (e.g. view,router,inject)"
     )
-    .option("-ps, --skip-plugins", "No plugins will be added");
+    .option("-sp, --skip-plugins", "No plugins will be added");
 };
 
 function getCliVersion() {

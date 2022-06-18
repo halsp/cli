@@ -89,7 +89,7 @@ export class CreateMiddleware extends BaseMiddlware {
   }
 
   private async getPlugins() {
-    if (this.commandService.getOptionVlaue<boolean>("skip-plugins")) {
+    if (this.commandService.getOptionVlaue<boolean>("skipPlugins")) {
       return [];
     }
 
