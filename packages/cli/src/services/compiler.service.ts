@@ -76,7 +76,7 @@ export class CompilerService {
   }
 
   private getCompilerOptions(options: ts.CompilerOptions, outDir: string) {
-    const opts: Record<string, any> = {
+    const opts: ts.CompilerOptions = {
       outDir,
     };
     if (!isUndefined(this.sourceMap)) {

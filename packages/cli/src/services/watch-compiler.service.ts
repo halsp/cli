@@ -26,7 +26,8 @@ export class WatchCompilerService {
   }
 
   compiler(outDir: string, onSuccess?: () => void) {
-    const { projectReferences } = this.tsconfigService.parsedCommandLine;
+    const { projectReferences, fileNames, options } =
+      this.tsconfigService.parsedCommandLine;
 
     const origDiagnosticReporter = (ts as any).createDiagnosticReporter(
       ts.sys,
@@ -38,8 +39,8 @@ export class WatchCompilerService {
     );
 
     const host = ts.createWatchCompilerHost(
-      this.tsconfigService.filePath,
-      this.getCompilerOptions(outDir),
+      fileNames,
+      this.getCompilerOptions(options, outDir),
       ts.sys,
       ts.createEmitAndSemanticDiagnosticsBuilderProgram,
       this.createDiagnosticReporter(origDiagnosticReporter),
@@ -111,17 +112,17 @@ export class WatchCompilerService {
     this.watcher = undefined;
   }
 
-  private getCompilerOptions(outDir: string) {
-    const tsCompilerOptions: ts.CompilerOptions = {
+  private getCompilerOptions(options: ts.CompilerOptions, outDir: string) {
+    const opts: ts.CompilerOptions = {
       outDir,
     };
     if (!isUndefined(this.compilerService.sourceMap)) {
-      tsCompilerOptions.sourceMap = this.compilerService.sourceMap;
+      opts.sourceMap = this.compilerService.sourceMap;
     }
     if (!isUndefined(this.preserveWatchOutput)) {
-      tsCompilerOptions.preserveWatchOutput = this.preserveWatchOutput;
+      opts.preserveWatchOutput = this.preserveWatchOutput;
     }
-    return tsCompilerOptions;
+    return Object.assign({}, options, opts);
   }
 
   private createDiagnosticReporter(
