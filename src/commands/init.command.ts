@@ -4,13 +4,11 @@ import { CreateMiddleware } from "../middlewares/create-middleware";
 import { BaseCommand } from "./base.command";
 import "./base-create";
 
-export class CreateCommand extends BaseCommand {
+export class InitCommand extends BaseCommand {
   register(command: Command): void {
     command
-      .command("create")
-      .alias("c")
+      .argument("[name]", "Application name")
       .description("Generate sfa application")
-      .argument("[name]", "Aapplication name")
       .setCreateOptions()
       .action(
         async (name: string, command: Record<string, boolean | string>) => {
