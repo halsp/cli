@@ -6,17 +6,15 @@ import { parseInject } from "@sfajs/inject";
 import { AssetsService } from "../../src/services/assets.service";
 import { WatchCompilerService } from "../../src/services/watch-compiler.service";
 
-function runTest(options: {
-  callback?: boolean;
-  preserveWatchOutput?: boolean;
-}) {
+function runTest(options: { callback?: boolean }) {
   test(`build watch`, async () => {
     let callCount = 0;
     await runin(`test/build/watch`, async () => {
       await new CliStartup(undefined, {
         watch: true,
         watchAssets: true,
-        preserveWatchOutput: options.preserveWatchOutput == true,
+        preserveWatchOutput: true,
+        sourceMap: true,
       })
         .use(async (ctx, next) => {
           if (options.callback) {
@@ -44,6 +42,7 @@ function runTest(options: {
 
       expect(fs.existsSync("./.sfa-cache")).toBeTruthy();
       expect(fs.existsSync("./.sfa-cache/build-test.js")).toBeTruthy();
+      expect(fs.existsSync("./.sfa-cache/build-test.js.map")).toBeTruthy();
       callCount++;
     });
     expect(callCount).toBe(options.callback ? 3 : 2);
@@ -55,7 +54,4 @@ runTest({
 });
 runTest({
   callback: false,
-});
-runTest({
-  preserveWatchOutput: true,
 });
