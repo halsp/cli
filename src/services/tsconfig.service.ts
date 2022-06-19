@@ -21,18 +21,7 @@ export class TsconfigService {
     return ".sfa-cache";
   }
   get outDir() {
-    return this.value.compilerOptions?.outDir || "dist";
-  }
-
-  #value: ts.TranspileOptions | undefined = undefined;
-  get value(): ts.TranspileOptions {
-    if (this.#value == undefined) {
-      this.ensureTsconfigFile();
-
-      const text = fs.readFileSync(this.filePath, "utf-8");
-      this.#value = JSON.parse(text) as ts.TranspileOptions;
-    }
-    return this.#value;
+    return this.parsedCommandLine.options.outDir || "dist";
   }
 
   #parsedCommandLine: ts.ParsedCommandLine | undefined = undefined;

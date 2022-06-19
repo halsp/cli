@@ -14,3 +14,10 @@ runTest(DepsService, async (ctx, service) => {
   );
   expect(depPath).toBe(pkgPath);
 });
+
+runTest(DepsService, async (ctx, service) => {
+  const depPath = (service as any).getPackagePath("@sfajs/inject");
+  const deps = service.getDeps(depPath, () => false);
+  expect(Array.isArray(deps)).toBeTruthy();
+  expect(deps.length).toBe(0);
+});
