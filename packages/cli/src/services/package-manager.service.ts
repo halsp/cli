@@ -1,12 +1,7 @@
-import { Inject } from "@sfajs/inject";
 import { ChildProcess, spawn, SpawnOptions } from "child_process";
 import inquirer from "inquirer";
-import { LoadingService } from "./loading.service";
 
 export class PackageManagerService {
-  @Inject
-  private readonly loadingService!: LoadingService;
-
   public async pickPackageManager(): Promise<string> {
     const { mng } = await inquirer.prompt([
       {
