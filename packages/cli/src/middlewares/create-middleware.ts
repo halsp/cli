@@ -43,9 +43,7 @@ export class CreateMiddleware extends BaseMiddlware {
   override async invoke(): Promise<void> {
     await super.invoke();
 
-    if (!(await this.checkName())) {
-      return;
-    }
+    await this.checkName();
 
     if (fs.existsSync(this.targetDir)) {
       const force = this.commandService.getOptionVlaue<boolean>("force");
@@ -108,9 +106,9 @@ export class CreateMiddleware extends BaseMiddlware {
     return plugins;
   }
 
-  private async checkName(): Promise<boolean> {
+  private async checkName(): Promise<void> {
     if (this.ctx.commandArgs.name) {
-      return true;
+      return;
     }
 
     const { name } = await inquirer.prompt([
@@ -130,6 +128,5 @@ export class CreateMiddleware extends BaseMiddlware {
       },
     ]);
     this.ctx.commandArgs.name = name.trim();
-    return true;
   }
 }
