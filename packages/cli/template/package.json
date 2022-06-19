@@ -1,18 +1,18 @@
 {
   "name": "name",
   "version": "0.0.1",
-  "description": "@sfajs/cli 项目",
-  "homepage": "https://github.com/sfajs/sfa",
+  "description": "@sfajs/cli 创建项目",
+  "homepage": "https://sfajs.com",
   "repository": {
     "type": "git",
-    "url": "https://github.com/sfajs/sfa"
+    "url": "https://github.com/sfajs/cli"
   },
   "keywords": [
     "sfa",
     "sfajs"
   ],
   "bugs": {
-    "url": "https://github.com/sfajs/sfa/issues",
+    "url": "https://github.com/sfajs/core/issues",
     "email": "support@hal.wang"
   },
   "main": "dist/index.js",
