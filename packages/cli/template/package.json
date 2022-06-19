@@ -33,7 +33,7 @@
     "@sfajs/inject": "^1.1.0",
     "@sfajs/jwt": "^0.3.4",
     "@sfajs/mva": "^1.5.0",
-    "@sfajs/pipe": "^1.1.6",
+    "@sfajs/pipe": "^1.1.7",
     "@sfajs/router": "^2.0.6",
     "@sfajs/static": "^1.1.1",
     "@sfajs/swagger": "^1.0.6",

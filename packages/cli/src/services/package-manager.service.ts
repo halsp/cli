@@ -14,7 +14,7 @@ export class PackageManagerService {
         message:
           "Pick the package manager to use when installing dependencies:",
         name: "mng",
-        default: "yarn",
+        default: "npm",
         choices: [
           {
             name: "Use Yarn",
@@ -58,15 +58,6 @@ export class PackageManagerService {
   }
 
   public async install(pm: string, dir: string) {
-    this.loadingService.start(`Installation in progress...`);
-    const runResult = await this.run(pm, "install", dir);
-    if (!runResult) {
-      this.loadingService.fail("Installation failed");
-      return false;
-    }
-
-    this.loadingService.succeed();
-    console.info(`Installation complete`);
-    return true;
+    return await this.run(pm, "install", dir);
   }
 }
