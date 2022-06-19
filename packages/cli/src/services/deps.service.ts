@@ -5,30 +5,32 @@ export type DepItem = { key: string; value: string };
 export class DepsService {
   public getPackageSfaDeps(pkg: string, paths = [process.cwd()]): DepItem[] {
     const path = this.getPackagePath(pkg, paths);
-    return this.getSfaDeps(path, paths, false);
+    return this.getDeps(path, /^@sfajs\//, paths, false);
   }
 
   public getProjectSfaDeps(
     packagePath: string,
     paths = [process.cwd()]
   ): DepItem[] {
-    return this.getSfaDeps(packagePath, paths, true);
+    return this.getDeps(packagePath, /^@sfajs\//, paths, true);
   }
 
-  private getSfaDeps(
+  public getDeps(
     packagePath: string,
-    paths: string[],
-    containsDev: boolean
+    regExp: RegExp | ((dep: string) => boolean),
+    paths = [process.cwd()],
+    containsDev = true
   ) {
     const result: DepItem[] = [];
-    this.loadSfaDeps(result, packagePath, paths, containsDev);
+    this.loadDeps(result, packagePath, paths, regExp, containsDev);
     return result;
   }
 
-  private loadSfaDeps(
+  private loadDeps(
     result: DepItem[],
     packagePath: string,
     paths: string[],
+    regExp: RegExp | ((dep: string) => boolean),
     containsDev: boolean
   ) {
     const pkg = JSON.parse(fs.readFileSync(packagePath, "utf-8"));
@@ -41,6 +43,13 @@ export class DepsService {
             name.startsWith("@sfajs/") &&
             !result.some((exist) => exist.key == name)
         )
+        .filter((name) => {
+          if (typeof regExp == "function") {
+            return regExp(name);
+          } else {
+            return regExp.test(name);
+          }
+        })
         .map((name) => ({
           key: name,
           value: deps[name],
@@ -57,11 +66,11 @@ export class DepsService {
 
     pkgs.forEach((pkg) => {
       const depPackagePath = this.getPackagePath(pkg.key, paths);
-      this.loadSfaDeps(result, depPackagePath, paths, false);
+      this.loadDeps(result, depPackagePath, paths, regExp, false);
     });
   }
 
-  public getPackagePath(pkg: string, paths = [process.cwd()]) {
+  private getPackagePath(pkg: string, paths = [process.cwd()]) {
     return require.resolve(pkg + "/package.json", {
       paths: paths,
     });

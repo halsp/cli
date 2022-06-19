@@ -125,8 +125,9 @@ export class BuildMiddlware extends BaseMiddlware {
     if (!fs.existsSync(pkgPath)) {
       return [];
     }
-    const deps = this.depsService.getProjectSfaDeps(
-      path.join(process.cwd(), "package.json")
+    const deps = this.depsService.getDeps(
+      path.join(process.cwd(), "package.json"),
+      /^(@sfajs\/|sfa\-|sfa(js)?\-|@\S+\/sfa(js)?\-)/
     );
     return deps
       .map((dep) => {

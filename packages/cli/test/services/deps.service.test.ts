@@ -7,7 +7,7 @@ runTest(DepsService, async (ctx, service) => {
   expect(Array.isArray(deps)).toBeTruthy();
   expect(deps.length > 0).toBeTruthy();
 
-  const depPath = service.getPackagePath("@sfajs/inject");
+  const depPath = (service as any).getPackagePath("@sfajs/inject");
   const pkgPath = path.join(
     __dirname,
     "../../node_modules/@sfajs/inject/package.json"
