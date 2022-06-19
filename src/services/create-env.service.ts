@@ -31,6 +31,8 @@ export class CreateEnvService {
 
   public async create(): Promise<Env | undefined> {
     const env = await this.getEnv();
+    if (!env) return;
+
     const sourceFilePath = path.join(this.sourceDir, `${env}.ts`);
     const targetFilePath = path.join(this.targetDir, `src/index.ts`);
 
@@ -45,7 +47,7 @@ export class CreateEnvService {
   }
 
   private async getEnv(): Promise<Env | undefined> {
-    if (this.commandService.getOptionVlaue<boolean>("skip-env")) {
+    if (this.commandService.getOptionVlaue<boolean>("skipEnv")) {
       return undefined;
     }
 
