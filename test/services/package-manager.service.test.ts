@@ -1,6 +1,4 @@
-import { parseInject } from "@sfajs/inject";
 import inquirer from "inquirer";
-import { LoadingService } from "../../src/services/loading.service";
 import { PackageManagerService } from "../../src/services/package-manager.service";
 import { runTest } from "./runTest";
 
@@ -13,18 +11,6 @@ runTest(PackageManagerService, async (ctx, service) => {
   } finally {
     inquirer.prompt = prompt;
   }
-});
-
-runTest(PackageManagerService, async (ctx, service) => {
-  let failed: string | undefined;
-  const loadingService = await parseInject(ctx, LoadingService);
-  const fail = loadingService.fail;
-  loadingService.fail = (msg) => {
-    fail.bind(loadingService)();
-    failed = msg ?? "";
-  };
-  await service.install("not-exist", __dirname);
-  expect(failed).toBe("Installation failed");
 });
 
 runTest(PackageManagerService, async (ctx, service) => {
