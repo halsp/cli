@@ -74,9 +74,10 @@ export class BuildMiddlware extends BaseMiddlware {
         async () => {
           await this.assetsService.copy();
           await this.execPostbuilds();
-          const onWatchSuccess = this.ctx.bag<Promise<void>>("onWatchSuccess");
+          const onWatchSuccess =
+            this.ctx.bag<() => Promise<void>>("onWatchSuccess");
           if (onWatchSuccess) {
-            await onWatchSuccess;
+            await onWatchSuccess();
           }
         }
       );
