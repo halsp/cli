@@ -20,6 +20,7 @@ export type AssetConfig =
 export type Transformer =
   | ts.TransformerFactory<any>
   | ts.CustomTransformerFactory;
+export type CompilerHook = (program?: ts.Program) => Transformer;
 
 export type ScriptOptions = {
   config: Configuration;
@@ -41,11 +42,9 @@ declare module "@sfajs/cli-common" {
       readonly prebuild?: Prebuild[];
       readonly postbuild?: Postbuild[];
 
-      readonly beforeHooks?: ((program?: ts.Program) => Transformer)[];
-      readonly afterHooks?: ((program?: ts.Program) => Transformer)[];
-      readonly afterDeclarationsHooks?: ((
-        program?: ts.Program
-      ) => Transformer)[];
+      readonly beforeHooks?: CompilerHook[];
+      readonly afterHooks?: CompilerHook[];
+      readonly afterDeclarationsHooks?: CompilerHook[];
 
       readonly deleteOutDir?: boolean;
       readonly assets?: AssetConfig[];
