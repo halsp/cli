@@ -7,8 +7,8 @@ import { TsconfigService } from "../services/tsconfig.service";
 import { WatchCompilerService } from "../services/watch-compiler.service";
 import * as fs from "fs";
 import { BaseMiddlware } from "./base.middleware";
-import { CommandType, Postbuild, Prebuild } from "../configuration";
-import { DepsService } from "../services/deps.service";
+import { CommandType } from "../configuration";
+import { HookService } from "../services/hook.service";
 
 export class BuildMiddlware extends BaseMiddlware {
   override get command(): CommandType {
@@ -26,11 +26,8 @@ export class BuildMiddlware extends BaseMiddlware {
   @Inject
   private readonly assetsService!: AssetsService;
   @Inject
-  private readonly depsService!: DepsService;
+  private readonly hookService!: HookService;
 
-  private get config() {
-    return this.configService.value;
-  }
   private get cacheDir() {
     return this.tsconfigService.cacheDir;
   }
@@ -41,14 +38,6 @@ export class BuildMiddlware extends BaseMiddlware {
       false
     );
   }
-  private get scriptOptions() {
-    return {
-      config: this.config,
-      command: this.command,
-      cacheDir: this.cacheDir,
-      mode: this.configService.mode,
-    };
-  }
 
   override async invoke(): Promise<void> {
     await super.invoke();
@@ -58,7 +47,7 @@ export class BuildMiddlware extends BaseMiddlware {
       force: true,
     });
 
-    if (!(await this.execPrebuilds())) {
+    if (!(await this.hookService.execPrebuilds(this.command))) {
       return;
     }
 
@@ -67,79 +56,34 @@ export class BuildMiddlware extends BaseMiddlware {
       force: true,
     });
 
-    let compilerResult: boolean;
-    if (this.watch) {
-      compilerResult = this.watchCompilerService.compiler(
-        this.cacheDir,
-        async () => {
-          await this.assetsService.copy();
-          await this.execPostbuilds();
-          const onWatchSuccess =
-            this.ctx.bag<() => Promise<void>>("onWatchSuccess");
-          if (onWatchSuccess) {
-            await onWatchSuccess();
-          }
-        }
-      );
-    } else {
-      compilerResult = this.compilerService.compiler(this.cacheDir);
-      if (compilerResult) {
-        await this.assetsService.copy();
-        await this.execPostbuilds();
-      }
-    }
-
+    const compilerResult = await this.compile();
     if (compilerResult) {
       await this.next();
     }
   }
 
-  private async execPrebuilds(): Promise<boolean> {
-    const internalPrebuild = this.getPluginScripts("prebuild");
-
-    for (const fn of [
-      ...internalPrebuild,
-      ...(this.config.build?.prebuild ?? []),
-    ]) {
-      if ((await fn(this.scriptOptions)) == false) {
-        return false;
+  private async compile() {
+    if (this.watch) {
+      return this.watchCompile();
+    } else {
+      const compilerResult = this.compilerService.compiler(this.cacheDir);
+      if (compilerResult) {
+        await this.assetsService.copy();
+        await this.hookService.execPostbuilds(this.command);
       }
-    }
-    return true;
-  }
-
-  private async execPostbuilds() {
-    const internalPostbuild = this.getPluginScripts("postbuild");
-
-    for (const fn of [
-      ...internalPostbuild,
-      ...(this.config.build?.postbuild ?? []),
-    ]) {
-      await fn(this.scriptOptions);
+      return compilerResult;
     }
   }
 
-  private getPluginScripts(name: "postbuild"): Postbuild[];
-  private getPluginScripts(name: "prebuild"): Prebuild[];
-  private getPluginScripts(name: "prebuild" | "postbuild") {
-    const pkgPath = path.join(process.cwd(), "package.json");
-    if (!fs.existsSync(pkgPath)) {
-      return [];
-    }
-    const deps = this.depsService.getDeps(
-      path.join(process.cwd(), "package.json"),
-      /^(@sfajs\/|sfa\-|sfa(js)?\-|@\S+\/sfa(js)?\-)/
-    );
-    return deps
-      .map((dep) => {
-        try {
-          // eslint-disable-next-line @typescript-eslint/no-var-requires
-          const module = require(dep.key);
-          return module[name] as Postbuild | Prebuild;
-        } catch {
-          return undefined;
-        }
-      })
-      .filter((script) => !!script);
+  private watchCompile() {
+    return this.watchCompilerService.compiler(this.cacheDir, async () => {
+      await this.assetsService.copy();
+      await this.hookService.execPostbuilds(this.command);
+      const onWatchSuccess =
+        this.ctx.bag<() => Promise<void>>("onWatchSuccess");
+      if (onWatchSuccess) {
+        await onWatchSuccess();
+      }
+    });
   }
 }

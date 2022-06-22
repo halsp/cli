@@ -3,6 +3,7 @@ import { Inject } from "@sfajs/inject";
 import { Context } from "@sfajs/pipe";
 import ts from "typescript";
 import { ConfigService } from "./config.service";
+import { HookService } from "./hook.service";
 import { TsconfigService } from "./tsconfig.service";
 
 export class CompilerService {
@@ -12,6 +13,8 @@ export class CompilerService {
   private readonly tsconfigService!: TsconfigService;
   @Inject
   private readonly configService!: ConfigService;
+  @Inject
+  private readonly hookService!: HookService;
 
   private get config() {
     return this.configService.value;
@@ -28,13 +31,19 @@ export class CompilerService {
   }
 
   public getHooks(program: ts.Program) {
-    const before =
-      this.config.build?.beforeHooks?.map((hook) => hook(program)) ?? [];
-    const after =
-      this.config.build?.afterHooks?.map((hook) => hook(program)) ?? [];
-    const afterDeclarations =
-      this.config.build?.afterDeclarationsHooks?.map((hook) => hook(program)) ??
-      [];
+    const before = [
+      ...this.hookService.getPluginHooks("beforeCompile"),
+      ...(this.config.build?.beforeHooks ?? []),
+    ].map((hook) => hook(program));
+    const after = [
+      ...this.hookService.getPluginHooks("afterCompile"),
+      ...(this.config.build?.afterHooks ?? []),
+    ].map((hook) => hook(program));
+    const afterDeclarations = [
+      ...this.hookService.getPluginHooks("afterCompileDeclarations"),
+      ...(this.config.build?.afterDeclarationsHooks ?? []),
+    ].map((hook) => hook(program));
+
     return {
       before,
       after,
