@@ -15,9 +15,6 @@ export class WatchCompilerService {
 
   private watcher?: ts.WatchOfConfigFile<ts.EmitAndSemanticDiagnosticsBuilderProgram>;
 
-  private get config() {
-    return this.configService.value;
-  }
   private get preserveWatchOutput() {
     return this.configService.getOptionOrConfigValue<boolean, boolean>(
       "preserveWatchOutput",
@@ -71,27 +68,10 @@ export class WatchCompilerService {
         emitOnlyDtsFiles?: boolean,
         customTransformers?: ts.CustomTransformers
       ) => {
-        const transforms = customTransformers ?? {};
-
-        const before =
-          this.config.build?.beforeHooks?.map((hook) =>
-            hook(program.getProgram())
-          ) ?? [];
-        const after =
-          this.config.build?.afterHooks?.map((hook) =>
-            hook(program.getProgram())
-          ) ?? [];
-        const afterDeclarations =
-          this.config.build?.afterDeclarationsHooks?.map((hook) =>
-            hook(program.getProgram())
-          ) ?? [];
-
-        transforms.before = before.concat(transforms.before || []);
-        transforms.after = after.concat(transforms.after || []);
-        transforms.afterDeclarations = afterDeclarations.concat(
-          transforms.afterDeclarations || []
+        const transforms = Object.assign(
+          customTransformers ?? {},
+          this.compilerService.getHooks(program.getProgram())
         );
-
         return origProgramEmit(
           targetSourceFile,
           writeFile,
