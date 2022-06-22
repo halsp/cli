@@ -66,7 +66,7 @@ export class BuildMiddlware extends BaseMiddlware {
     if (this.watch) {
       return this.watchCompile();
     } else {
-      const compilerResult = this.compilerService.compiler(this.cacheDir);
+      const compilerResult = this.compilerService.compile(this.cacheDir);
       if (compilerResult) {
         await this.assetsService.copy();
         await this.hookService.execPostbuilds(this.command);
@@ -76,7 +76,7 @@ export class BuildMiddlware extends BaseMiddlware {
   }
 
   private watchCompile() {
-    return this.watchCompilerService.compiler(this.cacheDir, async () => {
+    return this.watchCompilerService.compile(this.cacheDir, async () => {
       await this.assetsService.copy();
       await this.hookService.execPostbuilds(this.command);
       const onWatchSuccess =

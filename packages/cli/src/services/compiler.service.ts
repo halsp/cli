@@ -51,7 +51,7 @@ export class CompilerService {
     };
   }
 
-  public compiler(outDir: string) {
+  public compile(outDir: string) {
     const formatHost: ts.FormatDiagnosticsHost = {
       getCanonicalFileName: (path) => path,
       getCurrentDirectory: ts.sys.getCurrentDirectory,

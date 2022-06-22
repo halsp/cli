@@ -22,7 +22,7 @@ export class WatchCompilerService {
     );
   }
 
-  compiler(outDir: string, onSuccess?: () => void) {
+  compile(outDir: string, onSuccess?: () => void) {
     const { projectReferences, fileNames, options } =
       this.tsconfigService.parsedCommandLine;
 
