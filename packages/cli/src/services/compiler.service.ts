@@ -60,8 +60,7 @@ export class CompilerService {
     const { options, fileNames, projectReferences } =
       this.tsconfigService.parsedCommandLine;
 
-    const createProgram = ts.createIncrementalProgram || ts.createProgram;
-    const buildProgram = createProgram.call(ts, {
+    const buildProgram = ts.createIncrementalProgram({
       rootNames: fileNames,
       projectReferences,
       options: this.getCompilerOptions(options, outDir),
