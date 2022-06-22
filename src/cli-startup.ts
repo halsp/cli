@@ -19,33 +19,6 @@ declare module "@sfajs/core" {
   }
 }
 
-Object.defineProperty(HttpContext.prototype, "commandArgs", {
-  configurable: false,
-  enumerable: false,
-  get: function () {
-    const ctx = this as HttpContext;
-    return ctx.startup[COMMAND_ARGS_METADATA];
-  },
-});
-
-Object.defineProperty(HttpContext.prototype, "commandOptions", {
-  configurable: false,
-  enumerable: false,
-  get: function () {
-    const ctx = this as HttpContext;
-    return ctx.startup[COMMAND_OPTIONS_METADATA];
-  },
-});
-
-Object.defineProperty(HttpContext.prototype, "command", {
-  configurable: false,
-  enumerable: false,
-  get: function () {
-    const ctx = this as HttpContext;
-    return ctx.startup[COMMAND_TYPE_METADATA];
-  },
-});
-
 export class CliStartup extends Startup {
   constructor(
     args?: Record<string, string>,
@@ -56,10 +29,37 @@ export class CliStartup extends Startup {
     this[COMMAND_OPTIONS_METADATA] = options ?? {};
     this[COMMAND_ARGS_METADATA] = args ?? {};
 
-    this.hook(HookType.Exception, (ctx, md, ex) => {
-      ctx.res[HOOK_EXCEPTION] = ex;
-      return true;
+    this.use(async (ctx, next) => {
+      Object.defineProperty(ctx, "command", {
+        configurable: false,
+        enumerable: false,
+        get: () => {
+          return ctx[COMMAND_TYPE_METADATA];
+        },
+      });
+
+      Object.defineProperty(ctx, "commandArgs", {
+        configurable: false,
+        enumerable: false,
+        get: () => {
+          return this[COMMAND_ARGS_METADATA];
+        },
+      });
+
+      Object.defineProperty(ctx, "commandOptions", {
+        configurable: false,
+        enumerable: false,
+        get: () => {
+          return this[COMMAND_OPTIONS_METADATA];
+        },
+      });
+
+      await next();
     })
+      .hook(HookType.Exception, (ctx, md, ex) => {
+        ctx.res[HOOK_EXCEPTION] = ex;
+        return true;
+      })
       .useInject()
       .inject(ConfigService, async (ctx) => {
         const result = await parseInject(ctx, new ConfigService());
