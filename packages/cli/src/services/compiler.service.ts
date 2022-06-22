@@ -27,7 +27,22 @@ export class CompilerService {
     );
   }
 
-  compiler(outDir: string) {
+  public getHooks(program: ts.Program) {
+    const before =
+      this.config.build?.beforeHooks?.map((hook) => hook(program)) ?? [];
+    const after =
+      this.config.build?.afterHooks?.map((hook) => hook(program)) ?? [];
+    const afterDeclarations =
+      this.config.build?.afterDeclarationsHooks?.map((hook) => hook(program)) ??
+      [];
+    return {
+      before,
+      after,
+      afterDeclarations,
+    };
+  }
+
+  public compiler(outDir: string) {
     const formatHost: ts.FormatDiagnosticsHost = {
       getCanonicalFileName: (path) => path,
       getCurrentDirectory: ts.sys.getCurrentDirectory,
@@ -42,26 +57,14 @@ export class CompilerService {
       projectReferences,
       options: this.getCompilerOptions(options, outDir),
     });
+
     const program = buildProgram.getProgram();
-
-    const before =
-      this.config.build?.beforeHooks?.map((hook) => hook(program)) ?? [];
-    const after =
-      this.config.build?.afterHooks?.map((hook) => hook(program)) ?? [];
-    const afterDeclarations =
-      this.config.build?.afterDeclarationsHooks?.map((hook) => hook(program)) ??
-      [];
-
     const emitResult = buildProgram.emit(
       undefined,
       undefined,
       undefined,
       undefined,
-      {
-        before,
-        after,
-        afterDeclarations,
-      }
+      this.getHooks(program)
     );
 
     const errorsCount = this.reportAfterCompilationDiagnostic(
