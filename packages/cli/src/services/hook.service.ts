@@ -48,7 +48,7 @@ export class HookService {
           // eslint-disable-next-line @typescript-eslint/no-var-requires
           const module = require(dep.key);
           return module[name];
-        } catch {
+        } catch (err) {
           return undefined;
         }
       })

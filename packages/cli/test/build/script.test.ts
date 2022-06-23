@@ -57,3 +57,30 @@ test(`build script failed`, async () => {
   });
   expect(callCount).toBe(2);
 });
+
+test(`plugin script error`, async () => {
+  let callCount = 0;
+  await runin(`test/build/plugin-script-error`, async () => {
+    await new CliStartup()
+      .use(async (ctx, next) => {
+        try {
+          await next();
+        } catch (err) {
+          callCount++;
+        }
+
+        const configService = await parseInject(ctx, ConfigService);
+        const cfg = configService.value;
+        expect(cfg["prebuild"]).toBeUndefined();
+        expect(cfg["postbuild"]).toBeUndefined();
+        callCount++;
+      })
+      .add(BuildMiddlware)
+      .run();
+
+    expect(fs.existsSync("./.sfa-cache")).toBeTruthy();
+    expect(fs.existsSync("./.sfa-cache/build-test.js")).toBeTruthy();
+    callCount++;
+  });
+  expect(callCount).toBe(2);
+});
