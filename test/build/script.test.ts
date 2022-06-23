@@ -63,11 +63,7 @@ test(`plugin script error`, async () => {
   await runin(`test/build/plugin-script-error`, async () => {
     await new CliStartup()
       .use(async (ctx, next) => {
-        try {
-          await next();
-        } catch (err) {
-          callCount++;
-        }
+        await next();
 
         const configService = await parseInject(ctx, ConfigService);
         const cfg = configService.value;

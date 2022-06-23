@@ -39,6 +39,7 @@ function runCompilerOptions(command: "start" | "build") {
     async (ctx, service) => {
       ctx[COMMAND_TYPE_METADATA] = command;
       expect((service as any).getCompilerOptions({}, "")).toEqual({
+        noEmitOnError: true,
         outDir: "",
         sourceMap: command == "start",
       });

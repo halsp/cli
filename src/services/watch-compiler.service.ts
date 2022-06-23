@@ -93,12 +93,8 @@ export class WatchCompilerService {
   }
 
   private getCompilerOptions(options: ts.CompilerOptions, outDir: string) {
-    const opts: ts.CompilerOptions = {
-      outDir,
-    };
-    if (!isUndefined(this.compilerService.sourceMap)) {
-      opts.sourceMap = this.compilerService.sourceMap;
-    }
+    const opts = this.compilerService.getDefaultCompilerOptions(outDir);
+
     if (!isUndefined(this.preserveWatchOutput)) {
       opts.preserveWatchOutput = this.preserveWatchOutput;
     }
