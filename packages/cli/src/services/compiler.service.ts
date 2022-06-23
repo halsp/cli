@@ -80,19 +80,22 @@ export class CompilerService {
       emitResult,
       formatHost
     );
-    if (errorsCount) {
-      process.exit(1);
-    }
     return !errorsCount;
   }
 
-  private getCompilerOptions(options: ts.CompilerOptions, outDir: string) {
-    const opts: ts.CompilerOptions = {
+  public getDefaultCompilerOptions(outDir: string) {
+    const options: ts.CompilerOptions = {
       outDir,
+      noEmitOnError: true,
     };
     if (!isUndefined(this.sourceMap)) {
-      opts.sourceMap = this.sourceMap;
+      options.sourceMap = this.sourceMap;
     }
+    return options;
+  }
+
+  private getCompilerOptions(options: ts.CompilerOptions, outDir: string) {
+    const opts = this.getDefaultCompilerOptions(outDir);
     return Object.assign({}, options, opts);
   }
 
