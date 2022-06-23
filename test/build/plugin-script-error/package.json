@@ -1,0 +1,6 @@
+{
+  "name": "script",
+  "dependencies": {
+    "@sfajs/script-test": "*"
+  }
+}
