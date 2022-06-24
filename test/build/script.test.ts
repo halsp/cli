@@ -8,7 +8,9 @@ import { ConfigService } from "../../src/services/config.service";
 test(`build script`, async () => {
   let callCount = 0;
   await runin(`test/build/script`, async () => {
-    await new CliStartup()
+    await new CliStartup(undefined, {
+      copyPackage: true,
+    })
       .use(async (ctx, next) => {
         await next();
 
@@ -26,6 +28,7 @@ test(`build script`, async () => {
 
     expect(fs.existsSync("./.sfa-cache")).toBeTruthy();
     expect(fs.existsSync("./.sfa-cache/build-test.js")).toBeTruthy();
+    expect(fs.existsSync("./.sfa-cache/package.json")).toBeTruthy();
     callCount++;
   });
   expect(callCount).toBe(2);
