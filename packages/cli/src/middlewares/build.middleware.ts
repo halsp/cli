@@ -69,6 +69,7 @@ export class BuildMiddlware extends BaseMiddlware {
       const compilerResult = this.compilerService.compile(this.cacheDir);
       if (compilerResult) {
         await this.assetsService.copy();
+        await this.copyPackage();
         await this.hookService.execPostbuilds(this.command);
       }
       return compilerResult;
@@ -78,6 +79,7 @@ export class BuildMiddlware extends BaseMiddlware {
   private watchCompile() {
     return this.watchCompilerService.compile(this.cacheDir, async () => {
       await this.assetsService.copy();
+      await this.copyPackage();
       await this.hookService.execPostbuilds(this.command);
       const onWatchSuccess =
         this.ctx.bag<() => Promise<void>>("onWatchSuccess");
@@ -85,5 +87,22 @@ export class BuildMiddlware extends BaseMiddlware {
         await onWatchSuccess();
       }
     });
+  }
+
+  public async copyPackage() {
+    const copy = this.configService.getOptionOrConfigValue(
+      "copyPackage",
+      "build.copyPackage",
+      false
+    );
+    if (!copy) return;
+
+    const filePath = path.join(process.cwd(), "package.json");
+    const targetPath = path.join(this.cacheDir, "package.json");
+
+    await fs.promises.rm(targetPath, {
+      force: true,
+    });
+    await fs.promises.copyFile(filePath, targetPath);
   }
 }

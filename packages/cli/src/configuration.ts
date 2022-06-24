@@ -55,6 +55,7 @@ declare module "@sfajs/cli-common" {
 
       readonly tsConfigPath?: string;
       readonly sourceMap?: boolean;
+      readonly copyPackage?: boolean;
     };
     readonly start?: {
       readonly port?: number;

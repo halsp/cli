@@ -18,6 +18,7 @@ export class BuildCommand extends BaseCommand {
         "Binary to run application (e.g., node, ts-node).",
         "node"
       )
+      .option("-cp, --copyPackage", "Copy package.json to out dir.", false)
       .action(async (command: Record<string, boolean | string>) => {
         await new CliStartup(undefined, command)
           .add(BuildMiddlware)
