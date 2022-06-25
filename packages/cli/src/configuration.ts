@@ -17,10 +17,12 @@ export type AssetConfig =
       root?: string;
     }
   | string;
-export type Transformer =
-  | ts.TransformerFactory<any>
+export type Transformer<T extends ts.Node> =
+  | ts.TransformerFactory<T>
   | ts.CustomTransformerFactory;
-export type CompilerHook = (program?: ts.Program) => Transformer;
+export type CompilerHook<T extends ts.Node> = (
+  program: ts.Program
+) => Transformer<T>;
 
 export type ScriptOptions = {
   config: Configuration;
@@ -42,9 +44,11 @@ declare module "@sfajs/cli-common" {
       readonly prebuild?: Prebuild[];
       readonly postbuild?: Postbuild[];
 
-      readonly beforeHooks?: CompilerHook[];
-      readonly afterHooks?: CompilerHook[];
-      readonly afterDeclarationsHooks?: CompilerHook[];
+      readonly beforeHooks?: CompilerHook<ts.SourceFile>[];
+      readonly afterHooks?: CompilerHook<ts.SourceFile>[];
+      readonly afterDeclarationsHooks?: CompilerHook<
+        ts.SourceFile | ts.Bundle
+      >[];
 
       readonly deleteOutDir?: boolean;
       readonly assets?: AssetConfig[];
