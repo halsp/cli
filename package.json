@@ -108,6 +108,7 @@
     "LICENSE",
     "package.json",
     "README.md",
+    "tsconfig.base.json",
     "tsconfig.json"
   ]
 }

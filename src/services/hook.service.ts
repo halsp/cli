@@ -10,6 +10,7 @@ import { DepsService } from "./deps.service";
 import * as fs from "fs";
 import { ConfigService } from "./config.service";
 import { TsconfigService } from "./tsconfig.service";
+import ts from "typescript";
 
 export class HookService {
   @Inject
@@ -29,9 +30,11 @@ export class HookService {
 
   public getPluginHooks(name: "postbuild"): Postbuild[];
   public getPluginHooks(name: "prebuild"): Prebuild[];
-  public getPluginHooks(name: "beforeCompile"): CompilerHook[];
-  public getPluginHooks(name: "afterCompile"): CompilerHook[];
-  public getPluginHooks(name: "afterCompileDeclarations"): CompilerHook[];
+  public getPluginHooks(name: "beforeCompile"): CompilerHook<ts.SourceFile>[];
+  public getPluginHooks(name: "afterCompile"): CompilerHook<ts.SourceFile>[];
+  public getPluginHooks(
+    name: "afterCompileDeclarations"
+  ): CompilerHook<ts.SourceFile | ts.Bundle>[];
   public getPluginHooks(name: string) {
     const pkgPath = path.join(process.cwd(), "package.json");
     if (!fs.existsSync(pkgPath)) {
