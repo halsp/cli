@@ -6,6 +6,8 @@ import { Inject } from "@sfajs/inject";
 import { CommandService } from "./command.service";
 import { FileService } from "./file.service";
 import * as tsNode from "ts-node";
+import _ from "lodash";
+import { PluginInterfaceService } from "./plugin-interface.service";
 
 export class ConfigService {
   @Context
@@ -14,6 +16,8 @@ export class ConfigService {
   private readonly fileService!: FileService;
   @Inject
   private readonly commandService!: CommandService;
+  @Inject
+  private readonly pluginInterfaceService!: PluginInterfaceService;
 
   #configFileName: string | undefined = undefined;
   private get configFileName() {
@@ -75,6 +79,21 @@ export class ConfigService {
   }
 
   private async loadConfig(): Promise<Configuration> {
+    const config: Configuration = {};
+
+    const cliConfigs = this.pluginInterfaceService.get("cliConfig");
+    for (let cliConfig of cliConfigs) {
+      if (typeof cliConfig == "function") {
+        cliConfig = cliConfig(this.configEnv);
+      }
+      _.merge(config, cliConfig);
+    }
+    _.merge(config, await this.getConfig());
+
+    return config;
+  }
+
+  private async getConfig(): Promise<Configuration> {
     const jsonConfig = this.commandService.getOptionVlaue<string>("jsonConfig");
     if (jsonConfig) {
       return JSON.parse(jsonConfig);
