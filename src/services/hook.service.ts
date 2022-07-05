@@ -1,20 +1,12 @@
 import { Inject } from "@sfajs/inject";
-import path from "path";
-import {
-  CommandType,
-  CompilerHook,
-  Postbuild,
-  Prebuild,
-} from "../configuration";
-import { DepsService } from "./deps.service";
-import * as fs from "fs";
+import { CommandType } from "../configuration";
 import { ConfigService } from "./config.service";
 import { TsconfigService } from "./tsconfig.service";
-import ts from "typescript";
+import { PluginInterfaceService } from "./plugin-interface.service";
 
 export class HookService {
   @Inject
-  private readonly depsService!: DepsService;
+  private readonly pluginInterfaceService!: PluginInterfaceService;
   @Inject
   private readonly configService!: ConfigService;
   @Inject
@@ -28,38 +20,8 @@ export class HookService {
     return this.tsconfigService.cacheDir;
   }
 
-  public getPluginHooks(name: "postbuild"): Postbuild[];
-  public getPluginHooks(name: "prebuild"): Prebuild[];
-  public getPluginHooks(name: "beforeCompile"): CompilerHook<ts.SourceFile>[];
-  public getPluginHooks(name: "afterCompile"): CompilerHook<ts.SourceFile>[];
-  public getPluginHooks(
-    name: "afterCompileDeclarations"
-  ): CompilerHook<ts.SourceFile | ts.Bundle>[];
-  public getPluginHooks(name: string) {
-    const pkgPath = path.join(process.cwd(), "package.json");
-    if (!fs.existsSync(pkgPath)) {
-      return [];
-    }
-
-    return this.depsService
-      .getDeps(
-        path.join(process.cwd(), "package.json"),
-        /^(@sfajs\/|sfa\-|sfa(js)?\-|@\S+\/sfa(js)?\-)/
-      )
-      .map((dep) => {
-        try {
-          // eslint-disable-next-line @typescript-eslint/no-var-requires
-          const module = require(dep.key);
-          return module[name];
-        } catch (err) {
-          return undefined;
-        }
-      })
-      .filter((script) => !!script);
-  }
-
   public async execPrebuilds(command: CommandType): Promise<boolean> {
-    const internalPrebuild = this.getPluginHooks("prebuild");
+    const internalPrebuild = this.pluginInterfaceService.get("prebuild");
     const options = this.getScriptOptions(command);
 
     for (const fn of [
@@ -74,7 +36,7 @@ export class HookService {
   }
 
   public async execPostbuilds(command: CommandType) {
-    const internalPostbuild = this.getPluginHooks("postbuild");
+    const internalPostbuild = this.pluginInterfaceService.get("postbuild");
     const options = this.getScriptOptions(command);
 
     for (const fn of [
