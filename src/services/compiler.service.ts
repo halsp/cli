@@ -3,7 +3,6 @@ import { Inject } from "@sfajs/inject";
 import { Context } from "@sfajs/pipe";
 import ts from "typescript";
 import { ConfigService } from "./config.service";
-import { HookService } from "./hook.service";
 import { PluginInterfaceService } from "./plugin-interface.service";
 import { TsconfigService } from "./tsconfig.service";
 

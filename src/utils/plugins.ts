@@ -15,6 +15,7 @@ export type Plugin =
   | "jwt"
   | "core"
   | "cli"
+  | "validator"
   | Env;
 
 export const allPlugins: PluginItem[] = [
@@ -44,6 +45,10 @@ export const allPlugins: PluginItem[] = [
   {
     value: "filter",
     name: "过滤器 (用于拦截请求) (@sfajs/filter)",
+  },
+  {
+    value: "validator",
+    name: "请求参数校验 (@sfajs/validator)",
   },
   {
     value: "testing",

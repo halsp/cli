@@ -98,7 +98,7 @@ export class CreatePackageService {
 
   private setCliVersion(pkg: Record<string, any>) {
     let version = this.commandService.getOptionVlaue<string>("cli-version");
-    if (version == "cli-test") {
+    if (version == "cli-test" || version == "test-cli") {
       version = path.join(__dirname, "../..");
     }
 

@@ -1,6 +1,7 @@
 {
   "dependencies": {
-    "ejs": "view"
+    "ejs": "view",
+    "class-validator": "validator"
   },
   "constant": ["core", "cli"],
   "files": {

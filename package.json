@@ -1,6 +1,6 @@
 {
   "name": "@sfajs/cli",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "sfajs 的命令行脚手架工具",
   "homepage": "https://github.com/sfajs/cli",
   "repository": {
@@ -39,7 +39,7 @@
     "ignore-walk": "^5.0.1",
     "inquirer": "^8.2.4",
     "lodash": "^4.17.21",
-    "npm-check-updates": "^15.0.2",
+    "npm-check-updates": "^14.1.1",
     "ora": "5.4.1",
     "prettier": "^2.7.1",
     "reflect-metadata": "^0.1.13",

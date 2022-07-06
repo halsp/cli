@@ -3,6 +3,9 @@ import { Action } from "@sfajs/router";
 //{pipe
 import { Body } from "@sfajs/pipe";
 //}
+//{validator
+import { IsString, IsNumberString } from "class-validator";
+//}
 
 //{swagger
 /**
@@ -40,9 +43,18 @@ export default class extends Action {
   private readonly userInfo!: any;
   //}
 
+  //{validator
+  @IsString()
+  @Body("userName")
+  private readonly userName!: string;
+  @IsNumberString()
+  @Body("userId")
+  private readonly uid!: string;
+  //}
+
   async invoke(): Promise<void> {
     //{ pipe
-    this.ok(this.userInfo)
+    this.ok(this.userInfo);
     //}
 
     //{ !pipe
