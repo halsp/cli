@@ -7,6 +7,7 @@ import "@sfajs/filter";
 import "@sfajs/static";
 import "@sfajs/jwt";
 import "@sfajs/view";
+import "@sfajs/validator";
 import * as fs from "fs";
 import path from "path";
 // {filter
@@ -32,22 +33,9 @@ export default <T extends Startup>(startup: T, mode?: string) =>
       ctx.res.setHeader("mode", mode ?? "");
       await next();
     })
-    // { inject
+    //{
     .useInject()
-    /// { !router
-    .use(async (ctx, next) => {
-      const userService = await parseInject(ctx, UserService);
-      const userInfo = userService.getUserInfo();
-      //// { view
-      ctx.setHeader("injectUserInfo", JSON.stringify(userInfo));
-      //// }
-      //// { !view
-      ctx.ok(userInfo);
-      //// }
-      await next();
-    })
-    /// }
-    // }
+    //}
     // { swagger
     .useSwagger({
       options: getSwaggerOptions(version),
@@ -59,6 +47,9 @@ export default <T extends Startup>(startup: T, mode?: string) =>
       dir: "static",
       prefix: "s",
     })
+    //}
+    //{validator
+    .useValidator()
     //}
     //{jwt
     .useJwt({
@@ -76,6 +67,19 @@ export default <T extends Startup>(startup: T, mode?: string) =>
     // default verify
     .useJwtVerify()
     //}
+    // { inject&&!router
+    .use(async (ctx, next) => {
+      const userService = await parseInject(ctx, UserService);
+      const userInfo = userService.getUserInfo();
+      //// { view
+      ctx.setHeader("injectUserInfo", JSON.stringify(userInfo));
+      //// }
+      //// { !view
+      ctx.ok(userInfo);
+      //// }
+      await next();
+    })
+    // }
     // {filter
     .useFilter()
     .useGlobalFilter(GlobalActionFilter)
