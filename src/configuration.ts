@@ -57,7 +57,6 @@ declare module "@sfajs/cli-common" {
       readonly watchAssets?: boolean;
       readonly preserveWatchOutput?: boolean;
 
-      readonly tsConfigPath?: string;
       readonly sourceMap?: boolean;
       readonly copyPackage?: boolean;
     };
