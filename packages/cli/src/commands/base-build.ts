@@ -25,15 +25,7 @@ Command.prototype.setBuildOptions = function (defaultMode: string) {
       "-fc, --func-config [function]",
       "Function string to build sfa-cli configuration."
     )
-    .option(
-      "-tc, --tsconfig [path]",
-      "Path to tsconfig.json file.",
-      "tsconfig.json"
-    )
-    .option("-w, --watch", "Run in watch mode (live-reload).", false)
-    .option(
-      "-wa, --watch-assets",
-      "Watch non-ts (e.g., .views) files mode.",
-      false
-    );
+    .option("-tc, --tsconfigPath [path]", "Path to tsconfig.json file.")
+    .option("-w, --watch", "Run in watch mode (live-reload).")
+    .option("-wa, --watch-assets", "Watch non-ts (e.g., .views) files mode.");
 };

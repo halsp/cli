@@ -18,7 +18,7 @@ runTest(
   },
   undefined,
   {
-    tsconfigFile: "not-exist.json",
+    tsconfigPath: "not-exist.json",
   }
 );
 
@@ -29,7 +29,7 @@ runTest(
   },
   undefined,
   {
-    tsconfigFile: "empty.tsconfig.json",
+    tsconfigPath: "empty.tsconfig.json",
   }
 );
 

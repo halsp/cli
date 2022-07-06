@@ -9,8 +9,8 @@ export class TsconfigService {
   private readonly commandService!: CommandService;
 
   private get fileName() {
-    return (
-      this.commandService.getOptionVlaue<string>("tsconfigFile") ??
+    return this.commandService.getOptionVlaue<string>(
+      "tsconfigPath",
       "tsconfig.json"
     );
   }

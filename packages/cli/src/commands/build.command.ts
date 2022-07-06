@@ -13,12 +13,7 @@ export class BuildCommand extends BaseCommand {
       .description("Build sfa application.")
       .setBuildOptions("production")
       .option("-sm, --sourceMap", "Whether to generate source map files.")
-      .option(
-        "-b, --binary-to-run [program]",
-        "Binary to run application (e.g., node, ts-node).",
-        "node"
-      )
-      .option("-cp, --copyPackage", "Copy package.json to out dir.", false)
+      .option("-cp, --copyPackage", "Copy package.json to out dir.")
       .action(async (command: Record<string, boolean | string>) => {
         await new CliStartup(undefined, command)
           .add(BuildMiddlware)
