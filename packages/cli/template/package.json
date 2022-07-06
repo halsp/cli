@@ -46,7 +46,7 @@
     "@sfajs/cli": "../",
     "@sfajs/testing": "^0.0.2",
     "@types/jest": "^28.1.4",
-    "@types/node": "^18.0.2",
+    "@types/node": "^18.0.3",
     "@typescript-eslint/eslint-plugin": "^5.30.5",
     "@typescript-eslint/parser": "^5.30.5",
     "ejs": "^3.1.8",
