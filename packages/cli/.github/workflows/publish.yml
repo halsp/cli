@@ -35,7 +35,7 @@ jobs:
           node-version: "16"
           registry-url: https://registry.npmjs.org/
       - run: npm install
-      - run: cd src/enter && npm install && cd ../..
+      - run: cd enter && npm install && cd ..
       - run: npm run build
       - run: npm publish
         env:
@@ -52,7 +52,7 @@ jobs:
           node-version: "16"
           registry-url: https://registry.npmjs.org/
       - run: npm install
-      - run: cd src/enter && npm install && cd ../..
+      - run: cd enter && npm install && cd ..
       - run: npm run build
       - run: npx ts-node scripts/create-sfa.ts
       - run: npm publish
