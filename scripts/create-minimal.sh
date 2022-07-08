@@ -1,7 +1,7 @@
 set -e
 
 npm install
-cd src/enter && npm install && cd ../..
+cd enter && npm install && cd ..
 npm run build
 
 node bin/index.js create minimal -e http -pm npm -ps inject,router,view,mva,pipe,filter,testing,static,swagger,jwt -f

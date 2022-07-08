@@ -5,3 +5,7 @@ if [ -d "./dist" ]; then
 fi
 
 tsc
+
+cd enter
+npx tsc
+cd ..

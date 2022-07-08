@@ -1,7 +1,7 @@
 set -e
 
 npm install
-cd src/enter && npm install && cd ../..
+cd enter && npm install && cd ..
 
 npm run build
 rm -f ./package-lock.json
