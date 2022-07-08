@@ -1,6 +1,6 @@
 {
   "name": "@sfajs/cli",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "description": "sfajs 的命令行脚手架工具",
   "homepage": "https://github.com/sfajs/cli",
   "repository": {
@@ -90,7 +90,8 @@
     }
   },
   "bin": {
-    "sfa": "bin/index.js"
+    "sfa": "bin/index.js",
+    "create-sfa": "bin/create-sfa.js"
   },
   "files": [
     "/.github/*",
