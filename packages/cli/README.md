@@ -15,6 +15,20 @@
     <a href="https://paypal.me/ihalwang" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
 </p>
 
+<!--create-sfa
+## 介绍
+
+`create-sfa` 是 `sfajs` 的快速开始脚手架工具，由 @sfajs/cli 自动生成
+
+## 开始使用
+
+```
+npm init sfa
+```
+create-sfa-->
+
+<!--introduce start-->
+
 ## 介绍
 
 `@sfajs/cli` 是 `sfajs` 的命令行脚手架工具
@@ -30,6 +44,8 @@ npm install -g @sfajs/cli
 ## 开始使用
 
 请访问 <https://sfajs.com>
+
+<!--introduce end-->
 
 ## 贡献
 
