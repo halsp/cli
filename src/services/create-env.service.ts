@@ -81,7 +81,6 @@ export class CreateEnvService {
           .replace(commentEnvStartRegExp, "");
         const env = file.replace(/\.ts$/, "");
         const strs = title.split(".").map((item) => item.trim());
-        console.log("strs", strs);
         return {
           order: Number(strs[0]),
           name: strs[1],
