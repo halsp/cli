@@ -5,3 +5,5 @@ if [ -d "./dist" ]; then
 fi
 
 tsc
+
+tsc ./create-sfa/main.ts
