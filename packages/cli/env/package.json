@@ -2,7 +2,7 @@
   "name": "env",
   "dependencies": {
     "@sfajs/alifunc": "*",
-    "@sfajs/cloudbase": "*",
-    "@sfajs/http": "*"
+    "@sfajs/http": "*",
+    "@sfajs/lambda": "*"
   }
 }

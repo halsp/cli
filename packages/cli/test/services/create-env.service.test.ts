@@ -18,11 +18,11 @@ runTest(
   CreateEnvService,
   async (ctx, service) => {
     const env = await (service as any).getEnv();
-    expect(env).toBe("cloudbase");
+    expect(env).toBe("lambda");
   },
   undefined,
   {
-    env: "cloudbase",
+    env: "lambda",
   }
 );
 
@@ -46,10 +46,10 @@ runTest(
 
 runTest(CreateEnvService, async (ctx, service) => {
   const prompt = inquirer.prompt;
-  inquirer.prompt = (() => Promise.resolve({ env: "cloudbase" })) as any;
+  inquirer.prompt = (() => Promise.resolve({ env: "lambda" })) as any;
   try {
     const env = await (service as any).getEnv();
-    expect(env).toBe("cloudbase");
+    expect(env).toBe("lambda");
   } finally {
     inquirer.prompt = prompt;
   }
