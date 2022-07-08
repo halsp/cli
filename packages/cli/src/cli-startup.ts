@@ -1,6 +1,6 @@
 import "@sfajs/core";
 import "@sfajs/inject";
-import { HookType, HttpContext, SfaRequest, Startup } from "@sfajs/core";
+import { HookType, HttpContext, Request, Startup } from "@sfajs/core";
 import {
   COMMAND_ARGS_METADATA,
   COMMAND_OPTIONS_METADATA,
@@ -69,7 +69,7 @@ export class CliStartup extends Startup {
   }
 
   async run() {
-    const res = await super.invoke(new HttpContext(new SfaRequest()));
+    const res = await super.invoke(new HttpContext(new Request()));
     if (res[HOOK_EXCEPTION]) {
       throw res[HOOK_EXCEPTION];
     }
