@@ -10,6 +10,6 @@ npx sfa build
 
 git config --global user.email hi@hal.wang
 git config --global user.name hal-wang
-git init -b main
+git init -b minimal
 git add -A
 git commit -m "create"
