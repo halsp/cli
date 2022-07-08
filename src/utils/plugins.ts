@@ -1,6 +1,6 @@
 type PluginItem = { value: string; name: string; default?: boolean };
 
-export type Env = "http" | "cloudbase" | "alifunc";
+export type Env = "http" | "lambda" | "alifunc";
 
 export type Plugin =
   | "inject"

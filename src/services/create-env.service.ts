@@ -73,18 +73,27 @@ export class CreateEnvService {
       })
       .map((file) => {
         const filePath = path.join(this.sourceDir, file);
-        const name = fs
+        const title = fs
           .readFileSync(filePath, "utf-8")
           .replace(/\r\n/g, "\n")
           .split("\n")
           .filter((line) => commentEnvStartRegExp.test(line))[0]
           .replace(commentEnvStartRegExp, "");
         const env = file.replace(/\.ts$/, "");
+        const strs = title.split(".").map((item) => item.trim());
+        console.log("strs", strs);
         return {
-          name,
+          order: Number(strs[0]),
+          name: strs[1],
           value: env,
+          // TODO
         };
-      });
+      })
+      .sort((a, b) => a.order - b.order)
+      .map((item) => ({
+        name: item.name,
+        value: item.value,
+      }));
   }
 
   private async getEnvByInquirer(
