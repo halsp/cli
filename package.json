@@ -1,19 +1,18 @@
 {
-  "name": "@sfajs/cli-common",
-  "version": "0.2.7",
-  "description": "@sfajs/cli 基础功能",
-  "homepage": "https://github.com/sfajs/cli-common",
+  "name": "@ipare/cli-common",
+  "version": "0.2.8",
+  "description": "@ipare/cli 基础功能",
+  "homepage": "https://github.com/ipare/cli-common",
   "repository": {
     "type": "git",
-    "url": "https://github.com/sfajs/cli-common"
+    "url": "https://github.com/ipare/cli-common"
   },
   "keywords": [
-    "sfa",
-    "sfajs",
+    "ipare",
     "cli"
   ],
   "bugs": {
-    "url": "https://github.com/sfajs/cli-common/issues",
+    "url": "https://github.com/ipare/cli-common/issues",
     "email": "support@hal.wang"
   },
   "main": "dist/index.js",

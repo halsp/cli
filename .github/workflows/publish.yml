@@ -23,7 +23,7 @@ jobs:
       - run: npx codecov
 
   publish-npm:
-    if: github.repository == 'sfajs/cli-common'
+    if: github.repository == 'ipare/cli-common'
     needs: test
     runs-on: ubuntu-latest
     steps:
