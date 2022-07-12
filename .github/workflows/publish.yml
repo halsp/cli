@@ -35,7 +35,6 @@ jobs:
           node-version: "16"
           registry-url: https://registry.npmjs.org/
       - run: npm install
-      - run: cd enter && npm install && cd ..
       - run: npm run build
       - run: npm publish --access=public
         env:
@@ -52,9 +51,7 @@ jobs:
           node-version: "16"
           registry-url: https://registry.npmjs.org/
       - run: npm install
-      - run: cd enter && npm install && cd ..
-      - run: npm run build
-      - run: npx ts-node scripts/create-ipare.ts
+      - run: npm run build:create-ipare
       - run: npm publish --access=public
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}

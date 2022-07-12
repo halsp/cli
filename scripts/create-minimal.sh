@@ -1,7 +1,6 @@
 set -e
 
 npm install
-cd enter && npm install && cd ..
 npm run build
 
 mv minimal.README.md README.md
