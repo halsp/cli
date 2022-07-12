@@ -94,8 +94,7 @@
     }
   },
   "bin": {
-    "ipare": "bin/index.js",
-    "create-ipare": "bin/create-ipare.js"
+    "ipare": "bin/cli.js"
   },
   "files": [
     "/.github/*",
