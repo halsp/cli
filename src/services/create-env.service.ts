@@ -1,10 +1,10 @@
-import { HttpContext } from "@sfajs/core";
+import { HttpContext } from "@ipare/core";
 import inquirer from "inquirer";
 import * as fs from "fs";
 import path from "path";
-import { Inject } from "@sfajs/inject";
+import { Inject } from "@ipare/inject";
 import { FileService } from "./file.service";
-import { Context } from "@sfajs/pipe";
+import { Context } from "@ipare/pipe";
 import { Env } from "../utils/plugins";
 import { CommandService } from "./command.service";
 

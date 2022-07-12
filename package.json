@@ -1,18 +1,17 @@
 {
-  "name": "@sfajs/cli",
-  "version": "0.1.12",
-  "description": "sfajs 的命令行脚手架工具",
-  "homepage": "https://github.com/sfajs/cli",
+  "name": "@ipare/cli",
+  "version": "0.1.13",
+  "description": "Ipare 的命令行脚手架工具",
+  "homepage": "https://github.com/ipare/cli",
   "repository": {
     "type": "git",
-    "url": "https://github.com/sfajs/cli"
+    "url": "https://github.com/ipare/cli"
   },
   "keywords": [
-    "sfa",
-    "sfajs"
+    "ipare"
   ],
   "bugs": {
-    "url": "https://github.com/sfajs/cli/issues",
+    "url": "https://github.com/ipare/cli/issues",
     "email": "support@hal.wang"
   },
   "main": "dist/index.js",
@@ -22,15 +21,15 @@
     "test": "npm run build && jest",
     "tests": "sh scripts/tests.sh",
     "lint": "eslint src --ext .ts",
-    "dev": "npm run build && npm uninstall @sfajs/cli -g && npm link"
+    "dev": "npm run build && npm uninstall @ipare/cli -g && npm link"
   },
   "author": "hal-wang",
   "license": "MIT",
   "dependencies": {
-    "@sfajs/cli-common": "^0.2.7",
-    "@sfajs/core": "^1.6.0",
-    "@sfajs/inject": "^1.1.4",
-    "@sfajs/pipe": "^1.3.1",
+    "@ipare/cli-common": "^0.2.8",
+    "@ipare/core": "^1.6.1",
+    "@ipare/inject": "^1.2.1",
+    "@ipare/pipe": "^1.3.3",
     "chalk": "^4.1.2",
     "child_process": "^1.0.2",
     "chokidar": "^3.5.3",
@@ -56,8 +55,8 @@
     "@types/lodash": "^4.14.182",
     "@types/node": "^18.0.3",
     "@types/shelljs": "^0.8.11",
-    "@typescript-eslint/eslint-plugin": "^5.30.5",
-    "@typescript-eslint/parser": "^5.30.5",
+    "@typescript-eslint/eslint-plugin": "^5.30.6",
+    "@typescript-eslint/parser": "^5.30.6",
     "codecov": "^3.8.3",
     "eslint": "^8.19.0",
     "eslint-config-prettier": "^8.5.0",
@@ -66,32 +65,32 @@
     "ts-jest": "^28.0.5"
   },
   "peerDependencies": {
-    "@sfajs/cli-common": "0.2.x",
-    "@sfajs/core": "~1",
-    "@sfajs/inject": "~1",
-    "@sfajs/pipe": "~1",
+    "@ipare/cli-common": "0.2.x",
+    "@ipare/core": "~1",
+    "@ipare/inject": "~1",
+    "@ipare/pipe": "~1",
     "ts-node": ">=9.0.0"
   },
   "peerDependenciesMeta": {
-    "@sfajs/core": {
+    "@ipare/core": {
       "optional": true
     },
-    "@sfajs/inject": {
+    "@ipare/inject": {
       "optional": true
     },
-    "@sfajs/pipe": {
+    "@ipare/pipe": {
       "optional": true
     },
     "ts-node": {
       "optional": true
     },
-    "@sfajs/cli-common": {
+    "@ipare/cli-common": {
       "optional": true
     }
   },
   "bin": {
-    "sfa": "bin/index.js",
-    "create-sfa": "bin/create-sfa.js"
+    "ipare": "bin/index.js",
+    "create-ipare": "bin/create-ipare.js"
   },
   "files": [
     "/.github/*",

@@ -22,7 +22,7 @@ Command.prototype.setCreateOptions = function () {
     )
     .option(
       "-cv, --cli-version [version]",
-      "Version of @sfajs/cli",
+      "Version of @ipare/cli",
       getCliVersion()
     )
     .option(

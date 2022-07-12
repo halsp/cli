@@ -1,7 +1,7 @@
 //{ router
-import { Action } from "@sfajs/router";
+import { Action } from "@ipare/router";
 //{pipe
-import { Body } from "@sfajs/pipe";
+import { Body } from "@ipare/pipe";
 //}
 //{validator
 import { IsString, IsNumberString } from "class-validator";

@@ -1,4 +1,4 @@
-import { Inject } from "@sfajs/inject";
+import { Inject } from "@ipare/inject";
 import inquirer from "inquirer";
 import path from "path";
 import { DepsService } from "./deps.service";
@@ -49,7 +49,7 @@ export class PluginSelectService {
     }
 
     function addFromDeps(deps: any, plugin: Plugin) {
-      if (Object.keys(deps).some((dep) => dep == `@sfajs/${plugin}`)) {
+      if (Object.keys(deps).some((dep) => dep == `@ipare/${plugin}`)) {
         add(plugin);
       }
     }
@@ -58,10 +58,10 @@ export class PluginSelectService {
       addFromDeps(dependencies, plugin);
       addFromDeps(devDependencies, plugin);
 
-      if (Object.keys(dependencies).some((dep) => dep == `@sfajs/${plugin}`)) {
+      if (Object.keys(dependencies).some((dep) => dep == `@ipare/${plugin}`)) {
         this.depsService
-          .getPackageSfaDeps(`@sfajs/${plugin}`, paths)
-          .map((item) => item.key.replace(/^@sfajs\//, "") as Plugin)
+          .getPackageIpareDeps(`@ipare/${plugin}`, paths)
+          .map((item) => item.key.replace(/^@ipare\//, "") as Plugin)
           .forEach((dep) => {
             add(dep);
           });

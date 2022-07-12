@@ -1,6 +1,6 @@
 {
   "name": "script",
   "dependencies": {
-    "@sfajs/core": "*"
+    "@ipare/core": "*"
   }
 }

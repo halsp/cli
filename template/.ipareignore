@@ -1,0 +1,4 @@
+.ipareignore
+plugin.json
+package.json
+ipare-cli.config.ts

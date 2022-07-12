@@ -1,6 +1,6 @@
 import { CliStartup } from "../../src/cli-startup";
 import { runin } from "../utils";
-import { isUndefined } from "@sfajs/core";
+import { isUndefined } from "@ipare/core";
 
 function testCliStartup(args?: any, options?: any) {
   test(`cli startup`, async () => {

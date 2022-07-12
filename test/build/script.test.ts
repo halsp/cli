@@ -2,7 +2,7 @@ import { runin } from "../utils";
 import { CliStartup } from "../../src/cli-startup";
 import { BuildMiddlware } from "../../src/middlewares/build.middleware";
 import * as fs from "fs";
-import { parseInject } from "@sfajs/inject";
+import { parseInject } from "@ipare/inject";
 import { ConfigService } from "../../src/services/config.service";
 
 test(`build script`, async () => {
@@ -26,9 +26,9 @@ test(`build script`, async () => {
       .add(BuildMiddlware)
       .run();
 
-    expect(fs.existsSync("./.sfa-cache")).toBeTruthy();
-    expect(fs.existsSync("./.sfa-cache/build-test.js")).toBeTruthy();
-    expect(fs.existsSync("./.sfa-cache/package.json")).toBeTruthy();
+    expect(fs.existsSync("./.ipare-cache")).toBeTruthy();
+    expect(fs.existsSync("./.ipare-cache/build-test.js")).toBeTruthy();
+    expect(fs.existsSync("./.ipare-cache/package.json")).toBeTruthy();
     callCount++;
   });
   expect(callCount).toBe(2);
@@ -55,7 +55,7 @@ test(`build script failed`, async () => {
       .add(BuildMiddlware)
       .run();
 
-    expect(fs.existsSync("./.sfa-cache")).toBeFalsy();
+    expect(fs.existsSync("./.ipare-cache")).toBeFalsy();
     callCount++;
   });
   expect(callCount).toBe(2);
@@ -77,8 +77,8 @@ test(`plugin script error`, async () => {
       .add(BuildMiddlware)
       .run();
 
-    expect(fs.existsSync("./.sfa-cache")).toBeTruthy();
-    expect(fs.existsSync("./.sfa-cache/build-test.js")).toBeTruthy();
+    expect(fs.existsSync("./.ipare-cache")).toBeTruthy();
+    expect(fs.existsSync("./.ipare-cache/build-test.js")).toBeTruthy();
     callCount++;
   });
   expect(callCount).toBe(2);

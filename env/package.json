@@ -1,8 +1,8 @@
 {
   "name": "env",
   "dependencies": {
-    "@sfajs/alifunc": "*",
-    "@sfajs/http": "*",
-    "@sfajs/lambda": "*"
+    "@ipare/alifunc": "*",
+    "@ipare/http": "*",
+    "@ipare/lambda": "*"
   }
 }

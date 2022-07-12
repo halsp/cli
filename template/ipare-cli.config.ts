@@ -1,5 +1,5 @@
-import { Configuration, defineConfig } from "@sfajs/cli";
-import "@sfajs/router";
+import { Configuration, defineConfig } from "@ipare/cli";
+import "@ipare/router";
 
 export default defineConfig(() => {
   return <Configuration>{

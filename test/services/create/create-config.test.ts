@@ -1,4 +1,4 @@
-import { parseInject } from "@sfajs/inject";
+import { parseInject } from "@ipare/inject";
 import { runin } from "../../utils";
 import path from "path";
 import { CliStartup } from "../../../src/cli-startup";
@@ -20,15 +20,15 @@ test(`create config`, async () => {
           get: () => path.join(__dirname, "dist/config"),
         });
         Object.defineProperty(service, "sourceFile", {
-          get: () => path.join(__dirname, "config/sfa-cli.config.ts"),
+          get: () => path.join(__dirname, "config/ipare-cli.config.ts"),
         });
 
         await service.create(["cli"]);
 
-        expect(fs.existsSync("dist/config/sfa-cli.config.ts")).toBeTruthy();
+        expect(fs.existsSync("dist/config/ipare-cli.config.ts")).toBeTruthy();
         expect(
           fs
-            .readFileSync("dist/config/sfa-cli.config.ts", "utf-8")
+            .readFileSync("dist/config/ipare-cli.config.ts", "utf-8")
             .includes('packageManager: "pnpm"')
         ).toBeTruthy();
 

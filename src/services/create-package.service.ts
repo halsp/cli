@@ -1,6 +1,6 @@
-import { HttpContext } from "@sfajs/core";
-import { Inject } from "@sfajs/inject";
-import { Context } from "@sfajs/pipe";
+import { HttpContext } from "@ipare/core";
+import { Inject } from "@ipare/inject";
+import { Context } from "@ipare/pipe";
 import path from "path";
 import { CreateEnvService } from "./create-env.service";
 import * as fs from "fs";
@@ -76,9 +76,9 @@ export class CreatePackageService {
     const { constant, dependencies } = pluginConfig;
 
     Object.keys(deps)
-      .filter((k) => k.startsWith("@sfajs/"))
-      .filter((k) => !constant.some((c) => `@sfajs/${c}` == k))
-      .filter((k) => !plugins.some((p) => `@sfajs/${p}` == k))
+      .filter((k) => k.startsWith("@ipare/"))
+      .filter((k) => !constant.some((c) => `@ipare/${c}` == k))
+      .filter((k) => !plugins.some((p) => `@ipare/${p}` == k))
       .forEach((key) => {
         delete deps[key];
       });
@@ -104,15 +104,15 @@ export class CreatePackageService {
 
     if (
       pkg.dependencies &&
-      Object.keys(pkg.dependencies).includes("@sfajs/cli")
+      Object.keys(pkg.dependencies).includes("@ipare/cli")
     ) {
-      pkg.dependencies["@sfajs/cli"] = version;
+      pkg.dependencies["@ipare/cli"] = version;
     }
     if (
       pkg.devDependencies &&
-      Object.keys(pkg.devDependencies).includes("@sfajs/cli")
+      Object.keys(pkg.devDependencies).includes("@ipare/cli")
     ) {
-      pkg.devDependencies["@sfajs/cli"] = version;
+      pkg.devDependencies["@ipare/cli"] = version;
     }
   }
 }

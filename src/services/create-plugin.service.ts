@@ -1,4 +1,4 @@
-import { Inject } from "@sfajs/inject";
+import { Inject } from "@ipare/inject";
 import * as fs from "fs";
 import path from "path";
 import { ExpressionService } from "./expression.service";

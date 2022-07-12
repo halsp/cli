@@ -10,7 +10,7 @@ export class BuildCommand extends BaseCommand {
     command
       .command("build")
       .alias("b")
-      .description("Build sfa application.")
+      .description("Build ipare application.")
       .setBuildOptions("production")
       .option("-sm, --sourceMap", "Whether to generate source map files.")
       .option("-cp, --copyPackage", "Copy package.json to out dir.")

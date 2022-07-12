@@ -2,4 +2,4 @@
 
 'use strict';
 
-require('../dist/create-sfa');
+require('../dist/create-ipare');

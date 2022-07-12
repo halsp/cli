@@ -1,4 +1,4 @@
-import { Inject } from "@sfajs/inject";
+import { Inject } from "@ipare/inject";
 import { CommandType } from "../configuration";
 import { ConfigService } from "./config.service";
 import { TsconfigService } from "./tsconfig.service";

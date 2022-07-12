@@ -1,8 +1,8 @@
 //{ router
-import { UseFilters } from "@sfajs/filter";
-import { Inject } from "@sfajs/inject";
-import { Header } from "@sfajs/pipe";
-import { Action } from "@sfajs/router";
+import { UseFilters } from "@ipare/filter";
+import { Inject } from "@ipare/inject";
+import { Header } from "@ipare/pipe";
+import { Action } from "@ipare/router";
 //{filter
 import { AuthFilter } from "../filters/auth.filter";
 //}

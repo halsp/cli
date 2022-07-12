@@ -1,4 +1,4 @@
-import { Startup } from "@sfajs/core";
+import { Startup } from "@ipare/core";
 
 //just be placeholder
 export default <T extends Startup>(startup: T, mode?: string) => {

@@ -1,5 +1,5 @@
-import { Middleware } from "@sfajs/core";
-import { Inject } from "@sfajs/inject";
+import { Middleware } from "@ipare/core";
+import { Inject } from "@ipare/inject";
 import path from "path";
 import { FileService } from "../services/file.service";
 import { TsconfigService } from "../services/tsconfig.service";

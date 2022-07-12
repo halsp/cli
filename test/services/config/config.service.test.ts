@@ -2,9 +2,9 @@ import { ConfigService } from "../../../src/services/config.service";
 import { runTest } from "../runTest";
 import { runin } from "../../utils";
 import { CliStartup } from "../../../src/cli-startup";
-import { parseInject } from "@sfajs/inject";
+import { parseInject } from "@ipare/inject";
 import * as fs from "fs";
-import { defineConfig } from "@sfajs/cli-common";
+import { defineConfig } from "@ipare/cli-common";
 
 runTest(ConfigService, async (res, service) => {
   await service.init();
@@ -33,7 +33,7 @@ test(`json config file`, async () => {
   let worked = false;
   await runin("test/services/config/types", async () => {
     await new CliStartup(undefined, {
-      configName: `sfa-cli.config.json`,
+      configName: `ipare-cli.config.json`,
     })
       .use(async (ctx) => {
         const service = await parseInject(ctx, ConfigService);
@@ -49,7 +49,7 @@ test(`json config command`, async () => {
   let worked = false;
   await runin("test/services/config/types", async () => {
     await new CliStartup(undefined, {
-      jsonConfig: await fs.promises.readFile("sfa-cli.config.json", "utf-8"),
+      jsonConfig: await fs.promises.readFile("ipare-cli.config.json", "utf-8"),
     })
       .use(async (ctx) => {
         const service = await parseInject(ctx, ConfigService);
@@ -85,7 +85,7 @@ test(`js config file`, async () => {
   await runin("test/services/config/types", async () => {
     await new CliStartup(undefined, {
       mode: "js-test",
-      configName: `sfa-cli.config.js`,
+      configName: `ipare-cli.config.js`,
     })
       .use(async (ctx) => {
         const service = await parseInject(ctx, ConfigService);

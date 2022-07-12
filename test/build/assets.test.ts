@@ -1,24 +1,24 @@
 import { CliStartup } from "../../src/cli-startup";
 import { BuildMiddlware } from "../../src/middlewares/build.middleware";
 import * as fs from "fs";
-import { parseInject } from "@sfajs/inject";
+import { parseInject } from "@ipare/inject";
 import { AssetsService } from "../../src/services/assets.service";
 import { WatchCompilerService } from "../../src/services/watch-compiler.service";
 import { runin } from "../utils";
 
 function expectFiles() {
-  expect(fs.existsSync("./.sfa-cache")).toBeTruthy();
-  expect(fs.existsSync("./.sfa-cache/default/test.txt")).toBeTruthy();
-  expect(fs.readFileSync("./.sfa-cache/default/test.txt", "utf-8")).toBe(
+  expect(fs.existsSync("./.ipare-cache")).toBeTruthy();
+  expect(fs.existsSync("./.ipare-cache/default/test.txt")).toBeTruthy();
+  expect(fs.readFileSync("./.ipare-cache/default/test.txt", "utf-8")).toBe(
     "test-build"
   );
-  expect(fs.existsSync("./.sfa-cache/build-test.js")).toBeTruthy();
+  expect(fs.existsSync("./.ipare-cache/build-test.js")).toBeTruthy();
 
-  expect(fs.existsSync("./.sfa-cache/root/test.txt")).toBeTruthy();
-  expect(fs.existsSync("./.sfa-cache/include/test.txt")).toBeTruthy();
-  expect(fs.existsSync("./.sfa-cache/test/outDir/test.txt")).toBeTruthy();
+  expect(fs.existsSync("./.ipare-cache/root/test.txt")).toBeTruthy();
+  expect(fs.existsSync("./.ipare-cache/include/test.txt")).toBeTruthy();
+  expect(fs.existsSync("./.ipare-cache/test/outDir/test.txt")).toBeTruthy();
 
-  expect(fs.existsSync("./.sfa-cache/exclude/test.txt")).toBeFalsy();
+  expect(fs.existsSync("./.ipare-cache/exclude/test.txt")).toBeFalsy();
 }
 
 test(`build assets`, async () => {
@@ -40,13 +40,13 @@ test(`build command assets`, async () => {
       .add(BuildMiddlware)
       .run();
 
-    expect(fs.existsSync("./.sfa-cache")).toBeTruthy();
-    expect(fs.existsSync("./.sfa-cache/default")).toBeTruthy();
-    expect(fs.existsSync("./.sfa-cache/default/test.txt")).toBeTruthy();
-    expect(fs.readFileSync("./.sfa-cache/default/test.txt", "utf-8")).toBe(
+    expect(fs.existsSync("./.ipare-cache")).toBeTruthy();
+    expect(fs.existsSync("./.ipare-cache/default")).toBeTruthy();
+    expect(fs.existsSync("./.ipare-cache/default/test.txt")).toBeTruthy();
+    expect(fs.readFileSync("./.ipare-cache/default/test.txt", "utf-8")).toBe(
       "test-build"
     );
-    expect(fs.existsSync("./.sfa-cache/build-test.js")).toBeTruthy();
+    expect(fs.existsSync("./.ipare-cache/build-test.js")).toBeTruthy();
     worked = true;
   });
   expect(worked).toBeTruthy();
@@ -56,7 +56,7 @@ function runWatchAssetsTest(type: "add" | "edit" | "unlink") {
   test(`watch assets ${type}`, async () => {
     const cacheFileName = `test-cache-${type}.txt`;
     const cacheSourceFile = `./default/${cacheFileName}`;
-    const cacheTargetFile = `./.sfa-cache/default/${cacheFileName}`;
+    const cacheTargetFile = `./.ipare-cache/default/${cacheFileName}`;
     const cacheFileContent = "watchAssets";
     const cacheFileEditContent = "Edit";
     let callCount = 0;

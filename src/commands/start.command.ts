@@ -10,7 +10,7 @@ export class StartCommand extends BaseCommand {
     command
       .command("start")
       .alias("s")
-      .description("Run sfa application.")
+      .description("Run ipare application.")
       .setBuildOptions("development")
       .option(
         "-b, --binaryToRun [program]",

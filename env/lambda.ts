@@ -1,6 +1,6 @@
 // 1.云函数运行环境
 
-import { LambdaStartup } from "@sfajs/lambda";
+import { LambdaStartup } from "@ipare/lambda";
 import startup from "./startup";
 
 const app = startup(new LambdaStartup());

@@ -1,4 +1,4 @@
-import { Inject } from "@sfajs/inject";
+import { Inject } from "@ipare/inject";
 import path from "path";
 import { FileService } from "./file.service";
 import * as fs from "fs";
@@ -14,7 +14,7 @@ const commentPluginStartRegExp = /^\s*\/{2,}\s*\{\s*/;
 // plugin end
 const commentPluginEndRegExp = /^\s*\/{2,}\s*\}\s*/;
 const importRegExp =
-  /^import\s(\"@sfajs\/(.+?)\")|(.+?\sfrom\s\"@sfajs\/(.+?)\");$/;
+  /^import\s(\"@ipare\/(.+?)\")|(.+?\sfrom\s\"@ipare\/(.+?)\");$/;
 const uslessRegExp = /\/{2,}\s*\!\s*/;
 
 export class CreateTemplateService {
@@ -40,7 +40,7 @@ export class CreateTemplateService {
     const exclude = await this.createPluginService.excludePluginFiles(plugins);
     let paths = await walk({
       path: this.sourceDir,
-      ignoreFiles: [".gitignore", ".sfaignore"],
+      ignoreFiles: [".gitignore", ".ipareignore"],
     });
     paths = paths.filter((p) => !exclude.some((e) => e == p));
     await this.copyTemplate(plugins, paths);

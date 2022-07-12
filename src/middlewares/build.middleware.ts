@@ -1,4 +1,4 @@
-import { Inject } from "@sfajs/inject";
+import { Inject } from "@ipare/inject";
 import path from "path";
 import { AssetsService } from "../services/assets.service";
 import { CompilerService } from "../services/compiler.service";

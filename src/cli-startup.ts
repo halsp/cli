@@ -1,6 +1,6 @@
-import "@sfajs/core";
-import "@sfajs/inject";
-import { HookType, HttpContext, Request, Startup } from "@sfajs/core";
+import "@ipare/core";
+import "@ipare/inject";
+import { HookType, HttpContext, Request, Startup } from "@ipare/core";
 import {
   COMMAND_ARGS_METADATA,
   COMMAND_OPTIONS_METADATA,
@@ -9,9 +9,9 @@ import {
 } from "./constant";
 import { ConfigService } from "./services/config.service";
 import { CommandType } from "./configuration";
-import { parseInject } from "@sfajs/inject";
+import { parseInject } from "@ipare/inject";
 
-declare module "@sfajs/core" {
+declare module "@ipare/core" {
   interface HttpContext {
     get command(): CommandType;
     get commandArgs(): Record<string, string>;

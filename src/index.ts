@@ -1,4 +1,4 @@
-export { defineConfig, ConfigEnv, Configuration } from "@sfajs/cli-common";
+export { defineConfig, ConfigEnv, Configuration } from "@ipare/cli-common";
 
 export {
   Transformer,

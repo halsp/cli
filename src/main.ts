@@ -6,7 +6,7 @@ import { StartCommand } from "./commands/start.command";
 import { TemplateCommand } from "./commands/template.command";
 import { UpdateCommand } from "./commands/update.command";
 
-const program = new Command("sfa");
+const program = new Command("ipare");
 
 program
   .usage("<command> [options]")

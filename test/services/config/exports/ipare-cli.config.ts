@@ -1,4 +1,4 @@
-import { defineConfig, Configuration } from "@sfajs/cli-common";
+import { defineConfig, Configuration } from "@ipare/cli-common";
 
 module.exports = defineConfig(({ mode }) => {
   return <Configuration>{

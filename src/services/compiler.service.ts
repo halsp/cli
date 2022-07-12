@@ -1,6 +1,6 @@
-import { HttpContext, isUndefined } from "@sfajs/core";
-import { Inject } from "@sfajs/inject";
-import { Context } from "@sfajs/pipe";
+import { HttpContext, isUndefined } from "@ipare/core";
+import { Inject } from "@ipare/inject";
+import { Context } from "@ipare/pipe";
 import ts from "typescript";
 import { ConfigService } from "./config.service";
 import { PluginInterfaceService } from "./plugin-interface.service";

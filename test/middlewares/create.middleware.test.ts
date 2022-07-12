@@ -4,7 +4,7 @@ import { CliStartup } from "../../src/cli-startup";
 import { CreateMiddleware } from "../../src/middlewares/create-middleware";
 import * as fs from "fs";
 import inquirer from "inquirer";
-import { HookType, HttpContext } from "@sfajs/core";
+import { HookType, HttpContext } from "@ipare/core";
 
 const testName = "create-cache";
 

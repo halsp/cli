@@ -14,16 +14,16 @@ Command.prototype.setBuildOptions = function (defaultMode: string) {
   )
     .option(
       "-c, --config [path]",
-      "Path to sfa-cli configuration file.",
-      "sfa-cli.config.ts"
+      "Path to ipare-cli configuration file.",
+      "ipare-cli.config.ts"
     )
     .option(
       "-jc, --json-config [json]",
-      "Json string of sfa-cli configuration."
+      "Json string of ipare-cli configuration."
     )
     .option(
       "-fc, --func-config [function]",
-      "Function string to build sfa-cli configuration."
+      "Function string to build ipare-cli configuration."
     )
     .option("-tc, --tsconfigPath [path]", "Path to tsconfig.json file.")
     .option("-w, --watch", "Run in watch mode (live-reload).")
