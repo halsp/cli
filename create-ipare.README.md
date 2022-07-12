@@ -5,9 +5,9 @@
 <p align="center">Ipare - 面向云的现代渐进式轻量 <a href="http://nodejs.org" target="_blank">Node.js</a> 框架</p>
 <p align="center">
     <a href="https://github.com/ipare/cli/blob/main/LICENSE" target="_blank"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="GitHub license" /></a>
-    <a href=""><img src="https://img.shields.io/npm/v/@ipare/cli.svg" alt="npm version"></a>
-    <a href=""><img src="https://badgen.net/npm/dt/@ipare/cli" alt="npm downloads"></a>
-    <a href="https://nodejs.org/en/about/releases/"><img src="https://img.shields.io/node/v/@ipare/cli.svg" alt="node compatibility"></a>
+    <a href=""><img src="https://img.shields.io/npm/v/create-ipare.svg" alt="npm version"></a>
+    <a href=""><img src="https://badgen.net/npm/dt/create-ipare" alt="npm downloads"></a>
+    <a href="https://nodejs.org/en/about/releases/"><img src="https://img.shields.io/node/v/create-ipare.svg" alt="node compatibility"></a>
     <a href="#"><img src="https://github.com/ipare/cli/actions/workflows/test.yml/badge.svg?branch=main" alt="Build Status"></a>
     <a href="https://codecov.io/gh/ipare/cli/branch/main"><img src="https://img.shields.io/codecov/c/github/ipare/cli/main.svg" alt="Test Coverage"></a>
     <a href="https://github.com/ipare/cli/pulls"><img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg" alt="PRs Welcome"></a>
@@ -17,21 +17,13 @@
 
 ## 介绍
 
-`@ipare/cli` 是 `Ipare` 的命令行脚手架工具
-
-用于帮助你创建、运行、编译 Ipare 应用
-
-## 安装
-
-```
-npm install -g @ipare/cli
-```
+`create-ipare` 是 `Ipare` 的快速开始脚手架工具，由 @ipare/cli 自动生成
 
 ## 开始使用
 
-请访问 <https://ipare.org>
-
-<!--introduce end-->
+```
+npm init ipare
+```
 
 ## 贡献
 

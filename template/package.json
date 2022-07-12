@@ -17,7 +17,7 @@
   "main": "dist/index.js",
   "scripts": {
     "dev": "ipare start --mode development --watch",
-    "start": "ipare start",
+    "start": "npm run dev",
     "build": "ipare build",
     "lint": "eslint . --ext .ts"
   },
@@ -26,10 +26,10 @@
   "dependencies": {
     "@ipare/alifunc": "^1.2.3",
     "@ipare/lambda": "^1.3.4",
-    "@ipare/core": "^1.6.1",
+    "@ipare/core": "^1.6.2",
     "@ipare/filter": "^1.0.8",
     "@ipare/http": "^1.2.3",
-    "@ipare/inject": "^1.2.1",
+    "@ipare/inject": "^1.2.2",
     "@ipare/jwt": "^0.3.7",
     "@ipare/mva": "^1.5.3",
     "@ipare/pipe": "^1.3.3",
