@@ -32,7 +32,7 @@ function editTsconfig() {
 }
 
 function editReadme() {
-  const readme = fs.readFileSync("./README.md", "utf-8");
+  const readme = fs.readFileSync("./create-ipare.README.md", "utf-8");
   fs.writeFileSync("./README.md", readme);
 }
 

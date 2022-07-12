@@ -1,4 +1,4 @@
-const { defineConfig } = require("@ipare/cli-common");
+const { defineConfig } = require("@ipare/cli-config");
 
 module.exports = defineConfig(({ mode }) => {
   return {
