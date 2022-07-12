@@ -1,6 +1,6 @@
 {
   "name": "@ipare/cli",
-  "version": "0.1.14",
+  "version": "0.2.0",
   "engines": {
     "node": ">=14.18.0"
   },
@@ -19,8 +19,10 @@
   },
   "main": "dist/index.js",
   "scripts": {
-    "build": "sh scripts/build.sh",
+    "build": "sh scripts/build/prod.sh",
+    "build:create-ipare": "sh scripts/build/create-ipare.sh",
     "publish:beta": "npm run build && npm publish --tag=beta --access=public",
+    "postinstall": "cd enter && npm install && cd ..",
     "test": "npm run build && jest",
     "tests": "sh scripts/tests.sh",
     "lint": "eslint src --ext .ts",
