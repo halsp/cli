@@ -2,7 +2,7 @@ set -e
 
 sh scripts/remove-dist.sh
 
-tsc
+npx tsc
 
 cd enter
 npx tsc
