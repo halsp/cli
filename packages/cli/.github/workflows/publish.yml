@@ -50,6 +50,7 @@ jobs:
         with:
           node-version: "16"
           registry-url: https://registry.npmjs.org/
+      - run: ts-node scripts/set-config-version.ts
       - run: npm install
       - run: npm run build
       - run: npm publish --access=public
@@ -66,6 +67,7 @@ jobs:
         with:
           node-version: "16"
           registry-url: https://registry.npmjs.org/
+      - run: ts-node scripts/set-config-version.ts
       - run: npm install
       - run: npm run build:create-ipare
       - run: npm publish --access=public
