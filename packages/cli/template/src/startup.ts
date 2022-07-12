@@ -38,7 +38,7 @@ export default <T extends Startup>(startup: T, mode?: string) =>
     //}
     // { swagger
     .useSwagger({
-      options: getSwaggerOptions(version),
+      docOptions: getSwaggerOptions(version),
     })
     // }
     //{static
