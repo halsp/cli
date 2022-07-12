@@ -1,10 +1,9 @@
 set -e
 
-npm install
 npm run build
 
 mv minimal.README.md README.md
-node bin/index.js create minimal -e http -pm npm -ps inject,router,view,mva,pipe,filter,testing,static,swagger,jwt,validator -f
+node bin/cli.js create minimal -e http -pm npm -ps inject,router,view,mva,pipe,filter,testing,static,swagger,jwt,validator -f
 cd minimal
 npx ipare build
 
