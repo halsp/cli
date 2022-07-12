@@ -1,6 +1,9 @@
 {
   "name": "@ipare/cli",
-  "version": "0.1.13",
+  "version": "0.1.14",
+  "engines": {
+    "node": ">=14.18.0"
+  },
   "description": "Ipare 的命令行脚手架工具",
   "homepage": "https://github.com/ipare/cli",
   "repository": {
@@ -27,8 +30,8 @@
   "license": "MIT",
   "dependencies": {
     "@ipare/cli-common": "^0.2.8",
-    "@ipare/core": "^1.6.1",
-    "@ipare/inject": "^1.2.1",
+    "@ipare/core": "^1.6.2",
+    "@ipare/inject": "^1.2.2",
     "@ipare/pipe": "^1.3.3",
     "chalk": "^4.1.2",
     "child_process": "^1.0.2",

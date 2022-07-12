@@ -18,19 +18,8 @@ function editPackage() {
 }
 
 function editReadme() {
-  let readme = fs.readFileSync("./README.md", "utf-8");
-  readme = readme.replace(
-    /\<\!\-\-introduce start\-\-\>[\s\S]*\<\!\-\-introduce end\-\-\>/,
-    ""
-  );
-  readme = readme.replace(/<\!\-\-create\-ipare/, "");
-  readme = readme.replace(/create\-ipare\-\-\>/, "");
-  fs.writeFileSync(
-    "./README.md",
-    prettier.format(readme, {
-      parser: "markdown",
-    })
-  );
+  const readme = fs.readFileSync("./README.md", "utf-8");
+  fs.writeFileSync("./README.md", readme);
 }
 
 editPackage();

@@ -4,7 +4,8 @@ npm install
 cd enter && npm install && cd ..
 npm run build
 
-node bin/index.js create minimal -e http -pm npm -ps inject,router,view,mva,pipe,filter,testing,static,swagger,jwt -f
+mv minimal.README.md README.md
+node bin/index.js create minimal -e http -pm npm -ps inject,router,view,mva,pipe,filter,testing,static,swagger,jwt,validator -f
 cd minimal
 npx ipare build
 

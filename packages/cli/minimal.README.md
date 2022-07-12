@@ -17,32 +17,20 @@
 
 ## 介绍
 
-`@ipare/cli` 是 `Ipare` 的命令行脚手架工具
+本项目是 Ipare 的一个简易示例
 
-用于帮助你创建、运行、编译 Ipare 应用
+由 `@ipare/cli` 以下命令自动生成
 
-## 安装
-
-```
-npm install -g @ipare/cli
+```bash
+ipare create minimal -e http -pm npm -ps inject,router,view,mva,pipe,filter,testing,static,swagger,jwt,validator -f
 ```
 
-## 开始使用
+## 运行
 
-请访问 <https://ipare.org>
+```bash
+npm start
+```
 
-<!--introduce end-->
+## 在线编辑调试
 
-## 贡献
-
-请阅读 [Contributing to @ipare/cli](https://github.com/ipare/cli/blob/main/CONTRIBUTING.md)
-
-### 贡献列表
-
-<a href="https://github.com/ipare/cli/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=ipare/cli" />
-</a>
-
-## License
-
-@ipare/cli is MIT licensed.
+StackBlitz：[minimal.ipare.org](http://minimal.ipare.org)
