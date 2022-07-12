@@ -1,6 +1,6 @@
 // 3.阿里云函数计算
 
-import { AlifuncStartup } from "@sfajs/alifunc";
+import { AlifuncStartup } from "@ipare/alifunc";
 import startup from "./startup";
 
 const app = startup(new AlifuncStartup());

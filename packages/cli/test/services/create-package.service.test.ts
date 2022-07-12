@@ -21,10 +21,10 @@ runTest(
   async (ctx, service) => {
     const pkg = {
       dependencies: {
-        "@sfajs/cli": "",
+        "@ipare/cli": "",
       },
       devDependencies: {
-        "@sfajs/cli": "",
+        "@ipare/cli": "",
       },
     };
     await (service as any).setCliVersion(pkg);
@@ -32,10 +32,10 @@ runTest(
     const cliPath = path.join(__dirname, "../..");
     expect(pkg).toEqual({
       dependencies: {
-        "@sfajs/cli": cliPath,
+        "@ipare/cli": cliPath,
       },
       devDependencies: {
-        "@sfajs/cli": cliPath,
+        "@ipare/cli": cliPath,
       },
     });
   },

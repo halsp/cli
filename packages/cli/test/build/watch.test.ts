@@ -2,7 +2,7 @@ import { runin } from "../utils";
 import { CliStartup } from "../../src/cli-startup";
 import { BuildMiddlware } from "../../src/middlewares/build.middleware";
 import * as fs from "fs";
-import { parseInject } from "@sfajs/inject";
+import { parseInject } from "@ipare/inject";
 import { AssetsService } from "../../src/services/assets.service";
 import { WatchCompilerService } from "../../src/services/watch-compiler.service";
 
@@ -40,9 +40,9 @@ function runTest(options: { callback?: boolean }) {
         .add(BuildMiddlware)
         .run();
 
-      expect(fs.existsSync("./.sfa-cache")).toBeTruthy();
-      expect(fs.existsSync("./.sfa-cache/build-test.js")).toBeTruthy();
-      expect(fs.existsSync("./.sfa-cache/build-test.js.map")).toBeTruthy();
+      expect(fs.existsSync("./.ipare-cache")).toBeTruthy();
+      expect(fs.existsSync("./.ipare-cache/build-test.js")).toBeTruthy();
+      expect(fs.existsSync("./.ipare-cache/build-test.js.map")).toBeTruthy();
       callCount++;
     });
     expect(callCount).toBe(options.callback ? 3 : 2);

@@ -1,10 +1,10 @@
-import { Inject } from "@sfajs/inject";
+import { Inject } from "@ipare/inject";
 import path from "path";
 import { CompilerHook, Postbuild, Prebuild } from "../configuration";
 import { DepsService } from "./deps.service";
 import * as fs from "fs";
 import ts from "typescript";
-import { ConfigEnv, Configuration } from "@sfajs/cli-common";
+import { ConfigEnv, Configuration } from "@ipare/cli-common";
 
 export class PluginInterfaceService {
   @Inject
@@ -29,7 +29,7 @@ export class PluginInterfaceService {
     return this.depsService
       .getDeps(
         path.join(process.cwd(), "package.json"),
-        /^(@sfajs\/|sfa\-|sfa(js)?\-|@\S+\/sfa(js)?\-)/
+        /^(@ipare\/|ipare\-|@\S+\/ipare\-)/
       )
       .map((dep) => {
         try {

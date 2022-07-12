@@ -4,7 +4,7 @@ import os from "os";
 import * as fs from "fs";
 import path from "path";
 import { DepsService } from "../services/deps.service";
-import { Inject } from "@sfajs/inject";
+import { Inject } from "@ipare/inject";
 import { BaseMiddlware } from "./base.middleware";
 import { CommandType } from "../configuration";
 
@@ -30,7 +30,7 @@ export class InfoMiddleware extends BaseMiddlware {
       )
     );
 
-    const text = figlet.textSync("SFAJSCLI");
+    const text = figlet.textSync("IPARECLI");
     this.log("\n");
     this.log(chalk.rgb(0x19, 0xc9, 0xac)(text));
 
@@ -54,17 +54,17 @@ export class InfoMiddleware extends BaseMiddlware {
       },
     ]);
 
-    this.logTitle("Sfa CLI");
+    this.logTitle("Ipare CLI");
     this.logItems([
       {
-        key: "Sfa CLI Version",
+        key: "Ipare CLI Version",
         value: pkg.version,
       },
     ]);
 
-    this.logTitle("Sfa Packages Version");
+    this.logTitle("Ipare Packages Version");
     this.logItems(
-      this.depsService.getProjectSfaDeps(
+      this.depsService.getProjectIpareDeps(
         path.join(process.cwd(), "package.json")
       )
     );

@@ -1,4 +1,4 @@
-import { Inject } from "@sfajs/inject";
+import { Inject } from "@ipare/inject";
 import * as fs from "fs";
 import { FileService } from "./file.service";
 import path from "path";

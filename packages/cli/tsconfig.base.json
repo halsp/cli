@@ -10,10 +10,6 @@
     "noImplicitAny": false,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "preserveWatchOutput": true,
-    "types": [
-      "node",
-      "jest"
-    ]
+    "preserveWatchOutput": true
   }
 }

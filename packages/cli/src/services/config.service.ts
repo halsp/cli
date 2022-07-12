@@ -1,8 +1,8 @@
-import { Context } from "@sfajs/pipe";
-import { HttpContext, isUndefined } from "@sfajs/core";
+import { Context } from "@ipare/pipe";
+import { HttpContext, isUndefined } from "@ipare/core";
 import path from "path";
-import { Configuration, ConfigEnv } from "@sfajs/cli-common";
-import { Inject } from "@sfajs/inject";
+import { Configuration, ConfigEnv } from "@ipare/cli-common";
+import { Inject } from "@ipare/inject";
 import { CommandService } from "./command.service";
 import { FileService } from "./file.service";
 import * as tsNode from "ts-node";
@@ -29,18 +29,18 @@ export class ConfigService {
       } else {
         const exts = ["ts", "js", "json"];
         const names = [
-          "sfa-cli.config",
-          "sfacli.config",
-          "sfa-cli",
-          "sfacli",
+          "ipare-cli.config",
+          "iparecli.config",
+          "ipare-cli",
+          "iparecli",
 
-          "sfa-cli-config",
-          "sfacli-config",
+          "ipare-cli-config",
+          "iparecli-config",
 
-          "sfa_cli.config",
-          "sfacli_config",
-          "sfa_cli_config",
-          "sfa_cli",
+          "ipare_cli.config",
+          "iparecli_config",
+          "ipare_cli_config",
+          "ipare_cli",
         ];
 
         const files: string[] = [];

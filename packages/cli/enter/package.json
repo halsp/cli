@@ -1,6 +1,6 @@
 {
   "name": "enter",
   "dependencies": {
-    "@sfajs/http": "*"
+    "@ipare/http": "*"
   }
 }

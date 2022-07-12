@@ -1,9 +1,9 @@
-import { Inject } from "@sfajs/inject";
+import { Inject } from "@ipare/inject";
 import path from "path";
 import { CreateEnvService } from "./create-env.service";
 import * as fs from "fs";
-import { Context } from "@sfajs/pipe";
-import { HttpContext } from "@sfajs/core";
+import { Context } from "@ipare/pipe";
+import { HttpContext } from "@ipare/core";
 import { CreateTemplateService } from "./create-template.service";
 import prettier from "prettier";
 import { FileService } from "./file.service";
@@ -23,10 +23,10 @@ export class CreateConfigService {
     return this.createEnvService.targetDir;
   }
   private get targetFile() {
-    return path.join(this.targetDir, "sfa-cli.config.ts");
+    return path.join(this.targetDir, "ipare-cli.config.ts");
   }
   private get sourceFile() {
-    return path.join(__dirname, "../../template/sfa-cli.config.ts");
+    return path.join(__dirname, "../../template/ipare-cli.config.ts");
   }
 
   public async create(plugins: Plugin[]): Promise<void> {

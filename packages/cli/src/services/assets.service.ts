@@ -1,4 +1,4 @@
-import { Inject } from "@sfajs/inject";
+import { Inject } from "@ipare/inject";
 import path from "path";
 import { TsconfigService } from "./tsconfig.service";
 import * as chokidar from "chokidar";

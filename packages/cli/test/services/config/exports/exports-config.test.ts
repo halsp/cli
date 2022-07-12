@@ -1,7 +1,7 @@
 import { ConfigService } from "../../../../src/services/config.service";
 import { runin } from "../../../utils";
 import { CliStartup } from "../../../../src/cli-startup";
-import { parseInject } from "@sfajs/inject";
+import { parseInject } from "@ipare/inject";
 
 test(`config module.exports`, async () => {
   let worked = false;

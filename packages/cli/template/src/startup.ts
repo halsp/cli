@@ -1,13 +1,13 @@
-import { Startup } from "@sfajs/core";
-import "@sfajs/router";
-import "@sfajs/swagger";
-import "@sfajs/inject";
-import "@sfajs/mva";
-import "@sfajs/filter";
-import "@sfajs/static";
-import "@sfajs/jwt";
-import "@sfajs/view";
-import "@sfajs/validator";
+import { Startup } from "@ipare/core";
+import "@ipare/router";
+import "@ipare/swagger";
+import "@ipare/inject";
+import "@ipare/mva";
+import "@ipare/filter";
+import "@ipare/static";
+import "@ipare/jwt";
+import "@ipare/view";
+import "@ipare/validator";
 import * as fs from "fs";
 import path from "path";
 // {filter
@@ -16,10 +16,10 @@ import { GlobalActionFilter } from "./filters/global.action.filter";
 // { swagger
 import { getSwaggerOptions } from "./utils/swagger";
 // }
-import { JwtService } from "@sfajs/jwt";
+import { JwtService } from "@ipare/jwt";
 // { inject
 /// { !router || jwt
-import { parseInject } from "@sfajs/inject";
+import { parseInject } from "@ipare/inject";
 /// }
 /// { !router
 import { UserService } from "./services/user.service";

@@ -1,4 +1,0 @@
-.sfaignore
-plugin.json
-package.json
-sfa-cli.config.ts

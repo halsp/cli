@@ -1,6 +1,6 @@
 //{filter
-import { HttpContext } from "@sfajs/core";
-import { ActionFilter } from "@sfajs/filter";
+import { HttpContext } from "@ipare/core";
+import { ActionFilter } from "@ipare/filter";
 
 export class GlobalActionFilter implements ActionFilter {
   onActionExecuted(ctx: HttpContext): void | Promise<void> {

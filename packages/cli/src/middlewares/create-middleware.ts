@@ -1,6 +1,6 @@
 import * as fs from "fs";
 import { CreateTemplateService } from "../services/create-template.service";
-import { Inject } from "@sfajs/inject";
+import { Inject } from "@ipare/inject";
 import { FileService } from "../services/file.service";
 import { CreateEnvService } from "../services/create-env.service";
 import { PluginSelectService } from "../services/plugin-select.service";
@@ -116,7 +116,7 @@ export class CreateMiddleware extends BaseMiddlware {
         type: "input",
         message: "Project name:",
         name: "name",
-        default: "sfa-project",
+        default: "ipare-project",
         validate: (input) => {
           const result = /^[^?v\*|""<>:/]{1,256}$/.test(input.trim());
           if (result) {

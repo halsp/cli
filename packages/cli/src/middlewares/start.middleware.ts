@@ -1,5 +1,5 @@
-import { isUndefined } from "@sfajs/core";
-import { Inject } from "@sfajs/inject";
+import { isUndefined } from "@ipare/core";
+import { Inject } from "@ipare/inject";
 import path from "path";
 import * as fs from "fs";
 import { TsconfigService } from "../services/tsconfig.service";

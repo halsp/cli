@@ -1,8 +1,8 @@
 //{inject
 //{pipe
-import { HttpContext } from "@sfajs/core";
+import { HttpContext } from "@ipare/core";
 //}
-import { Context, Query } from "@sfajs/pipe";
+import { Context, Query } from "@ipare/pipe";
 //{validator
 import { IsString, IsNumberString } from "class-validator";
 //}
@@ -24,7 +24,7 @@ export class UserService {
 
   public getUserInfo() {
     //{pipe
-    this.ctx.res.setHeader("test-header", "sfa");
+    this.ctx.res.setHeader("test-header", "ipare");
     //}
 
     return {

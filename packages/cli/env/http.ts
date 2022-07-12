@@ -1,6 +1,6 @@
 // 2.原生 NodeJS 服务
 
-import { HttpStartup } from "@sfajs/http";
+import { HttpStartup } from "@ipare/http";
 import startup from "./startup";
 
 const app = startup(new HttpStartup());

@@ -8,7 +8,7 @@ test(`build error`, async () => {
   await runin(`test/build/build-error`, async () => {
     await new CliStartup().add(BuildMiddlware).run();
 
-    expect(fs.existsSync("./.sfa-cache")).toBeFalsy();
+    expect(fs.existsSync("./.ipare-cache")).toBeFalsy();
     callCount++;
   });
   expect(callCount).toBe(1);

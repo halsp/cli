@@ -1,6 +1,6 @@
 import { BaseMiddlware } from "./base.middleware";
 import { CommandType } from "../configuration";
-import { Inject } from "@sfajs/inject";
+import { Inject } from "@ipare/inject";
 import { PackageManagerService } from "../services/package-manager.service";
 import { ConfigService } from "../services/config.service";
 import { CommandService } from "../services/command.service";
@@ -64,7 +64,7 @@ export class UpdateMiddleware extends BaseMiddlware {
       return undefined;
     }
 
-    return /^\@sfajs\//;
+    return /^\@ipare\//;
   }
 
   private async getPackageManager() {

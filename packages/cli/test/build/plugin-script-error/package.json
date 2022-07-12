@@ -1,6 +1,6 @@
 {
   "name": "script",
   "dependencies": {
-    "@sfajs/script-test": "*"
+    "@ipare/script-test": "*"
   }
 }

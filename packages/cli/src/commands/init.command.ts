@@ -8,7 +8,7 @@ export class InitCommand extends BaseCommand {
   register(command: Command): void {
     command
       .argument("[name]", "Application name")
-      .description("Generate sfa application")
+      .description("Generate ipare application")
       .setCreateOptions()
       .action(
         async (name: string, command: Record<string, boolean | string>) => {

@@ -1,5 +1,5 @@
 import ts from "typescript";
-import { defineConfig } from "@sfajs/cli-common";
+import { defineConfig } from "@ipare/cli-common";
 const dict: any = {};
 
 export default defineConfig(() => ({

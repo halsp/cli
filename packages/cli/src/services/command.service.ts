@@ -1,5 +1,5 @@
-import { HttpContext, isUndefined } from "@sfajs/core";
-import { Context } from "@sfajs/pipe";
+import { HttpContext, isUndefined } from "@ipare/core";
+import { Context } from "@ipare/pipe";
 
 export class CommandService {
   @Context

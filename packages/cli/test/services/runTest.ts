@@ -1,7 +1,7 @@
-import { HttpContext, ObjectConstructor } from "@sfajs/core";
+import { HttpContext, ObjectConstructor } from "@ipare/core";
 import { CliStartup } from "../../src/cli-startup";
 import { runin } from "../utils";
-import { parseInject } from "@sfajs/inject";
+import { parseInject } from "@ipare/inject";
 
 export function runTest<T extends object = any>(
   service: ObjectConstructor<T>,

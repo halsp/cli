@@ -1,4 +1,4 @@
-import { parseInject } from "@sfajs/inject";
+import { parseInject } from "@ipare/inject";
 import { runin } from "../../utils";
 import path from "path";
 import { CliStartup } from "../../../src/cli-startup";
@@ -14,8 +14,8 @@ async function testTemplate(
     await new CliStartup({ name: "test" })
       .use(async (ctx) => {
         const service = await parseInject(ctx, CreateTemplateService);
-        if (!fs.existsSync("./.sfa-cache")) {
-          fs.mkdirSync("./.sfa-cache");
+        if (!fs.existsSync("./.ipare-cache")) {
+          fs.mkdirSync("./.ipare-cache");
         }
 
         await fn(service);

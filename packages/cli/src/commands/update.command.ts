@@ -8,7 +8,7 @@ export class UpdateCommand extends BaseCommand {
     command
       .command("update")
       .alias("u")
-      .description("Update sfa dependencies.")
+      .description("Update ipare dependencies.")
       .option("-n, --name [name]", "Specify to update a package")
       .option("-a, --all", "Update all dependencies", false)
       .option(

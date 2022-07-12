@@ -25,7 +25,7 @@ jobs:
       - run: npx codecov
 
   publish-npm:
-    if: github.repository == 'sfajs/cli'
+    if: github.repository == 'ipare/cli'
     needs: test
     runs-on: ubuntu-latest
     steps:
@@ -37,12 +37,12 @@ jobs:
       - run: npm install
       - run: cd enter && npm install && cd ..
       - run: npm run build
-      - run: npm publish
+      - run: npm publish --access=public
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
 
-  publish-create-sfa:
-    if: github.repository == 'sfajs/cli'
+  publish-create-ipare:
+    if: github.repository == 'ipare/cli'
     needs: test
     runs-on: ubuntu-latest
     steps:
@@ -54,7 +54,7 @@ jobs:
       - run: npm install
       - run: cd enter && npm install && cd ..
       - run: npm run build
-      - run: npx ts-node scripts/create-sfa.ts
-      - run: npm publish
+      - run: npx ts-node scripts/create-ipare.ts
+      - run: npm publish --access=public
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}

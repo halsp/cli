@@ -1,4 +1,4 @@
-const { defineConfig } = require("@sfajs/cli-common");
+const { defineConfig } = require("@ipare/cli-common");
 
 module.exports = defineConfig(({ mode }) => {
   return {

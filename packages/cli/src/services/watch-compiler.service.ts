@@ -1,5 +1,5 @@
-import { isUndefined } from "@sfajs/core";
-import { Inject } from "@sfajs/inject";
+import { isUndefined } from "@ipare/core";
+import { Inject } from "@ipare/inject";
 import ts from "typescript";
 import { CompilerService } from "./compiler.service";
 import { ConfigService } from "./config.service";

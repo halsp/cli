@@ -1,4 +1,4 @@
-import { defineConfig } from "@sfajs/cli-common";
+import { defineConfig } from "@ipare/cli-common";
 
 export default defineConfig({
   start: {

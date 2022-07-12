@@ -1,4 +1,4 @@
-import { Middleware } from "@sfajs/core";
+import { Middleware } from "@ipare/core";
 import { CommandType } from "../configuration";
 
 export abstract class BaseMiddlware extends Middleware {

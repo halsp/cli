@@ -1,5 +1,5 @@
 import ts from "typescript";
-import { Configuration, ConfigEnv } from "@sfajs/cli-common";
+import { Configuration, ConfigEnv } from "@ipare/cli-common";
 
 export type CommandType =
   | "build"
@@ -34,7 +34,7 @@ export type Prebuild = (
 ) => Promise<boolean> | boolean | Promise<void> | void;
 export type Postbuild = (options: ScriptOptions) => Promise<void> | void;
 
-declare module "@sfajs/cli-common" {
+declare module "@ipare/cli-common" {
   interface ConfigEnv {
     mode: string;
     command: CommandType;

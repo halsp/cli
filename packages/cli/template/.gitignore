@@ -4,6 +4,6 @@ package-lock.json
 yarn.lock
 pnpm-lock.yaml
 coverage
-.sfa-cache
+.ipare-cache
 
 *-error.log
