@@ -2,7 +2,7 @@ set -e
 
 sh scripts/remove-dist.sh
 npx ts-node scripts/create-ipare.ts
-tsc
+npx tsc
 
 cd enter
 npx tsc
