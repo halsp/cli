@@ -1,6 +1,6 @@
-export { defineConfig, ConfigEnv, Configuration } from "@ipare/cli-common";
-
 export {
+  ConfigEnv,
+  Configuration,
   Transformer,
   CompilerHook,
   CommandType,
@@ -8,6 +8,5 @@ export {
   Postbuild,
   Prebuild,
   ScriptOptions,
-} from "./configuration";
-
-export { InitCommand } from "./commands/init.command";
+  defineConfig,
+} from "@ipare/cli-config";

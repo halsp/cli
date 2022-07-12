@@ -19,10 +19,15 @@
   },
   "main": "dist/index.js",
   "scripts": {
+    "prebuild": "ts-node scripts/build/prebuild.ts",
     "build": "sh scripts/build/prod.sh",
+    "prebuild:create-ipare": "npm run prebuild",
     "build:create-ipare": "sh scripts/build/create-ipare.sh",
+    "build:cli-config": "sh scripts/build/create-config.sh",
     "publish:beta": "npm run build && npm publish --tag=beta --access=public",
     "postinstall": "cd enter && npm install && cd ..",
+    "update-config": "sh scripts/update-config.sh",
+    "pretest": "npm run update-config",
     "test": "npm run build && jest",
     "tests": "sh scripts/tests.sh",
     "lint": "eslint src --ext .ts",
@@ -31,7 +36,7 @@
   "author": "hal-wang",
   "license": "MIT",
   "dependencies": {
-    "@ipare/cli-common": "^0.2.8",
+    "@ipare/cli-config": "*",
     "@ipare/core": "^1.6.2",
     "@ipare/inject": "^1.2.2",
     "@ipare/pipe": "^1.3.3",
@@ -70,7 +75,7 @@
     "ts-jest": "^28.0.5"
   },
   "peerDependencies": {
-    "@ipare/cli-common": "0.2.x",
+    "@ipare/cli-config": "*",
     "@ipare/core": "~1",
     "@ipare/inject": "~1",
     "@ipare/pipe": "~1",
@@ -89,7 +94,7 @@
     "ts-node": {
       "optional": true
     },
-    "@ipare/cli-common": {
+    "@ipare/cli-config": {
       "optional": true
     }
   },
@@ -99,7 +104,9 @@
   "files": [
     "/.github/*",
     "/bin/*",
+    "/cli-config/*",
     "/dist/*",
+    "/enter/*",
     "/env/*",
     "/scripts/*",
     "/src/*",
@@ -108,13 +115,17 @@
     ".eslintignore",
     ".eslintrc.js",
     ".gitignore",
+    "cli-config.README.md",
     "CODE_OF_CONDUCT.md",
     "CONTRIBUTING.md",
+    "create-ipare.README.md",
     "jest.config.js",
     "LICENSE",
+    "minimal.README.md",
     "package.json",
     "README.md",
     "tsconfig.base.json",
+    "tsconfig.cli-config.json",
     "tsconfig.json"
   ]
 }

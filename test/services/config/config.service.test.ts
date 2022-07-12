@@ -4,7 +4,7 @@ import { runin } from "../../utils";
 import { CliStartup } from "../../../src/cli-startup";
 import { parseInject } from "@ipare/inject";
 import * as fs from "fs";
-import { defineConfig } from "@ipare/cli-common";
+import { defineConfig } from "@ipare/cli-config";
 
 runTest(ConfigService, async (res, service) => {
   await service.init();
