@@ -21,7 +21,7 @@
   "scripts": {
     "build": "sh scripts/build/prod.sh",
     "build:create-ipare": "sh scripts/build/create-ipare.sh",
-    "build:cli-config": "sh scripts/build/create-config.sh",
+    "build:cli-config": "sh scripts/build/cli-config.sh",
     "publish:beta": "npm run build && npm publish --tag=beta --access=public",
     "postinstall": "cd enter && npm install && cd ..",
     "update-config": "sh scripts/update-config.sh",
