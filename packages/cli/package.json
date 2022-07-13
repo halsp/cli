@@ -23,7 +23,6 @@
     "build:create-ipare": "sh scripts/build/create-ipare.sh",
     "build:cli-config": "sh scripts/build/cli-config.sh",
     "publish:beta": "npm run build && npm publish --tag=beta --access=public",
-    "postinstall": "cd enter && npm install && cd ..",
     "update-config": "sh scripts/update-config.sh",
     "test": "npm run build && jest",
     "tests": "sh scripts/tests.sh",
@@ -35,6 +34,7 @@
   "dependencies": {
     "@ipare/cli-config": "*",
     "@ipare/core": "^1.6.2",
+    "@ipare/http": "^1.2.3",
     "@ipare/inject": "^1.2.2",
     "@ipare/pipe": "^1.3.4",
     "chalk": "^4.1.2",
@@ -103,7 +103,6 @@
     "/bin/*",
     "/cli-config/*",
     "/dist/*",
-    "/enter/*",
     "/env/*",
     "/scripts/*",
     "/src/*",

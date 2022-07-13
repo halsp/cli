@@ -1,6 +1,7 @@
 import { HttpStartup } from "@ipare/http";
 import chalk from "chalk";
-import setupStartup from "./startup";
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const setupStartup = require("./startup").default;
 
 const mode = "{{MODE}}";
 const port = "{{PORT}}";
