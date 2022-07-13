@@ -31,8 +31,6 @@ npm install -g @ipare/cli
 
 请访问 <https://ipare.org>
 
-<!--introduce end-->
-
 ## 贡献
 
 请阅读 [Contributing to @ipare/cli](https://github.com/ipare/cli/blob/main/CONTRIBUTING.md)

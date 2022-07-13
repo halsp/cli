@@ -43,6 +43,7 @@ export class CreatePackageService {
 
     this.setCliVersion(pkg);
     pkg.name = this.name;
+    pkg.version = this.getCurrentVersion();
 
     const filePath = path.join(this.targetDir, "package.json");
     await fs.promises.writeFile(
@@ -97,11 +98,7 @@ export class CreatePackageService {
   }
 
   private setCliVersion(pkg: Record<string, any>) {
-    let version = this.commandService.getOptionVlaue<string>("cli-version");
-    if (version == "cli-test" || version == "test-cli") {
-      version = path.join(__dirname, "../..");
-    }
-
+    const version = this.getCurrentVersion();
     if (
       pkg.dependencies &&
       Object.keys(pkg.dependencies).includes("@ipare/cli")
@@ -114,5 +111,13 @@ export class CreatePackageService {
     ) {
       pkg.devDependencies["@ipare/cli"] = version;
     }
+  }
+
+  private getCurrentVersion() {
+    let version = this.commandService.getOptionVlaue<string>("cli-version");
+    if (version == "cli-test" || version == "test-cli") {
+      version = path.join(__dirname, "../..");
+    }
+    return version;
   }
 }
