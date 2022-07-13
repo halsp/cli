@@ -1,4 +1,4 @@
-import * as fs from "fs";
+const fs = require("fs");
 
 function editPackage() {
   let pkgStr = fs.readFileSync("./package.json", "utf-8");
