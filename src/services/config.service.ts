@@ -1,7 +1,7 @@
 import { Context } from "@ipare/pipe";
 import { HttpContext, isUndefined } from "@ipare/core";
 import path from "path";
-import { Configuration, ConfigEnv } from "@ipare/cli-config";
+import { Configuration, ConfigEnv } from "../configuration";
 import { Inject } from "@ipare/inject";
 import { CommandService } from "./command.service";
 import { FileService } from "./file.service";

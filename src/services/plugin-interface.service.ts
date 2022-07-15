@@ -4,7 +4,7 @@ import { CompilerHook, Postbuild, Prebuild } from "../configuration";
 import { DepsService } from "./deps.service";
 import * as fs from "fs";
 import ts from "typescript";
-import { ConfigEnv, Configuration } from "@ipare/cli-config";
+import { Configuration, ConfigEnv } from "../configuration";
 
 export class PluginInterfaceService {
   @Inject

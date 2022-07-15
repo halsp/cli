@@ -1,5 +1,5 @@
 import path from "path";
-import { defineConfig } from "@ipare/cli-config";
+import { defineConfig } from "../../../src";
 
 export default defineConfig(() => ({
   build: {
