@@ -9,4 +9,4 @@ export {
   Prebuild,
   ScriptOptions,
   defineConfig,
-} from "@ipare/cli-config";
+} from "./configuration";

@@ -1,4 +1,4 @@
-import { defineConfig, Configuration } from "@ipare/cli-config";
+import { defineConfig, Configuration } from "../../src";
 
 export default defineConfig(({ mode }) => {
   return <Configuration>{

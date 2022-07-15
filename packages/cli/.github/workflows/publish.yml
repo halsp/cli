@@ -33,7 +33,6 @@ jobs:
           node-version: "16"
           registry-url: https://registry.npmjs.org/
       - run: npm install
-      - run: npm run update-config
       - run: npm run build
 
   try-publish-create-ipare:
@@ -45,28 +44,11 @@ jobs:
           node-version: "16"
           registry-url: https://registry.npmjs.org/
       - run: npm install
-      - run: npm run update-config
       - run: npm run build:create-ipare
-
-  publish-cli-config:
-    if: github.repository == 'ipare/cli'
-    needs: [test, try-publish-npm, try-publish-create-ipare]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
-        with:
-          node-version: "16"
-          registry-url: https://registry.npmjs.org/
-      - run: npm install
-      - run: npm run build:cli-config
-      - run: npm publish --access=public
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
 
   publish-npm:
     if: github.repository == 'ipare/cli'
-    needs: publish-cli-config
+    needs: [test, try-publish-npm, try-publish-create-ipare]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -83,7 +65,7 @@ jobs:
 
   publish-create-ipare:
     if: github.repository == 'ipare/cli'
-    needs: publish-cli-config
+    needs: [test, try-publish-npm, try-publish-create-ipare]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
