@@ -24,7 +24,7 @@
   "author": "hal-wang",
   "license": "MIT",
   "dependencies": {
-    "@ipare/alifunc": "^1.2.3",
+    "@ipare/alifc": "^1.2.3",
     "@ipare/lambda": "^1.3.5",
     "@ipare/core": "^1.6.2",
     "@ipare/filter": "^1.0.9",

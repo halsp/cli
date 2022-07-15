@@ -1,7 +1,7 @@
 {
   "name": "env",
   "dependencies": {
-    "@ipare/alifunc": "*",
+    "@ipare/alifc": "*",
     "@ipare/http": "*",
     "@ipare/lambda": "*"
   }
