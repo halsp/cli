@@ -13,15 +13,15 @@ Command.prototype.setCreateOptions = function () {
     "Force create application, delete existing files. ",
     false
   )
-    .option("-sg, --skip-git", "Skip git repository initialization. ", false)
+    .option("-sg, --skipGit", "Skip git repository initialization. ", false)
     .option("-e, --env [env]", "The environment to run application")
     .option("--skip-env [env]", "No running environment", false)
     .option(
-      "-pm, --package-manager [package-manager]",
+      "-pm, --packageManager [packageManager]",
       "Specify package manager. (npm/yarn/pnpm/cnpm)"
     )
     .option(
-      "-cv, --cli-version [version]",
+      "-cv, --cliVersion [version]",
       "Version of @ipare/cli",
       getCliVersion()
     )
@@ -29,7 +29,7 @@ Command.prototype.setCreateOptions = function () {
       "-ps, --plugins [plugins]",
       "Plugins to add (e.g. view,router,inject)"
     )
-    .option("-sp, --skip-plugins", "No plugins will be added");
+    .option("-sp, --skipPlugins", "No plugins will be added");
 };
 
 function getCliVersion() {
