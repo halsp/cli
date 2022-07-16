@@ -1,5 +1,5 @@
 import { Configuration, defineConfig } from "@ipare/cli";
-import "@ipare/router";
+import "@ipare/router/dist/cli-config";
 
 export default defineConfig(() => {
   return <Configuration>{

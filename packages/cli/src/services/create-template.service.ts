@@ -14,7 +14,7 @@ const commentPluginStartRegExp = /^\s*\/{2,}\s*\{\s*/;
 // plugin end
 const commentPluginEndRegExp = /^\s*\/{2,}\s*\}\s*/;
 const importRegExp =
-  /^import\s(\"@ipare\/(.+?)\")|(.+?\sfrom\s\"@ipare\/(.+?)\");$/;
+  /^import\s((\"@ipare\/([^/]+?)((\")|(\/.+\")))|(.+?\sfrom\s\"@ipare\/([^/]+?)((\")|(\/.+\"))));$/;
 const uslessRegExp = /\/{2,}\s*\!\s*/;
 
 export class CreateTemplateService {
@@ -137,7 +137,7 @@ export class CreateTemplateService {
         break;
       }
       const regArr = importRegExp.exec(lines[importIndex]) as RegExpExecArray;
-      const importName = (regArr[2] ?? regArr[4]) as Plugin;
+      const importName = (regArr[3] ?? regArr[8]) as Plugin;
       if (!plugins.includes(importName) && isPlugin(importName)) {
         lines.splice(importIndex, 1);
         importIndex--;
