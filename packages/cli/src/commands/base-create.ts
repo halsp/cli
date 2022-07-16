@@ -13,9 +13,8 @@ Command.prototype.setCreateOptions = function () {
     "Force create application, delete existing files. ",
     false
   )
-    .option("-sg, --skipGit", "Skip git repository initialization. ", false)
     .option("-e, --env [env]", "The environment to run application")
-    .option("--skip-env [env]", "No running environment", false)
+    .option("--skipEnv [env]", "No running environment", false)
     .option(
       "-pm, --packageManager [packageManager]",
       "Specify package manager. (npm/yarn/pnpm/cnpm)"
@@ -29,7 +28,9 @@ Command.prototype.setCreateOptions = function () {
       "-ps, --plugins [plugins]",
       "Plugins to add (e.g. view,router,inject)"
     )
-    .option("-sp, --skipPlugins", "No plugins will be added");
+    .option("-sg, --skipGit", "Skip git repository initialization. ")
+    .option("-sp, --skipPlugins", "No plugins will be added")
+    .option("-sr, --skipRun", "Skip running after completion");
 };
 
 function getCliVersion() {

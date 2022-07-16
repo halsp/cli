@@ -27,5 +27,5 @@ Command.prototype.setBuildOptions = function (defaultMode: string) {
     )
     .option("-tc, --tsconfigPath [path]", "Path to tsconfig.json file.")
     .option("-w, --watch", "Run in watch mode (live-reload).")
-    .option("-wa, --watchCssets", "Watch non-ts (e.g., .views) files mode.");
+    .option("-wa, --watchAssets", "Watch non-ts (e.g., .views) files mode.");
 };
