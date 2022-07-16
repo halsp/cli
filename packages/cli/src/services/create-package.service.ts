@@ -60,7 +60,7 @@ export class CreatePackageService {
   }
 
   private async getPackageManager() {
-    let pm = this.commandService.getOptionVlaue<string>("package-manager");
+    let pm = this.commandService.getOptionVlaue<string>("packageManager");
     if (!pm) {
       pm = await this.packageManagerService.pickPackageManager();
     }
@@ -114,7 +114,7 @@ export class CreatePackageService {
   }
 
   private getCurrentVersion() {
-    let version = this.commandService.getOptionVlaue<string>("cli-version");
+    let version = this.commandService.getOptionVlaue<string>("cliVersion");
     if (version == "cli-test" || version == "test-cli") {
       version = path.join(__dirname, "../..");
     }

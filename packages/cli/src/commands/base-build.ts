@@ -18,14 +18,14 @@ Command.prototype.setBuildOptions = function (defaultMode: string) {
       "ipare-cli.config.ts"
     )
     .option(
-      "-jc, --json-config [json]",
+      "-jc, --jsonConfig [json]",
       "Json string of ipare-cli configuration."
     )
     .option(
-      "-fc, --func-config [function]",
+      "-fc, --funcConfig [function]",
       "Function string to build ipare-cli configuration."
     )
     .option("-tc, --tsconfigPath [path]", "Path to tsconfig.json file.")
     .option("-w, --watch", "Run in watch mode (live-reload).")
-    .option("-wa, --watch-assets", "Watch non-ts (e.g., .views) files mode.");
+    .option("-wa, --watchCssets", "Watch non-ts (e.g., .views) files mode.");
 };
