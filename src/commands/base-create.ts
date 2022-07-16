@@ -14,7 +14,7 @@ Command.prototype.setCreateOptions = function () {
     false
   )
     .option("-e, --env [env]", "The environment to run application")
-    .option("--skipEnv [env]", "No running environment", false)
+    .option("--skipEnv", "Skip adding environment files")
     .option(
       "-pm, --packageManager [packageManager]",
       "Specify package manager. (npm/yarn/pnpm/cnpm)"
@@ -28,7 +28,7 @@ Command.prototype.setCreateOptions = function () {
       "-ps, --plugins [plugins]",
       "Plugins to add (e.g. view,router,inject)"
     )
-    .option("-sg, --skipGit", "Skip git repository initialization. ")
+    .option("-sg, --skipGit", "Skip git repository initialization")
     .option("-sp, --skipPlugins", "No plugins will be added")
     .option("-sr, --skipRun", "Skip running after completion");
 };
