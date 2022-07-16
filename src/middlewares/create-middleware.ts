@@ -85,18 +85,17 @@ export class CreateMiddleware extends BaseMiddlware {
     );
     await this.createConfigService.create(fixedPlugins);
     await this.createTemplateService.create(fixedPlugins);
-    await this.initGit();
+    this.initGit();
 
     await this.next();
   }
 
-  private async initGit() {
+  private initGit() {
     if (this.commandService.getOptionVlaue<boolean>("skipGit")) {
       return;
     }
 
-    await this.runnerService.run("git", "init", {
-      stdio: "inherit",
+    this.runnerService.run("git", "init", {
       cwd: this.targetDir,
     });
   }

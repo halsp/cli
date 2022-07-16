@@ -2,22 +2,24 @@ import { FileService } from "../../src/services/file.service";
 import { runTest } from "./runTest";
 import * as fs from "fs";
 import inquirer from "inquirer";
+import path from "path";
 
 runTest(FileService, async (ctx, service) => {
-  fs.rmSync("dist", {
-    recursive: true,
-    force: true,
-  });
+  if (!fs.existsSync("dist")) {
+    fs.mkdirSync("dist");
+  }
+  const dir = path.join("dist", "file");
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir);
+  }
 
-  fs.mkdirSync("dist");
+  fs.writeFileSync(dir + "/f1.js", "f1");
+  fs.writeFileSync(dir + "/f2.ts", "f2");
+  service.globDelete(dir, "**/*.ts");
+  service.globDelete(dir + "not-exist", "**/*.ts");
 
-  fs.writeFileSync("dist/f1.js", "f1");
-  fs.writeFileSync("dist/f2.ts", "f2");
-  service.globDelete("dist1", "**/*.ts");
-  service.globDelete("dist", "**/*.ts");
-
-  expect(fs.existsSync("dist/f1.js")).toBeTruthy();
-  expect(fs.existsSync("dist/f2.ts")).toBeFalsy();
+  expect(fs.existsSync(dir + "/f1.js")).toBeTruthy();
+  expect(fs.existsSync(dir + "/f2.ts")).toBeFalsy();
 });
 
 function testOverwrite(value: boolean) {
