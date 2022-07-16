@@ -13,6 +13,7 @@ import { CommandService } from "../services/command.service";
 import { allPlugins, Plugin } from "../utils/plugins";
 import { CopyBaseService } from "../services/copy-base-files.service";
 import inquirer from "inquirer";
+import { RunnerService } from "../services/runner.service";
 
 export class CreateMiddleware extends BaseMiddlware {
   override get command(): CommandType {
@@ -35,6 +36,8 @@ export class CreateMiddleware extends BaseMiddlware {
   private readonly commandService!: CommandService;
   @Inject
   private readonly copyBaseService!: CopyBaseService;
+  @Inject
+  private readonly runnerService!: RunnerService;
 
   private get targetDir() {
     return this.createEnvService.targetDir;
@@ -82,8 +85,20 @@ export class CreateMiddleware extends BaseMiddlware {
     );
     await this.createConfigService.create(fixedPlugins);
     await this.createTemplateService.create(fixedPlugins);
+    await this.initGit();
 
     await this.next();
+  }
+
+  private async initGit() {
+    if (this.commandService.getOptionVlaue<boolean>("skipGit")) {
+      return;
+    }
+
+    await this.runnerService.run("git", "init", {
+      stdio: "inherit",
+      cwd: this.targetDir,
+    });
   }
 
   private async getPlugins() {
