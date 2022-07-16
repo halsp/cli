@@ -79,7 +79,7 @@ export class ConfigService {
   }
 
   private async loadConfig(): Promise<Configuration> {
-    const config: Configuration = {};
+    let config: Configuration = {};
 
     const cliConfigs = this.pluginInterfaceService.get("cliConfig");
     for (let cliConfig of cliConfigs) {
@@ -88,7 +88,13 @@ export class ConfigService {
       }
       _.merge(config, cliConfig);
     }
+
     _.merge(config, await this.getConfig());
+
+    const cliConfigHooks = this.pluginInterfaceService.get("cliConfigHook");
+    for (const hook of cliConfigHooks) {
+      config = hook(config, this.configEnv) ?? config;
+    }
 
     return config;
   }

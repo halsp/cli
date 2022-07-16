@@ -13,6 +13,9 @@ export class PluginInterfaceService {
   public get(
     name: "cliConfig"
   ): (Configuration | ((options: ConfigEnv) => Configuration))[];
+  public get(
+    name: "cliConfigHook"
+  ): ((config: Configuration, options: ConfigEnv) => Configuration | void)[];
   public get(name: "postbuild"): Postbuild[];
   public get(name: "prebuild"): Prebuild[];
   public get(name: "beforeCompile"): CompilerHook<ts.SourceFile>[];

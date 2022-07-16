@@ -64,7 +64,7 @@ test(`json config command`, async () => {
 test(`json func command`, async () => {
   let worked = false;
   await runin("test/services/config/types", async () => {
-    const func = defineConfig((c) => ({
+    const func = defineConfig(() => ({
       packageManager: "cnpm",
     }));
     await new CliStartup(undefined, {

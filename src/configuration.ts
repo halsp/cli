@@ -39,30 +39,30 @@ export interface ConfigEnv {
 }
 
 export interface Configuration {
-  readonly build?: {
-    readonly prebuild?: Prebuild[];
-    readonly postbuild?: Postbuild[];
+  build?: {
+    prebuild?: Prebuild[];
+    postbuild?: Postbuild[];
 
-    readonly beforeHooks?: CompilerHook<ts.SourceFile>[];
-    readonly afterHooks?: CompilerHook<ts.SourceFile>[];
-    readonly afterDeclarationsHooks?: CompilerHook<ts.SourceFile | ts.Bundle>[];
+    beforeHooks?: CompilerHook<ts.SourceFile>[];
+    afterHooks?: CompilerHook<ts.SourceFile>[];
+    afterDeclarationsHooks?: CompilerHook<ts.SourceFile | ts.Bundle>[];
 
-    readonly deleteOutDir?: boolean;
-    readonly assets?: AssetConfig[];
+    deleteOutDir?: boolean;
+    assets?: AssetConfig[];
 
-    readonly watch?: boolean;
-    readonly watchAssets?: boolean;
-    readonly preserveWatchOutput?: boolean;
+    watch?: boolean;
+    watchAssets?: boolean;
+    preserveWatchOutput?: boolean;
 
-    readonly sourceMap?: boolean;
-    readonly copyPackage?: boolean;
+    sourceMap?: boolean;
+    copyPackage?: boolean;
   };
-  readonly start?: {
-    readonly port?: number;
-    readonly binaryToRun?: string;
+  start?: {
+    port?: number;
+    binaryToRun?: string;
   };
-  readonly startupFile?: string;
-  readonly packageManager?: string;
+  startupFile?: string;
+  packageManager?: string;
 }
 
 export function defineConfig(
