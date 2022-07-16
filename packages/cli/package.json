@@ -1,6 +1,6 @@
 {
   "name": "@ipare/cli",
-  "version": "0.2.8",
+  "version": "0.2.9",
   "description": "Ipare 的命令行脚手架工具",
   "engines": {
     "node": ">=12.16.0"
@@ -37,7 +37,7 @@
     "chalk": "^4.1.2",
     "child_process": "^1.0.2",
     "chokidar": "^3.5.3",
-    "commander": "^9.3.0",
+    "commander": "^9.4.0",
     "figlet": "^1.5.2",
     "ignore-walk": "^5.0.1",
     "inquirer": "^8.2.4",
@@ -55,9 +55,9 @@
     "@types/figlet": "^1.5.4",
     "@types/ignore-walk": "^4.0.0",
     "@types/inquirer": "^8.2.1",
-    "@types/jest": "^28.1.5",
+    "@types/jest": "^28.1.6",
     "@types/lodash": "^4.14.182",
-    "@types/node": "^18.0.4",
+    "@types/node": "^18.0.5",
     "@types/shelljs": "^0.8.11",
     "@typescript-eslint/eslint-plugin": "^5.30.6",
     "@typescript-eslint/parser": "^5.30.6",

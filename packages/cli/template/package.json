@@ -44,8 +44,8 @@
   "devDependencies": {
     "@ipare/cli": "../",
     "@ipare/testing": "^0.0.6",
-    "@types/jest": "^28.1.5",
-    "@types/node": "^18.0.4",
+    "@types/jest": "^28.1.6",
+    "@types/node": "^18.0.5",
     "@typescript-eslint/eslint-plugin": "^5.30.6",
     "@typescript-eslint/parser": "^5.30.6",
     "ejs": "^3.1.8",

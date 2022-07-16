@@ -36,5 +36,5 @@ function getCliVersion() {
   const file = path.join(__dirname, "../../package.json");
   // eslint-disable-next-line @typescript-eslint/no-var-requires
   const cliPkg = require(file);
-  return cliPkg.version;
+  return "^" + cliPkg.version;
 }
