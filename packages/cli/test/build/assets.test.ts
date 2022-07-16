@@ -29,7 +29,7 @@ test(`build assets`, async () => {
     worked = true;
   });
   expect(worked).toBeTruthy();
-});
+}, 10000);
 
 test(`build command assets`, async () => {
   let worked = false;
@@ -50,7 +50,7 @@ test(`build command assets`, async () => {
     worked = true;
   });
   expect(worked).toBeTruthy();
-});
+}, 10000);
 
 function runWatchAssetsTest(type: "add" | "edit" | "unlink") {
   test(`watch assets ${type}`, async () => {
@@ -64,8 +64,8 @@ function runWatchAssetsTest(type: "add" | "edit" | "unlink") {
     const testWaiting = async (waiting: () => boolean) => {
       let times = 0;
       while (waiting()) {
-        if (times > 25) {
-          // 5s
+        if (times > 50) {
+          // 10s
           break;
         }
         await new Promise<void>((resolve) => {
@@ -157,7 +157,7 @@ function runWatchAssetsTest(type: "add" | "edit" | "unlink") {
       callCount++;
     });
     expect(callCount).toBe(3);
-  }, 10000);
+  }, 14000);
 }
 
 runWatchAssetsTest("add");

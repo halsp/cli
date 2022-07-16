@@ -37,9 +37,10 @@ export class PackageManagerService {
     return mng;
   }
 
-  public async install(pm: string, dir = process.cwd()) {
-    return await this.runnerService.run(pm, "install", {
+  public install(pm: string, dir = process.cwd()) {
+    return this.runnerService.run(pm, "install", {
       cwd: dir,
+      encoding: "utf-8",
     });
   }
 }

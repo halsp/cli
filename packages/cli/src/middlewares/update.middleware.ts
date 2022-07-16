@@ -32,7 +32,7 @@ export class UpdateMiddleware extends BaseMiddlware {
 
     if (!this.skipUpgrade && runResult && Object.keys(runResult).length > 0) {
       const packageManager = await this.getPackageManager();
-      this.packageManagerService.install(packageManager, process.cwd());
+      this.packageManagerService.install(packageManager);
     }
   }
 

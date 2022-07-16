@@ -19,13 +19,7 @@ export class CommandService {
     if (!Array.isArray(commands)) {
       commands = [commands];
     }
-    for (let property of commands) {
-      if (!isUndefined(this.ctx.commandOptions[property])) {
-        return this.ctx.commandOptions[property] as unknown as T;
-      }
-      property = property.replace(/\-\w/g, ($1) => {
-        return $1.slice(1).toUpperCase();
-      });
+    for (const property of commands) {
       if (!isUndefined(this.ctx.commandOptions[property])) {
         return this.ctx.commandOptions[property] as unknown as T;
       }

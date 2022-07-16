@@ -32,7 +32,7 @@ test(`build script`, async () => {
     callCount++;
   });
   expect(callCount).toBe(2);
-});
+}, 10000);
 
 test(`build script failed`, async () => {
   let callCount = 0;
@@ -59,7 +59,7 @@ test(`build script failed`, async () => {
     callCount++;
   });
   expect(callCount).toBe(2);
-});
+}, 10000);
 
 test(`plugin script error`, async () => {
   let callCount = 0;
@@ -82,4 +82,4 @@ test(`plugin script error`, async () => {
     callCount++;
   });
   expect(callCount).toBe(2);
-});
+}, 10000);
