@@ -19,7 +19,7 @@
     "dev": "ipare start --mode development --watch",
     "start": "npm run dev",
     "build": "ipare build",
-    "lint": "eslint . --ext .ts"
+    "lint": "eslint src --ext .ts"
   },
   "author": "hal-wang",
   "license": "MIT",
@@ -34,10 +34,10 @@
     "@ipare/mva": "^1.5.7",
     "@ipare/pipe": "^1.3.5",
     "@ipare/router": "^2.1.9",
-    "@ipare/static": "^1.1.4",
+    "@ipare/static": "^1.2.0",
     "@ipare/swagger": "^1.0.9",
     "@ipare/validator": "^0.1.1",
-    "@ipare/view": "^1.3.6",
+    "@ipare/view": "^1.4.0",
     "class-validator": "^0.13.2",
     "reflect-metadata": "^0.1.13"
   },
@@ -49,12 +49,12 @@
     "@typescript-eslint/eslint-plugin": "^5.30.6",
     "@typescript-eslint/parser": "^5.30.6",
     "ejs": "^3.1.8",
-    "eslint": "^8.19.0",
+    "eslint": "^8.20.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.2.1",
     "jest": "^28.1.3",
     "prettier": "^2.7.1",
-    "ts-jest": "^28.0.6",
+    "ts-jest": "^28.0.7",
     "typescript": "^4.7.4"
   }
 }

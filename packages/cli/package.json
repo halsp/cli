@@ -1,6 +1,6 @@
 {
   "name": "@ipare/cli",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Ipare 的命令行脚手架工具",
   "engines": {
     "node": ">=12.16.0"
@@ -64,11 +64,11 @@
     "@typescript-eslint/eslint-plugin": "^5.30.6",
     "@typescript-eslint/parser": "^5.30.6",
     "codecov": "^3.8.3",
-    "eslint": "^8.19.0",
+    "eslint": "^8.20.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.2.1",
     "jest": "^28.1.3",
-    "ts-jest": "^28.0.6"
+    "ts-jest": "^28.0.7"
   },
   "peerDependencies": {
     "@ipare/core": "~1",
