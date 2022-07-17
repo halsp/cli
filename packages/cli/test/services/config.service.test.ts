@@ -1,5 +1,5 @@
 import { Configuration } from "../../src";
-import { ConfigService } from "../../src/services/config.service";
+import { ConfigService } from "../../src/services/build.services/config.service";
 import { runTest } from "./runTest";
 
 runTest(

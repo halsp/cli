@@ -2,8 +2,8 @@ import { runin } from "../utils";
 import { CliStartup } from "../../src/cli-startup";
 import { BuildMiddlware } from "../../src/middlewares/build.middleware";
 import { parseInject } from "@ipare/inject";
-import { AssetsService } from "../../src/services/assets.service";
-import { WatchCompilerService } from "../../src/services/watch-compiler.service";
+import { AssetsService } from "../../src/services/build.services/assets.service";
+import { WatchCompilerService } from "../../src/services/build.services/watch-compiler.service";
 
 test(`empty config`, async () => {
   let callCount = 0;

@@ -1,5 +1,5 @@
 import { CommandService } from "../../src/services/command.service";
-import { ConfigService } from "../../src/services/config.service";
+import { ConfigService } from "../../src/services/build.services/config.service";
 import { runTest } from "./runTest";
 
 runTest(ConfigService, async (ctx, service) => {

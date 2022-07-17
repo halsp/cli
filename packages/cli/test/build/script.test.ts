@@ -3,7 +3,7 @@ import { CliStartup } from "../../src/cli-startup";
 import { BuildMiddlware } from "../../src/middlewares/build.middleware";
 import * as fs from "fs";
 import { parseInject } from "@ipare/inject";
-import { ConfigService } from "../../src/services/config.service";
+import { ConfigService } from "../../src/services/build.services/config.service";
 
 test(`build script`, async () => {
   let callCount = 0;

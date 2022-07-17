@@ -7,7 +7,7 @@ import {
   COMMAND_TYPE_METADATA,
   HOOK_EXCEPTION,
 } from "./constant";
-import { ConfigService } from "./services/config.service";
+import { ConfigService } from "./services/build.services/config.service";
 import { CommandType } from "./configuration";
 import { parseInject } from "@ipare/inject";
 

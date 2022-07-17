@@ -1,5 +1,5 @@
 import { Inject } from "@ipare/inject";
-import { CommandType } from "../configuration";
+import { CommandType } from "../../configuration";
 import { ConfigService } from "./config.service";
 import { TsconfigService } from "./tsconfig.service";
 import { PluginInterfaceService } from "./plugin-interface.service";

@@ -1,4 +1,4 @@
-import { ConfigService } from "../../../../src/services/config.service";
+import { ConfigService } from "../../../../src/services/build.services/config.service";
 import { runin } from "../../../utils";
 import { CliStartup } from "../../../../src/cli-startup";
 import { parseInject } from "@ipare/inject";
