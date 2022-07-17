@@ -1,7 +1,7 @@
-import { CompilerService } from "../../src/services/compiler.service";
+import { CompilerService } from "../../src/services/build.services/compiler.service";
 import { runTest } from "./runTest";
 import * as fs from "fs";
-import { WatchCompilerService } from "../../src/services/watch-compiler.service";
+import { WatchCompilerService } from "../../src/services/build.services/watch-compiler.service";
 import { COMMAND_TYPE_METADATA } from "../../src/constant";
 
 runTest(CompilerService, async (ctx, service) => {

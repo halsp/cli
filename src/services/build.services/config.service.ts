@@ -1,10 +1,10 @@
 import { Context } from "@ipare/pipe";
 import { HttpContext, isUndefined } from "@ipare/core";
 import path from "path";
-import { Configuration, ConfigEnv } from "../configuration";
+import { Configuration, ConfigEnv } from "../../configuration";
 import { Inject } from "@ipare/inject";
-import { CommandService } from "./command.service";
-import { FileService } from "./file.service";
+import { CommandService } from "../command.service";
+import { FileService } from "../file.service";
 import * as tsNode from "ts-node";
 import _ from "lodash";
 import { PluginInterfaceService } from "./plugin-interface.service";

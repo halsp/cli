@@ -3,7 +3,7 @@ import { CliStartup } from "../cli-startup";
 import { BuildMiddlware } from "../middlewares/build.middleware";
 import { BaseCommand } from "./base.command";
 import "./base-build";
-import { CopyResultMiddleware } from "../middlewares/copy-result.middleware";
+import { CopyBuildResultMiddleware } from "../middlewares/copy-build-result.middleware";
 
 export class BuildCommand extends BaseCommand {
   register(command: Command): void {
@@ -17,7 +17,7 @@ export class BuildCommand extends BaseCommand {
       .action(async (command: Record<string, boolean | string>) => {
         await new CliStartup(undefined, command)
           .add(BuildMiddlware)
-          .add(CopyResultMiddleware)
+          .add(CopyBuildResultMiddleware)
           .run();
       });
   }

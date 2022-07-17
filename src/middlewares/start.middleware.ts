@@ -2,7 +2,7 @@ import { isUndefined } from "@ipare/core";
 import { Inject } from "@ipare/inject";
 import path from "path";
 import * as fs from "fs";
-import { TsconfigService } from "../services/tsconfig.service";
+import { TsconfigService } from "../services/build.services/tsconfig.service";
 import spawn from "cross-spawn";
 import killProcess from "tree-kill";
 import { START_DEV_FILE_NAME } from "../constant";
@@ -10,7 +10,7 @@ import { treeKillSync } from "../utils/tree-kill";
 import { BaseMiddlware } from "./base.middleware";
 import { CommandType } from "../configuration";
 import shell from "shelljs";
-import { ConfigService } from "../services/config.service";
+import { ConfigService } from "../services/build.services/config.service";
 import { ChildProcess } from "child_process";
 
 export class StartMiddleware extends BaseMiddlware {

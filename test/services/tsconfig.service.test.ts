@@ -1,4 +1,4 @@
-import { TsconfigService } from "../../src/services/tsconfig.service";
+import { TsconfigService } from "../../src/services/build.services/tsconfig.service";
 import { runTest } from "./runTest";
 import ts from "typescript";
 import path from "path";

@@ -1,14 +1,14 @@
 import { Inject } from "@ipare/inject";
 import path from "path";
-import { AssetsService } from "../services/assets.service";
-import { CompilerService } from "../services/compiler.service";
-import { ConfigService } from "../services/config.service";
-import { TsconfigService } from "../services/tsconfig.service";
-import { WatchCompilerService } from "../services/watch-compiler.service";
+import { AssetsService } from "../services/build.services/assets.service";
+import { CompilerService } from "../services/build.services/compiler.service";
+import { ConfigService } from "../services/build.services/config.service";
+import { TsconfigService } from "../services/build.services/tsconfig.service";
+import { WatchCompilerService } from "../services/build.services/watch-compiler.service";
 import * as fs from "fs";
 import { BaseMiddlware } from "./base.middleware";
 import { CommandType } from "../configuration";
-import { HookService } from "../services/hook.service";
+import { HookService } from "../services/build.services/hook.service";
 
 export class BuildMiddlware extends BaseMiddlware {
   override get command(): CommandType {

@@ -1,4 +1,4 @@
-import { ConfigService } from "../../../src/services/config.service";
+import { ConfigService } from "../../../src/services/build.services/config.service";
 import { runTest } from "../runTest";
 import { runin } from "../../utils";
 import { CliStartup } from "../../../src/cli-startup";

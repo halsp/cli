@@ -2,11 +2,11 @@ import { Middleware } from "@ipare/core";
 import { Inject } from "@ipare/inject";
 import path from "path";
 import { FileService } from "../services/file.service";
-import { TsconfigService } from "../services/tsconfig.service";
+import { TsconfigService } from "../services/build.services/tsconfig.service";
 import * as fs from "fs";
-import { ConfigService } from "../services/config.service";
+import { ConfigService } from "../services/build.services/config.service";
 
-export class CopyResultMiddleware extends Middleware {
+export class CopyBuildResultMiddleware extends Middleware {
   @Inject
   private readonly tsconfigService!: TsconfigService;
   @Inject

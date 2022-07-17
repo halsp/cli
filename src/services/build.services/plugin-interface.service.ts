@@ -1,10 +1,10 @@
 import { Inject } from "@ipare/inject";
 import path from "path";
-import { CompilerHook, Postbuild, Prebuild } from "../configuration";
-import { DepsService } from "./deps.service";
+import { CompilerHook, Postbuild, Prebuild } from "../../configuration";
+import { DepsService } from "../deps.service";
 import * as fs from "fs";
 import ts from "typescript";
-import { Configuration, ConfigEnv } from "../configuration";
+import { Configuration, ConfigEnv } from "../../configuration";
 
 export class PluginInterfaceService {
   @Inject

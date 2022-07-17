@@ -2,7 +2,7 @@ import ts from "typescript";
 import * as fs from "fs";
 import path from "path";
 import { Inject } from "@ipare/inject";
-import { CommandService } from "./command.service";
+import { CommandService } from "../command.service";
 
 export class TsconfigService {
   @Inject
