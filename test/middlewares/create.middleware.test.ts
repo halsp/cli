@@ -30,6 +30,8 @@ function testTemplate(plugins: Plugin[]) {
             force: true,
             env: "http",
             cliVersion: "../../../../",
+            skipGit: true,
+            skipRun: true,
           }
         )
           .add(CreateMiddleware)
@@ -100,6 +102,8 @@ async function runTest(options: {
         force: options.force ?? true,
         skipEnv: true,
         cliVersion: "../../../../",
+        skipGit: true,
+        skipRun: true,
       }
     )
       .hook(HookType.BeforeInvoke, async (ctx, md) => {
