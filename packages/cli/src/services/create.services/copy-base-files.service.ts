@@ -1,6 +1,6 @@
 import { Inject } from "@ipare/inject";
 import * as fs from "fs";
-import { FileService } from "./file.service";
+import { FileService } from "../file.service";
 import path from "path";
 import { CreateEnvService } from "./create-env.service";
 
@@ -24,7 +24,7 @@ export class CopyBaseService {
 
   private async copyFile(fileName: string) {
     const targetFile = path.join(this.targetDir, fileName);
-    const sourceFile = path.join(__dirname, "../..", fileName);
+    const sourceFile = path.join(__dirname, "../../..", fileName);
 
     await this.fileService.createDir(targetFile);
     await fs.promises.copyFile(sourceFile, targetFile);

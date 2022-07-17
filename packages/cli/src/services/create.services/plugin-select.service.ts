@@ -1,16 +1,16 @@
 import { Inject } from "@ipare/inject";
 import inquirer from "inquirer";
 import path from "path";
-import { DepsService } from "./deps.service";
+import { DepsService } from "../deps.service";
 import * as fs from "fs";
-import { allPlugins, Plugin } from "../utils/plugins";
+import { allPlugins, Plugin } from "../../utils/plugins";
 
 export class PluginSelectService {
   @Inject
   private readonly depsService!: DepsService;
 
   private get sourceDir() {
-    return path.join(__dirname, "../../template");
+    return path.join(__dirname, "../../../template");
   }
 
   public async select(): Promise<Plugin[]> {

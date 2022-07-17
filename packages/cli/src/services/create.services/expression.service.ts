@@ -1,4 +1,4 @@
-import { Plugin } from "../utils/plugins";
+import { Plugin } from "../../utils/plugins";
 
 export class ExpressionService {
   public calcPlugins(expression: string, plugins: Plugin[]) {

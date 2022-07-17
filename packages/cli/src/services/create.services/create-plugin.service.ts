@@ -3,7 +3,7 @@ import * as fs from "fs";
 import path from "path";
 import { ExpressionService } from "./expression.service";
 import glob from "glob";
-import { Plugin } from "../utils/plugins";
+import { Plugin } from "../../utils/plugins";
 
 type PluginConfig = {
   dependencies: Record<string, string | boolean | undefined>;
@@ -21,11 +21,11 @@ export class CreatePluginService {
   private readonly expressionService!: ExpressionService;
 
   private get sourceDir() {
-    return path.join(__dirname, "../../template");
+    return path.join(__dirname, "../../../template");
   }
 
   public async getPluginConfig(plugins: Plugin[]) {
-    const file = path.join(__dirname, "../../template/plugin.json");
+    const file = path.join(__dirname, "../../../template/plugin.json");
     const config: PluginConfig = JSON.parse(
       await fs.promises.readFile(file, "utf-8")
     );

@@ -1,5 +1,5 @@
 import inquirer from "inquirer";
-import { PluginSelectService } from "../../src/services/plugin-select.service";
+import { PluginSelectService } from "../../src/services/create.services/plugin-select.service";
 import { runTest } from "./runTest";
 
 runTest(PluginSelectService, async (ctx, service) => {

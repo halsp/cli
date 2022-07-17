@@ -4,14 +4,14 @@ import { Context } from "@ipare/pipe";
 import path from "path";
 import { CreateEnvService } from "./create-env.service";
 import * as fs from "fs";
-import { PackageManagerService } from "./package-manager.service";
+import { PackageManagerService } from "../package-manager.service";
 import {
   CreatePluginService,
   FixedPluginConfig,
 } from "./create-plugin.service";
 import prettier from "prettier";
-import { Plugin } from "../utils/plugins";
-import { CommandService } from "./command.service";
+import { Plugin } from "../../utils/plugins";
+import { CommandService } from "../command.service";
 
 export class CreatePackageService {
   @Context
@@ -94,7 +94,7 @@ export class CreatePackageService {
   }
 
   private getPackage(): any {
-    const file = path.join(__dirname, "../../template/package.json");
+    const file = path.join(__dirname, "../../../template/package.json");
     // eslint-disable-next-line @typescript-eslint/no-var-requires
     return require(file);
   }
@@ -118,7 +118,7 @@ export class CreatePackageService {
   private getCurrentVersion() {
     let version = this.commandService.getOptionVlaue<string>("cliVersion");
     if (version == "cli-test" || version == "test-cli") {
-      version = path.join(__dirname, "../..");
+      version = path.join(__dirname, "../../..");
     }
     return version;
   }
