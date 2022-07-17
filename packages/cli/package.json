@@ -45,7 +45,6 @@
     "inquirer": "^8.2.4",
     "lodash": "^4.17.21",
     "npm-check-updates": "^14.1.1",
-    "ora": "5.4.1",
     "prettier": "^2.7.1",
     "reflect-metadata": "^0.1.13",
     "shelljs": "^0.8.5",
