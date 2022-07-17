@@ -1,5 +1,5 @@
 import inquirer from "inquirer";
-import { CreateEnvService } from "../../src/services/create-env.service";
+import { CreateEnvService } from "../../src/services/create.services/create-env.service";
 import { runTest } from "./runTest";
 
 runTest(

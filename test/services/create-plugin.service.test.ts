@@ -1,4 +1,4 @@
-import { CreatePluginService } from "../../src/services/create-plugin.service";
+import { CreatePluginService } from "../../src/services/create.services/create-plugin.service";
 import { runTest } from "./runTest";
 import glob from "glob";
 

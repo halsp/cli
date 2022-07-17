@@ -3,10 +3,10 @@ import inquirer from "inquirer";
 import * as fs from "fs";
 import path from "path";
 import { Inject } from "@ipare/inject";
-import { FileService } from "./file.service";
+import { FileService } from "../file.service";
 import { Context } from "@ipare/pipe";
-import { Env } from "../utils/plugins";
-import { CommandService } from "./command.service";
+import { Env } from "../../utils/plugins";
+import { CommandService } from "../command.service";
 
 const commentEnvStartRegExp = /^\s*\/{2,}\s+/;
 const commentEnvLineRegExp = /^\s*\/{2,}\s+.+/;
@@ -23,7 +23,7 @@ export class CreateEnvService {
     return this.ctx.commandArgs.name;
   }
   public get sourceDir() {
-    return path.join(__dirname, `../../env`);
+    return path.join(__dirname, `../../../env`);
   }
   public get targetDir() {
     return path.join(process.cwd(), this.name);

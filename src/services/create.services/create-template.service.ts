@@ -1,13 +1,13 @@
 import { Inject } from "@ipare/inject";
 import path from "path";
-import { FileService } from "./file.service";
+import { FileService } from "../file.service";
 import * as fs from "fs";
 import walk from "ignore-walk";
 import { ExpressionService } from "./expression.service";
 import { CreateEnvService } from "./create-env.service";
 import { CreatePluginService } from "./create-plugin.service";
 import prettier from "prettier";
-import { isPlugin, Plugin } from "../utils/plugins";
+import { isPlugin, Plugin } from "../../utils/plugins";
 
 // plugin inject|router
 const commentPluginStartRegExp = /^\s*\/{2,}\s*\{\s*/;
@@ -31,7 +31,7 @@ export class CreateTemplateService {
     return this.createEnvService.targetDir;
   }
   private get sourceDir() {
-    return path.join(__dirname, "../../template");
+    return path.join(__dirname, "../../../template");
   }
 
   public async create(plugins: Plugin[]) {

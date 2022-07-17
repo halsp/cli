@@ -1,6 +1,6 @@
 import inquirer from "inquirer";
 import path from "path";
-import { CreatePackageService } from "../../src/services/create-package.service";
+import { CreatePackageService } from "../../src/services/create.services/create-package.service";
 import { runTest } from "./runTest";
 
 runTest(

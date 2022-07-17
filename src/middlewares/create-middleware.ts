@@ -1,16 +1,16 @@
 import * as fs from "fs";
-import { CreateTemplateService } from "../services/create-template.service";
+import { CreateTemplateService } from "../services/create.services/create-template.service";
 import { Inject } from "@ipare/inject";
 import { FileService } from "../services/file.service";
-import { CreateEnvService } from "../services/create-env.service";
-import { PluginSelectService } from "../services/plugin-select.service";
+import { CreateEnvService } from "../services/create.services/create-env.service";
+import { PluginSelectService } from "../services/create.services/plugin-select.service";
 import { CommandType } from "../configuration";
 import { BaseMiddlware } from "./base.middleware";
-import { CreatePackageService } from "../services/create-package.service";
+import { CreatePackageService } from "../services/create.services/create-package.service";
 import path from "path";
 import { CommandService } from "../services/command.service";
 import { allPlugins, Plugin } from "../utils/plugins";
-import { CopyBaseService } from "../services/copy-base-files.service";
+import { CopyBaseService } from "../services/create.services/copy-base-files.service";
 import inquirer from "inquirer";
 import { RunnerService } from "../services/runner.service";
 
