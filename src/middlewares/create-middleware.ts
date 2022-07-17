@@ -7,7 +7,6 @@ import { PluginSelectService } from "../services/plugin-select.service";
 import { CommandType } from "../configuration";
 import { BaseMiddlware } from "./base.middleware";
 import { CreatePackageService } from "../services/create-package.service";
-import { CreateConfigService } from "../services/create-config.service";
 import path from "path";
 import { CommandService } from "../services/command.service";
 import { allPlugins, Plugin } from "../utils/plugins";
@@ -26,8 +25,6 @@ export class CreateMiddleware extends BaseMiddlware {
   private readonly createEnvService!: CreateEnvService;
   @Inject
   private readonly createPackageService!: CreatePackageService;
-  @Inject
-  private readonly createConfigService!: CreateConfigService;
   @Inject
   private readonly pluginSelectService!: PluginSelectService;
   @Inject
@@ -83,7 +80,6 @@ export class CreateMiddleware extends BaseMiddlware {
       plugins,
       path.join(this.targetDir)
     );
-    await this.createConfigService.create(fixedPlugins);
     await this.createTemplateService.create(fixedPlugins);
     this.initGit();
     this.runApp();

@@ -62,7 +62,6 @@ export interface Configuration {
     binaryToRun?: string;
   };
   startupFile?: string;
-  packageManager?: string;
 }
 
 export function defineConfig(

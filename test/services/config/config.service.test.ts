@@ -65,14 +65,14 @@ test(`json func command`, async () => {
   let worked = false;
   await runin("test/services/config/types", async () => {
     const func = defineConfig(() => ({
-      packageManager: "cnpm",
+      startupFile: "t1",
     }));
     await new CliStartup(undefined, {
       funcConfig: func.toString(),
     })
       .use(async (ctx) => {
         const service = await parseInject(ctx, ConfigService);
-        expect(service.value.packageManager).toBe("cnpm");
+        expect(service.value.startupFile).toBe("t1");
         worked = true;
       })
       .run();
@@ -89,7 +89,7 @@ test(`js config file`, async () => {
     })
       .use(async (ctx) => {
         const service = await parseInject(ctx, ConfigService);
-        expect(service.value.packageManager).toBe("cnpm");
+        expect(service.value.startupFile).toBe("t1");
         worked = true;
       })
       .run();
