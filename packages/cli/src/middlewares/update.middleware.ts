@@ -2,7 +2,6 @@ import { BaseMiddlware } from "./base.middleware";
 import { CommandType } from "../configuration";
 import { Inject } from "@ipare/inject";
 import { PackageManagerService } from "../services/package-manager.service";
-import { ConfigService } from "../services/config.service";
 import { CommandService } from "../services/command.service";
 import * as fs from "fs";
 import path from "path";
@@ -22,8 +21,6 @@ export class UpdateMiddleware extends BaseMiddlware {
 
   @Inject
   private readonly packageManagerService!: PackageManagerService;
-  @Inject
-  private readonly configService!: ConfigService;
   @Inject
   private readonly commandService!: CommandService;
 
@@ -70,10 +67,20 @@ export class UpdateMiddleware extends BaseMiddlware {
   private async getPackageManager() {
     let result =
       this.commandService.getOptionVlaue<string>("packageManager") ??
-      this.configService.value.packageManager;
+      this.parsePackageManager();
     if (!result) {
       result = await this.packageManagerService.pickPackageManager();
     }
     return result;
+  }
+
+  private parsePackageManager(): "pnpm" | "yarn" | "npm" {
+    if (fs.existsSync(path.join(process.cwd(), "pnpm-lock.yaml"))) {
+      return "pnpm";
+    } else if (fs.existsSync(path.join(process.cwd(), "yarn.lock"))) {
+      return "yarn";
+    } else {
+      return "npm";
+    }
   }
 }

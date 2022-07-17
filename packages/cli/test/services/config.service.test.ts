@@ -34,7 +34,7 @@ runTest(
       if (name == "cliConfigHook") {
         return [
           (config: Configuration) => {
-            config.packageManager = "pnpm";
+            config.startupFile = "t1";
           },
         ];
       } else {
@@ -43,11 +43,11 @@ runTest(
     };
 
     const cfg = await (service as any).loadConfig();
-    expect(cfg.packageManager).toBe("pnpm");
+    expect(cfg.startupFile).toBe("t1");
   },
   undefined,
   {
-    jsonConfig: `{"packageManager":"cnpm"}`,
+    jsonConfig: `{"startupFile":"t1"}`,
   }
 );
 
@@ -58,7 +58,7 @@ runTest(
       if (name == "cliConfigHook") {
         return [
           () => ({
-            packageManager: "pnpm",
+            startupFile: "t1",
           }),
         ];
       } else {
@@ -67,10 +67,10 @@ runTest(
     };
 
     const cfg = await (service as any).loadConfig();
-    expect(cfg.packageManager).toBe("pnpm");
+    expect(cfg.startupFile).toBe("t1");
   },
   undefined,
   {
-    jsonConfig: `{"packageManager":"cnpm"}`,
+    jsonConfig: `{"startupFile":"t2"}`,
   }
 );

@@ -54,8 +54,6 @@ export class CreatePackageService {
     );
 
     const pm = await this.getPackageManager();
-    this.ctx.bag("PACKAGE_MANAGER", pm);
-
     const installResult = this.packageManagerService.install(
       pm,
       this.targetDir
