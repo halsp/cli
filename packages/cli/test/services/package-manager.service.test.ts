@@ -34,6 +34,7 @@ runTest(PackageManagerService, async (ctx, service) => {
 
   const runner = await parseInject(ctx, RunnerService);
   await runin(dir, async () => {
+    runner.run("npm");
     runner.run("npm", ["init", "-y"]);
     service.install("npm");
   });
