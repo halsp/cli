@@ -1,4 +1,4 @@
-//{pipe
+//{pipe && router
 import { DtoDescription, DtoFormat, DtoLengthRange } from "@ipare/swagger";
 //{validator
 import { IsEmail, IsString, MaxLength, MinLength } from "class-validator";
