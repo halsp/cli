@@ -13,9 +13,6 @@ import path from "path";
 // {filter
 import { GlobalActionFilter } from "./filters/global.action.filter";
 // }
-// { swagger
-import { getSwaggerOptions } from "./utils/swagger";
-// }
 import { JwtService } from "@ipare/jwt";
 // { inject
 /// { !router || jwt
@@ -38,7 +35,28 @@ export default <T extends Startup>(startup: T, mode?: string) =>
     //}
     // { swagger
     .useSwagger({
-      docOptions: getSwaggerOptions(version),
+      builder: (builder) =>
+        builder
+          .addInfo({
+            title: "NewApplication",
+            description: "A new application",
+            version: version,
+            license: {
+              name: "MIT",
+            },
+            contact: {
+              email: "hi@hal.wang",
+            },
+          })
+          .addServer({
+            url: "/",
+          })
+          .addOpenApiVersion("3.0.0")
+          .addSecurityScheme("password", {
+            type: "apiKey",
+            in: "header",
+            name: "Authorization",
+          }),
     })
     // }
     //{static

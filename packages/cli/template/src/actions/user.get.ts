@@ -3,6 +3,7 @@ import { UseFilters } from "@ipare/filter";
 import { Inject } from "@ipare/inject";
 import { Header } from "@ipare/pipe";
 import { Action } from "@ipare/router";
+import { ApiDescription, ApiResponses, ApiTags } from "@ipare/swagger";
 //{filter
 import { AuthFilter } from "../filters/auth.filter";
 //}
@@ -10,27 +11,24 @@ import { AuthFilter } from "../filters/auth.filter";
 import { UserService } from "../services/user.service";
 //}
 
-//{swagger
-/**
- * @openapi
- * /user:
- *   get:
- *     tags:
- *       - user
- *     description: Get user info
- *     responses:
- *       200:
- *         description: success
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/user'
- *     security:
- *       - password: []
- */
-//}
 //{filter
 @UseFilters(AuthFilter)
+//}
+//{swagger
+@ApiTags("user")
+@ApiDescription("Get user info")
+@ApiResponses({
+  "200": {
+    description: "success",
+    content: {
+      "application/json": {
+        schema: {
+          $ref: "#/components/schemas/LoginDto",
+        },
+      },
+    },
+  },
+})
 //}
 export default class extends Action {
   //{inject
