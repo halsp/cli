@@ -5,42 +5,33 @@ import { Body } from "@ipare/pipe";
 //}
 //{validator
 import { IsString, IsNumberString } from "class-validator";
+import { ApiDescription, ApiResponses, ApiTags } from "@ipare/swagger";
+import { LoginDto } from "../dtos/login.dto";
 //}
 
 //{swagger
-/**
- * @openapi
- * /user:
- *   post:
- *     tags:
- *       - user
- *     description: Get user info
- *     requestBody:
- *       description: User info
- *       content:
- *         application/json:
- *           schema:
- *             properties:
- *               account:
- *                 type: string
- *                 description: email
- *               password:
- *                 type: string
- *     responses:
- *       200:
- *         description: success
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/user'
- *       404:
- *         description: The account not existing or error password
- */
+@ApiTags("user")
+@ApiDescription("Get user info")
+@ApiResponses({
+  "200": {
+    description: "success",
+    content: {
+      "application/json": {
+        schema: {
+          $ref: "#/components/schemas/LoginDto",
+        },
+      },
+    },
+  },
+  "404": {
+    description: "The account not existing or error password",
+  },
+})
 //}
 export default class extends Action {
   //{pipe
   @Body
-  private readonly userInfo!: any;
+  private readonly loginDto!: LoginDto;
   //}
 
   //{validator
@@ -54,7 +45,7 @@ export default class extends Action {
 
   async invoke(): Promise<void> {
     //{ pipe
-    this.ok(this.userInfo);
+    this.ok(this.loginDto);
     //}
 
     //{ !pipe
