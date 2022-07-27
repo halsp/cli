@@ -11,7 +11,7 @@
     "ipare"
   ],
   "bugs": {
-    "url": "https://github.com/ipare/core/issues",
+    "url": "https://github.com/ipare/cli/issues",
     "email": "support@hal.wang"
   },
   "main": "dist/index.js",

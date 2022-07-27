@@ -3,9 +3,9 @@ contact_links:
   - name: Document
     url: https://ipare.org
     about: Find the answer in the document first.
-  - name: ipare/core
-    url: https://github.com/ipare/core
-    about: This is a problem of @ipare/core.
+  - name: plugins
+    url: https://github.com/ipare/ipare
+    about: This is a problem of ipare plugins.
   - name: Questions & Discussions
-    url: https://github.com/ipare/core/discussions
+    url: https://github.com/ipare/ipare/discussions
     about: Use GitHub discussions for message-board style questions and discussions.
