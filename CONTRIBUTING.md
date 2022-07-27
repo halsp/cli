@@ -13,7 +13,7 @@ today! As a contributor, here are the guidelines we would like you to follow:
 
 ## <a name="question"></a> Got a Question or Problem?
 
-**Do not open issues for general support questions as we want to keep GitHub issues for bug reports and feature requests.** You've got much better chances of getting your question answered on [Discussions](https://github.com/ipare/core/discussions).
+**Do not open issues for general support questions as we want to keep GitHub issues for bug reports and feature requests.** You've got much better chances of getting your question answered on [Discussions](https://github.com/ipare/ipare/discussions).
 
 ## <a name="issue"></a> Found a Bug?
 
