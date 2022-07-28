@@ -161,19 +161,7 @@ export class StartMiddleware extends BaseMiddlware {
           : "--inspect";
       processArgs.unshift(inspectFlag);
     }
-    if (this.isSourceMapSupportPkgAvailable()) {
-      processArgs.unshift("-r source-map-support/register");
-    }
     return processArgs;
-  }
-
-  private isSourceMapSupportPkgAvailable() {
-    try {
-      require.resolve("source-map-support");
-      return true;
-    } catch {
-      return false;
-    }
   }
 
   private async copyEnterFile() {
