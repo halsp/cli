@@ -1,4 +1,4 @@
-import { isUndefined } from "@ipare/core";
+import { isString, isUndefined } from "@ipare/core";
 import { Inject } from "@ipare/inject";
 import path from "path";
 import * as fs from "fs";
@@ -26,10 +26,10 @@ export class StartMiddleware extends BaseMiddlware {
   private get cacheDir() {
     return this.tsconfigService.cacheDir;
   }
-  private get debug() {
-    return this.configService.getOptionOrConfigValue<boolean>(
-      "debug",
-      "build.debug",
+  private get inspect() {
+    return this.configService.getOptionOrConfigValue<boolean | string>(
+      "inspect",
+      "start.inspect",
       false
     );
   }
@@ -154,12 +154,12 @@ export class StartMiddleware extends BaseMiddlware {
       outputFilePath.indexOf(" ") >= 0 ? `"${outputFilePath}"` : outputFilePath;
 
     const processArgs = [outputFilePath, ...childProcessArgs];
-    if (this.debug) {
-      const inspectFlag =
-        typeof this.debug === "string"
-          ? `--inspect=${this.debug}`
-          : "--inspect";
-      processArgs.unshift(inspectFlag);
+    if (this.inspect) {
+      let inspect = "--inspect";
+      if (isString(this.inspect)) {
+        inspect += "=" + this.inspect;
+      }
+      processArgs.unshift(inspect);
     }
     return processArgs;
   }
