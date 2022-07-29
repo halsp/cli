@@ -16,7 +16,7 @@
   },
   "main": "dist/index.js",
   "scripts": {
-    "dev": "ipare start --mode development --watch",
+    "dev": "ipare start",
     "start": "npm run dev",
     "build": "ipare build",
     "lint": "eslint src --ext .ts"

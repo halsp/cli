@@ -7,6 +7,8 @@ import { AssetConfig } from "../../configuration";
 import glob from "glob";
 import { FileService } from "../file.service";
 import { ConfigService } from "./config.service";
+import { Context } from "@ipare/pipe";
+import { HttpContext } from "@ipare/core";
 
 type FixedAsset = {
   include: string;
@@ -22,6 +24,9 @@ export class AssetsService {
   private readonly configService!: ConfigService;
   @Inject
   private readonly fileService!: FileService;
+
+  @Context
+  private readonly ctx!: HttpContext;
 
   private readonly watchers: chokidar.FSWatcher[] = [];
 
@@ -90,7 +95,7 @@ export class AssetsService {
     return this.configService.getOptionOrConfigValue<boolean>(
       "watch",
       "build.watch",
-      false
+      this.ctx.command == "start"
     );
   }
   private get watchAssets() {

@@ -1,6 +1,6 @@
 {
   "name": "@ipare/cli",
-  "version": "0.3.4",
+  "version": "0.3.5",
   "description": "Ipare 的命令行脚手架工具",
   "engines": {
     "node": ">=12.16.0"
