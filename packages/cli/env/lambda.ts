@@ -3,7 +3,7 @@
 import { LambdaStartup } from "@ipare/lambda";
 import startup from "./startup";
 
-const app = startup(new LambdaStartup());
+const app = startup(new LambdaStartup(), "production");
 export const main = async (event: any, context: any): Promise<unknown> => {
   return await app.run(event, context);
 };
