@@ -10,6 +10,7 @@ test(`build script`, async () => {
   await runin(`test/build/script`, async () => {
     await new CliStartup(undefined, {
       copyPackage: true,
+      mode: "production",
     })
       .use(async (ctx, next) => {
         await next();
@@ -64,7 +65,9 @@ test(`build script failed`, async () => {
 test(`plugin script error`, async () => {
   let callCount = 0;
   await runin(`test/build/plugin-script-error`, async () => {
-    await new CliStartup()
+    await new CliStartup(undefined, {
+      mode: "production",
+    })
       .use(async (ctx, next) => {
         await next();
 

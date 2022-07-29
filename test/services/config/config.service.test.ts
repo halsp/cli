@@ -8,7 +8,7 @@ import { defineConfig } from "../../../src";
 
 runTest(ConfigService, async (res, service) => {
   await service.init();
-  expect(service.mode).toBe("production");
+  expect(service.mode).toBeUndefined();
   expect(Object.keys(service.value).includes("services")).toBeTruthy();
 });
 
