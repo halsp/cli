@@ -69,7 +69,7 @@ export class ConfigService {
 
   #value: Configuration | undefined = undefined;
   public get value(): Configuration {
-    return this.#value ?? {};
+    return this.#value as Configuration;
   }
 
   public async init() {

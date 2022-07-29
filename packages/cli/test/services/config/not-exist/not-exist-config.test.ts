@@ -9,7 +9,7 @@ test(`config file not exist`, async () => {
     await new CliStartup()
       .use(async (ctx) => {
         const service = await parseInject(ctx, ConfigService);
-        expect(service.mode).toBe("production");
+        expect(service.mode).toBeUndefined();
         expect(service.value).toEqual({});
         worked = true;
       })
