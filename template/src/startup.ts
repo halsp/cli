@@ -23,7 +23,7 @@ import { UserService } from "./services/user.service";
 /// }
 // }
 
-export default <T extends Startup>(startup: T, mode?: string) =>
+export default <T extends Startup>(startup: T, mode: string) =>
   startup
     .use(async (ctx, next) => {
       ctx.res.setHeader("version", version);
