@@ -64,10 +64,7 @@ export class ConfigService {
   }
 
   public get mode() {
-    return this.commandService.getOptionVlaue<string>(
-      "mode",
-      this.ctx.command == "start" ? "development" : "production"
-    );
+    return this.commandService.getOptionVlaue<string>("mode") as string;
   }
 
   #value: Configuration | undefined = undefined;

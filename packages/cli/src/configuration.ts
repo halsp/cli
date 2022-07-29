@@ -60,6 +60,7 @@ export interface Configuration {
   start?: {
     port?: number;
     binaryToRun?: string;
+    inspect?: boolean | string;
   };
   startupFile?: string;
 }

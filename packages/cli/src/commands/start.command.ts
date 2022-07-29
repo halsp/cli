@@ -14,9 +14,10 @@ export class StartCommand extends BaseCommand {
       .setBuildOptions("development")
       .option(
         "-b, --binaryToRun [program]",
-        "Binary to run application (e.g., node, ts-node)."
+        "Binary to run application (e.g., node, ts-node)"
       )
       .option("-p, --port [port]", "The port on http listens")
+      .option("--inspect [hostport]", "Run in inspect mode")
       .action(async (command: Record<string, boolean | string>) => {
         await new CliStartup(undefined, command)
           .add(StartMiddleware)
