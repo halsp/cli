@@ -8,8 +8,11 @@ import "@ipare/static";
 import "@ipare/jwt";
 import "@ipare/view";
 import "@ipare/validator";
+import "@ipare/env";
+//{swagger || !env
 import * as fs from "fs";
 import path from "path";
+//}
 // {filter
 import { GlobalActionFilter } from "./filters/global.action.filter";
 // }
@@ -25,9 +28,15 @@ import { UserService } from "./services/user.service";
 
 export default <T extends Startup>(startup: T, mode: string) =>
   startup
+    //{env
+    .useVersion()
+    .useEnv()
+    //}
     .use(async (ctx, next) => {
+      //{!env
       ctx.res.setHeader("version", version);
-      ctx.res.setHeader("mode", mode ?? "");
+      //}
+      ctx.res.setHeader("mode", mode);
       await next();
     })
     //{
@@ -121,6 +130,7 @@ export default <T extends Startup>(startup: T, mode: string) =>
     .useRouter();
 // }
 
+//{swagger || !env
 const version = (() => {
   const pkgName = "package.json";
   let dir = __dirname;
@@ -132,3 +142,4 @@ const version = (() => {
   const pkgStr = fs.readFileSync(filePath, "utf-8");
   return JSON.parse(pkgStr).version;
 })();
+//}

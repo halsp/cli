@@ -16,6 +16,7 @@ export type Plugin =
   | "core"
   | "cli"
   | "validator"
+  | "env"
   | Env;
 
 export const allPlugins: PluginItem[] = [
@@ -65,6 +66,10 @@ export const allPlugins: PluginItem[] = [
   {
     value: "jwt",
     name: "jwt 身份验证中间件 (@ipare/jwt)",
+  },
+  {
+    value: "env",
+    name: "环境配置插件 (@ipare/env)",
   },
 ];
 
