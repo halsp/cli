@@ -6,7 +6,6 @@ import { Inject } from "@ipare/inject";
 import { CommandService } from "../command.service";
 import { FileService } from "../file.service";
 import * as tsNode from "ts-node";
-import _ from "lodash";
 import { PluginInterfaceService } from "./plugin-interface.service";
 
 export class ConfigService {
@@ -79,17 +78,7 @@ export class ConfigService {
   }
 
   private async loadConfig(): Promise<Configuration> {
-    let config: Configuration = {};
-
-    const cliConfigs = this.pluginInterfaceService.get("cliConfig");
-    for (let cliConfig of cliConfigs) {
-      if (typeof cliConfig == "function") {
-        cliConfig = cliConfig(this.configEnv);
-      }
-      _.merge(config, cliConfig);
-    }
-
-    _.merge(config, await this.getConfig());
+    let config = await this.getConfig();
 
     const cliConfigHooks = this.pluginInterfaceService.get("cliConfigHook");
     for (const hook of cliConfigHooks) {

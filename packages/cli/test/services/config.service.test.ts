@@ -6,32 +6,6 @@ runTest(
   ConfigService,
   async (ctx, service) => {
     (service as any).pluginInterfaceService.get = (name) => {
-      if (name == "cliConfig") {
-        return [
-          { startupFile: "123" },
-          () => ({
-            startupFile: "456",
-          }),
-        ];
-      } else {
-        return [];
-      }
-    };
-
-    const cfg = await (service as any).loadConfig();
-    expect(cfg.startupFile).toBe("789");
-  },
-  undefined,
-  undefined,
-  {
-    jsonConfig: `{"startupFile":"789"}`,
-  }
-);
-
-runTest(
-  ConfigService,
-  async (ctx, service) => {
-    (service as any).pluginInterfaceService.get = (name) => {
       if (name == "cliConfigHook") {
         return [
           (config: Configuration) => {
