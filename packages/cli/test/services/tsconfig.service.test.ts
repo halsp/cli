@@ -17,6 +17,7 @@ runTest(
     );
   },
   undefined,
+  undefined,
   {
     tsconfigPath: "not-exist.json",
   }
@@ -27,6 +28,7 @@ runTest(
   async (ctx, service) => {
     expect(service.outDir).toBe("dist");
   },
+  undefined,
   undefined,
   {
     tsconfigPath: "empty.tsconfig.json",

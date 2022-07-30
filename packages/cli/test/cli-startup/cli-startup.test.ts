@@ -6,7 +6,7 @@ function testCliStartup(args?: any, options?: any) {
   test(`cli startup`, async () => {
     let worked = false;
     await runin("test/cli-startup", async () => {
-      const res = await new CliStartup(args, options)
+      const res = await new CliStartup("test", args, options)
         .use((ctx) => {
           ctx.ok({
             options: ctx.commandOptions,

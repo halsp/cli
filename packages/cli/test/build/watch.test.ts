@@ -10,7 +10,7 @@ function runTest(options: { callback?: boolean }) {
   test(`build watch`, async () => {
     let callCount = 0;
     await runin(`test/build/watch`, async () => {
-      await new CliStartup(undefined, {
+      await new CliStartup("test", undefined, {
         watch: true,
         watchAssets: true,
         preserveWatchOutput: true,

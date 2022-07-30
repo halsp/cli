@@ -6,15 +6,10 @@ import { ConfigService } from "../services/build.services/config.service";
 import { TsconfigService } from "../services/build.services/tsconfig.service";
 import { WatchCompilerService } from "../services/build.services/watch-compiler.service";
 import * as fs from "fs";
-import { BaseMiddlware } from "./base.middleware";
-import { CommandType } from "../configuration";
 import { HookService } from "../services/build.services/hook.service";
+import { Middleware } from "@ipare/core";
 
-export class BuildMiddlware extends BaseMiddlware {
-  override get command(): CommandType {
-    return "build";
-  }
-
+export class BuildMiddlware extends Middleware {
   @Inject
   private readonly tsconfigService!: TsconfigService;
   @Inject
@@ -40,14 +35,12 @@ export class BuildMiddlware extends BaseMiddlware {
   }
 
   override async invoke(): Promise<void> {
-    await super.invoke();
-
     await fs.promises.rm(path.resolve(process.cwd(), this.cacheDir), {
       recursive: true,
       force: true,
     });
 
-    if (!(await this.hookService.execPrebuilds(this.command))) {
+    if (!(await this.hookService.execPrebuilds())) {
       return;
     }
 
@@ -70,7 +63,7 @@ export class BuildMiddlware extends BaseMiddlware {
       if (compilerResult) {
         await this.assetsService.copy();
         await this.copyPackage();
-        await this.hookService.execPostbuilds(this.command);
+        await this.hookService.execPostbuilds();
       }
       return compilerResult;
     }
@@ -80,7 +73,7 @@ export class BuildMiddlware extends BaseMiddlware {
     return this.watchCompilerService.compile(this.cacheDir, async () => {
       await this.assetsService.copy();
       await this.copyPackage();
-      await this.hookService.execPostbuilds(this.command);
+      await this.hookService.execPostbuilds();
       const onWatchSuccess =
         this.ctx.bag<() => Promise<void>>("onWatchSuccess");
       if (onWatchSuccess) {

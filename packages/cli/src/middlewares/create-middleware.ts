@@ -4,8 +4,6 @@ import { Inject } from "@ipare/inject";
 import { FileService } from "../services/file.service";
 import { CreateEnvService } from "../services/create.services/create-env.service";
 import { PluginSelectService } from "../services/create.services/plugin-select.service";
-import { CommandType } from "../configuration";
-import { BaseMiddlware } from "./base.middleware";
 import { CreatePackageService } from "../services/create.services/create-package.service";
 import path from "path";
 import { CommandService } from "../services/command.service";
@@ -13,12 +11,9 @@ import { allPlugins, Plugin } from "../utils/plugins";
 import { CopyBaseService } from "../services/create.services/copy-base-files.service";
 import inquirer from "inquirer";
 import { RunnerService } from "../services/runner.service";
+import { Middleware } from "@ipare/core";
 
-export class CreateMiddleware extends BaseMiddlware {
-  override get command(): CommandType {
-    return "create";
-  }
-
+export class CreateMiddleware extends Middleware {
   @Inject
   private readonly createTemplateService!: CreateTemplateService;
   @Inject
@@ -41,8 +36,6 @@ export class CreateMiddleware extends BaseMiddlware {
   }
 
   override async invoke(): Promise<void> {
-    await super.invoke();
-
     await this.checkName();
 
     if (fs.existsSync(this.targetDir)) {

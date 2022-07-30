@@ -11,6 +11,7 @@ runTest(
     expect(pkg).toEqual({});
   },
   undefined,
+  undefined,
   {
     skipEnv: true,
   }
@@ -39,6 +40,7 @@ runTest(
       },
     });
   },
+  undefined,
   undefined,
   {
     cliVersion: "cli-test",

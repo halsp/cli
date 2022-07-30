@@ -11,7 +11,7 @@ async function testTemplate(
 ) {
   let worked = false;
   await runin("test/services/create", async () => {
-    await new CliStartup({ name: "test" })
+    await new CliStartup("test", { name: "test" })
       .use(async (ctx) => {
         const service = await parseInject(ctx, CreateTemplateService);
         if (!fs.existsSync("./.ipare-cache")) {

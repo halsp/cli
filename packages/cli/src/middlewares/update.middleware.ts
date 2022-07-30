@@ -1,17 +1,12 @@
-import { BaseMiddlware } from "./base.middleware";
-import { CommandType } from "../configuration";
 import { Inject } from "@ipare/inject";
 import { PackageManagerService } from "../services/package-manager.service";
 import { CommandService } from "../services/command.service";
 import * as fs from "fs";
 import path from "path";
 import runLocal from "npm-check-updates/build/src/lib/runLocal";
+import { Middleware } from "@ipare/core";
 
-export class UpdateMiddleware extends BaseMiddlware {
-  override get command(): CommandType {
-    return "update";
-  }
-
+export class UpdateMiddleware extends Middleware {
   private get packagePath() {
     return path.join(process.cwd(), "package.json");
   }

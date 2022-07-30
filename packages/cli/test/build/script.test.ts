@@ -8,7 +8,7 @@ import { ConfigService } from "../../src/services/build.services/config.service"
 test(`build script`, async () => {
   let callCount = 0;
   await runin(`test/build/script`, async () => {
-    await new CliStartup(undefined, {
+    await new CliStartup("test", undefined, {
       copyPackage: true,
       mode: "production",
     })
@@ -38,7 +38,7 @@ test(`build script`, async () => {
 test(`build script failed`, async () => {
   let callCount = 0;
   await runin(`test/build/script`, async () => {
-    await new CliStartup(undefined, {
+    await new CliStartup("test", undefined, {
       mode: "development",
     })
       .use(async (ctx, next) => {
@@ -65,7 +65,7 @@ test(`build script failed`, async () => {
 test(`plugin script error`, async () => {
   let callCount = 0;
   await runin(`test/build/plugin-script-error`, async () => {
-    await new CliStartup(undefined, {
+    await new CliStartup("test", undefined, {
       mode: "production",
     })
       .use(async (ctx, next) => {

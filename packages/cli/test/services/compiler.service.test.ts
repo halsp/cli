@@ -2,7 +2,6 @@ import { CompilerService } from "../../src/services/build.services/compiler.serv
 import { runTest } from "./runTest";
 import * as fs from "fs";
 import { WatchCompilerService } from "../../src/services/build.services/watch-compiler.service";
-import { COMMAND_TYPE_METADATA } from "../../src/constant";
 
 runTest(CompilerService, async (ctx, service) => {
   fs.rmSync("./dist-compiler", {
@@ -37,13 +36,13 @@ function runCompilerOptions(command: "start" | "build") {
   runTest(
     CompilerService,
     async (ctx, service) => {
-      ctx[COMMAND_TYPE_METADATA] = command;
       expect((service as any).getCompilerOptions({}, "")).toEqual({
         noEmitOnError: true,
         outDir: "",
         sourceMap: command == "start",
       });
     },
+    command,
     undefined,
     {
       sourceMap: false,

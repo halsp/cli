@@ -1,8 +1,9 @@
 import { Inject } from "@ipare/inject";
-import { CommandType } from "../../configuration";
 import { ConfigService } from "./config.service";
 import { TsconfigService } from "./tsconfig.service";
 import { PluginInterfaceService } from "./plugin-interface.service";
+import { Context } from "@ipare/pipe";
+import { HttpContext } from "@ipare/core";
 
 export class HookService {
   @Inject
@@ -12,6 +13,9 @@ export class HookService {
   @Inject
   private readonly tsconfigService!: TsconfigService;
 
+  @Context
+  private readonly ctx!: HttpContext;
+
   private get config() {
     return this.configService.value;
   }
@@ -20,9 +24,9 @@ export class HookService {
     return this.tsconfigService.cacheDir;
   }
 
-  public async execPrebuilds(command: CommandType): Promise<boolean> {
+  public async execPrebuilds(): Promise<boolean> {
     const internalPrebuild = this.pluginInterfaceService.get("prebuild");
-    const options = this.getScriptOptions(command);
+    const options = this.getScriptOptions();
 
     for (const fn of [
       ...internalPrebuild,
@@ -35,9 +39,9 @@ export class HookService {
     return true;
   }
 
-  public async execPostbuilds(command: CommandType) {
+  public async execPostbuilds() {
     const internalPostbuild = this.pluginInterfaceService.get("postbuild");
-    const options = this.getScriptOptions(command);
+    const options = this.getScriptOptions();
 
     for (const fn of [
       ...internalPostbuild,
@@ -47,10 +51,10 @@ export class HookService {
     }
   }
 
-  private getScriptOptions(command: CommandType) {
+  private getScriptOptions() {
     return {
       config: this.config,
-      command: command,
+      command: this.ctx.command,
       cacheDir: this.cacheDir,
       mode: this.configService.mode,
     };

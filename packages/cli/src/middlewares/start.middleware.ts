@@ -1,4 +1,4 @@
-import { isString, isUndefined } from "@ipare/core";
+import { isString, isUndefined, Middleware } from "@ipare/core";
 import { Inject } from "@ipare/inject";
 import path from "path";
 import * as fs from "fs";
@@ -7,17 +7,11 @@ import spawn from "cross-spawn";
 import killProcess from "tree-kill";
 import { START_DEV_FILE_NAME } from "../constant";
 import { treeKillSync } from "../utils/tree-kill";
-import { BaseMiddlware } from "./base.middleware";
-import { CommandType } from "../configuration";
 import shell from "shelljs";
 import { ConfigService } from "../services/build.services/config.service";
 import { ChildProcess } from "child_process";
 
-export class StartMiddleware extends BaseMiddlware {
-  override get command(): CommandType {
-    return "start";
-  }
-
+export class StartMiddleware extends Middleware {
   @Inject
   private readonly tsconfigService!: TsconfigService;
   @Inject
@@ -71,8 +65,6 @@ export class StartMiddleware extends BaseMiddlware {
   }
 
   override async invoke(): Promise<void> {
-    await super.invoke();
-
     if (this.watch) {
       this.ctx.bag("onWatchSuccess", this.createOnWatchSuccess());
     }

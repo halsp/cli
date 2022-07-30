@@ -22,6 +22,7 @@ runTest(
     expect(cfg.startupFile).toBe("789");
   },
   undefined,
+  undefined,
   {
     jsonConfig: `{"startupFile":"789"}`,
   }
@@ -46,6 +47,7 @@ runTest(
     expect(cfg.startupFile).toBe("t1");
   },
   undefined,
+  undefined,
   {
     jsonConfig: `{"startupFile":"t1"}`,
   }
@@ -69,6 +71,7 @@ runTest(
     const cfg = await (service as any).loadConfig();
     expect(cfg.startupFile).toBe("t1");
   },
+  undefined,
   undefined,
   {
     jsonConfig: `{"startupFile":"t2"}`,

@@ -1,11 +1,6 @@
-import { CommandType } from "../configuration";
-import { BaseMiddlware } from "./base.middleware";
+import { Middleware } from "@ipare/core";
 
-export class TemplateMiddleware extends BaseMiddlware {
-  override get command(): CommandType {
-    return "template";
-  }
-
+export class TemplateMiddleware extends Middleware {
   get name() {
     return this.ctx.commandArgs.name;
   }
@@ -15,8 +10,6 @@ export class TemplateMiddleware extends BaseMiddlware {
   }
 
   override async invoke(): Promise<void> {
-    await super.invoke();
-
     console.log("TODO", this.template, this.name);
   }
 }

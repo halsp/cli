@@ -21,6 +21,7 @@ function testTemplate(plugins: Plugin[]) {
 
       await runin(cacheDir, async () => {
         await new CliStartup(
+          "test",
           {
             name: pluginsStr,
           },
@@ -93,6 +94,7 @@ async function runTest(options: {
   inquirer.prompt = options.promptFn ?? ((() => ({})) as any);
   try {
     await new CliStartup(
+      "test",
       {
         name: options.name ?? testName,
       },
