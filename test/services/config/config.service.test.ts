@@ -23,6 +23,7 @@ runTest(
     return;
   },
   undefined,
+  undefined,
   {
     configName: "custom.config.ts",
     mode: "test",
@@ -32,7 +33,7 @@ runTest(
 test(`json config file`, async () => {
   let worked = false;
   await runin("test/services/config/types", async () => {
-    await new CliStartup(undefined, {
+    await new CliStartup("test", undefined, {
       configName: `ipare-cli.config.json`,
     })
       .use(async (ctx) => {
@@ -48,7 +49,7 @@ test(`json config file`, async () => {
 test(`json config command`, async () => {
   let worked = false;
   await runin("test/services/config/types", async () => {
-    await new CliStartup(undefined, {
+    await new CliStartup("test", undefined, {
       jsonConfig: await fs.promises.readFile("ipare-cli.config.json", "utf-8"),
     })
       .use(async (ctx) => {
@@ -67,7 +68,7 @@ test(`json func command`, async () => {
     const func = defineConfig(() => ({
       startupFile: "t1",
     }));
-    await new CliStartup(undefined, {
+    await new CliStartup("test", undefined, {
       funcConfig: func.toString(),
     })
       .use(async (ctx) => {
@@ -83,7 +84,7 @@ test(`json func command`, async () => {
 test(`js config file`, async () => {
   let worked = false;
   await runin("test/services/config/types", async () => {
-    await new CliStartup(undefined, {
+    await new CliStartup("test", undefined, {
       mode: "js-test",
       configName: `ipare-cli.config.js`,
     })

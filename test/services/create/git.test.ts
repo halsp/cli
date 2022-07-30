@@ -26,7 +26,7 @@ async function createCacheDir(name: string) {
 function initGit(skip: boolean) {
   test(`init git ${skip}`, async () => {
     let worked = false;
-    await new CliStartup({ name: "git" }, { skipGit: skip })
+    await new CliStartup("test", { name: "git" }, { skipGit: skip })
       .hook(HookType.BeforeInvoke, async (ctx, md) => {
         if (md instanceof CreateMiddleware) {
           const cacheDir = await createCacheDir("git");

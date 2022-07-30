@@ -34,7 +34,7 @@ test(`build assets`, async () => {
 test(`build command assets`, async () => {
   let worked = false;
   await runin(`test/build/assets`, async () => {
-    await new CliStartup(undefined, {
+    await new CliStartup("test", undefined, {
       assets: "default/**/*",
     })
       .add(BuildMiddlware)
@@ -78,7 +78,7 @@ function runWatchAssetsTest(type: "add" | "edit" | "unlink") {
     };
 
     await runin(`test/build/assets`, async () => {
-      await new CliStartup(undefined, {
+      await new CliStartup("test", undefined, {
         watch: true,
         watchAssets: true,
       })

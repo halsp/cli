@@ -3,7 +3,7 @@ import { InfoMiddleware } from "../../src/middlewares/info.middleware";
 import { runin } from "../utils";
 
 test(`info`, async () => {
-  await new CliStartup(undefined, {
+  await new CliStartup("test", undefined, {
     assets: "assets",
   })
     .add(InfoMiddleware)
@@ -13,7 +13,7 @@ test(`info`, async () => {
 test(`empty package`, async () => {
   let worked = false;
   await runin("test/info/empty-package", async () => {
-    await new CliStartup(undefined, {
+    await new CliStartup("test", undefined, {
       assets: "assets",
     })
       .add(InfoMiddleware)

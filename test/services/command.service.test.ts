@@ -18,6 +18,7 @@ runTest(
     return;
   },
   undefined,
+  undefined,
   { "from-command": 1 }
 );
 
@@ -27,6 +28,7 @@ runTest(
     expect(service.getOptionVlaue("from-command", "from-command")).toBe(1);
     return;
   },
+  undefined,
   undefined,
   { "from-command": 1 }
 );

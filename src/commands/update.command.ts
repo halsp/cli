@@ -27,7 +27,7 @@ export class UpdateCommand extends BaseCommand {
       )
       .option("-si, --skipInstall", "Skip installation", false)
       .action(async (command: Record<string, boolean | string>) => {
-        await new CliStartup({}, command).add(UpdateMiddleware).run();
+        await new CliStartup("update", {}, command).add(UpdateMiddleware).run();
       });
   }
 }

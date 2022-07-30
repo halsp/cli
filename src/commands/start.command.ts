@@ -19,7 +19,7 @@ export class StartCommand extends BaseCommand {
       .option("-p, --port [port]", "The port on http listens")
       .option("--inspect [hostport]", "Run in inspect mode")
       .action(async (command: Record<string, boolean | string>) => {
-        await new CliStartup(undefined, command)
+        await new CliStartup("start", undefined, command)
           .add(StartMiddleware)
           .add(BuildMiddlware)
           .run();

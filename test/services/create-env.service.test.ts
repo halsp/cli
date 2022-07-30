@@ -9,6 +9,7 @@ runTest(
     expect(env).toBeUndefined();
   },
   undefined,
+  undefined,
   {
     skipEnv: true,
   }
@@ -20,6 +21,7 @@ runTest(
     const env = await (service as any).getEnv();
     expect(env).toBe("lambda");
   },
+  undefined,
   undefined,
   {
     env: "lambda",
@@ -38,6 +40,7 @@ runTest(
     }
     expect(err).toBeTruthy();
   },
+  undefined,
   undefined,
   {
     env: "not-exist",

@@ -12,7 +12,9 @@ export class InitCommand extends BaseCommand {
       .setCreateOptions()
       .action(
         async (name: string, command: Record<string, boolean | string>) => {
-          await new CliStartup({ name }, command).add(CreateMiddleware).run();
+          await new CliStartup("init", { name }, command)
+            .add(CreateMiddleware)
+            .run();
         }
       );
   }

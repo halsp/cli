@@ -14,7 +14,9 @@ export class CreateCommand extends BaseCommand {
       .setCreateOptions()
       .action(
         async (name: string, command: Record<string, boolean | string>) => {
-          await new CliStartup({ name }, command).add(CreateMiddleware).run();
+          await new CliStartup("create", { name }, command)
+            .add(CreateMiddleware)
+            .run();
         }
       );
   }

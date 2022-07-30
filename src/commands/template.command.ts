@@ -18,6 +18,7 @@ export class TemplateCommand extends BaseCommand {
           command: Record<string, boolean | string>
         ) => {
           await new CliStartup(
+            "template",
             {
               template,
               name,

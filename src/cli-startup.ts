@@ -4,7 +4,6 @@ import { HookType, HttpContext, Request, Startup } from "@ipare/core";
 import {
   COMMAND_ARGS_METADATA,
   COMMAND_OPTIONS_METADATA,
-  COMMAND_TYPE_METADATA,
   HOOK_EXCEPTION,
 } from "./constant";
 import { ConfigService } from "./services/build.services/config.service";
@@ -21,6 +20,7 @@ declare module "@ipare/core" {
 
 export class CliStartup extends Startup {
   constructor(
+    mode = "test",
     args?: Record<string, string>,
     options?: Record<string, string | boolean>
   ) {
@@ -28,13 +28,14 @@ export class CliStartup extends Startup {
 
     this[COMMAND_OPTIONS_METADATA] = options ?? {};
     this[COMMAND_ARGS_METADATA] = args ?? {};
+    this[COMMAND_ARGS_METADATA] = args ?? {};
 
     this.use(async (ctx, next) => {
       Object.defineProperty(ctx, "command", {
         configurable: false,
         enumerable: false,
         get: () => {
-          return ctx[COMMAND_TYPE_METADATA];
+          return mode;
         },
       });
 

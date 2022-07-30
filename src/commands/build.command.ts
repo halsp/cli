@@ -15,7 +15,7 @@ export class BuildCommand extends BaseCommand {
       .option("-sm, --sourceMap", "Whether to generate source map files.")
       .option("-cp, --copyPackage", "Copy package.json to out dir.")
       .action(async (command: Record<string, boolean | string>) => {
-        await new CliStartup(undefined, command)
+        await new CliStartup("build", undefined, command)
           .add(BuildMiddlware)
           .add(CopyBuildResultMiddleware)
           .run();

@@ -5,14 +5,9 @@ import * as fs from "fs";
 import path from "path";
 import { DepsService } from "../services/deps.service";
 import { Inject } from "@ipare/inject";
-import { BaseMiddlware } from "./base.middleware";
-import { CommandType } from "../configuration";
+import { Middleware } from "@ipare/core";
 
-export class InfoMiddleware extends BaseMiddlware {
-  override get command(): CommandType {
-    return "info";
-  }
-
+export class InfoMiddleware extends Middleware {
   @Inject
   private readonly depsService!: DepsService;
 
@@ -21,8 +16,6 @@ export class InfoMiddleware extends BaseMiddlware {
   }
 
   override async invoke(): Promise<void> {
-    await super.invoke();
-
     const pkg = JSON.parse(
       await fs.promises.readFile(
         path.join(__dirname, "../../package.json"),

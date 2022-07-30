@@ -26,7 +26,7 @@ async function createCacheDir(name: string) {
 function runApp(skip: boolean) {
   test(`run app ${skip}`, async () => {
     let worked = false;
-    await new CliStartup({ name: "runApp" }, { skipGit: skip })
+    await new CliStartup("test", { name: "runApp" }, { skipGit: skip })
       .hook(HookType.BeforeInvoke, async (ctx, md) => {
         if (md instanceof CreateMiddleware) {
           const cacheDir = await createCacheDir("runApp");
