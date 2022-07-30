@@ -6,6 +6,8 @@
   "constant": ["core", "cli"],
   "files": {
     "static/*": "static",
-    "src/views/*": "view"
+    "src/views/*": "view",
+    ".env": "env",
+    ".env.development": "env"
   }
 }
