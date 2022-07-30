@@ -11,9 +11,6 @@ export class PluginInterfaceService {
   private readonly depsService!: DepsService;
 
   public get(
-    name: "cliConfig"
-  ): (Configuration | ((options: ConfigEnv) => Configuration))[];
-  public get(
     name: "cliConfigHook"
   ): ((config: Configuration, options: ConfigEnv) => Configuration | void)[];
   public get(name: "postbuild"): Postbuild[];
