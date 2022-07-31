@@ -8,3 +8,4 @@ coverage
 .ipare-cache
 
 *-error.log
+.husky/_
