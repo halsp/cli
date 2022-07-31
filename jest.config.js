@@ -1,4 +1,4 @@
-export default {
+module.exports = {
   roots: ["<rootDir>/test"],
   testRegex: "test/(.+)\\.test\\.(jsx?|tsx?)$",
   transform: {
@@ -7,4 +7,4 @@ export default {
   moduleFileExtensions: ["ts", "tsx", "js", "jsx", "json", "node"],
   collectCoverageFrom: ["./src/**/*.ts"],
   collectCoverage: true,
-};
+}
