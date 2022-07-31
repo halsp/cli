@@ -49,4 +49,6 @@ npm install -g @ipare/cli
 
 ## License
 
-@ipare/cli is MIT licensed.
+[MIT](https://opensource.org/licenses/MIT)
+
+Copyright (c) 2022-present, Hal Wang
