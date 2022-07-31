@@ -15,6 +15,10 @@
     <a href="https://paypal.me/ihalwang" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
 </p>
 
+## 开始使用
+
+请访问 <https://ipare.org>
+
 ## 介绍
 
 `@ipare/cli` 是 `Ipare` 的命令行脚手架工具
@@ -27,13 +31,9 @@
 npm install -g @ipare/cli
 ```
 
-## 开始使用
-
-请访问 <https://ipare.org>
-
 ## 贡献
 
-请阅读 [Contributing to @ipare/cli](https://github.com/ipare/cli/blob/main/CONTRIBUTING.md)
+在提交 PR 前请先阅读 [Contributing to @ipare/cli](https://github.com/ipare/cli/blob/main/CONTRIBUTING.md)
 
 ### Ipare 贡献列表
 
