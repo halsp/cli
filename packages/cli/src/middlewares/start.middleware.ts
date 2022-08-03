@@ -53,7 +53,7 @@ export class StartMiddleware extends Middleware {
     return this.configService.getOptionOrConfigValue<boolean>(
       "watch",
       "build.watch",
-      false
+      true
     );
   }
   private get binaryToRun() {
