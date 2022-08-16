@@ -9,6 +9,7 @@ import "@ipare/jwt";
 import "@ipare/view";
 import "@ipare/validator";
 import "@ipare/env";
+import "@ipare/logger";
 //{swagger || !env
 import * as fs from "fs";
 import path from "path";
@@ -31,6 +32,9 @@ export default <T extends Startup>(startup: T, mode: string) =>
     //{env
     .useVersion()
     .useEnv()
+    //}
+    //{logger
+    .useConsoleLogger()
     //}
     .use(async (ctx, next) => {
       //{!env
