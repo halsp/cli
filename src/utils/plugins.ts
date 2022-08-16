@@ -17,6 +17,7 @@ export type Plugin =
   | "cli"
   | "validator"
   | "env"
+  | "logger"
   | Env;
 
 export const allPlugins: PluginItem[] = [
@@ -70,6 +71,10 @@ export const allPlugins: PluginItem[] = [
   {
     value: "env",
     name: "环境配置插件 (@ipare/env)",
+  },
+  {
+    value: "logger",
+    name: "日志插件 (@ipare/logger)",
   },
 ];
 

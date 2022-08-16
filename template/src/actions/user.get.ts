@@ -10,6 +10,7 @@ import { AuthFilter } from "../filters/auth.filter";
 //{inject
 import { UserService } from "../services/user.service";
 //}
+import { Logger, winston } from "@ipare/logger";
 
 //{filter
 @UseFilters(AuthFilter)
@@ -35,6 +36,10 @@ export default class extends Action {
   @Inject
   private readonly userService!: UserService;
   //}
+  //{logger
+  @Logger()
+  private readonly logger!: winston.Logger;
+  //}
 
   //{pipe
   @Header("host")
@@ -42,6 +47,9 @@ export default class extends Action {
   //}
 
   async invoke(): Promise<void> {
+    //{logger
+    this.logger.info("get user info from action");
+    //}
     //!
     {
       //{inject

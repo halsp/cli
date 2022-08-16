@@ -39,6 +39,7 @@
     "@ipare/swagger": "^1.8.3",
     "@ipare/validator": "^1.8.3",
     "@ipare/view": "^1.8.3",
+    "@ipare/logger": "^1.8.3",
     "ejs": "^3.1.8",
     "class-validator": "^0.13.2",
     "reflect-metadata": "^0.1.13"
