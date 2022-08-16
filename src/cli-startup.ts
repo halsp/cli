@@ -1,11 +1,6 @@
 import "@ipare/core";
 import "@ipare/inject";
-import { HookType, HttpContext, Request, Startup } from "@ipare/core";
-import {
-  COMMAND_ARGS_METADATA,
-  COMMAND_OPTIONS_METADATA,
-  HOOK_EXCEPTION,
-} from "./constant";
+import { HttpContext, Request, Startup } from "@ipare/core";
 import { ConfigService } from "./services/build.services/config.service";
 import { CommandType } from "./configuration";
 import { parseInject } from "@ipare/inject";
@@ -21,14 +16,10 @@ declare module "@ipare/core" {
 export class CliStartup extends Startup {
   constructor(
     mode = "test",
-    args?: Record<string, string>,
-    options?: Record<string, string | boolean>
+    args: Record<string, string> = {},
+    options: Record<string, string | boolean> = {}
   ) {
     super();
-
-    this[COMMAND_OPTIONS_METADATA] = options ?? {};
-    this[COMMAND_ARGS_METADATA] = args ?? {};
-    this[COMMAND_ARGS_METADATA] = args ?? {};
 
     this.use(async (ctx, next) => {
       Object.defineProperty(ctx, "command", {
@@ -43,7 +34,7 @@ export class CliStartup extends Startup {
         configurable: false,
         enumerable: false,
         get: () => {
-          return this[COMMAND_ARGS_METADATA];
+          return args;
         },
       });
 
@@ -51,16 +42,12 @@ export class CliStartup extends Startup {
         configurable: false,
         enumerable: false,
         get: () => {
-          return this[COMMAND_OPTIONS_METADATA];
+          return options;
         },
       });
 
       await next();
     })
-      .hook(HookType.Exception, (ctx, md, ex) => {
-        ctx.res[HOOK_EXCEPTION] = ex;
-        return true;
-      })
       .useInject()
       .inject(ConfigService, async (ctx) => {
         const result = await parseInject(ctx, new ConfigService());
@@ -71,8 +58,8 @@ export class CliStartup extends Startup {
 
   async run() {
     const res = await super.invoke(new HttpContext(new Request()));
-    if (res[HOOK_EXCEPTION]) {
-      throw res[HOOK_EXCEPTION];
+    if (res.ctx.errorStack.length) {
+      throw res.ctx.errorStack[0];
     }
     return res;
   }
