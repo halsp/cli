@@ -1,12 +1,12 @@
 //{ router
 import { Action } from "@ipare/router";
-//{pipe
 import { Body } from "@ipare/pipe";
+import { ApiDescription, ApiResponses, ApiTags } from "@ipare/swagger";
+//{pipe
+import { LoginDto } from "../dtos/login.dto";
 //}
 //{validator
-import { IsString, IsNumberString } from "class-validator";
-import { ApiDescription, ApiResponses, ApiTags } from "@ipare/swagger";
-import { LoginDto } from "../dtos/login.dto";
+import { IsNumberString, IsString } from "class-validator";
 //}
 
 //{swagger
@@ -34,13 +34,11 @@ export default class extends Action {
   private readonly loginDto!: LoginDto;
   //}
 
-  //{validator
-  @IsString()
-  @Body("userName")
-  private readonly userName!: string;
-  @IsNumberString()
-  @Body("userId")
-  private readonly uid!: string;
+  //{swagger
+  @Body("account")
+  private readonly account!: string;
+  @Body("password")
+  private readonly password!: string;
   //}
 
   async invoke(): Promise<void> {
