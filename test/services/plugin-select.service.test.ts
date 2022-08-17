@@ -14,6 +14,6 @@ runTest(PluginSelectService, async (ctx, service) => {
 });
 
 runTest(PluginSelectService, async (ctx, service) => {
-  const plugins = await service.fixPlugins(["inject"], process.cwd());
+  const plugins = await service.sortPlugins(["inject"], process.cwd());
   expect(plugins.length).toBeGreaterThan(1);
 });

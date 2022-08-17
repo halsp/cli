@@ -10,7 +10,7 @@ import { ConfigService } from "./config.service";
 import { Context } from "@ipare/pipe";
 import { HttpContext } from "@ipare/core";
 
-type FixedAsset = {
+type SortedAsset = {
   include: string;
   exclude: string[];
   outDir: string;
@@ -30,7 +30,7 @@ export class AssetsService {
 
   private readonly watchers: chokidar.FSWatcher[] = [];
 
-  public get assets(): FixedAsset[] {
+  public get assets(): SortedAsset[] {
     let assCfg = this.configService.getOptionOrConfigValue<
       string,
       AssetConfig[]
@@ -44,7 +44,7 @@ export class AssetsService {
       ];
     }
 
-    const result: FixedAsset[] = [];
+    const result: SortedAsset[] = [];
     assCfg
       .map((asset) => {
         if (typeof asset == "string") {
@@ -122,7 +122,7 @@ export class AssetsService {
     }
   }
 
-  private async globCopy(asset: FixedAsset) {
+  private async globCopy(asset: SortedAsset) {
     const paths = glob.sync(asset.include, {
       ignore: asset.exclude,
       cwd: asset.root,
@@ -138,7 +138,7 @@ export class AssetsService {
     }
   }
 
-  private watchAsset(asset: FixedAsset) {
+  private watchAsset(asset: SortedAsset) {
     const getTargetPath = (file: string) => {
       return path.join(asset.outDir, file);
     };

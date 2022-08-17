@@ -70,22 +70,22 @@ export class CreateMiddleware extends Middleware {
     if (!createPackageResult) return;
     await this.copyBaseService.copy();
 
-    const fixedPlugins = await this.pluginSelectService.fixPlugins(
+    const sortedPlugins = await this.pluginSelectService.sortPlugins(
       plugins,
       path.join(this.targetDir)
     );
 
-    const consolePlugins = fixedPlugins
+    const consolePlugins = sortedPlugins
       .filter((p) => p != "core")
       .map((p) => `@ipare/${p}`);
     console.log("\n");
     console.log(
-      chalk.bold("Fixed plugins"),
+      chalk.bold("Sorted plugins"),
       chalk.greenBright(consolePlugins.join(", "))
     );
     console.log("\n");
 
-    await this.createTemplateService.create(fixedPlugins);
+    await this.createTemplateService.create(sortedPlugins);
     this.initGit();
     this.runApp();
   }

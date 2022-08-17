@@ -29,7 +29,7 @@ export class PluginSelectService {
     return plugins;
   }
 
-  public async fixPlugins(
+  public async sortPlugins(
     plugins: Plugin[],
     ...paths: string[]
   ): Promise<Plugin[]> {

@@ -10,7 +10,7 @@ type PluginConfig = {
   constant: Plugin[];
   files: Record<string, string | boolean | undefined>;
 };
-export type FixedPluginConfig = {
+export type SortedPluginConfig = {
   dependencies: Record<string, boolean | undefined>;
   constant: Plugin[];
   files: Record<string, boolean | undefined>;
@@ -41,7 +41,7 @@ export class CreatePluginService {
       config.files[key] = newValue;
     }
 
-    return config as FixedPluginConfig;
+    return config as SortedPluginConfig;
   }
 
   public async excludePluginFiles(plugins: Plugin[]) {
