@@ -18,7 +18,7 @@ export class UserService {
   private readonly logger!: winston.Logger;
   //}
 
-  //{validator
+  //{!router&&validator
   @IsString()
   @Query("userName")
   private readonly userName!: string;

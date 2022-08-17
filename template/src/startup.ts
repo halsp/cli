@@ -33,9 +33,6 @@ export default <T extends Startup>(startup: T, mode: string) =>
     .useVersion()
     .useEnv()
     //}
-    //{logger
-    .useConsoleLogger()
-    //}
     .use(async (ctx, next) => {
       //{!env
       ctx.res.setHeader("version", version);
@@ -45,6 +42,9 @@ export default <T extends Startup>(startup: T, mode: string) =>
     })
     //{
     .useInject()
+    //}
+    //{logger
+    .useConsoleLogger()
     //}
     // { swagger
     .useSwagger({

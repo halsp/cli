@@ -1,9 +1,16 @@
 //{ router
 import { UseFilters } from "@ipare/filter";
 import { Inject } from "@ipare/inject";
-import { Header } from "@ipare/pipe";
+import { Header, Query } from "@ipare/pipe";
 import { Action } from "@ipare/router";
-import { ApiDescription, ApiResponses, ApiTags } from "@ipare/swagger";
+import {
+  ApiDescription,
+  ApiResponses,
+  ApiTags,
+  DtoDescription,
+  DtoLengthRange,
+  DtoRequired,
+} from "@ipare/swagger";
 //{filter
 import { AuthFilter } from "../filters/auth.filter";
 //}
@@ -11,6 +18,9 @@ import { AuthFilter } from "../filters/auth.filter";
 import { UserService } from "../services/user.service";
 //}
 import { Logger, winston } from "@ipare/logger";
+//{validator
+import { IsString, IsNumberString } from "class-validator";
+//}
 
 //{filter
 @UseFilters(AuthFilter)
@@ -44,6 +54,28 @@ export default class extends Action {
   //{pipe
   @Header("host")
   private readonly host!: string;
+  //}
+
+  //{pipe
+  ///{validator
+  @IsString()
+  ///}
+  ///{swagger
+  @DtoRequired()
+  @DtoLengthRange({ min: 6, max: 20 })
+  @DtoDescription("user name")
+  ///}
+  @Query("userName")
+  private readonly userName!: string;
+  ///{validator
+  @IsNumberString()
+  ///}
+  ///{swagger
+  @DtoRequired()
+  @DtoDescription("user id")
+  ///}
+  @Query("userId")
+  private readonly userId!: string;
   //}
 
   async invoke(): Promise<void> {
