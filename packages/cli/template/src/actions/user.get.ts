@@ -3,6 +3,7 @@ import { UseFilters } from "@ipare/filter";
 import { Inject } from "@ipare/inject";
 import { Header, Query } from "@ipare/pipe";
 import { Action } from "@ipare/router";
+//{swagger
 import {
   ApiDescription,
   ApiResponses,
@@ -11,6 +12,7 @@ import {
   DtoLengthRange,
   DtoRequired,
 } from "@ipare/swagger";
+//}
 //{filter
 import { AuthFilter } from "../filters/auth.filter";
 //}
