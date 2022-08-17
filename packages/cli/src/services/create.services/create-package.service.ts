@@ -7,7 +7,7 @@ import * as fs from "fs";
 import { PackageManagerService } from "../package-manager.service";
 import {
   CreatePluginService,
-  FixedPluginConfig,
+  SortedPluginConfig,
 } from "./create-plugin.service";
 import prettier from "prettier";
 import { Plugin } from "../../utils/plugins";
@@ -72,7 +72,7 @@ export class CreatePackageService {
   private setDeps(
     deps: Record<string, string>,
     plugins: Plugin[],
-    pluginConfig: FixedPluginConfig
+    pluginConfig: SortedPluginConfig
   ) {
     if (!deps) return;
 
