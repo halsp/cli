@@ -12,6 +12,7 @@ import { CopyBaseService } from "../services/create.services/copy-base-files.ser
 import inquirer from "inquirer";
 import { RunnerService } from "../services/runner.service";
 import { Middleware } from "@ipare/core";
+import chalk from "chalk";
 
 export class CreateMiddleware extends Middleware {
   @Inject
@@ -73,6 +74,17 @@ export class CreateMiddleware extends Middleware {
       plugins,
       path.join(this.targetDir)
     );
+
+    const consolePlugins = fixedPlugins
+      .filter((p) => p != "core")
+      .map((p) => `@ipare/${p}`);
+    console.log("\n");
+    console.log(
+      chalk.bold("Fixed plugins"),
+      chalk.greenBright(consolePlugins.join(", "))
+    );
+    console.log("\n");
+
     await this.createTemplateService.create(fixedPlugins);
     this.initGit();
     this.runApp();
