@@ -1,6 +1,6 @@
 {
   "name": "@ipare/cli",
-  "version": "0.4.5",
+  "version": "0.4.6",
   "description": "Ipare 的命令行脚手架工具",
   "engines": {
     "node": ">=12.16.0"
@@ -31,10 +31,10 @@
   "author": "hal-wang",
   "license": "MIT",
   "dependencies": {
-    "@ipare/core": "^1.8.4",
-    "@ipare/http": "^1.8.4",
-    "@ipare/inject": "^1.8.4",
-    "@ipare/pipe": "^1.8.4",
+    "@ipare/core": "^1.8.5",
+    "@ipare/http": "^1.8.5",
+    "@ipare/inject": "^1.8.5",
+    "@ipare/pipe": "^1.8.5",
     "@types/cross-spawn": "^6.0.2",
     "chalk": "^4.1.2",
     "child_process": "^1.0.2",
@@ -60,7 +60,7 @@
     "@types/ignore-walk": "^4.0.0",
     "@types/inquirer": "^8.2.1",
     "@types/jest": "^28.1.7",
-    "@types/lodash": "^4.14.182",
+    "@types/lodash": "^4.14.184",
     "@types/node": "^18.7.6",
     "@types/shelljs": "^0.8.11",
     "@typescript-eslint/eslint-plugin": "^5.33.1",
