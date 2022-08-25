@@ -5,9 +5,6 @@ import { ApiDescription, ApiResponses, ApiTags } from "@ipare/swagger";
 //{pipe
 import { LoginDto } from "../dtos/login.dto";
 //}
-//{validator
-import { IsNumberString, IsString } from "class-validator";
-//}
 
 //{swagger
 @ApiTags("user")
