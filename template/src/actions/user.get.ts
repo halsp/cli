@@ -19,7 +19,7 @@ import { AuthFilter } from "../filters/auth.filter";
 //{inject
 import { UserService } from "../services/user.service";
 //}
-import { Logger, winston } from "@ipare/logger";
+import { Logger, LoggerInject } from "@ipare/logger";
 //{validator
 import { IsString, IsNumberString } from "class-validator";
 //}
@@ -49,8 +49,8 @@ export default class extends Action {
   private readonly userService!: UserService;
   //}
   //{logger
-  @Logger()
-  private readonly logger!: winston.Logger;
+  @LoggerInject()
+  private readonly logger!: Logger;
   //}
 
   //{pipe
