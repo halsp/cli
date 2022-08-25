@@ -1,7 +1,7 @@
 //{inject
 //{pipe
 import { HttpContext } from "@ipare/core";
-import { Logger, winston } from "@ipare/logger";
+import { LoggerInject, Logger } from "@ipare/logger";
 //}
 import { Context, Query } from "@ipare/pipe";
 //{validator
@@ -14,8 +14,8 @@ export class UserService {
   private readonly ctx!: HttpContext;
   //}
   //{logger
-  @Logger()
-  private readonly logger!: winston.Logger;
+  @LoggerInject()
+  private readonly logger!: Logger;
   //}
 
   //{!router&&validator
