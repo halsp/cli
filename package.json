@@ -32,10 +32,10 @@
   "author": "hal-wang",
   "license": "MIT",
   "dependencies": {
-    "@ipare/core": "^1.8.11",
-    "@ipare/http": "^1.8.11",
-    "@ipare/inject": "^1.8.11",
-    "@ipare/pipe": "^1.8.11",
+    "@ipare/core": "^1.8.12",
+    "@ipare/http": "^1.8.12",
+    "@ipare/inject": "^1.8.12",
+    "@ipare/pipe": "^1.8.12",
     "@types/cross-spawn": "^6.0.2",
     "chalk": "^4.1.2",
     "child_process": "^1.0.2",
@@ -52,11 +52,11 @@
     "shelljs": "^0.8.5",
     "tree-kill": "^1.2.2",
     "ts-node": "^10.9.1",
-    "typescript": "^4.7.4"
+    "typescript": "^4.8.2"
   },
   "devDependencies": {
-    "@commitlint/cli": "^17.0.3",
-    "@commitlint/config-conventional": "^17.0.3",
+    "@commitlint/cli": "^17.1.1",
+    "@commitlint/config-conventional": "^17.1.0",
     "@types/figlet": "^1.5.5",
     "@types/ignore-walk": "^4.0.0",
     "@types/inquirer": "^8.2.1",
@@ -68,7 +68,7 @@
     "@typescript-eslint/parser": "^5.35.1",
     "codecov": "^3.8.3",
     "cross-env": "^7.0.3",
-    "eslint": "^8.22.0",
+    "eslint": "^8.23.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.2.1",
     "husky": "^8.0.1",
