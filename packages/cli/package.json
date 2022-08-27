@@ -1,6 +1,6 @@
 {
   "name": "@ipare/cli",
-  "version": "0.4.7",
+  "version": "0.4.8",
   "description": "Ipare 的命令行脚手架工具",
   "engines": {
     "node": ">=12.16.0"
@@ -23,7 +23,7 @@
     "build:create-ipare": "ts-node scripts/create-ipare.ts && npm run build",
     "publish:beta": "npm run build && npm publish --tag=beta --access=public",
     "test": "npm run build && jest",
-    "tests": "sh scripts/tests.sh",
+    "ci-test": "sh scripts/ci-test.sh",
     "lint": "eslint src --ext .ts",
     "dev": "npm run build && npm uninstall @ipare/cli -g && npm link",
     "prepare": "husky install"
