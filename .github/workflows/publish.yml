@@ -21,7 +21,7 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
-      - run: npm run tests
+      - run: npm run ci-test
       - run: npx codecov
 
   try-publish-npm:
