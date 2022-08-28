@@ -40,7 +40,7 @@ export default <T extends Startup>(startup: T, mode: string) =>
       ctx.res.setHeader("mode", mode);
       await next();
     })
-    //{
+    //{inject
     .useInject()
     //}
     //{logger
