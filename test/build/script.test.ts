@@ -10,6 +10,7 @@ test(`build script`, async () => {
   await runin(`test/build/script`, async () => {
     await new CliStartup("test", undefined, {
       copyPackage: true,
+      removeDevDeps: true,
       mode: "production",
     })
       .use(async (ctx, next) => {
@@ -30,6 +31,10 @@ test(`build script`, async () => {
     expect(fs.existsSync("./.ipare-cache")).toBeTruthy();
     expect(fs.existsSync("./.ipare-cache/build-test.js")).toBeTruthy();
     expect(fs.existsSync("./.ipare-cache/package.json")).toBeTruthy();
+    expect(
+      JSON.parse(fs.readFileSync("./.ipare-cache/package.json", "utf-8"))
+        .devDependencies
+    ).toEqual({});
     callCount++;
   });
   expect(callCount).toBe(2);

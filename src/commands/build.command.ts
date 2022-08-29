@@ -14,6 +14,10 @@ export class BuildCommand extends BaseCommand {
       .setBuildOptions("production")
       .option("-sm, --sourceMap", "Whether to generate source map files.")
       .option("-cp, --copyPackage", "Copy package.json to out dir.")
+      .option(
+        "--removeDevDeps",
+        "Remove devDependencies in package.json file when --copyPackage is on."
+      )
       .action(async (command: Record<string, boolean | string>) => {
         await new CliStartup("build", undefined, command)
           .add(BuildMiddlware)
