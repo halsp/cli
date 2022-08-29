@@ -16,7 +16,7 @@
   },
   "main": "dist/index.js",
   "scripts": {
-    "dev": "ipare start",
+    "dev": "npm start",
     "start": "ipare start",
     "build": "ipare build",
     "lint": "eslint src --ext .ts"

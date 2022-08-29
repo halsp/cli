@@ -8,6 +8,7 @@ import { WatchCompilerService } from "../services/build.services/watch-compiler.
 import * as fs from "fs";
 import { HookService } from "../services/build.services/hook.service";
 import { Middleware } from "@ipare/core";
+import prettier from "prettier";
 
 export class BuildMiddlware extends Middleware {
   @Inject
@@ -89,6 +90,11 @@ export class BuildMiddlware extends Middleware {
       false
     );
     if (!copy) return;
+    const removeDevDeps = this.configService.getOptionOrConfigValue(
+      "removeDevDeps",
+      "build.removeDevDeps",
+      false
+    );
 
     const filePath = path.join(process.cwd(), "package.json");
     const targetPath = path.join(this.cacheDir, "package.json");
@@ -96,6 +102,18 @@ export class BuildMiddlware extends Middleware {
     await fs.promises.rm(targetPath, {
       force: true,
     });
-    await fs.promises.copyFile(filePath, targetPath);
+    if (!removeDevDeps) {
+      await fs.promises.copyFile(filePath, targetPath);
+    } else {
+      const txt = await fs.promises.readFile(filePath, "utf-8");
+      const json = JSON.parse(txt);
+      json["devDependencies"] = {};
+      await fs.promises.writeFile(
+        targetPath,
+        prettier.format(JSON.stringify(json), {
+          parser: "json",
+        })
+      );
+    }
   }
 }
