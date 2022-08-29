@@ -2,6 +2,8 @@ import { CompilerService } from "../../src/services/build.services/compiler.serv
 import { runTest } from "./runTest";
 import * as fs from "fs";
 import { WatchCompilerService } from "../../src/services/build.services/watch-compiler.service";
+import path from "path";
+import ts from "typescript";
 
 runTest(CompilerService, async (ctx, service) => {
   fs.rmSync("./dist-compiler", {
@@ -51,3 +53,17 @@ function runCompilerOptions(command: "start" | "build") {
 }
 runCompilerOptions("start");
 runCompilerOptions("build");
+
+runTest(WatchCompilerService, async (ctx, service) => {
+  const targetDir = path.join(__dirname, "dist", "watch-compiler");
+  service.compile(targetDir);
+  const watcher = (service as any)
+    .watcher as ts.WatchOfConfigFile<ts.EmitAndSemanticDiagnosticsBuilderProgram>;
+  const program = watcher.getProgram();
+  program.emit(undefined, undefined, undefined, undefined, {});
+  watcher.close();
+  await fs.promises.rm(targetDir, {
+    force: true,
+    recursive: true,
+  });
+});
