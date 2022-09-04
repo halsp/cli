@@ -2,10 +2,10 @@
 dist
 node_modules
 package-lock.json
-yarn.lock
 pnpm-lock.yaml
 coverage
 .ipare-cache
+env/yarn.lock
 
 *-error.log
 .husky/_

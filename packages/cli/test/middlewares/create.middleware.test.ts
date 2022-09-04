@@ -26,7 +26,8 @@ function testTemplate(plugins: Plugin[]) {
             name: pluginsStr,
           },
           {
-            packageManager: process.env.PACKAGE_MANAGER ?? "npm",
+            packageManager: "npm",
+            registry: process.env.REGISTRY as string,
             plugins: pluginsStr,
             force: true,
             env: "http",
@@ -99,7 +100,8 @@ async function runTest(options: {
         name: options.name ?? testName,
       },
       {
-        packageManager: process.env.PACKAGE_MANAGER ?? "npm",
+        packageManager: "npm",
+        registry: process.env.REGISTRY as string,
         skipPlugins: options.skipPlugins ?? true,
         force: options.force ?? true,
         skipEnv: true,
