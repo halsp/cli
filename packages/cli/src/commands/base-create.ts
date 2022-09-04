@@ -13,19 +13,20 @@ Command.prototype.setCreateOptions = function () {
     "Force create application, delete existing files. ",
     false
   )
-    .option("-e, --env [env]", "The environment to run application")
+    .option("-e, --env <env>", "The environment to run application")
     .option("--skipEnv", "Skip adding environment files")
     .option(
-      "-pm, --packageManager [packageManager]",
+      "-pm, --packageManager <packageManager>",
       "Specify package manager. (npm/yarn/pnpm/cnpm)"
     )
+    .option("--registry <url>", "Override configuration registry")
     .option(
-      "-cv, --cliVersion [version]",
+      "-cv, --cliVersion <version>",
       "Version of @ipare/cli",
       getCliVersion()
     )
     .option(
-      "-ps, --plugins [plugins]",
+      "-ps, --plugins <plugins>",
       "Plugins to add (e.g. view,router,inject)"
     )
     .option("-sg, --skipGit", "Skip git repository initialization")
