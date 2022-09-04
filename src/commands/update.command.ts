@@ -9,7 +9,7 @@ export class UpdateCommand extends BaseCommand {
       .command("update")
       .alias("u")
       .description("Update ipare dependencies")
-      .option("-n, --name [name]", "Specify to update a package")
+      .option("-n, --name <name>", "Specify to update a package")
       .option("-a, --all", "Update all dependencies", false)
       .option(
         "-t, --tag <tag>",
@@ -22,9 +22,10 @@ export class UpdateCommand extends BaseCommand {
         false
       )
       .option(
-        "-p, --packageManager [packageManager]",
+        "-p, --packageManager <packageManager>",
         "Specify package manager. (npm/yarn/pnpm/cnpm)"
       )
+      .option("--registry <url>", "Override configuration registry")
       .option("-si, --skipInstall", "Skip installation", false)
       .action(async (command: Record<string, boolean | string>) => {
         await new CliStartup("update", {}, command).add(UpdateMiddleware).run();
