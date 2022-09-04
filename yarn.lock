@@ -490,40 +490,40 @@
   resolved "https://registry.npmjs.org/@humanwhocodes/object-schema/-/object-schema-1.2.1.tgz"
   integrity sha512-ZnQMnLV4e7hDlUvw8H+U8ASL02SS2Gn6+9Ac3wGGLIe7+je2AeAOxPY+izIPJDfFDb7eDjev0Us8MO1iFRN8hA==
 
-"@ipare/core@^2.0.1":
-  version "2.0.1"
-  resolved "https://registry.npmjs.org/@ipare/core/-/core-2.0.1.tgz#7c6dc036d18882fec07117a6dab6471905f701d8"
-  integrity sha512-b5qD4ZEyE+VDPukSYjIZ5lBp/rQHhAKxyEyUrk47FIFnoAgm4V06aP8JPd8qrzcbGYNb+LRfrbNBqJVkjPs+eg==
+"@ipare/core@^2.0.2":
+  version "2.0.2"
+  resolved "https://registry.npmjs.org/@ipare/core/-/core-2.0.2.tgz#5973f3c8ed4a9786459581754ca659bd910d88de"
+  integrity sha512-+5jTVjLZmamvkUyCd6jvVHj1tgbcRejvrNJMLvRoprOZcxaAor48Yks8R/5kQMlvRZ44p8BPFdNrOu3zQR22EA==
   dependencies:
     http-status-codes "^2.2.0"
     mime-types "^2.1.35"
 
-"@ipare/http@^2.0.1":
-  version "2.0.1"
-  resolved "https://registry.npmjs.org/@ipare/http/-/http-2.0.1.tgz#66f76c7d838763d647809a0e93151c035734016d"
-  integrity sha512-ck4+hHyJplOwhCXqy/ynNFwGmTSTE/aUYJLxi8IDA9iYlmdPX3RHbfM2pXVhTxbvMoLd323BNyymquGTL/Zeog==
+"@ipare/http@^2.0.2":
+  version "2.0.2"
+  resolved "https://registry.npmjs.org/@ipare/http/-/http-2.0.2.tgz#00a38e63966953afcaf6376f1e0d1ebfbc6508bd"
+  integrity sha512-KhAaDIy0izBWI8xzQcCUuVSxI7QchXWFfGLH4eR0vAGEZzH+k9p4Z4Bw0/A5Gs1q1JbHJRIUArVnIOB0SrRxSA==
   dependencies:
-    "@ipare/core" "^2.0.1"
+    "@ipare/core" "^2.0.2"
     co-body "^6.1.0"
     formidable "^2.0.1"
     type-is "^1.6.18"
     url-parse "^1.5.10"
 
-"@ipare/inject@^2.0.1":
-  version "2.0.1"
-  resolved "https://registry.npmjs.org/@ipare/inject/-/inject-2.0.1.tgz#a5d9d82c796dc2cb2857149f52adb87031064890"
-  integrity sha512-OYFVxWkvs5M1+snptrmIIHReBa+ZxrEzRXiOXQmQ6Un+0H+hJiXhMdieb1xxBCOXgfNCwBbsSYsBnPYjpzNKsw==
+"@ipare/inject@^2.0.2":
+  version "2.0.2"
+  resolved "https://registry.npmjs.org/@ipare/inject/-/inject-2.0.2.tgz#dc8ade3c4d1c7e27f5662d8aef74426175cdaff5"
+  integrity sha512-bEAMrt3j3XG2cQEV1tYLYMzYM5jCX6kmv42hG14mf6+I0eTz9xlW6JRvkqe6lwXp1QKfzQVNRauG2NBlAM981w==
   dependencies:
-    "@ipare/core" "^2.0.1"
+    "@ipare/core" "^2.0.2"
     reflect-metadata "^0.1.13"
 
-"@ipare/pipe@^2.0.1":
-  version "2.0.1"
-  resolved "https://registry.npmjs.org/@ipare/pipe/-/pipe-2.0.1.tgz#4ec2869eefea31e456d8eaf8d36115f5326252b2"
-  integrity sha512-E1N+i6kDa6NxdZJF6dh7zzmrDWDnkZoF6L+jwmRnJtKBUtdKNB3YivGWFzQBKRT9L0MWhNSvhh35+dGoBMO2Og==
+"@ipare/pipe@^2.0.2":
+  version "2.0.2"
+  resolved "https://registry.npmjs.org/@ipare/pipe/-/pipe-2.0.2.tgz#b8b90bf7f7c4bc99601f437ca51ebd60e1271d23"
+  integrity sha512-TTpoaaQAIY48ZtZkGedzPGLDA9n2T+HcOfYDIh1qFqJ2wNZcojxpSK4kfe1r7K40yYGlgqthaov/nXGpmUXM3A==
   dependencies:
-    "@ipare/core" "^2.0.1"
-    "@ipare/inject" "^2.0.1"
+    "@ipare/core" "^2.0.2"
+    "@ipare/inject" "^2.0.2"
     class-transformer "^0.5.1"
     reflect-metadata "^0.1.13"
 
