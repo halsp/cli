@@ -3,16 +3,7 @@ import { UseFilters } from "@ipare/filter";
 import { Inject } from "@ipare/inject";
 import { Header, Query } from "@ipare/pipe";
 import { Action } from "@ipare/router";
-//{swagger
-import {
-  ApiDescription,
-  ApiResponses,
-  ApiTags,
-  DtoDescription,
-  DtoLengthRange,
-  DtoRequired,
-} from "@ipare/swagger";
-//}
+import { V } from "@ipare/validator";
 //{filter
 import { AuthFilter } from "../filters/auth.filter";
 //}
@@ -20,28 +11,16 @@ import { AuthFilter } from "../filters/auth.filter";
 import { UserService } from "../services/user.service";
 //}
 import { Logger, LoggerInject } from "@ipare/logger";
-//{validator
-import { IsString, IsNumberString } from "class-validator";
+
+//{swagger
+import { LoginDto } from "../dtos/login.dto";
 //}
 
 //{filter
 @UseFilters(AuthFilter)
 //}
 //{swagger
-@ApiTags("user")
-@ApiDescription("Get user info")
-@ApiResponses({
-  "200": {
-    description: "success",
-    content: {
-      "application/json": {
-        schema: {
-          $ref: "#/components/schemas/LoginDto",
-        },
-      },
-    },
-  },
-})
+@V().Tags("user").Description("Get user info").Response(LoginDto)
 //}
 export default class extends Action {
   //{inject
@@ -59,22 +38,19 @@ export default class extends Action {
   //}
 
   //{pipe
-  ///{validator
-  @IsString()
+  ///{validator&&!swagger
+  @V().IsString()
   ///}
   ///{swagger
-  @DtoRequired()
-  @DtoLengthRange({ min: 6, max: 20 })
-  @DtoDescription("user name")
+  @V().Required().IsString().MinLength(6).MaxLength(20).Description("user name")
   ///}
   @Query("userName")
   private readonly userName!: string;
-  ///{validator
-  @IsNumberString()
+  ///{validator&&!swagger
+  @V().IsNumberString()
   ///}
   ///{swagger
-  @DtoRequired()
-  @DtoDescription("user id")
+  @V().Required().IsNumberString().Description("user id")
   ///}
   @Query("userId")
   private readonly userId!: string;
