@@ -48,23 +48,20 @@ export default <T extends Startup>(startup: T, mode: string) =>
     //}
     // { swagger
     .useSwagger({
+      path: "",
       builder: (builder) =>
         builder
-          .addInfo({
-            title: "NewApplication",
-            description: "A new application",
-            version: version,
-            license: {
-              name: "MIT",
-            },
-            contact: {
-              email: "hi@hal.wang",
-            },
+          .addTitle("NewApplication")
+          .addDescription("A new application")
+          .addLicense({
+            name: "MIT",
+          })
+          .addContact({
+            email: "hi@hal.wang",
           })
           .addServer({
             url: "/",
           })
-          .addOpenApiVersion("3.0.0")
           .addSecurityScheme("password", {
             type: "apiKey",
             in: "header",
@@ -134,7 +131,7 @@ export default <T extends Startup>(startup: T, mode: string) =>
     .useRouter();
 // }
 
-//{swagger || !env
+//{!env
 const version = (() => {
   const pkgName = "package.json";
   let dir = __dirname;
