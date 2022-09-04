@@ -1,12 +1,10 @@
 //{inject
 //{pipe
 import { HttpContext } from "@ipare/core";
+//}
 import { LoggerInject, Logger } from "@ipare/logger";
-//}
 import { Context, Query } from "@ipare/pipe";
-//{validator
-import { IsString, IsNumberString } from "class-validator";
-//}
+import { V } from "@ipare/validator";
 
 export class UserService {
   //{pipe
@@ -19,10 +17,10 @@ export class UserService {
   //}
 
   //{!router&&validator
-  @IsString()
+  @V().IsString()
   @Query("userName")
   private readonly userName!: string;
-  @IsNumberString()
+  @V().IsNumberString()
   @Query("userId")
   private readonly uid!: string;
   //}

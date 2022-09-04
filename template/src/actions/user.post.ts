@@ -1,29 +1,18 @@
 //{ router
 import { Action } from "@ipare/router";
 import { Body } from "@ipare/pipe";
-import { ApiDescription, ApiResponses, ApiTags } from "@ipare/swagger";
+import { V } from "@ipare/validator";
 //{pipe
 import { LoginDto } from "../dtos/login.dto";
 //}
 
 //{swagger
-@ApiTags("user")
-@ApiDescription("Get user info")
-@ApiResponses({
-  "200": {
-    description: "success",
-    content: {
-      "application/json": {
-        schema: {
-          $ref: "#/components/schemas/LoginDto",
-        },
-      },
-    },
-  },
-  "404": {
-    description: "The account not existing or error password",
-  },
-})
+@V()
+  .Tags("user")
+  .Description("Get user info")
+  .Response(200, LoginDto)
+  .ResponseDescription(200, "success")
+  .ResponseDescription(404, "The account not existing or error password")
 //}
 export default class extends Action {
   //{pipe
