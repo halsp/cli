@@ -33,7 +33,7 @@ export class StartMiddleware extends Middleware {
   private get startupFile() {
     const result = this.configService.getOptionOrConfigValue<string>(
       "startupFile",
-      "startupFile",
+      "startu.startupFile",
       START_DEV_FILE_NAME
     );
     if (result.includes(".")) {
