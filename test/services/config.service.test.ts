@@ -9,7 +9,9 @@ runTest(
       if (name == "cliConfigHook") {
         return [
           (config: Configuration) => {
-            config.startupFile = "t1";
+            config.start = {
+              startupFile: "t1",
+            };
           },
         ];
       } else {
@@ -18,12 +20,12 @@ runTest(
     };
 
     const cfg = await (service as any).loadConfig();
-    expect(cfg.startupFile).toBe("t1");
+    expect(cfg.start.startupFile).toBe("t1");
   },
   undefined,
   undefined,
   {
-    jsonConfig: `{"startupFile":"t1"}`,
+    jsonConfig: `{"start":{"startupFile":"t1"}}`,
   }
 );
 
@@ -34,7 +36,9 @@ runTest(
       if (name == "cliConfigHook") {
         return [
           () => ({
-            startupFile: "t1",
+            start: {
+              startupFile: "t1",
+            },
           }),
         ];
       } else {
@@ -43,11 +47,11 @@ runTest(
     };
 
     const cfg = await (service as any).loadConfig();
-    expect(cfg.startupFile).toBe("t1");
+    expect(cfg.start.startupFile).toBe("t1");
   },
   undefined,
   undefined,
   {
-    jsonConfig: `{"startupFile":"t2"}`,
+    jsonConfig: `{"start":{"startupFile":"t2"}}`,
   }
 );

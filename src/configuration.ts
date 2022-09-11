@@ -62,8 +62,8 @@ export interface Configuration {
     port?: number;
     binaryToRun?: string;
     inspect?: boolean | string;
+    startupFile?: string;
   };
-  startupFile?: string;
 }
 
 export function defineConfig(
