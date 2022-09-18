@@ -13,7 +13,10 @@ Command.prototype.setCreateOptions = function () {
     "Force create application, delete existing files. ",
     false
   )
-    .option("-e, --env <env>", "The environment to run application")
+    .option(
+      "-e, --env <env>",
+      "The environment to run application. (lambda/http/azure/alifc)"
+    )
     .option("--skipEnv", "Skip adding environment files")
     .option(
       "-pm, --packageManager <packageManager>",

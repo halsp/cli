@@ -1,4 +1,4 @@
-// 2.原生 NodeJS 服务
+// 2.NodeJS HTTP
 
 import { HttpStartup } from "@ipare/http";
 import startup from "./startup";

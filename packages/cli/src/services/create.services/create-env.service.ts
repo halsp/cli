@@ -5,11 +5,17 @@ import path from "path";
 import { Inject } from "@ipare/inject";
 import { FileService } from "../file.service";
 import { Context } from "@ipare/pipe";
-import { Env } from "../../utils/plugins";
+import { EnvPlugin, EnvType } from "../../utils/plugins";
 import { CommandService } from "../command.service";
 
-const commentEnvStartRegExp = /^\s*\/{2,}\s+/;
-const commentEnvLineRegExp = /^\s*\/{2,}\s+.+/;
+const commentEnvLineRegExp = /^\s*\/{2,}\s+(\d+)\.(.+)/;
+const commentUseEnvLineRegExp = /^\s*\/{2,}\s+use\s(.+)/;
+
+type EnvConfig = {
+  desc: string;
+  type: EnvType;
+  plugin: EnvPlugin;
+};
 
 export class CreateEnvService {
   @Context
@@ -29,11 +35,11 @@ export class CreateEnvService {
     return path.join(process.cwd(), this.name);
   }
 
-  public async create(): Promise<Env | undefined> {
+  public async create(): Promise<EnvPlugin | undefined> {
     const env = await this.getEnv();
     if (!env) return;
 
-    const sourceFilePath = path.join(this.sourceDir, `${env}.ts`);
+    const sourceFilePath = path.join(this.sourceDir, `${env.type}.ts`);
     const targetFilePath = path.join(this.targetDir, `src/index.ts`);
 
     await this.fileService.createDir(targetFilePath);
@@ -41,26 +47,27 @@ export class CreateEnvService {
     const code = fs
       .readFileSync(sourceFilePath, "utf-8")
       .replace(commentEnvLineRegExp, "")
+      .replace(commentUseEnvLineRegExp, "")
       .trimStart();
     await fs.promises.writeFile(targetFilePath, code);
-    return env;
+    return env.plugin;
   }
 
-  private async getEnv(): Promise<Env | undefined> {
+  private async getEnv(): Promise<EnvConfig | undefined> {
     if (this.commandService.getOptionVlaue<boolean>("skipEnv")) {
       return undefined;
     }
 
-    let env: Env;
+    let envType: EnvType;
     const envs = await this.getExistEnvs();
-    env = this.commandService.getOptionVlaue<string>("env") as Env;
-    if (env && !envs.some((e) => e.value == env)) {
+    envType = this.commandService.getOptionVlaue<string>("env") as EnvType;
+    if (envType && !envs.some((e) => e.type == envType)) {
       throw new Error("The env is not exist");
     }
-    if (!env) {
-      env = await this.getEnvByInquirer(envs);
+    if (!envType) {
+      envType = await this.getEnvByInquirer(envs);
     }
-    return env;
+    return envs.filter((e) => e.type == envType)[0];
   }
 
   private async getExistEnvs() {
@@ -73,38 +80,39 @@ export class CreateEnvService {
       })
       .map((file) => {
         const filePath = path.join(this.sourceDir, file);
-        const title = fs
+        const lines = fs
           .readFileSync(filePath, "utf-8")
           .replace(/\r\n/g, "\n")
-          .split("\n")
-          .filter((line) => commentEnvStartRegExp.test(line))[0]
-          .replace(commentEnvStartRegExp, "");
-        const env = file.replace(/\.ts$/, "");
-        const strs = title.split(".").map((item) => item.trim());
+          .split("\n");
+        const execArr = lines
+          .filter((line) => commentEnvLineRegExp.test(line))[0]
+          .match(commentEnvLineRegExp) as RegExpExecArray;
+
+        const useEnvExec = lines
+          .filter((line) => commentUseEnvLineRegExp.test(line))[0]
+          ?.match(commentUseEnvLineRegExp);
+
         return {
-          order: Number(strs[0]),
-          name: strs[1],
-          value: env,
-          // TODO
-        };
+          order: Number(execArr[1]),
+          desc: execArr[2],
+          type: file.replace(/\.ts$/, ""),
+          plugin: useEnvExec ? useEnvExec[1] : file.replace(/\.ts$/, ""),
+        } as EnvConfig & { order: number };
       })
-      .sort((a, b) => a.order - b.order)
-      .map((item) => ({
-        name: item.name,
-        value: item.value,
-      }));
+      .sort((a, b) => a.order - b.order);
   }
 
-  private async getEnvByInquirer(
-    envs: { name: string; value: string }[]
-  ): Promise<Env> {
+  private async getEnvByInquirer(envs: EnvConfig[]): Promise<EnvType> {
     const { env } = await inquirer.prompt([
       {
         type: "list",
         message: "Pick the environment to run application:",
         name: "env",
         default: "http",
-        choices: envs,
+        choices: envs.map((item) => ({
+          name: `${item.desc} (@ipare/${item.plugin})`,
+          value: item.type,
+        })),
       },
     ]);
     return env;

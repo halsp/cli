@@ -19,7 +19,7 @@ runTest(
   CreateEnvService,
   async (ctx, service) => {
     const env = await (service as any).getEnv();
-    expect(env).toBe("lambda");
+    expect(env.type).toBe("lambda");
   },
   undefined,
   undefined,
@@ -52,7 +52,20 @@ runTest(CreateEnvService, async (ctx, service) => {
   inquirer.prompt = (() => Promise.resolve({ env: "lambda" })) as any;
   try {
     const env = await (service as any).getEnv();
-    expect(env).toBe("lambda");
+    expect(env.plugin).toBe("lambda");
+    expect(env.type).toBe("lambda");
+  } finally {
+    inquirer.prompt = prompt;
+  }
+});
+
+runTest(CreateEnvService, async (ctx, service) => {
+  const prompt = inquirer.prompt;
+  inquirer.prompt = (() => Promise.resolve({ env: "azure" })) as any;
+  try {
+    const env = await (service as any).getEnv();
+    expect(env.plugin).toBe("lambda");
+    expect(env.type).toBe("azure");
   } finally {
     inquirer.prompt = prompt;
   }
