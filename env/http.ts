@@ -1,5 +1,3 @@
-// 1.NodeJS HTTP
-
 import { HttpStartup } from "@ipare/http";
 import startup from "./startup";
 

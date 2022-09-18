@@ -5,17 +5,21 @@ import path from "path";
 import { Inject } from "@ipare/inject";
 import { FileService } from "../file.service";
 import { Context } from "@ipare/pipe";
-import { EnvPlugin, EnvType } from "../../utils/plugins";
+import { EnvPlugin } from "../../utils/plugins";
 import { CommandService } from "../command.service";
 
-const commentEnvLineRegExp = /^\s*\/{2,}\s+(\d+)\.(.+)/;
-const commentUseEnvLineRegExp = /^\s*\/{2,}\s+use\s(.+)/;
-
-type EnvConfig = {
+type EnvConfigItem = {
   desc: string;
-  type: EnvType;
+  file: string;
   plugin: EnvPlugin;
 };
+type EnvConfigType = {
+  desc: string;
+  children: EnvConfigItem[];
+  pickMessage: string;
+};
+
+type EnvConfig = EnvConfigItem | EnvConfigType;
 
 export class CreateEnvService {
   @Context
@@ -39,82 +43,78 @@ export class CreateEnvService {
     const env = await this.getEnv();
     if (!env) return;
 
-    const sourceFilePath = path.join(this.sourceDir, `${env.type}.ts`);
+    const sourceFilePath = path.join(this.sourceDir, `${env.file}.ts`);
     const targetFilePath = path.join(this.targetDir, `src/index.ts`);
 
     await this.fileService.createDir(targetFilePath);
-
-    const code = fs
-      .readFileSync(sourceFilePath, "utf-8")
-      .replace(commentEnvLineRegExp, "")
-      .replace(commentUseEnvLineRegExp, "")
-      .trimStart();
-    await fs.promises.writeFile(targetFilePath, code);
+    await fs.promises.copyFile(sourceFilePath, targetFilePath);
     return env.plugin;
   }
 
-  private async getEnv(): Promise<EnvConfig | undefined> {
+  private async getEnv(): Promise<EnvConfigItem | undefined> {
     if (this.commandService.getOptionVlaue<boolean>("skipEnv")) {
       return undefined;
     }
 
-    let envType: EnvType;
-    const envs = await this.getExistEnvs();
-    envType = this.commandService.getOptionVlaue<string>("env") as EnvType;
-    if (envType && !envs.some((e) => e.type == envType)) {
+    let envType: string;
+    const envConfig = this.getEnvConfig();
+    const envs = this.getEnvs(envConfig);
+    envType = this.commandService.getOptionVlaue<string>("env") as string;
+    if (envType && !this.getEnvs(envConfig).some((e) => e.file == envType)) {
       throw new Error("The env is not exist");
     }
     if (!envType) {
-      envType = await this.getEnvByInquirer(envs);
+      envType = await this.getEnvByInquirer(envConfig);
     }
-    return envs.filter((e) => e.type == envType)[0];
+    return envs.filter((e) => e.file == envType)[0];
   }
 
-  private async getExistEnvs() {
-    return (await fs.promises.readdir(this.sourceDir))
-      .filter((file) => file.endsWith(".ts"))
-      .filter((file) => !file.endsWith("startup.ts"))
-      .filter((file) => {
-        const stat = fs.statSync(path.join(this.sourceDir, file));
-        return stat.isFile();
-      })
-      .map((file) => {
-        const filePath = path.join(this.sourceDir, file);
-        const lines = fs
-          .readFileSync(filePath, "utf-8")
-          .replace(/\r\n/g, "\n")
-          .split("\n");
-        const execArr = lines
-          .filter((line) => commentEnvLineRegExp.test(line))[0]
-          .match(commentEnvLineRegExp) as RegExpExecArray;
-
-        const useEnvExec = lines
-          .filter((line) => commentUseEnvLineRegExp.test(line))[0]
-          ?.match(commentUseEnvLineRegExp);
-
-        return {
-          order: Number(execArr[1]),
-          desc: execArr[2],
-          type: file.replace(/\.ts$/, ""),
-          plugin: useEnvExec ? useEnvExec[1] : file.replace(/\.ts$/, ""),
-        } as EnvConfig & { order: number };
-      })
-      .sort((a, b) => a.order - b.order);
+  private getEnvConfig(): EnvConfig[] {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    return require(path.join(this.sourceDir, "config.json"));
   }
 
-  private async getEnvByInquirer(envs: EnvConfig[]): Promise<EnvType> {
-    const { env } = await inquirer.prompt([
+  private getEnvs(config: EnvConfig[]) {
+    const result: EnvConfigItem[] = [];
+
+    config
+      .filter((item) => "file" in item)
+      .forEach((item) => result.push(item as EnvConfigItem));
+
+    config
+      .filter((item) => "children" in item)
+      .forEach((item) => {
+        (item as EnvConfigType).children.forEach((item) => result.push(item));
+      });
+
+    return result;
+  }
+
+  private async getEnvByInquirer(
+    envConfig: EnvConfig[],
+    message?: string
+  ): Promise<string> {
+    message = message ?? "Pick the environment to run application";
+    const answer = await inquirer.prompt([
       {
         type: "list",
-        message: "Pick the environment to run application:",
+        message: message,
         name: "env",
-        default: "http",
-        choices: envs.map((item) => ({
-          name: `${item.desc} (@ipare/${item.plugin})`,
-          value: item.type,
+        default: envConfig[0],
+        choices: envConfig.map((item) => ({
+          name:
+            "file" in item
+              ? `${item.desc} (@ipare/${item.plugin})`
+              : `${item.desc} ->`,
+          value: item,
         })),
       },
     ]);
-    return env;
+    const env = answer.env as EnvConfig;
+    if ("file" in env) {
+      return env.file;
+    } else {
+      return await this.getEnvByInquirer(env.children, env.pickMessage);
+    }
   }
 }

@@ -1,7 +1,6 @@
 type PluginItem = { value: string; name: string; default?: boolean };
 
 export type EnvPlugin = "http" | "lambda" | "alifc";
-export type EnvType = EnvPlugin | "azure";
 
 export type Plugin =
   | "inject"

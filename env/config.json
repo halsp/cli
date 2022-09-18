@@ -1,0 +1,65 @@
+[
+  {
+    "desc": "NodeJS HTTP",
+    "file": "http",
+    "plugin": "http"
+  },
+  {
+    "desc": "腾讯云函数",
+    "pickMessage": "选择云函数类型",
+    "children": [
+      {
+        "desc": "事件函数",
+        "file": "lambda",
+        "plugin": "lambda"
+      },
+      {
+        "desc": "Web 函数",
+        "file": "sls-http-tcloud",
+        "plugin": "http"
+      }
+    ]
+  },
+  {
+    "desc": "Azure Function App",
+    "file": "azure",
+    "plugin": "lambda"
+  },
+  {
+    "desc": "AWS Lambda",
+    "file": "lambda",
+    "plugin": "lambda"
+  },
+  {
+    "desc": "阿里云函数计算",
+    "pickMessage": "选择云函数类型",
+    "children": [
+      {
+        "desc": "处理事件请求",
+        "file": "lambda",
+        "plugin": "lambda"
+      },
+      {
+        "desc": "处理 HTTP 请求",
+        "file": "alifc",
+        "plugin": "alifc"
+      }
+    ]
+  },
+  {
+    "desc": "华为云函数工作流",
+    "pickMessage": "选择云函数类型",
+    "children": [
+      {
+        "desc": "事件函数",
+        "file": "lambda",
+        "plugin": "lambda"
+      },
+      {
+        "desc": "Web 函数",
+        "file": "sls-http-huawei",
+        "plugin": "http"
+      }
+    ]
+  }
+]
