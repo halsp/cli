@@ -1,7 +1,10 @@
-// 1.云函数 Serverless
+// 3.Azure 函数计算
+// use lambda
 
 import { LambdaStartup } from "@ipare/lambda";
 import startup from "./startup";
 
 const app = startup(new LambdaStartup(), "production");
-export const main = (event: any, context: any) => app.run(event, context);
+export default async (context: any, req: any) => {
+  context.res = await app.run(req, context);
+};

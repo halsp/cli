@@ -1,6 +1,7 @@
 type PluginItem = { value: string; name: string; default?: boolean };
 
-export type Env = "http" | "lambda" | "alifc";
+export type EnvPlugin = "http" | "lambda" | "alifc";
+export type EnvType = EnvPlugin | "azure";
 
 export type Plugin =
   | "inject"
@@ -18,7 +19,7 @@ export type Plugin =
   | "validator"
   | "env"
   | "logger"
-  | Env;
+  | EnvPlugin;
 
 export const allPlugins: PluginItem[] = [
   {

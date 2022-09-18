@@ -1,4 +1,4 @@
-// 3.阿里云函数计算
+// 4.阿里云函数计算
 
 import { AlifcStartup } from "@ipare/alifc";
 import startup from "./startup";
