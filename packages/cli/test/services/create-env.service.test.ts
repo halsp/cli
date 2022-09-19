@@ -19,7 +19,7 @@ runTest(
   CreateEnvService,
   async (ctx, service) => {
     const env = await (service as any).getEnv();
-    expect(env.type).toBe("lambda");
+    expect(env.file).toBe("lambda");
   },
   undefined,
   undefined,
@@ -49,11 +49,12 @@ runTest(
 
 runTest(CreateEnvService, async (ctx, service) => {
   const prompt = inquirer.prompt;
-  inquirer.prompt = (() => Promise.resolve({ env: "lambda" })) as any;
+  inquirer.prompt = (() =>
+    Promise.resolve({ env: { plugin: "lambda", file: "lambda" } })) as any;
   try {
     const env = await (service as any).getEnv();
     expect(env.plugin).toBe("lambda");
-    expect(env.type).toBe("lambda");
+    expect(env.file).toBe("lambda");
   } finally {
     inquirer.prompt = prompt;
   }
@@ -61,11 +62,31 @@ runTest(CreateEnvService, async (ctx, service) => {
 
 runTest(CreateEnvService, async (ctx, service) => {
   const prompt = inquirer.prompt;
-  inquirer.prompt = (() => Promise.resolve({ env: "azure" })) as any;
+  inquirer.prompt = (() => {
+    inquirer.prompt = (() =>
+      Promise.resolve({
+        env: { file: "sls-http-tcloud", plugin: "http" },
+      })) as any;
+    return Promise.resolve({
+      env: {
+        pickMessage: "",
+        children: [
+          {
+            file: "lambda",
+            plugin: "lambda",
+          },
+          {
+            file: "sls-http-tcloud",
+            plugin: "http",
+          },
+        ],
+      },
+    });
+  }) as any;
   try {
     const env = await (service as any).getEnv();
-    expect(env.plugin).toBe("lambda");
-    expect(env.type).toBe("azure");
+    expect(env.plugin).toBe("http");
+    expect(env.file).toBe("sls-http-tcloud");
   } finally {
     inquirer.prompt = prompt;
   }
