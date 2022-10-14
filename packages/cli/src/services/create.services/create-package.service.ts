@@ -43,7 +43,7 @@ export class CreatePackageService {
 
     this.setCliVersion(pkg);
     pkg.name = this.name;
-    pkg.version = this.getCurrentVersion();
+    pkg.version = this.getCurrentVersion().replace(/^\^/, "");
 
     const filePath = path.join(this.targetDir, "package.json");
     await fs.promises.writeFile(
@@ -116,7 +116,7 @@ export class CreatePackageService {
   }
 
   private getCurrentVersion() {
-    let version = this.commandService.getOptionVlaue<string>("cliVersion");
+    let version = this.commandService.getOptionVlaue<string>("cliVersion", "");
     if (version == "cli-test" || version == "test-cli") {
       version = path.join(__dirname, "../../..");
     }
