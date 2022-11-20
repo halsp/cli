@@ -65,7 +65,7 @@ runTest(CreateEnvService, async (ctx, service) => {
   inquirer.prompt = (() => {
     inquirer.prompt = (() =>
       Promise.resolve({
-        env: { file: "sls-http-tcloud", plugin: "http" },
+        env: { file: "sls-http-tcloud", plugin: "native" },
       })) as any;
     return Promise.resolve({
       env: {
@@ -77,7 +77,7 @@ runTest(CreateEnvService, async (ctx, service) => {
           },
           {
             file: "sls-http-tcloud",
-            plugin: "http",
+            plugin: "native",
           },
         ],
       },
@@ -85,7 +85,7 @@ runTest(CreateEnvService, async (ctx, service) => {
   }) as any;
   try {
     const env = await (service as any).getEnv();
-    expect(env.plugin).toBe("http");
+    expect(env.plugin).toBe("native");
     expect(env.file).toBe("sls-http-tcloud");
   } finally {
     inquirer.prompt = prompt;

@@ -30,7 +30,7 @@ function testTemplate(plugins: Plugin[]) {
             registry: process.env.REGISTRY as string,
             plugins: pluginsStr,
             force: true,
-            env: "http",
+            env: "native",
             cliVersion: "../../../../",
             skipGit: true,
             skipRun: true,

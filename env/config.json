@@ -16,7 +16,7 @@
       {
         "desc": "Web 函数",
         "file": "sls-http-tcloud",
-        "plugin": "http"
+        "plugin": "native"
       }
     ]
   },
@@ -58,7 +58,7 @@
       {
         "desc": "Web 函数",
         "file": "sls-http-huawei",
-        "plugin": "http"
+        "plugin": "native"
       }
     ]
   },

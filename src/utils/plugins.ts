@@ -1,6 +1,6 @@
 type PluginItem = { value: string; name: string; default?: boolean };
 
-export type EnvPlugin = "http" | "lambda" | "alifc";
+export type EnvPlugin = "native" | "lambda" | "alifc";
 
 export type Plugin =
   | "inject"
