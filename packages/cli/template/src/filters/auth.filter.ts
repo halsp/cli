@@ -1,9 +1,9 @@
 //{ filter
-import { HttpContext } from "@ipare/core";
+import { Context } from "@ipare/core";
 import { AuthorizationFilter } from "@ipare/filter";
 
 export class AuthFilter implements AuthorizationFilter {
-  onAuthorization(ctx: HttpContext): boolean | Promise<boolean> {
+  onAuthorization(ctx: Context): boolean | Promise<boolean> {
     ctx.bag("user", {
       id: 1,
       email: "hi@hal.wang",

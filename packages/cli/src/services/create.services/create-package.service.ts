@@ -1,6 +1,6 @@
-import { HttpContext } from "@ipare/core";
+import { Context } from "@ipare/core";
 import { Inject } from "@ipare/inject";
-import { Context } from "@ipare/pipe";
+import { InjectContext } from "@ipare/pipe";
 import path from "path";
 import { CreateEnvService } from "./create-env.service";
 import * as fs from "fs";
@@ -14,8 +14,8 @@ import { Plugin } from "../../utils/plugins";
 import { CommandService } from "../command.service";
 
 export class CreatePackageService {
-  @Context
-  private readonly ctx!: HttpContext;
+  @InjectContext
+  private readonly ctx!: Context;
   @Inject
   private readonly createPluginService!: CreatePluginService;
   @Inject

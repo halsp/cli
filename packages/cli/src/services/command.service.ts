@@ -1,9 +1,9 @@
-import { HttpContext, isUndefined } from "@ipare/core";
-import { Context } from "@ipare/pipe";
+import { Context, isUndefined } from "@ipare/core";
+import { InjectContext } from "@ipare/pipe";
 
 export class CommandService {
-  @Context
-  private readonly ctx!: HttpContext;
+  @InjectContext
+  private readonly ctx!: Context;
 
   getOptionVlaue<T extends string | boolean>(
     commands: string[] | string

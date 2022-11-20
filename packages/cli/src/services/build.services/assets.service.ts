@@ -7,8 +7,8 @@ import { AssetConfig } from "../../configuration";
 import glob from "glob";
 import { FileService } from "../file.service";
 import { ConfigService } from "./config.service";
-import { Context } from "@ipare/pipe";
-import { HttpContext } from "@ipare/core";
+import { InjectContext } from "@ipare/pipe";
+import { Context } from "@ipare/core";
 
 type SortedAsset = {
   include: string;
@@ -25,8 +25,8 @@ export class AssetsService {
   @Inject
   private readonly fileService!: FileService;
 
-  @Context
-  private readonly ctx!: HttpContext;
+  @InjectContext
+  private readonly ctx!: Context;
 
   private readonly watchers: chokidar.FSWatcher[] = [];
 

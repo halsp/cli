@@ -2,8 +2,8 @@ import { Inject } from "@ipare/inject";
 import { ConfigService } from "./config.service";
 import { TsconfigService } from "./tsconfig.service";
 import { PluginInterfaceService } from "./plugin-interface.service";
-import { Context } from "@ipare/pipe";
-import { HttpContext } from "@ipare/core";
+import { InjectContext } from "@ipare/pipe";
+import { Context } from "@ipare/core";
 
 export class HookService {
   @Inject
@@ -13,8 +13,8 @@ export class HookService {
   @Inject
   private readonly tsconfigService!: TsconfigService;
 
-  @Context
-  private readonly ctx!: HttpContext;
+  @InjectContext
+  private readonly ctx!: Context;
 
   private get config() {
     return this.configService.value;

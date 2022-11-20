@@ -4,7 +4,7 @@ import { CliStartup } from "../../src/cli-startup";
 import { CreateMiddleware } from "../../src/middlewares/create-middleware";
 import * as fs from "fs";
 import inquirer from "inquirer";
-import { HookType, HttpContext } from "@ipare/core";
+import { HookType, Context } from "@ipare/core";
 
 const testName = "create-cache";
 
@@ -84,8 +84,8 @@ testPlugins(plugins.length);
 
 type promptType = typeof inquirer.prompt;
 async function runTest(options: {
-  before?: (ctx: HttpContext, md: CreateMiddleware) => Promise<boolean | void>;
-  after?: (ctx: HttpContext) => Promise<void>;
+  before?: (ctx: Context, md: CreateMiddleware) => Promise<boolean | void>;
+  after?: (ctx: Context) => Promise<void>;
   promptFn?: promptType;
   force?: boolean;
   skipPlugins?: boolean;

@@ -497,26 +497,26 @@
   resolved "https://registry.npmjs.org/@humanwhocodes/object-schema/-/object-schema-1.2.1.tgz"
   integrity sha512-ZnQMnLV4e7hDlUvw8H+U8ASL02SS2Gn6+9Ac3wGGLIe7+je2AeAOxPY+izIPJDfFDb7eDjev0Us8MO1iFRN8hA==
 
-"@ipare/core@^3.0.0-alpha.8", "@ipare/core@^3.0.0-beta.8":
-  version "3.0.0-alpha.8"
-  resolved "https://registry.npmmirror.com/@ipare/core/-/core-3.0.0-alpha.8.tgz#89c9b670c53d3920a712713f934a72dc73e9610c"
-  integrity sha512-Qzm9CVCsJJSCHwECCZbJl1cC2MW939yyZUUXAH8h4GDvP6lskNzveIOVSzrKWJwhEYCvpFWec520yWIZP+uwWg==
+"@ipare/core@^3.0.0":
+  version "3.0.0"
+  resolved "https://registry.npmmirror.com/@ipare/core/-/core-3.0.0.tgz#e351baf1f69b003edd17e2233840d5e4b5634e88"
+  integrity sha512-e2tOcKUwCimO1YDInN/fNG1sZMR2XnKkSjMh2mtKXveauKoU258i/7m9pBhGZ0NEsCX3LnsdhJAWJL9I+9KsGQ==
 
-"@ipare/inject@^3.0.0-alpha.8", "@ipare/inject@^3.0.0-beta.8":
-  version "3.0.0-alpha.8"
-  resolved "https://registry.npmmirror.com/@ipare/inject/-/inject-3.0.0-alpha.8.tgz#38998d26dac68486def1f84c463de64bb5d163c7"
-  integrity sha512-VO61HR+VS3+okOQNBEeesSiIUOe5qA9D4MyDug1cFG7/9O1s17+0NhUzkvVJAtXR/uLFDxUtmBto5xrBaRDtTA==
+"@ipare/inject@^3.0.0":
+  version "3.0.0"
+  resolved "https://registry.npmmirror.com/@ipare/inject/-/inject-3.0.0.tgz#0cbc8a50746f5da01721ed3865aab38af2a8b359"
+  integrity sha512-Wg8nf7ltyLuYy2NPXrzlJYFUKg1jnEuy6DGQFzHwzux9nI+rKXvQH6zhZ/XOg/B4pt3O67FokpwhJXdQK2QoLA==
   dependencies:
-    "@ipare/core" "^3.0.0-alpha.8"
+    "@ipare/core" "^3.0.0"
     reflect-metadata "^0.1.13"
 
-"@ipare/pipe@^3.0.0-beta.8":
-  version "3.0.0-alpha.8"
-  resolved "https://registry.npmmirror.com/@ipare/pipe/-/pipe-3.0.0-alpha.8.tgz#d1513aacc6dae8978654ca3af1fac2bf15328020"
-  integrity sha512-iGnHgDz9qVeW9Fno5K2cJiyfqh95Ko02w5AcAZsek889buZS1vmgl4NGEu+LJMprCI9myDBUDw2/HwDdTHeOhA==
+"@ipare/pipe@^3.0.0":
+  version "3.0.0"
+  resolved "https://registry.npmmirror.com/@ipare/pipe/-/pipe-3.0.0.tgz#db32795acb3dece81e0976a10752bc98fa7f1b34"
+  integrity sha512-ZxCE3DPFLFGvW86GPzVzWVTAAdcoBj4DxOAk5/7XYV1LvXvuQ0o12zi/yYrAYSy7/Z4rrLzlwGxMmgJAJ0i9tQ==
   dependencies:
-    "@ipare/core" "^3.0.0-alpha.8"
-    "@ipare/inject" "^3.0.0-alpha.8"
+    "@ipare/core" "^3.0.0"
+    "@ipare/inject" "^3.0.0"
     class-transformer "^0.5.1"
     reflect-metadata "^0.1.13"
 
