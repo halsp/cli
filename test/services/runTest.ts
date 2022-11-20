@@ -1,11 +1,11 @@
-import { HttpContext, ObjectConstructor } from "@ipare/core";
+import { Context, ObjectConstructor } from "@ipare/core";
 import { CliStartup } from "../../src/cli-startup";
 import { runin } from "../utils";
 import { parseInject } from "@ipare/inject";
 
 export function runTest<T extends object = any>(
   service: ObjectConstructor<T>,
-  expectFn: (ctx: HttpContext, service: T) => Promise<void>,
+  expectFn: (ctx: Context, service: T) => Promise<void>,
   mode = "test",
   args?: any,
   options?: any

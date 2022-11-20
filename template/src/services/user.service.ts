@@ -1,15 +1,15 @@
 //{inject
 //{pipe
-import { HttpContext } from "@ipare/core";
+import { Context } from "@ipare/core";
 //}
 import { LoggerInject, Logger } from "@ipare/logger";
-import { Context, Query } from "@ipare/pipe";
+import { InjectContext, Query } from "@ipare/pipe";
 import { V } from "@ipare/validator";
 
 export class UserService {
   //{pipe
-  @Context
-  private readonly ctx!: HttpContext;
+  @InjectContext
+  private readonly ctx!: Context;
   //}
   //{logger
   @LoggerInject()

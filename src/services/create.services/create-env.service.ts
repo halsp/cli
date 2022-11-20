@@ -1,10 +1,10 @@
-import { HttpContext } from "@ipare/core";
+import { Context } from "@ipare/core";
 import inquirer from "inquirer";
 import * as fs from "fs";
 import path from "path";
 import { Inject } from "@ipare/inject";
 import { FileService } from "../file.service";
-import { Context } from "@ipare/pipe";
+import { InjectContext } from "@ipare/pipe";
 import { EnvPlugin } from "../../utils/plugins";
 import { CommandService } from "../command.service";
 
@@ -22,8 +22,8 @@ type EnvConfigType = {
 type EnvConfig = EnvConfigItem | EnvConfigType;
 
 export class CreateEnvService {
-  @Context
-  private readonly ctx!: HttpContext;
+  @InjectContext
+  private readonly ctx!: Context;
   @Inject
   private readonly fileService!: FileService;
   @Inject

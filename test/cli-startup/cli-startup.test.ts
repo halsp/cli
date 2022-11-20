@@ -8,7 +8,7 @@ function testCliStartup(args?: any, options?: any) {
     await runin("test/cli-startup", async () => {
       const res = await new CliStartup("test", args, options)
         .use((ctx) => {
-          ctx.ok({
+          ctx.res.setBody({
             options: ctx.commandOptions,
             args: ctx.commandArgs,
             a: ctx.commandOptions["a"],

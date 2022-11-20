@@ -1,13 +1,13 @@
 //{filter
-import { HttpContext } from "@ipare/core";
+import { Context } from "@ipare/core";
 import { ActionFilter } from "@ipare/filter";
 
 export class GlobalActionFilter implements ActionFilter {
-  onActionExecuted(ctx: HttpContext): void | Promise<void> {
+  onActionExecuted(ctx: Context): void | Promise<void> {
     ctx.res.setHeader("excuted", 1);
   }
   onActionExecuting(
-    ctx: HttpContext
+    ctx: Context
   ): boolean | void | Promise<void> | Promise<boolean> {
     ctx.res.setHeader("action", 1);
     return true;

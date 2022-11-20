@@ -1,5 +1,5 @@
-import { Context } from "@ipare/pipe";
-import { HttpContext, isUndefined } from "@ipare/core";
+import { InjectContext } from "@ipare/pipe";
+import { Context, isUndefined } from "@ipare/core";
 import path from "path";
 import { Configuration, ConfigEnv } from "../../configuration";
 import { Inject } from "@ipare/inject";
@@ -9,8 +9,8 @@ import * as tsNode from "ts-node";
 import { PluginInterfaceService } from "./plugin-interface.service";
 
 export class ConfigService {
-  @Context
-  private readonly ctx!: HttpContext;
+  @InjectContext
+  private readonly ctx!: Context;
   @Inject
   private readonly fileService!: FileService;
   @Inject

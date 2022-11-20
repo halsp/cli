@@ -1,12 +1,12 @@
 import "@ipare/core";
 import "@ipare/inject";
-import { HttpContext, Request, Startup } from "@ipare/core";
+import { Context, Request, Startup } from "@ipare/core";
 import { ConfigService } from "./services/build.services/config.service";
 import { CommandType } from "./configuration";
 import { parseInject } from "@ipare/inject";
 
 declare module "@ipare/core" {
-  interface HttpContext {
+  interface Context {
     get command(): CommandType;
     get commandArgs(): Record<string, string>;
     get commandOptions(): Record<string, string | boolean>;
@@ -57,7 +57,7 @@ export class CliStartup extends Startup {
   }
 
   async run() {
-    const res = await super.invoke(new HttpContext(new Request()));
+    const res = await super.invoke(new Context(new Request()));
     if (res.ctx.errorStack.length) {
       throw res.ctx.errorStack[0];
     }

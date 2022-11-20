@@ -10,7 +10,6 @@ import { AuthFilter } from "../filters/auth.filter";
 //{inject
 import { UserService } from "../services/user.service";
 //}
-import { Logger, LoggerInject } from "@ipare/logger";
 
 //{swagger
 import { LoginDto } from "../dtos/login.dto";
@@ -26,10 +25,6 @@ export default class extends Action {
   //{inject
   @Inject
   private readonly userService!: UserService;
-  //}
-  //{logger
-  @LoggerInject()
-  private readonly logger!: Logger;
   //}
 
   //{pipe

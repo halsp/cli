@@ -1,14 +1,14 @@
-import { HttpContext, isUndefined } from "@ipare/core";
+import { Context, isUndefined } from "@ipare/core";
 import { Inject } from "@ipare/inject";
-import { Context } from "@ipare/pipe";
+import { InjectContext } from "@ipare/pipe";
 import ts from "typescript";
 import { ConfigService } from "./config.service";
 import { PluginInterfaceService } from "./plugin-interface.service";
 import { TsconfigService } from "./tsconfig.service";
 
 export class CompilerService {
-  @Context
-  private readonly ctx!: HttpContext;
+  @InjectContext
+  private readonly ctx!: Context;
   @Inject
   private readonly tsconfigService!: TsconfigService;
   @Inject
