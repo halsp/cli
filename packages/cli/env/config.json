@@ -1,8 +1,8 @@
 [
   {
-    "desc": "NodeJS HTTP",
-    "file": "http",
-    "plugin": "http"
+    "desc": "原生 NodeJS",
+    "file": "native",
+    "plugin": "native"
   },
   {
     "desc": "腾讯云函数",
@@ -59,6 +59,37 @@
         "desc": "Web 函数",
         "file": "sls-http-huawei",
         "plugin": "http"
+      }
+    ]
+  },
+  {
+    "desc": "微服务",
+    "pickMessage": "选择微服务通讯方式",
+    "children": [
+      {
+        "desc": "TCP",
+        "file": "micro-tcp",
+        "plugin": "micro-tcp"
+      },
+      {
+        "desc": "gRPC",
+        "file": "micro-grpc",
+        "plugin": "micro-grpc"
+      },
+      {
+        "desc": "MQTT",
+        "file": "micro-mqtt",
+        "plugin": "micro-mqtt"
+      },
+      {
+        "desc": "Redis",
+        "file": "micro-redis",
+        "plugin": "micro-redis"
+      },
+      {
+        "desc": "NATS",
+        "file": "micro-nats",
+        "plugin": "micro-nats"
       }
     ]
   }

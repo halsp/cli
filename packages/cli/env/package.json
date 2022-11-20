@@ -1,8 +1,14 @@
 {
   "name": "env",
   "dependencies": {
-    "@ipare/alifc": "*",
-    "@ipare/http": "*",
-    "@ipare/lambda": "*"
+    "@ipare/core": "^3.0.0",
+    "@ipare/alifc": "^3.0.0",
+    "@ipare/native": "^3.0.0",
+    "@ipare/lambda": "^3.0.0",
+    "@ipare/micro-tcp": "^3.0.0",
+    "@ipare/micro-grpc": "^3.0.0",
+    "@ipare/micro-mqtt": "^3.0.0",
+    "@ipare/micro-redis": "^3.0.0",
+    "@ipare/micro-nats": "^3.0.0"
   }
 }
