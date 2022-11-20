@@ -1,5 +1,4 @@
-import { HttpStartup } from "@ipare/http";
+import { NativeStartup } from "@ipare/native";
 import startup from "./startup";
 
-const app = startup(new HttpStartup(), "production");
-app.listen(8000, "127.0.0.0");
+startup(new NativeStartup(), "production").listen(8000, "127.0.0.0");

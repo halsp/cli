@@ -28,7 +28,7 @@
     "@ipare/core": "^2.2.5",
     "@ipare/env": "^2.2.5",
     "@ipare/filter": "^2.2.5",
-    "@ipare/http": "^2.2.5",
+    "@ipare/native": "^2.2.5",
     "@ipare/inject": "^2.2.5",
     "@ipare/jwt": "^2.2.5",
     "@ipare/lambda": "^2.2.5",

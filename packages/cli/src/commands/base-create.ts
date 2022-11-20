@@ -15,7 +15,7 @@ Command.prototype.setCreateOptions = function () {
   )
     .option(
       "-e, --env <env>",
-      "The environment to run application. (lambda/http/azure/alifc)"
+      "The environment to run application. (lambda/native/azure/micro-tcp/...)"
     )
     .option("--skipEnv", "Skip adding environment files")
     .option(
