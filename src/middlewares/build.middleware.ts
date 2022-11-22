@@ -36,8 +36,6 @@ export class BuildMiddlware extends Middleware {
   }
 
   override async invoke(): Promise<void> {
-    process.env.NODE_ENV = this.configService.mode;
-
     await fs.promises.rm(path.resolve(process.cwd(), this.cacheDir), {
       recursive: true,
       force: true,

@@ -63,10 +63,14 @@ export class StartMiddleware extends Middleware {
       "node"
     );
   }
+  private get processEnv() {
+    return {
+      IPARE_DEBUG_PORT: this.port,
+      NODE_ENV: this.configService.mode,
+    };
+  }
 
   override async invoke(): Promise<void> {
-    process.env.IPARE_DEBUG_PORT = this.port ?? process.env.IPARE_DEBUG_PORT;
-
     if (this.watch) {
       this.ctx.bag("onWatchSuccess", this.createOnWatchSuccess());
     }
@@ -79,6 +83,7 @@ export class StartMiddleware extends Middleware {
       const processArgs = this.getProcessArgs();
       shell.exec(`${this.binaryToRun} ${processArgs.join(" ")}`, {
         cwd: this.cacheDir,
+        env: this.processEnv,
       });
     }
   }
@@ -122,6 +127,7 @@ export class StartMiddleware extends Middleware {
     return spawn(this.binaryToRun, processArgs, {
       stdio: "inherit",
       cwd: this.cacheDir,
+      env: this.processEnv,
     });
   }
 
@@ -163,7 +169,7 @@ export class StartMiddleware extends Middleware {
       this.depsService.getDeps(
         path.join(process.cwd(), "package.json"),
         (dep) =>
-          slsPackages.filter((item) => `@ipare/${item}=` == dep).length > 0,
+          slsPackages.filter((item) => `@ipare/${item}` == dep).length > 0,
         undefined,
         false
       ).length > 0;
