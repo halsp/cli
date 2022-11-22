@@ -81,3 +81,5 @@ export const allPlugins: PluginItem[] = [
 export function isPlugin(name: string) {
   return allPlugins.some((p) => p.value == name || `@ipare/${p.value}` == name);
 }
+
+export const slsPackages = ["lambda", "alifc"];

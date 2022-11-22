@@ -1,4 +1,4 @@
-import { isString, isUndefined, Middleware } from "@ipare/core";
+import { isString, Middleware } from "@ipare/core";
 import { Inject } from "@ipare/inject";
 import path from "path";
 import * as fs from "fs";
@@ -10,12 +10,16 @@ import { treeKillSync } from "../utils/tree-kill";
 import shell from "shelljs";
 import { ConfigService } from "../services/build.services/config.service";
 import { ChildProcess } from "child_process";
+import { DepsService } from "../services/deps.service";
+import { slsPackages } from "../utils/plugins";
 
 export class StartMiddleware extends Middleware {
   @Inject
   private readonly tsconfigService!: TsconfigService;
   @Inject
   private readonly configService!: ConfigService;
+  @Inject
+  private readonly depsService!: DepsService;
 
   private get cacheDir() {
     return this.tsconfigService.cacheDir;
@@ -26,9 +30,6 @@ export class StartMiddleware extends Middleware {
       "start.inspect",
       false
     );
-  }
-  private get mode() {
-    return this.configService.mode;
   }
   private get startupFile() {
     const result = this.configService.getOptionOrConfigValue<string>(
@@ -45,8 +46,7 @@ export class StartMiddleware extends Middleware {
   private get port() {
     return this.configService.getOptionOrConfigValue<string>(
       "port",
-      "start.port",
-      "2333"
+      "start.port"
     );
   }
   private get watch() {
@@ -65,6 +65,8 @@ export class StartMiddleware extends Middleware {
   }
 
   override async invoke(): Promise<void> {
+    process.env.IPARE_DEBUG_PORT = this.port ?? process.env.IPARE_DEBUG_PORT;
+
     if (this.watch) {
       this.ctx.bag("onWatchSuccess", this.createOnWatchSuccess());
     }
@@ -72,9 +74,7 @@ export class StartMiddleware extends Middleware {
     await this.next();
 
     if (!this.watch) {
-      if (isUndefined(this.ctx.commandOptions["enterFile"])) {
-        await this.copyEnterFile();
-      }
+      await this.createSlsEnter();
 
       const processArgs = this.getProcessArgs();
       shell.exec(`${this.binaryToRun} ${processArgs.join(" ")}`, {
@@ -99,9 +99,7 @@ export class StartMiddleware extends Middleware {
     };
 
     return async () => {
-      if (isUndefined(this.ctx.commandOptions["enterFile"])) {
-        await this.copyEnterFile();
-      }
+      await this.createSlsEnter();
 
       if (childProcessRef) {
         childProcessRef.removeAllListeners("exit");
@@ -156,16 +154,24 @@ export class StartMiddleware extends Middleware {
     return processArgs;
   }
 
-  private async copyEnterFile() {
-    let code = await fs.promises.readFile(
-      path.join(__dirname, "../enter-startup.js"),
-      "utf-8"
-    );
-    code = code.replace("{{MODE}}", this.mode);
-    code = code.replace("{{PORT}}", this.port);
-    await fs.promises.writeFile(
-      path.resolve(process.cwd(), this.cacheDir, START_DEV_FILE_NAME),
-      code
+  private async createSlsEnter() {
+    if (this.startupFile != START_DEV_FILE_NAME) {
+      return;
+    }
+
+    const isSls =
+      this.depsService.getDeps(
+        path.join(process.cwd(), "package.json"),
+        (dep) =>
+          slsPackages.filter((item) => `@ipare/${item}=` == dep).length > 0,
+        undefined,
+        false
+      ).length > 0;
+    if (!isSls) return;
+
+    await fs.promises.copyFile(
+      path.join(__dirname, "../sls.js"),
+      path.resolve(process.cwd(), this.cacheDir, START_DEV_FILE_NAME)
     );
   }
 }

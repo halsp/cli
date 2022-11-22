@@ -27,17 +27,14 @@ import { UserService } from "./services/user.service";
 /// }
 // }
 
-export default <T extends Startup>(startup: T, mode: string) =>
+export default <T extends Startup>(startup: T) =>
   startup
     //{env
-    .useVersion()
     .useEnv()
     //}
     .use(async (ctx, next) => {
-      //{!env
       ctx.res.setHeader("version", version);
-      //}
-      ctx.res.setHeader("mode", mode);
+      ctx.res.setHeader("env", process.env.NODE_ENV);
       await next();
     })
     //{inject
