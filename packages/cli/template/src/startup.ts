@@ -10,6 +10,7 @@ import "@ipare/view";
 import "@ipare/validator";
 import "@ipare/env";
 import "@ipare/logger";
+import { HttpStartup } from "@ipare/http";
 //{swagger || !env
 import * as fs from "fs";
 import path from "path";
@@ -27,14 +28,14 @@ import { UserService } from "./services/user.service";
 /// }
 // }
 
-export default <T extends Startup>(startup: T) =>
+export default <T extends HttpStartup>(startup: T) =>
   startup
     //{env
     .useEnv()
     //}
     .use(async (ctx, next) => {
       ctx.res.setHeader("version", version);
-      ctx.res.setHeader("env", process.env.NODE_ENV);
+      ctx.res.setHeader("env", process.env.NODE_ENV ?? "");
       await next();
     })
     //{inject
