@@ -1,6 +1,6 @@
 {
   "extends": "../tsconfig.base.json",
   "include": [
-    "enter-startup.ts"
+    "sls.ts"
   ]
 }
