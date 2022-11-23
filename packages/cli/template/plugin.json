@@ -9,5 +9,15 @@
     "src/views/*": "view",
     ".env": "env",
     ".env.development": "env"
-  }
+  },
+  "names": [
+    {
+      "source": "startup.micro.ts",
+      "target": "startup.ts"
+    },
+    {
+      "source": "startup.http.ts",
+      "target": "startup.ts"
+    }
+  ]
 }
