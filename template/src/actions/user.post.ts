@@ -1,5 +1,5 @@
 //{ router
-import { Action } from "@ipare/router";
+import { Action, MicroPattern } from "@ipare/router";
 import { Body } from "@ipare/pipe";
 import { V } from "@ipare/validator";
 //{pipe
@@ -9,10 +9,13 @@ import { LoginDto } from "../dtos/login.dto";
 //{swagger
 @V()
   .Tags("user")
-  .Description("Get user info")
+  .Description("Login")
   .Response(200, LoginDto)
   .ResponseDescription(200, "success")
   .ResponseDescription(404, "The account not existing or error password")
+//}
+//{micro
+@MicroPattern("login")
 //}
 export default class extends Action {
   //{pipe
@@ -20,7 +23,7 @@ export default class extends Action {
   private readonly loginDto!: LoginDto;
   //}
 
-  //{swagger
+  //{swagger && !pipe
   @Body("account")
   private readonly account!: string;
   @Body("password")
@@ -28,16 +31,37 @@ export default class extends Action {
   //}
 
   async invoke(): Promise<void> {
-    //{ pipe
+    //{ http
+    ///{ pipe
     this.ok(this.loginDto);
-    //}
+    ///}
 
-    //{ !pipe
+    ///{ !pipe
     this.ok({
       id: 1,
       email: "hi@hal.wang",
     });
+    ///}
+    //}
+
+    //{ micro
+    ///{ pipe
+    this.res.setBody(this.loginDto);
+    ///}
+
+    ///{ !pipe
+    this.res.setBody({
+      id: 1,
+      email: "hi@hal.wang",
+    });
+    ///}
     //}
   }
 }
 //}
+
+/* rename
+//{micro
+login.ts
+//}
+ */

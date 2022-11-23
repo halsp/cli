@@ -49,7 +49,7 @@ export class CreateTemplateService {
   private async copyTemplate(plugins: Plugin[], paths: string[]) {
     for (const p of paths) {
       const sourceFile = path.join(this.sourceDir, p);
-      const targetFile = path.join(this.targetDir, p);
+      let targetFile = path.join(this.targetDir, p);
 
       let content: string | null = await fs.promises.readFile(
         sourceFile,
@@ -57,6 +57,17 @@ export class CreateTemplateService {
       );
       content = this.readFile(content, plugins);
       if (content != null) {
+        const renameInfo = this.getRename(content);
+        if (targetFile.endsWith("_.get.ts")) {
+          console.log("renameInfo", targetFile, renameInfo);
+        }
+        if (renameInfo) {
+          content = renameInfo.code;
+          targetFile = targetFile
+            .replace(/\\/g, "/")
+            .replace(/[^\/]+$/, renameInfo.rename);
+          console.log("targetFile2", targetFile);
+        }
         if (sourceFile.endsWith(".ts")) {
           content = prettier.format(content, {
             parser: "typescript",
@@ -77,7 +88,7 @@ export class CreateTemplateService {
     const lineEnd = code.includes("\r\n") ? "\r\n" : "\n";
     const result = lines.join(lineEnd).trimStart();
     if (!!result.trim()) {
-      return result;
+      return this.replaceCode(result);
     } else {
       return null;
     }
@@ -143,5 +154,38 @@ export class CreateTemplateService {
         importIndex--;
       }
     }
+  }
+
+  private getRename(code: string) {
+    if (!code.match(/\/\*\s*rename/)) {
+      return;
+    }
+
+    const matchArr = code.match(/\/\*\s*rename([\s\S]+)*\*\//);
+    if (!matchArr?.length) return;
+
+    code = code.replace(matchArr[0], "");
+    return {
+      code,
+      rename: matchArr[1]?.trim(),
+    };
+  }
+
+  private replaceCode(code: string) {
+    if (!code.match(/\/\*\s*replace/)) {
+      return code;
+    }
+
+    const matchArr = code.match(/\/\*\s*replace([\s\S]+)*\*\//);
+    if (!matchArr?.length) return code;
+
+    code = code.replace(matchArr[0], "");
+    const replaceContent = matchArr[1]
+      .trim()
+      .split("---")
+      .map((item) => item.trim())
+      .filter((item) => !!item);
+    code = code.replace(replaceContent[0], replaceContent[1]);
+    return code;
   }
 }

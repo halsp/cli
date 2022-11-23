@@ -2,8 +2,9 @@
 import { UseFilters } from "@ipare/filter";
 import { Inject } from "@ipare/inject";
 import { Header, Query } from "@ipare/pipe";
-import { Action } from "@ipare/router";
+import { Action, MicroPattern } from "@ipare/router";
 import { V } from "@ipare/validator";
+import "@ipare/view";
 //{filter
 import { AuthFilter } from "../filters/auth.filter";
 //}
@@ -19,7 +20,13 @@ import { LoginDto } from "../dtos/login.dto";
 @UseFilters(AuthFilter)
 //}
 //{swagger
-@V().Tags("user").Description("Get user info").Response(LoginDto)
+@V()
+  .Tags("user")
+  .Description("Get user info with auth filter")
+  .Response(LoginDto)
+//}
+//{micro
+@MicroPattern("getUserInfo")
 //}
 export default class extends Action {
   //{inject
@@ -27,12 +34,12 @@ export default class extends Action {
   private readonly userService!: UserService;
   //}
 
-  //{pipe
+  //{pipe && http
   @Header("host")
   private readonly host!: string;
   //}
 
-  //{pipe
+  //{pipe && http
   ///{validator&&!swagger
   @V().IsString()
   ///}
@@ -55,36 +62,46 @@ export default class extends Action {
     //{logger
     this.logger.info("get user info from action");
     //}
-    //!
-    {
-      //{inject
-      const userInfo = this.userService.getUserInfo();
-      ///{ view && !mva
-      await this.view("user", userInfo);
-      ///}
-      ///{!view || mva
-      this.ok(userInfo);
-      ///}
-      //}
-      //!
-    }
 
-    //!
-    {
-      //{!inject
-      const userInfo = {
-        id: 1,
-        email: "hi@hal.wang",
-      };
-      ///{ view && !mva
-      await this.view("user", userInfo);
-      ///}
-      ///{!view || mva
-      this.ok(userInfo);
-      ///}
-      //}
-      //!
-    }
+    const userInfo = this.getUserInfo();
+    //{ view && !mva
+    const html = await this.ctx.view("user", userInfo);
+    ///{ micro
+    this.res.setBody({
+      html,
+    });
+    ///}
+    ///{ !micro
+    this.ok(html);
+    ///}
+    //}
+
+    //{!view || mva
+    ///{ micro
+    this.res.setBody(userInfo);
+    ///}
+    ///{ !micro
+    this.ok(userInfo);
+    ///}
+    //}
+  }
+
+  getUserInfo() {
+    //{inject
+    return this.userService.getUserInfo();
+    //}
+    //{!inject
+    return {
+      id: 1,
+      email: "hi@hal.wang",
+    };
+    //}
   }
 }
 //}
+
+/* rename
+//{micro
+getUserInfo.ts
+//}
+ */

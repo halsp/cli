@@ -1,8 +1,8 @@
 //{inject
 //{pipe
-import { Context } from "@ipare/core";
+import { Context, ILogger } from "@ipare/core";
 //}
-import { LoggerInject, Logger } from "@ipare/logger";
+import { Logger } from "@ipare/logger";
 import { InjectContext, Query } from "@ipare/pipe";
 import { V } from "@ipare/validator";
 
@@ -12,11 +12,11 @@ export class UserService {
   private readonly ctx!: Context;
   //}
   //{logger
-  @LoggerInject()
-  private readonly logger!: Logger;
+  @Logger()
+  private readonly logger!: ILogger;
   //}
 
-  //{!router&&validator
+  //{!router && validator && http
   @V().IsString()
   @Query("userName")
   private readonly userName!: string;
@@ -26,8 +26,8 @@ export class UserService {
   //}
 
   public getUserInfo() {
-    //{pipe
-    this.ctx.res.setHeader("test-header", "ipare");
+    //{pipe && http
+    this.ctx.res.set("test-header", "ipare");
     //}
     //{logger
     this.logger.info("get user info from service");

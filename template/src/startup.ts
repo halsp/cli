@@ -1,4 +1,3 @@
-import { Startup } from "@ipare/core";
 import "@ipare/router";
 import "@ipare/swagger";
 import "@ipare/inject";
@@ -11,7 +10,8 @@ import "@ipare/validator";
 import "@ipare/env";
 import "@ipare/logger";
 import { HttpStartup } from "@ipare/http";
-//{swagger || !env
+import { MicroStartup } from "@ipare/micro";
+//{!env
 import * as fs from "fs";
 import path from "path";
 //}
@@ -28,16 +28,27 @@ import { UserService } from "./services/user.service";
 /// }
 // }
 
-export default <T extends HttpStartup>(startup: T) =>
+export default <T extends HttpStartup & MicroStartup>(startup: T) =>
   startup
     //{env
     .useEnv()
     //}
+    //{http
     .use(async (ctx, next) => {
-      ctx.res.setHeader("version", version);
-      ctx.res.setHeader("env", process.env.NODE_ENV ?? "");
+      ctx.res.set("version", version);
+      ctx.res.set("env", process.env.NODE_ENV ?? "");
       await next();
     })
+    //}
+    //{micro
+    .use(async (ctx, next) => {
+      ctx.res.setBody({
+        version: version,
+        env: process.env.NODE_ENV ?? "",
+      });
+      await next();
+    })
+    //}
     //{inject
     .useInject()
     //}
@@ -80,6 +91,9 @@ export default <T extends HttpStartup>(startup: T) =>
     //{jwt
     .useJwt({
       secret: "jwt-secret",
+      ///{micro
+      tokenProvider: (ctx) => ctx.req.body?.Authorization,
+      ///}
     })
     .use(async (ctx, next) => {
       const jwtService = await parseInject(ctx, JwtService);
@@ -87,7 +101,14 @@ export default <T extends HttpStartup>(startup: T) =>
         id: 1,
       });
       // just for jwt test
-      ctx.req.setHeader("Authorization", "Bearer " + testJwt);
+      ///{http
+      ctx.req.set("Authorization", "Bearer " + testJwt);
+      ///}
+      ///{micro
+      ctx.req.setBody({
+        Authorization: "Bearer " + testJwt,
+      });
+      ///}
       await next();
     })
     // default verify
@@ -97,12 +118,17 @@ export default <T extends HttpStartup>(startup: T) =>
     .use(async (ctx, next) => {
       const userService = await parseInject(ctx, UserService);
       const userInfo = userService.getUserInfo();
-      //// { view
-      ctx.setHeader("injectUserInfo", JSON.stringify(userInfo));
-      //// }
-      //// { !view
+      ///{ micro
+      ctx.res.setBody(userInfo);
+      ///}
+      ///{ http
+      ////{ view
+      ctx.set("injectUserInfo", JSON.stringify(userInfo));
+      ////}
+      ////{ !view
       ctx.ok(userInfo);
-      //// }
+      ////}
+      ///}
       await next();
     })
     // }
@@ -117,10 +143,18 @@ export default <T extends HttpStartup>(startup: T) =>
     .useView()
     ///{!router
     .use(async (ctx, next) => {
-      await ctx.view("user", {
+      const html = await ctx.view("user", {
         id: 1,
         email: "hi@hal.wang",
       });
+      //{ http
+      ctx.ok({
+        html,
+      });
+      //}
+      //{ micro
+      ctx.res.setBody({ html });
+      //}
       await next();
     })
     ///}
@@ -142,3 +176,14 @@ const version = (() => {
   return JSON.parse(pkgStr).version;
 })();
 //}
+
+/* replace
+extends HttpStartup & MicroStartup
+---
+//{http
+extends HttpStartup
+//}
+//{micro
+extends MicroStartup
+//}
+ */
