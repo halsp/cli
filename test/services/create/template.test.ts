@@ -4,7 +4,6 @@ import path from "path";
 import { CliStartup } from "../../../src/cli-startup";
 import { CreateTemplateService } from "../../../src/services/create.services/create-template.service";
 import * as fs from "fs";
-import { Plugin } from "../../../src/utils/plugins";
 
 async function testTemplate(
   fn: (service: CreateTemplateService) => void | Promise<void>
@@ -27,7 +26,7 @@ async function testTemplate(
 }
 
 async function testTemplateDefault(
-  plugins: Plugin[],
+  plugins: string[],
   file: string,
   fn: (text?: string) => void | Promise<void>,
   beforeFn?: () => void | Promise<void>

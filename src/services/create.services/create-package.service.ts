@@ -5,25 +5,24 @@ import path from "path";
 import { CreateEnvService } from "./create-env.service";
 import * as fs from "fs";
 import { PackageManagerService } from "../package-manager.service";
-import {
-  CreatePluginService,
-  SortedPluginConfig,
-} from "./create-plugin.service";
 import prettier from "prettier";
-import { Plugin } from "../../utils/plugins";
 import { CommandService } from "../command.service";
+import {
+  PluginConfigService,
+  SortedPluginConfig,
+} from "./plugin-config.service";
 
 export class CreatePackageService {
   @InjectContext
   private readonly ctx!: Context;
   @Inject
-  private readonly createPluginService!: CreatePluginService;
+  private readonly commandService!: CommandService;
   @Inject
   private readonly createEnvService!: CreateEnvService;
   @Inject
   private readonly packageManagerService!: PackageManagerService;
   @Inject
-  private readonly commandService!: CommandService;
+  private readonly pluginConfigService!: PluginConfigService;
 
   private get name() {
     return this.ctx.commandArgs.name;
@@ -32,14 +31,14 @@ export class CreatePackageService {
     return this.createEnvService.targetDir;
   }
 
-  public async create(plugins: Plugin[]): Promise<boolean> {
+  public async create(plugins: string[]): Promise<boolean> {
     const pkg = this.getPackage();
-    const pluginConfig = await this.createPluginService.getPluginConfig(
+    const pluginConfig = await this.pluginConfigService.getSortedConfig(
       plugins
     );
 
-    this.setDeps(pkg.dependencies, plugins, pluginConfig);
-    this.setDeps(pkg.devDependencies, plugins, pluginConfig);
+    this.setDeps(pkg.dependencies, plugins, pluginConfig, false);
+    this.setDeps(pkg.devDependencies, plugins, pluginConfig, true);
 
     this.setCliVersion(pkg);
     pkg.name = this.name;
@@ -71,16 +70,16 @@ export class CreatePackageService {
 
   private setDeps(
     deps: Record<string, string>,
-    plugins: Plugin[],
-    pluginConfig: SortedPluginConfig
+    plugins: string[],
+    pluginConfig: SortedPluginConfig,
+    isDev: boolean
   ) {
     if (!deps) return;
 
-    const { constant, dependencies } = pluginConfig;
+    const { dependencies, devDependencies } = pluginConfig;
 
     Object.keys(deps)
       .filter((k) => k.startsWith("@ipare/"))
-      .filter((k) => !constant.some((c) => `@ipare/${c}` == k))
       .filter((k) => !plugins.some((p) => `@ipare/${p}` == k))
       .forEach((key) => {
         delete deps[key];
@@ -88,6 +87,7 @@ export class CreatePackageService {
 
     Object.keys(deps)
       .filter((k) => dependencies[k] == false)
+      .filter((k) => !isDev || devDependencies[k] != true)
       .forEach((key) => {
         delete deps[key];
       });

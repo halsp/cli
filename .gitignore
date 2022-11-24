@@ -6,7 +6,6 @@ pnpm-lock.yaml
 coverage
 .ipare-cache
 env/yarn.lock
-enter/yarn.lock
 
 *-error.log
 .husky/_

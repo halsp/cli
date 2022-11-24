@@ -1,18 +1,7 @@
-import { CreatePluginService } from "../../src/services/create.services/create-plugin.service";
+import { CopyPluginFileService } from "../../src/services/create.services/copy-plugin-file.service";
 import { runTest } from "./runTest";
-import glob from "glob";
 
-runTest(CreatePluginService, async (ctx, service) => {
-  service.getPluginConfig = async () => ({
-    files: {
-      a: true,
-      b: false,
-    },
-    dependencies: {},
-    constant: [],
-  });
-  glob.sync = (arg) => [arg];
-
-  const plugins = await service.excludePluginFiles([]);
+runTest(CopyPluginFileService, async (ctx, service) => {
+  const plugins = await service.copy([]);
   expect(plugins).toEqual(["b"]);
 });

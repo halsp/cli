@@ -1,16 +1,17 @@
+//{ lambda || alifc
 import { NativeStartup } from "@ipare/native";
 import setupStartup from "./startup";
 
 async function bootstrap() {
-  const startup = await setupStartup(
-    new NativeStartup()
-      .useHttpJsonBody()
-      .useHttpTextBody()
-      .useHttpMultipartBody()
-      .useHttpUrlencodedBody()
-  );
+  const startup = setupStartup<any>(new NativeStartup().useHttpJsonBody());
   const { port } = await startup.dynamicListen();
   console.info(`start: http://localhost:${port}`);
 }
 
 bootstrap();
+//}
+
+/* replace
+ setupStartup<any>
+ setupStartup
+ */

@@ -1,7 +1,5 @@
-import { Plugin } from "../../utils/plugins";
-
 export class ExpressionService {
-  public calcPlugins(expression: string, plugins: Plugin[]) {
+  public calcPlugins(expression: string, plugins: string[]) {
     plugins.forEach((plugin) => {
       expression = expression.replace(new RegExp(plugin, "g"), "↑");
     });
