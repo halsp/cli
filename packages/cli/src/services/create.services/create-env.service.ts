@@ -5,13 +5,12 @@ import path from "path";
 import { Inject } from "@ipare/inject";
 import { FileService } from "../file.service";
 import { InjectContext } from "@ipare/pipe";
-import { EnvPlugin } from "../../utils/plugins";
 import { CommandService } from "../command.service";
 
 type EnvConfigItem = {
   desc: string;
   file: string;
-  plugin: EnvPlugin;
+  plugin: string;
 };
 type EnvConfigType = {
   desc: string;
@@ -39,7 +38,7 @@ export class CreateEnvService {
     return path.join(process.cwd(), this.name);
   }
 
-  public async create(): Promise<EnvPlugin | undefined> {
+  public async create(): Promise<string | undefined> {
     const env = await this.getEnv();
     if (!env) return;
 

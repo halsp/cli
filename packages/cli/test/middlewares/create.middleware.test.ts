@@ -1,15 +1,16 @@
-import { allPlugins, Plugin } from "../../src/utils/plugins";
 import { runin } from "../utils";
 import { CliStartup } from "../../src/cli-startup";
 import { CreateMiddleware } from "../../src/middlewares/create-middleware";
 import * as fs from "fs";
 import inquirer from "inquirer";
 import { HookType, Context } from "@ipare/core";
+import path from "path";
+import { PluginConfig } from "../../src/services/create.services/plugin-config.service";
 
 const testName = "create-cache";
 
 //#region test template
-function testTemplate(plugins: Plugin[]) {
+function testTemplate(plugins: string[]) {
   const pluginsStr = plugins.join("_");
   test(
     `create template ${pluginsStr}`,
@@ -49,13 +50,16 @@ function testTemplate(plugins: Plugin[]) {
     1000 * 60 * 5
   );
 }
+const file = path.join(__dirname, "../../template/plugin.json");
+const content = await fs.promises.readFile(file, "utf-8");
+const config: PluginConfig = JSON.parse(content);
 
-const plugins = allPlugins.map((item) => item.value as Plugin);
-function selectPlugins(count: number, startIndex = 0): Plugin[][] {
+const plugins = config.plugins.map((item) => item.name);
+function selectPlugins(count: number, startIndex = 0): string[][] {
   if (count < 1) return [];
   if (startIndex + count > plugins.length) return [];
 
-  const result: Plugin[][] = [];
+  const result: string[][] = [];
   for (let i = startIndex; i <= plugins.length - count; i++) {
     const first = plugins[i];
     const remain = selectPlugins(count - 1, i + 1);

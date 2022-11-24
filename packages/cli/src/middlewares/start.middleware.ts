@@ -5,13 +5,11 @@ import * as fs from "fs";
 import { TsconfigService } from "../services/build.services/tsconfig.service";
 import spawn from "cross-spawn";
 import killProcess from "tree-kill";
-import { START_DEV_FILE_NAME } from "../constant";
 import { treeKillSync } from "../utils/tree-kill";
 import shell from "shelljs";
 import { ConfigService } from "../services/build.services/config.service";
 import { ChildProcess } from "child_process";
 import { DepsService } from "../services/deps.service";
-import { slsPackages } from "../utils/plugins";
 
 export class StartMiddleware extends Middleware {
   @Inject
@@ -30,18 +28,6 @@ export class StartMiddleware extends Middleware {
       "start.inspect",
       false
     );
-  }
-  private get startupFile() {
-    const result = this.configService.getOptionOrConfigValue<string>(
-      "startupFile",
-      "startu.startupFile",
-      START_DEV_FILE_NAME
-    );
-    if (result.includes(".")) {
-      return result;
-    } else {
-      return result + ".js";
-    }
   }
   private get port() {
     return this.configService.getOptionOrConfigValue<string>(
@@ -78,8 +64,6 @@ export class StartMiddleware extends Middleware {
     await this.next();
 
     if (!this.watch) {
-      await this.createSlsEnter();
-
       const processArgs = this.getProcessArgs();
       shell.exec(`${this.binaryToRun} ${processArgs.join(" ")}`, {
         cwd: this.cacheDir,
@@ -104,8 +88,6 @@ export class StartMiddleware extends Middleware {
     };
 
     return async () => {
-      await this.createSlsEnter();
-
       if (childProcessRef) {
         childProcessRef.removeAllListeners("exit");
         childProcessRef.on("exit", () => {
@@ -132,11 +114,7 @@ export class StartMiddleware extends Middleware {
   }
 
   private getProcessArgs() {
-    let outputFilePath = path.resolve(
-      process.cwd(),
-      this.cacheDir,
-      this.startupFile
-    );
+    let outputFilePath = this.getStartFilePath();
     if (!fs.existsSync(outputFilePath)) {
       throw new Error("Can't find startup file");
     }
@@ -160,24 +138,27 @@ export class StartMiddleware extends Middleware {
     return processArgs;
   }
 
-  private async createSlsEnter() {
-    if (this.startupFile != START_DEV_FILE_NAME) {
-      return;
+  private getStartFilePath() {
+    const startupFile = this.configService.getOptionOrConfigValue<string>(
+      "startupFile",
+      "startu.startupFile"
+    );
+    if (startupFile) {
+      if (startupFile.includes(".")) {
+        return startupFile;
+      } else {
+        return startupFile + ".js";
+      }
     }
 
-    const isSls =
-      this.depsService.getDeps(
-        path.join(process.cwd(), "package.json"),
-        (dep) =>
-          slsPackages.filter((item) => `@ipare/${item}` == dep).length > 0,
-        undefined,
-        false
-      ).length > 0;
-    if (!isSls) return;
+    const files = ["native", "index", "main"];
+    for (const file of files) {
+      const filePath = path.resolve(process.cwd(), this.cacheDir, `${file}.js`);
+      if (fs.existsSync(filePath)) {
+        return filePath;
+      }
+    }
 
-    await fs.promises.copyFile(
-      path.join(__dirname, "../sls.js"),
-      path.resolve(process.cwd(), this.cacheDir, START_DEV_FILE_NAME)
-    );
+    throw new Error("The start file is not exist");
   }
 }

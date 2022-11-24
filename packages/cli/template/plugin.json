@@ -1,23 +1,88 @@
 {
+  "plugins": [
+    {
+      "name": "inject",
+      "desc": "依赖注入 (@ipare/inject)",
+      "default": true
+    },
+    {
+      "name": "router",
+      "desc": "路由 (@ipare/router)",
+      "default": true
+    },
+    {
+      "name": "view",
+      "desc": "视图渲染 (@ipare/view)"
+    },
+    {
+      "name": "mva",
+      "desc": "Mva 框架 (@ipare/mva)"
+    },
+    {
+      "name": "pipe",
+      "desc": "管道 (用于参数格式化) (@ipare/pipe)",
+      "default": true
+    },
+    {
+      "name": "filter",
+      "desc": "过滤器 (用于拦截请求) (@ipare/filter)"
+    },
+    {
+      "name": "validator",
+      "desc": "请求参数校验 (@ipare/validator)"
+    },
+    {
+      "name": "testing",
+      "desc": "测试工具 (@ipare/testing)"
+    },
+    {
+      "name": "static",
+      "desc": "静态资源 (@ipare/static)"
+    },
+    {
+      "name": "swagger",
+      "desc": "Swagger 文档 (@ipare/swagger)"
+    },
+    {
+      "name": "jwt",
+      "desc": "jwt 身份验证中间件 (@ipare/jwt)"
+    },
+    {
+      "name": "env",
+      "desc": "环境配置插件 (@ipare/env)"
+    },
+    {
+      "name": "logger",
+      "desc": "日志插件 (@ipare/logger)"
+    },
+    {
+      "name": "micro-grpc-client",
+      "desc": "微服务 gRPC 客户端 (@ipare/micro-grpc-client)"
+    },
+    {
+      "name": "micro-tcp-client",
+      "desc": "微服务 Tcp 客户端 (@ipare/micro-tcp-client)"
+    },
+    {
+      "name": "micro-redis-client",
+      "desc": "微服务 Redis 客户端 (@ipare/micro-redis-client)"
+    },
+    {
+      "name": "micro-mqtt-client",
+      "desc": "微服务 MQTT 客户端 (@ipare/micro-mqtt-client)"
+    }
+  ],
   "dependencies": {
     "ejs": "view",
     "class-validator": "validator"
   },
-  "constant": ["core", "cli"],
   "files": {
     "static/*": "static",
     "src/views/*": "view",
     ".env": "env",
     ".env.development": "env"
   },
-  "names": [
-    {
-      "source": "startup.micro.ts",
-      "target": "startup.ts"
-    },
-    {
-      "source": "startup.http.ts",
-      "target": "startup.ts"
-    }
-  ]
+  "devDependencies": {
+    "native": "lambda||alifc"
+  }
 }

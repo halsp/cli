@@ -5,16 +5,15 @@ import * as fs from "fs";
 import walk from "ignore-walk";
 import { ExpressionService } from "./expression.service";
 import { CreateEnvService } from "./create-env.service";
-import { CreatePluginService } from "./create-plugin.service";
+import { CopyPluginFileService } from "./copy-plugin-file.service";
 import prettier from "prettier";
-import { isPlugin, Plugin } from "../../utils/plugins";
 
 // plugin inject|router
 const commentPluginStartRegExp = /^\s*\/{2,}\s*\{\s*/;
 // plugin end
 const commentPluginEndRegExp = /^\s*\/{2,}\s*\}\s*/;
 const importRegExp =
-  /^import\s((\"@ipare\/([^/]+?)((\")|(\/.+\")))|(.+?\sfrom\s\"@ipare\/([^/]+?)((\")|(\/.+\"))));$/;
+  /^import\s((\"@ipare\/([^/]+?)((\")|(\/.+\")))|(.+?\sfrom\s(\"@ipare\/([^/]+?)((\")|(\/.+\")))));$/;
 const uslessRegExp = /\/{2,}\s*\!\s*/;
 
 export class CreateTemplateService {
@@ -25,7 +24,7 @@ export class CreateTemplateService {
   @Inject
   private readonly createEnvService!: CreateEnvService;
   @Inject
-  private readonly createPluginService!: CreatePluginService;
+  private readonly copyPluginFileService!: CopyPluginFileService;
 
   private get targetDir() {
     return this.createEnvService.targetDir;
@@ -34,10 +33,10 @@ export class CreateTemplateService {
     return path.join(__dirname, "../../../template");
   }
 
-  public async create(plugins: Plugin[]) {
+  public async create(plugins: string[]) {
     if (!fs.existsSync(this.sourceDir)) return;
 
-    const exclude = await this.createPluginService.excludePluginFiles(plugins);
+    const exclude = await this.copyPluginFileService.copy(plugins);
     let paths = await walk({
       path: this.sourceDir,
       ignoreFiles: [".gitignore", ".ipareignore"],
@@ -46,7 +45,7 @@ export class CreateTemplateService {
     await this.copyTemplate(plugins, paths);
   }
 
-  private async copyTemplate(plugins: Plugin[], paths: string[]) {
+  private async copyTemplate(plugins: string[], paths: string[]) {
     for (const p of paths) {
       const sourceFile = path.join(this.sourceDir, p);
       let targetFile = path.join(this.targetDir, p);
@@ -56,18 +55,14 @@ export class CreateTemplateService {
         "utf-8"
       );
       content = this.readFile(content, plugins);
-      if (content != null) {
-        const renameInfo = this.getRename(content);
-        if (targetFile.endsWith("_.get.ts")) {
-          console.log("renameInfo", targetFile, renameInfo);
-        }
-        if (renameInfo) {
-          content = renameInfo.code;
-          targetFile = targetFile
-            .replace(/\\/g, "/")
-            .replace(/[^\/]+$/, renameInfo.rename);
-          console.log("targetFile2", targetFile);
-        }
+      const renameInfo = this.getRename(content);
+      if (renameInfo) {
+        content = renameInfo.code;
+        targetFile = targetFile
+          .replace(/\\/g, "/")
+          .replace(/[^\/]+$/, renameInfo.rename);
+      }
+      if (!!content.trim()) {
         if (sourceFile.endsWith(".ts")) {
           content = prettier.format(content, {
             parser: "typescript",
@@ -79,22 +74,23 @@ export class CreateTemplateService {
     }
   }
 
-  public readFile(code: string, plugins: Plugin[]): string | null {
+  public readFile(code: string, plugins: string[]): string {
     const lines = code.trimStart().replace(/\r\n/g, "\n").split("\n");
 
     this.removeCommentLine(lines, plugins);
     this.removeImportLine(lines, plugins);
 
     const lineEnd = code.includes("\r\n") ? "\r\n" : "\n";
-    const result = lines.join(lineEnd).trimStart();
+    let result = lines.join(lineEnd).trimStart();
+    result = this.replaceCode(result);
     if (!!result.trim()) {
-      return this.replaceCode(result);
+      return result;
     } else {
-      return null;
+      return "";
     }
   }
 
-  private removeCommentLine(lines: string[], plugins: Plugin[]) {
+  private removeCommentLine(lines: string[], plugins: string[]) {
     while (true) {
       const index = lines.findIndex((line) => uslessRegExp.test(line));
       if (index < 0) {
@@ -138,7 +134,7 @@ export class CreateTemplateService {
     return -1;
   }
 
-  private removeImportLine(lines: string[], plugins: Plugin[]) {
+  private removeImportLine(lines: string[], plugins: string[]) {
     let importIndex = -1;
     while (true) {
       importIndex = lines.findIndex(
@@ -148,8 +144,11 @@ export class CreateTemplateService {
         break;
       }
       const regArr = importRegExp.exec(lines[importIndex]) as RegExpExecArray;
-      const importName = (regArr[3] ?? regArr[8]) as Plugin;
-      if (!plugins.includes(importName) && isPlugin(importName)) {
+      const importName = regArr[3] ?? regArr[9];
+      const pkgName = (regArr[2] ?? regArr[8])
+        .replace(/^\"/, "")
+        .replace(/\"$/, "");
+      if (!plugins.includes(importName) && pkgName.startsWith("@ipare/")) {
         lines.splice(importIndex, 1);
         importIndex--;
       }

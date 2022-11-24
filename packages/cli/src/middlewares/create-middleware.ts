@@ -7,7 +7,6 @@ import { PluginSelectService } from "../services/create.services/plugin-select.s
 import { CreatePackageService } from "../services/create.services/create-package.service";
 import path from "path";
 import { CommandService } from "../services/command.service";
-import { allPlugins, Plugin } from "../utils/plugins";
 import { CopyBaseService } from "../services/create.services/copy-base-files.service";
 import inquirer from "inquirer";
 import { RunnerService } from "../services/runner.service";
@@ -61,6 +60,7 @@ export class CreateMiddleware extends Middleware {
     }
 
     const plugins = await this.getPlugins();
+    plugins.push("cli");
     const env = await this.createEnvService.create();
     if (env) {
       plugins.push(env);
@@ -115,15 +115,14 @@ export class CreateMiddleware extends Middleware {
       return [];
     }
 
-    let plugins: Plugin[];
+    let plugins: string[];
     const argPlugins = this.commandService.getOptionVlaue<string>("plugins");
     if (argPlugins) {
       plugins = argPlugins
         .split(/\b|,/)
         .map((item) => item.trim())
         .filter((item) => !!item)
-        .map((item) => item as Plugin)
-        .filter((item) => allPlugins.some((ap) => ap.value == item));
+        .map((item) => item);
     } else {
       plugins = await this.pluginSelectService.select();
     }

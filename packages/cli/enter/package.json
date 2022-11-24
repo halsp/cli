@@ -1,7 +1,0 @@
-{
-  "name": "enter",
-  "dependencies": {
-    "@ipare/core": "^3.0.0",
-    "@ipare/native": "^3.0.0"
-  }
-}

@@ -19,7 +19,7 @@
   },
   "main": "dist/index.js",
   "scripts": {
-    "build": "rimraf ./dist/* && tsc && tsc -p enter/tsconfig.json",
+    "build": "rimraf ./dist/* && tsc",
     "build:create-ipare": "ts-node scripts/create-ipare.ts && npm run build",
     "publish:beta": "npm run build && npm publish --tag=beta --access=public",
     "test": "npm run build && jest",
