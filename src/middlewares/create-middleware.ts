@@ -5,13 +5,14 @@ import { FileService } from "../services/file.service";
 import { CreateEnvService } from "../services/create.services/create-env.service";
 import { PluginSelectService } from "../services/create.services/plugin-select.service";
 import { CreatePackageService } from "../services/create.services/create-package.service";
-import path from "path";
 import { CommandService } from "../services/command.service";
 import { CopyBaseService } from "../services/create.services/copy-base-files.service";
 import inquirer from "inquirer";
 import { RunnerService } from "../services/runner.service";
 import { Middleware } from "@ipare/core";
 import chalk from "chalk";
+import { PackageManagerService } from "../services/package-manager.service";
+import { SortPluginsService } from "../services/create.services/sort-plugins.service";
 
 export class CreateMiddleware extends Middleware {
   @Inject
@@ -30,6 +31,10 @@ export class CreateMiddleware extends Middleware {
   private readonly copyBaseService!: CopyBaseService;
   @Inject
   private readonly runnerService!: RunnerService;
+  @Inject
+  private readonly packageManagerService!: PackageManagerService;
+  @Inject
+  private readonly sortPluginsService!: SortPluginsService;
 
   private get targetDir() {
     return this.createEnvService.targetDir;
@@ -59,33 +64,25 @@ export class CreateMiddleware extends Middleware {
       });
     }
 
-    const plugins = await this.getPlugins();
-    plugins.push("cli");
-    const env = await this.createEnvService.create();
-    if (env) {
-      plugins.push(env);
-    }
+    const pm = await this.getPackageManager();
+    if (!pm) return;
 
-    const createPackageResult = await this.createPackageService.create(plugins);
+    const templateInitResult = await this.createTemplateService.init(pm);
+    if (!templateInitResult) return;
+
+    const env = await this.createEnvService.create();
+
+    const plugins = await this.getPlugins(env);
+    this.logPlugins(plugins);
+
+    const createPackageResult = await this.createPackageService.create(
+      plugins,
+      pm
+    );
     if (!createPackageResult) return;
     await this.copyBaseService.copy();
 
-    const sortedPlugins = await this.pluginSelectService.sortPlugins(
-      plugins,
-      path.join(this.targetDir)
-    );
-
-    const consolePlugins = sortedPlugins
-      .filter((p) => p != "core")
-      .map((p) => `@ipare/${p}`);
-    console.log("\n");
-    console.log(
-      chalk.bold("Sorted plugins"),
-      chalk.greenBright(consolePlugins.join(", "))
-    );
-    console.log("\n");
-
-    await this.createTemplateService.create(sortedPlugins);
+    await this.createTemplateService.create(plugins);
     this.initGit();
     this.runApp();
   }
@@ -110,7 +107,7 @@ export class CreateMiddleware extends Middleware {
     });
   }
 
-  private async getPlugins() {
+  private async getPlugins(env?: string) {
     if (this.commandService.getOptionVlaue<boolean>("skipPlugins")) {
       return [];
     }
@@ -124,8 +121,9 @@ export class CreateMiddleware extends Middleware {
         .filter((item) => !!item)
         .map((item) => item);
     } else {
-      plugins = await this.pluginSelectService.select();
+      plugins = await this.pluginSelectService.select(env);
     }
+    plugins = await this.sortPluginsService.sortPlugins(plugins, true);
     return plugins;
   }
 
@@ -151,5 +149,25 @@ export class CreateMiddleware extends Middleware {
       },
     ]);
     this.ctx.commandArgs.name = name.trim();
+  }
+
+  private async getPackageManager() {
+    let pm = this.commandService.getOptionVlaue<string>("packageManager");
+    if (!pm) {
+      pm = await this.packageManagerService.pickPackageManager();
+    }
+    return pm;
+  }
+
+  private logPlugins(plugins: string[]) {
+    const consolePlugins = plugins
+      .filter((p) => p != "core")
+      .map((p) => `@ipare/${p}`);
+    console.log("\n");
+    console.log(
+      chalk.bold("Sorted plugins"),
+      chalk.greenBright(consolePlugins.join(", "))
+    );
+    console.log("\n");
   }
 }

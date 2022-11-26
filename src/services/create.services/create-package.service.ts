@@ -31,7 +31,7 @@ export class CreatePackageService {
     return this.createEnvService.targetDir;
   }
 
-  public async create(plugins: string[]): Promise<boolean> {
+  public async create(plugins: string[], pm: string): Promise<boolean> {
     const pkg = this.getPackage();
     const pluginConfig = await this.pluginConfigService.getSortedConfig(
       plugins
@@ -52,20 +52,11 @@ export class CreatePackageService {
       })
     );
 
-    const pm = await this.getPackageManager();
     const installResult = this.packageManagerService.install(
       pm,
       this.targetDir
     );
     return installResult.status == 0;
-  }
-
-  private async getPackageManager() {
-    let pm = this.commandService.getOptionVlaue<string>("packageManager");
-    if (!pm) {
-      pm = await this.packageManagerService.pickPackageManager();
-    }
-    return pm;
   }
 
   private setDeps(
@@ -81,13 +72,33 @@ export class CreatePackageService {
     Object.keys(deps)
       .filter((k) => k.startsWith("@ipare/"))
       .filter((k) => !plugins.some((p) => `@ipare/${p}` == k))
+      .filter((k) => {
+        if (isDev) {
+          return devDependencies[k] != true;
+        } else {
+          return dependencies[k] != true;
+        }
+      })
       .forEach((key) => {
         delete deps[key];
       });
 
+    if (!isDev) {
+      Object.keys(deps)
+        .filter((k) => dependencies[k] == false)
+        .forEach((key) => {
+          delete deps[key];
+        });
+    }
+
     Object.keys(deps)
-      .filter((k) => dependencies[k] == false)
-      .filter((k) => !isDev || devDependencies[k] != true)
+      .filter((k) => {
+        if (isDev) {
+          return devDependencies[k] == false;
+        } else {
+          return dependencies[k] == false;
+        }
+      })
       .forEach((key) => {
         delete deps[key];
       });

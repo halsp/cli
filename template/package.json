@@ -40,8 +40,6 @@
     "@ipare/validator": "^3.0.1",
     "@ipare/view": "^3.0.1",
     "@ipare/logger": "^3.0.1",
-    "@ipare/http": "^3.0.1",
-    "@ipare/micro": "^3.0.1",
     "@ipare/micro-mqtt": "^3.0.1",
     "@ipare/micro-mqtt-client": "^3.0.1",
     "@ipare/micro-redis": "^3.0.1",

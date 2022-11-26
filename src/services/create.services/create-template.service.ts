@@ -7,6 +7,10 @@ import { ExpressionService } from "./expression.service";
 import { CreateEnvService } from "./create-env.service";
 import { CopyPluginFileService } from "./copy-plugin-file.service";
 import prettier from "prettier";
+import { PackageManagerService } from "../package-manager.service";
+import { CommandService } from "../command.service";
+import { SortPluginsService } from "./sort-plugins.service";
+import { ExpressionObject, PluginConfigService } from "./plugin-config.service";
 
 // plugin inject|router
 const commentPluginStartRegExp = /^\s*\/{2,}\s*\{\s*/;
@@ -25,6 +29,14 @@ export class CreateTemplateService {
   private readonly createEnvService!: CreateEnvService;
   @Inject
   private readonly copyPluginFileService!: CopyPluginFileService;
+  @Inject
+  private readonly commandService!: CommandService;
+  @Inject
+  private readonly packageManagerService!: PackageManagerService;
+  @Inject
+  private readonly sortPluginsService!: SortPluginsService;
+  @Inject
+  private readonly pluginConfigService!: PluginConfigService;
 
   private get targetDir() {
     return this.createEnvService.targetDir;
@@ -35,6 +47,8 @@ export class CreateTemplateService {
 
   public async create(plugins: string[]) {
     if (!fs.existsSync(this.sourceDir)) return;
+
+    plugins = await this.sortPlugins(plugins);
 
     const exclude = await this.copyPluginFileService.copy(plugins);
     let paths = await walk({
@@ -58,9 +72,11 @@ export class CreateTemplateService {
       const renameInfo = this.getRename(content);
       if (renameInfo) {
         content = renameInfo.code;
-        targetFile = targetFile
-          .replace(/\\/g, "/")
-          .replace(/[^\/]+$/, renameInfo.rename);
+        if (renameInfo.rename) {
+          targetFile = targetFile
+            .replace(/\\/g, "/")
+            .replace(/[^\/]+$/, renameInfo.rename);
+        }
       }
       if (!!content.trim()) {
         if (sourceFile.endsWith(".ts")) {
@@ -74,7 +90,7 @@ export class CreateTemplateService {
     }
   }
 
-  public readFile(code: string, plugins: string[]): string {
+  private readFile(code: string, plugins: string[]): string {
     const lines = code.trimStart().replace(/\r\n/g, "\n").split("\n");
 
     this.removeCommentLine(lines, plugins);
@@ -90,7 +106,7 @@ export class CreateTemplateService {
     }
   }
 
-  private removeCommentLine(lines: string[], plugins: string[]) {
+  private async removeCommentLine(lines: string[], plugins: string[]) {
     while (true) {
       const index = lines.findIndex((line) => uslessRegExp.test(line));
       if (index < 0) {
@@ -99,6 +115,7 @@ export class CreateTemplateService {
 
       lines.splice(index, 2);
     }
+
     while (true) {
       const start = lines.findIndex((line) =>
         commentPluginStartRegExp.test(line)
@@ -160,7 +177,7 @@ export class CreateTemplateService {
       return;
     }
 
-    const matchArr = code.match(/\/\*\s*rename([\s\S]+)*\*\//);
+    const matchArr = code.match(/\/\*\s*rename([\s\S]+)\*\//);
     if (!matchArr?.length) return;
 
     code = code.replace(matchArr[0], "");
@@ -187,4 +204,58 @@ export class CreateTemplateService {
     code = code.replace(replaceContent[0], replaceContent[1]);
     return code;
   }
+
+  public async init(pm: string) {
+    const cliVersion = getCliVersion();
+    const initFlatFilePath = path.join(
+      __dirname,
+      "../../../template/node_modules",
+      cliVersion
+    );
+    if (this.commandService.getOptionVlaue<boolean>("forseInit")) {
+      console.log("Forse init template. Please wait...");
+    } else {
+      if (fs.existsSync(initFlatFilePath)) {
+        return true;
+      }
+      console.log(
+        "The command is used for the first time and is being initialized. Please wait..."
+      );
+    }
+
+    const installResult = this.packageManagerService.install(
+      pm,
+      path.join(__dirname, "../../../template")
+    );
+    if (installResult.status == 0) {
+      await fs.promises.writeFile(initFlatFilePath, cliVersion);
+    }
+    return installResult.status == 0;
+  }
+
+  private async sortPlugins(plugins: string[]) {
+    const pluginConfig = await this.pluginConfigService.getSortedConfig(
+      plugins
+    );
+    plugins = [...plugins];
+
+    function addFromConfig(config: ExpressionObject<boolean>) {
+      Object.keys(config)
+        .filter((k) => k.startsWith("@ipare/"))
+        .filter((k) => config[k] == true)
+        .map((k) => k.replace(/^@ipare\//, ""))
+        .forEach((k) => plugins.push(k));
+    }
+
+    addFromConfig(pluginConfig.dependencies);
+    addFromConfig(pluginConfig.devDependencies);
+
+    return await this.sortPluginsService.sortPlugins(plugins, false);
+  }
+}
+
+function getCliVersion() {
+  const file = path.join(__dirname, "../../../package.json");
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  return require(file).version;
 }

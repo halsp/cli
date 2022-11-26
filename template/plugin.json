@@ -16,7 +16,8 @@
     },
     {
       "name": "mva",
-      "desc": "Mva 框架 (@ipare/mva)"
+      "desc": "Mva 框架 (@ipare/mva)",
+      "when": "!micro"
     },
     {
       "name": "pipe",
@@ -37,11 +38,13 @@
     },
     {
       "name": "static",
-      "desc": "静态资源 (@ipare/static)"
+      "desc": "静态资源 (@ipare/static)",
+      "when": "!micro"
     },
     {
       "name": "swagger",
-      "desc": "Swagger 文档 (@ipare/swagger)"
+      "desc": "Swagger 文档 (@ipare/swagger)",
+      "when": "!micro"
     },
     {
       "name": "jwt",
@@ -83,6 +86,6 @@
     ".env.development": "env"
   },
   "devDependencies": {
-    "native": "lambda||alifc"
+    "@ipare/native": "lambda||alifc"
   }
 }
