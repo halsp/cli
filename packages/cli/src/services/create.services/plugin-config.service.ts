@@ -3,28 +3,41 @@ import * as fs from "fs";
 import { isString } from "@ipare/core";
 import { ExpressionService } from "./expression.service";
 import { Inject } from "@ipare/inject";
+import { SortPluginsService } from "./sort-plugins.service";
 
-type ExpressionObject = Record<string, string | boolean | undefined>;
-type SortedExpressionObject = Record<string, boolean | undefined>;
+export type ExpressionObject<T = string | boolean> = Record<
+  string,
+  T | undefined
+>;
 
-type InternalPluginConfig<T> = {
-  plugins: { name: string; desc: string; default?: boolean }[];
-  dependencies: T;
-  files: T;
-  devDependencies: T;
+type InternalPluginConfig<T = string | boolean> = {
+  plugins: {
+    name: string;
+    desc: string;
+    default?: boolean;
+    when?: string | boolean;
+  }[];
+  dependencies: ExpressionObject<T>;
+  files: ExpressionObject<T>;
+  devDependencies: ExpressionObject<T>;
 };
-export type PluginConfig = InternalPluginConfig<ExpressionObject>;
-export type SortedPluginConfig = InternalPluginConfig<SortedExpressionObject>;
+export type PluginConfig = InternalPluginConfig;
+export type SortedPluginConfig = InternalPluginConfig<boolean>;
 
 export class PluginConfigService {
   @Inject
   private readonly expressionService!: ExpressionService;
+  @Inject
+  private readonly sortPluginsService!: SortPluginsService;
+
+  private get filePath() {
+    return path.join(__dirname, "../../../template/plugin.json");
+  }
 
   #config?: PluginConfig;
   public async getConfig(): Promise<PluginConfig> {
     if (!this.#config) {
-      const file = path.join(__dirname, "../../../template/plugin.json");
-      const content = await fs.promises.readFile(file, "utf-8");
+      const content = await fs.promises.readFile(this.filePath, "utf-8");
       this.#config = JSON.parse(content);
     }
     return this.#config as PluginConfig;
@@ -34,12 +47,13 @@ export class PluginConfigService {
     let config = await this.getConfig();
     config = JSON.parse(JSON.stringify(config));
 
+    plugins = await this.sortPluginsService.sortPlugins(plugins, false);
+
     const calcExpression = (obj: ExpressionObject) => {
       for (const key in obj) {
         const value = obj[key];
         if (isString(value)) {
-          const newValue = this.expressionService.calcPlugins(value, plugins);
-          obj[key] = newValue;
+          obj[key] = this.expressionService.calcPlugins(value, plugins);
         }
       }
     };
@@ -47,6 +61,11 @@ export class PluginConfigService {
     calcExpression(config.dependencies);
     calcExpression(config.files);
     calcExpression(config.devDependencies);
+    for (const plugin of config.plugins) {
+      if (isString(plugin.when)) {
+        plugin.when = this.expressionService.calcPlugins(plugin.when, plugins);
+      }
+    }
 
     return config as SortedPluginConfig;
   }
