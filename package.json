@@ -32,9 +32,9 @@
   "author": "hal-wang",
   "license": "MIT",
   "dependencies": {
-    "@ipare/core": "^3.0.0",
-    "@ipare/inject": "^3.0.0",
-    "@ipare/pipe": "^3.0.0",
+    "@ipare/core": "^3.0.2",
+    "@ipare/inject": "^3.0.2",
+    "@ipare/pipe": "^3.0.2",
     "@types/cross-spawn": "^6.0.2",
     "chalk": "^4.1.2",
     "child_process": "^1.0.2",
