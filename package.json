@@ -82,7 +82,6 @@
     "/.github/*",
     "/bin/*",
     "/dist/*",
-    "/env/*",
     "/scripts/*",
     "/src/*",
     "/template/*",

@@ -75,6 +75,102 @@
       "desc": "微服务 MQTT 客户端 (@ipare/micro-mqtt-client)"
     }
   ],
+  "envs": [
+    {
+      "desc": "原生 NodeJS",
+      "file": "native",
+      "plugin": "native"
+    },
+    {
+      "desc": "腾讯云函数",
+      "pickMessage": "选择云函数类型",
+      "children": [
+        {
+          "desc": "事件函数",
+          "file": "lambda",
+          "plugin": "lambda"
+        },
+        {
+          "desc": "Web 函数",
+          "file": "sls-http-tcloud",
+          "plugin": "native"
+        }
+      ]
+    },
+    {
+      "desc": "Azure Function App",
+      "file": "azure",
+      "plugin": "lambda"
+    },
+    {
+      "desc": "AWS Lambda",
+      "file": "lambda",
+      "plugin": "lambda"
+    },
+    {
+      "desc": "阿里云函数计算",
+      "pickMessage": "选择云函数类型",
+      "children": [
+        {
+          "desc": "处理事件请求",
+          "file": "lambda",
+          "plugin": "lambda"
+        },
+        {
+          "desc": "处理 HTTP 请求",
+          "file": "alifc",
+          "plugin": "alifc"
+        }
+      ]
+    },
+    {
+      "desc": "华为云函数工作流",
+      "pickMessage": "选择云函数类型",
+      "children": [
+        {
+          "desc": "事件函数",
+          "file": "lambda",
+          "plugin": "lambda"
+        },
+        {
+          "desc": "Web 函数",
+          "file": "sls-http-huawei",
+          "plugin": "native"
+        }
+      ]
+    },
+    {
+      "desc": "微服务",
+      "pickMessage": "选择微服务通讯方式",
+      "children": [
+        {
+          "desc": "TCP",
+          "file": "micro-tcp",
+          "plugin": "micro-tcp"
+        },
+        {
+          "desc": "gRPC",
+          "file": "micro-grpc",
+          "plugin": "micro-grpc"
+        },
+        {
+          "desc": "MQTT",
+          "file": "micro-mqtt",
+          "plugin": "micro-mqtt"
+        },
+        {
+          "desc": "Redis",
+          "file": "micro-redis",
+          "plugin": "micro-redis"
+        },
+        {
+          "desc": "NATS",
+          "file": "micro-nats",
+          "plugin": "micro-nats"
+        }
+      ]
+    }
+  ],
   "dependencies": {
     "ejs": "view",
     "class-validator": "validator"

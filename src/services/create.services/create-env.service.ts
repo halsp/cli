@@ -6,19 +6,11 @@ import { Inject } from "@ipare/inject";
 import { FileService } from "../file.service";
 import { InjectContext } from "@ipare/pipe";
 import { CommandService } from "../command.service";
-
-type EnvConfigItem = {
-  desc: string;
-  file: string;
-  plugin: string;
-};
-type EnvConfigType = {
-  desc: string;
-  children: EnvConfigItem[];
-  pickMessage: string;
-};
-
-type EnvConfig = EnvConfigItem | EnvConfigType;
+import {
+  EnvPluginItem,
+  EnvSelectItem,
+  PluginConfigService,
+} from "./plugin-config.service";
 
 export class CreateEnvService {
   @InjectContext
@@ -27,12 +19,14 @@ export class CreateEnvService {
   private readonly fileService!: FileService;
   @Inject
   private readonly commandService!: CommandService;
+  @Inject
+  private readonly pluginConfigService!: PluginConfigService;
 
   private get name() {
     return this.ctx.commandArgs.name;
   }
   public get sourceDir() {
-    return path.join(__dirname, `../../../env`);
+    return path.join(__dirname, `../../../template/startups`);
   }
   public get targetDir() {
     return path.join(process.cwd(), this.name);
@@ -50,16 +44,16 @@ export class CreateEnvService {
     return env.plugin;
   }
 
-  private async getEnv(): Promise<EnvConfigItem | undefined> {
+  private async getEnv(): Promise<EnvPluginItem | undefined> {
     if (this.commandService.getOptionVlaue<boolean>("skipEnv")) {
       return undefined;
     }
 
     let envType: string;
-    const envConfig = this.getEnvConfig();
+    const { envs: envConfig } = await this.pluginConfigService.getConfig();
     const envs = this.getEnvs(envConfig);
     envType = this.commandService.getOptionVlaue<string>("env") as string;
-    if (envType && !this.getEnvs(envConfig).some((e) => e.file == envType)) {
+    if (envType && !envs.some((e) => e.file == envType)) {
       throw new Error("The env is not exist");
     }
     if (!envType) {
@@ -68,29 +62,26 @@ export class CreateEnvService {
     return envs.filter((e) => e.file == envType)[0];
   }
 
-  private getEnvConfig(): EnvConfig[] {
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    return require(path.join(this.sourceDir, "config.json"));
-  }
+  private getEnvs(config: EnvSelectItem[]) {
+    const result: EnvPluginItem[] = [];
 
-  private getEnvs(config: EnvConfig[]) {
-    const result: EnvConfigItem[] = [];
-
-    config
-      .filter((item) => "file" in item)
-      .forEach((item) => result.push(item as EnvConfigItem));
-
-    config
-      .filter((item) => "children" in item)
-      .forEach((item) => {
-        (item as EnvConfigType).children.forEach((item) => result.push(item));
+    function add(items: EnvSelectItem[]) {
+      items.forEach((item) => {
+        if ("children" in item) {
+          add(item.children);
+        } else {
+          result.push(item);
+        }
       });
+    }
+
+    add(config);
 
     return result;
   }
 
   private async getEnvByInquirer(
-    envConfig: EnvConfig[],
+    envConfig: EnvSelectItem[],
     message?: string
   ): Promise<string> {
     message = message ?? "Pick the environment to run application";
@@ -109,7 +100,7 @@ export class CreateEnvService {
         })),
       },
     ]);
-    const env = answer.env as EnvConfig;
+    const env = answer.env as EnvSelectItem;
     if ("file" in env) {
       return env.file;
     } else {
