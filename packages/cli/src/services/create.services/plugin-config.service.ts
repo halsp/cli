@@ -10,6 +10,18 @@ export type ExpressionObject<T = string | boolean> = Record<
   T | undefined
 >;
 
+export type EnvPluginItem = {
+  desc: string;
+  file: string;
+  plugin: string;
+};
+export type EnvParentItem = {
+  desc: string;
+  pickMessage: string;
+  children: EnvSelectItem[];
+};
+export type EnvSelectItem = EnvPluginItem | EnvParentItem;
+
 type InternalPluginConfig<T = string | boolean> = {
   plugins: {
     name: string;
@@ -20,6 +32,7 @@ type InternalPluginConfig<T = string | boolean> = {
   dependencies: ExpressionObject<T>;
   files: ExpressionObject<T>;
   devDependencies: ExpressionObject<T>;
+  envs: EnvSelectItem[];
 };
 export type PluginConfig = InternalPluginConfig;
 export type SortedPluginConfig = InternalPluginConfig<boolean>;

@@ -3,9 +3,8 @@ import { NativeStartup } from "@ipare/native";
 import setupStartup from "./startup";
 
 async function bootstrap() {
-  const startup = setupStartup<any>(new NativeStartup().useHttpJsonBody());
-  const { port } = await startup.dynamicListen();
-  console.info(`start: http://localhost:${port}`);
+  const startup = setupStartup<any>(new NativeStartup().useHttpJsonBody()).dynamicListen();
+  await startup.dynamicListen();
 }
 
 bootstrap();
