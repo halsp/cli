@@ -3,13 +3,15 @@ import { CliStartup } from "../../src/cli-startup";
 import { BuildMiddlware } from "../../src/middlewares/build.middleware";
 import * as fs from "fs";
 
-test(`build error`, async () => {
-  let callCount = 0;
-  await runin(`test/build/build-error`, async () => {
-    await new CliStartup().add(BuildMiddlware).run();
+describe("error", () => {
+  it(`should build error when code is wrong`, async () => {
+    let callCount = 0;
+    await runin(`test/build/build-error`, async () => {
+      await new CliStartup().add(BuildMiddlware).run();
 
-    expect(fs.existsSync("./.ipare-cache")).toBeFalsy();
-    callCount++;
+      expect(fs.existsSync("./.ipare-cache")).toBeFalsy();
+      callCount++;
+    });
+    expect(callCount).toBe(1);
   });
-  expect(callCount).toBe(1);
 });
