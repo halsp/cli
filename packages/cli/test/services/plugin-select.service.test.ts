@@ -13,7 +13,7 @@ runTest(PluginSelectService, async (ctx, service) => {
   }
 });
 
-runTest(PluginSelectService, async (ctx, service) => {
-  const plugins = await service.sortPlugins(["inject"], process.cwd());
-  expect(plugins.length).toBeGreaterThan(1);
-});
+// runTest(PluginSelectService, async (ctx, service) => {
+//   const plugins = await service.sortPlugins(["inject"], process.cwd());
+//   expect(plugins.length).toBeGreaterThan(1);
+// });

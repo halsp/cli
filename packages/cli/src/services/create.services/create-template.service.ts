@@ -5,12 +5,12 @@ import * as fs from "fs";
 import walk from "ignore-walk";
 import { ExpressionService } from "./expression.service";
 import { CreateEnvService } from "./create-env.service";
-import { CopyPluginFileService } from "./copy-plugin-file.service";
 import prettier from "prettier";
 import { PackageManagerService } from "../package-manager.service";
 import { CommandService } from "../command.service";
 import { SortPluginsService } from "./sort-plugins.service";
 import { ExpressionObject, PluginConfigService } from "./plugin-config.service";
+import glob from "glob";
 
 // plugin inject|router
 const commentPluginStartRegExp = /^\s*\/{2,}\s*\{\s*/;
@@ -27,8 +27,6 @@ export class CreateTemplateService {
   private readonly expressionService!: ExpressionService;
   @Inject
   private readonly createEnvService!: CreateEnvService;
-  @Inject
-  private readonly copyPluginFileService!: CopyPluginFileService;
   @Inject
   private readonly commandService!: CommandService;
   @Inject
@@ -50,12 +48,12 @@ export class CreateTemplateService {
 
     plugins = await this.sortPlugins(plugins);
 
-    const exclude = await this.copyPluginFileService.copy(plugins);
+    const ignoreFiles = await this.getIgnoreFiles(plugins);
     let paths = await walk({
       path: this.sourceDir,
       ignoreFiles: [".gitignore", ".ipareignore"],
     });
-    paths = paths.filter((p) => !exclude.some((e) => e == p));
+    paths = paths.filter((p) => !ignoreFiles.some((e) => e == p));
     await this.copyTemplate(plugins, paths);
   }
 
@@ -251,6 +249,24 @@ export class CreateTemplateService {
     addFromConfig(pluginConfig.devDependencies);
 
     return await this.sortPluginsService.sortPlugins(plugins, false);
+  }
+
+  private async getIgnoreFiles(plugins: string[]) {
+    const { files } = await this.pluginConfigService.getSortedConfig(plugins);
+    const result: string[] = [];
+    for (const excludes in files) {
+      if (files[excludes]) {
+        continue;
+      }
+
+      const paths = glob.sync(excludes, {
+        cwd: this.sourceDir,
+        dot: true,
+        nodir: true,
+      });
+      result.push(...paths);
+    }
+    return result;
   }
 }
 

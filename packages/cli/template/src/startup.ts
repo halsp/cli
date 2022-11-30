@@ -186,4 +186,7 @@ extends HttpStartup
 //{micro
 extends MicroStartup
 //}
+//{!micro&&!http
+extends Startup
+//}
  */

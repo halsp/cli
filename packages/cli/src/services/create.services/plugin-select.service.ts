@@ -33,8 +33,6 @@ export class PluginSelectService {
     if (env) {
       result.push(env);
     }
-    result.push("core");
-    result.push("cli");
     return result;
   }
 }

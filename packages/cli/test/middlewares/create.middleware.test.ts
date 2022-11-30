@@ -50,8 +50,9 @@ function testTemplate(plugins: string[]) {
     1000 * 60 * 5
   );
 }
+
 const file = path.join(__dirname, "../../template/plugin.json");
-const content = await fs.promises.readFile(file, "utf-8");
+const content = fs.readFileSync(file, "utf-8");
 const config: PluginConfig = JSON.parse(content);
 
 const plugins = config.plugins.map((item) => item.name);
@@ -202,7 +203,7 @@ test(
           return { overwrite: false, plugins: ["view"] };
         }) as any,
         before: async (ctx, md) => {
-          expect(await (md as any).getPlugins()).toEqual(["view"]);
+          expect(await (md as any).getPlugins()).toEqual(["view", "core"]);
           done = true;
           return false;
         },
