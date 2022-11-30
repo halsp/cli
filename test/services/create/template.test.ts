@@ -175,3 +175,14 @@ test(`error sourceDir`, async () => {
     expect(fs.existsSync("dist/not-exist")).toBeFalsy();
   });
 });
+
+// runTest(CreatePackageService, async (ctx, service) => {
+//   const prompt = inquirer.prompt;
+//   inquirer.prompt = (() => Promise.resolve({ mng: "cnpm" })) as any;
+//   try {
+//     const mng = await service.getPackageManager();
+//     expect(mng).toBe("cnpm");
+//   } finally {
+//     inquirer.prompt = prompt;
+//   }
+// });

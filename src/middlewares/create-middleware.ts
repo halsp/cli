@@ -108,20 +108,23 @@ export class CreateMiddleware extends Middleware {
   }
 
   private async getPlugins(env?: string) {
-    if (this.commandService.getOptionVlaue<boolean>("skipPlugins")) {
-      return [];
-    }
-
     let plugins: string[];
-    const argPlugins = this.commandService.getOptionVlaue<string>("plugins");
-    if (argPlugins) {
-      plugins = argPlugins
-        .split(/\b|,/)
-        .map((item) => item.trim())
-        .filter((item) => !!item)
-        .map((item) => item);
+    if (this.commandService.getOptionVlaue<boolean>("skipPlugins")) {
+      plugins = [];
     } else {
-      plugins = await this.pluginSelectService.select(env);
+      const argPlugins = this.commandService.getOptionVlaue<string>("plugins");
+      if (argPlugins) {
+        plugins = argPlugins
+          .split(/\b|,/)
+          .map((item) => item.trim())
+          .filter((item) => !!item)
+          .map((item) => item);
+      } else {
+        plugins = await this.pluginSelectService.select(env);
+      }
+    }
+    if (!plugins.includes("core")) {
+      plugins.push("core");
     }
     plugins = await this.sortPluginsService.sortPlugins(plugins, true);
     return plugins;

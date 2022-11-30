@@ -1,4 +1,3 @@
-import inquirer from "inquirer";
 import path from "path";
 import { CreatePackageService } from "../../src/services/create.services/create-package.service";
 import { runTest } from "./runTest";
@@ -46,17 +45,6 @@ runTest(
     cliVersion: "cli-test",
   }
 );
-
-runTest(CreatePackageService, async (ctx, service) => {
-  const prompt = inquirer.prompt;
-  inquirer.prompt = (() => Promise.resolve({ mng: "cnpm" })) as any;
-  try {
-    const mng = await (service as any).getPackageManager();
-    expect(mng).toBe("cnpm");
-  } finally {
-    inquirer.prompt = prompt;
-  }
-});
 
 runTest(CreatePackageService, async (ctx, service) => {
   await (service as any).setDeps(undefined, [], {});

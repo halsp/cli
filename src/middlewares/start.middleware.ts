@@ -49,10 +49,11 @@ export class StartMiddleware extends Middleware {
       "node"
     );
   }
-  private get processEnv() {
+  private get processEnv(): NodeJS.ProcessEnv {
     return {
-      IPARE_DEBUG_PORT: this.port,
+      IPARE_DEBUG_PORT: this.port as string,
       NODE_ENV: this.configService.mode,
+      IPARE_ENV: "http",
     };
   }
 
