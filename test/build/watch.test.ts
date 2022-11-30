@@ -6,8 +6,8 @@ import { parseInject } from "@ipare/inject";
 import { AssetsService } from "../../src/services/build.services/assets.service";
 import { WatchCompilerService } from "../../src/services/build.services/watch-compiler.service";
 
-function runTest(options: { callback?: boolean }) {
-  test(`build watch`, async () => {
+describe("build with watch", () => {
+  async function runTest(options: { callback?: boolean }) {
     let callCount = 0;
     await runin(`test/build/watch`, async () => {
       await new CliStartup("test", undefined, {
@@ -46,12 +46,17 @@ function runTest(options: { callback?: boolean }) {
       callCount++;
     });
     expect(callCount).toBe(options.callback ? 3 : 2);
-  });
-}
+  }
 
-runTest({
-  callback: true,
-});
-runTest({
-  callback: false,
+  it("should build with callback options", async () => {
+    await runTest({
+      callback: true,
+    });
+  });
+
+  it("should build without callback options", async () => {
+    await runTest({
+      callback: false,
+    });
+  });
 });
