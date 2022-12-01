@@ -4,6 +4,9 @@ import { CreateMiddleware } from "../../src/middlewares/create-middleware";
 import * as fs from "fs";
 import path from "path";
 import { PluginConfig } from "../../src/services/create.services/plugin-config.service";
+import { parseInject } from "@ipare/inject";
+import { CreateTemplateService } from "../../src/services/create.services/create-template.service";
+import { HookType } from "@ipare/core";
 
 describe("template", () => {
   const testName = ".ipare-cache-template-create";
@@ -13,7 +16,7 @@ describe("template", () => {
     it(
       `should create template with plugins ${pluginsStr}`,
       async () => {
-        const cacheDir = `test/create/${testName}`;
+        const cacheDir = `test/create/${testName}_${pluginsStr}`;
         if (!fs.existsSync(cacheDir)) {
           await fs.promises.mkdir(cacheDir);
         }
@@ -22,7 +25,7 @@ describe("template", () => {
           await new CliStartup(
             "test",
             {
-              name: pluginsStr,
+              name: "test",
             },
             {
               packageManager: "npm",
@@ -84,4 +87,211 @@ describe("template", () => {
   // }
 
   testPlugins(plugins.length);
+});
+
+describe("mock template", () => {
+  async function testTemplate(
+    fn: (service: CreateTemplateService) => void | Promise<void>
+  ) {
+    let worked = false;
+    await runin("test/create/mock-template", async () => {
+      await new CliStartup("test", { name: "test" })
+        .use(async (ctx) => {
+          const service = await parseInject(ctx, CreateTemplateService);
+
+          if (!fs.existsSync("dist")) {
+            fs.mkdirSync("dist");
+          }
+
+          await fn(service);
+          worked = true;
+        })
+        .run();
+    });
+    expect(worked).toBeTruthy();
+  }
+
+  async function testTemplateDefault(
+    plugins: string[],
+    file: string,
+    fn: (text?: string) => void | Promise<void>,
+    beforeFn?: () => void | Promise<void>
+  ) {
+    await testTemplate(async (service) => {
+      fs.rmSync("./dist/template", {
+        recursive: true,
+        force: true,
+      });
+
+      if (beforeFn) {
+        await beforeFn();
+      }
+
+      expect((service["targetDir"] as string).endsWith("test")).toBeTruthy();
+      Object.defineProperty(service, "targetDir", {
+        get: () => path.join(process.cwd(), "dist/template"),
+      });
+      Object.defineProperty(service, "sourceDir", {
+        get: () => path.join(process.cwd(), "template"),
+      });
+      await service.create(plugins);
+      expect(fs.existsSync("dist")).toBeTruthy();
+
+      if (fs.existsSync(`dist/template/${file}`)) {
+        const text = fs.readFileSync(`dist/template/${file}`, "utf-8");
+        await fn(text);
+      } else {
+        await fn(undefined);
+      }
+    });
+  }
+
+  async function testContains(contains: boolean) {
+    it(`should contains children plugins: ${contains}`, async () => {
+      await testTemplateDefault(
+        contains ? ["router", "mva"] : ["router"],
+        "contains.ts",
+        (text) => {
+          if (contains) {
+            expect(text?.trim()?.split("\n")?.at(0)?.trim()).toBe(
+              "// ROUTER_CONTENT"
+            );
+          } else {
+            expect(text?.trim()?.split("\n")?.at(0)?.trim()).toBe(
+              "// CONTAINS_CONTENT"
+            );
+          }
+        }
+      );
+    });
+  }
+  testContains(true);
+  testContains(false);
+
+  async function testSelect(select: boolean) {
+    it(`should select code by plugins: ${select}`, async () => {
+      await testTemplateDefault(
+        [select ? "inject" : "router"],
+        "select.ts",
+        (text) => {
+          if (select) {
+            expect(text?.trim()).toBe("// INJECT_CONTENT");
+          } else {
+            expect(text).toBeUndefined();
+          }
+        }
+      );
+    });
+  }
+  testSelect(true);
+  testSelect(false);
+
+  it(`should parse files with crlf format`, async () => {
+    await testTemplateDefault(
+      [],
+      "crlf.txt",
+      (text) => {
+        expect(text).toBe("a\r\nb");
+      },
+      () => {
+        fs.writeFileSync("./template/crlf.txt", "a\r\nb");
+      }
+    );
+  });
+
+  it(`should create project with default template`, async () => {
+    await testTemplate(async (service) => {
+      fs.rmSync("./dist/default", {
+        recursive: true,
+        force: true,
+      });
+
+      Object.defineProperty(service, "targetDir", {
+        get: () => path.join(process.cwd(), "dist/default"),
+      });
+      await service.create([]);
+      expect(fs.existsSync("dist/default")).toBeTruthy();
+      expect(fs.existsSync("dist/default/.eslintrc.js")).toBeTruthy();
+      expect(fs.existsSync("dist/default/jest.config.js")).toBeTruthy();
+    });
+  });
+
+  function testChildren(childrenEnable: boolean) {
+    it(`should select code with children plugins: ${childrenEnable}`, async () => {
+      await testTemplateDefault(
+        childrenEnable ? ["router", "filter"] : ["router"],
+        "children.ts",
+        (text) => {
+          if (childrenEnable) {
+            expect(text?.trim()).toBe("// ROUTER_CONTENT\n// FILTER_CONTENT");
+          } else {
+            expect(text?.trim()).toBe("// ROUTER_CONTENT");
+          }
+        }
+      );
+    });
+  }
+  testChildren(true);
+  testChildren(false);
+
+  it(`should not copy codes when template sourceDir is not exist`, async () => {
+    await testTemplate((service) => {
+      fs.rmSync("./dist/not-exist", {
+        recursive: true,
+        force: true,
+      });
+
+      Object.defineProperty(service, "targetDir", {
+        get: () => path.join(process.cwd(), "dist/not-exist"),
+      });
+      Object.defineProperty(service, "sourceDir", {
+        get: () => path.join(process.cwd(), "not-exist"),
+      });
+      expect(fs.existsSync("dist/not-exist")).toBeFalsy();
+    });
+  });
+
+  it(`should not copy codes when template sourceDir is error`, async () => {
+    await testTemplate(async (service) => {
+      Object.defineProperty(service, "sourceDir", {
+        get: () => path.join(process.cwd(), "dist/not-exist"),
+      });
+
+      await service.create([]);
+      expect(fs.existsSync("dist/not-exist")).toBeFalsy();
+    });
+  });
+});
+
+describe("error", () => {
+  it("should be error when CreateTemplateService.create return false", async () => {
+    await runin("test/create", async () => {
+      const testName = ".ipare-cache-create-template-return-false";
+      if (fs.existsSync(testName)) {
+        fs.rmSync(testName, {
+          recursive: true,
+          force: true,
+        });
+      }
+
+      await new CliStartup(
+        "test",
+        {
+          name: testName,
+        },
+        {
+          packageManager: "npm",
+          force: true,
+        }
+      )
+        .hook(HookType.BeforeInvoke, (ctx, md) => {
+          md["createTemplateService"]["init"] = () => false;
+          return true;
+        })
+        .add(CreateMiddleware)
+        .run();
+      expect(fs.existsSync(testName)).toBeTruthy();
+      expect(fs.existsSync(testName + "/package.json")).toBeFalsy();
+    });
+  });
 });

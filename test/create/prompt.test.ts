@@ -6,8 +6,6 @@ import { CreateMiddleware } from "../../src/middlewares/create-middleware";
 import { CliStartup } from "../../src/cli-startup";
 
 describe("prompt", () => {
-  const testName = ".ipare-cache-create-inquirer";
-
   type promptType = typeof inquirer.prompt;
   async function runTest(options: {
     before?: (ctx: Context, md: CreateMiddleware) => Promise<boolean | void>;
@@ -16,6 +14,7 @@ describe("prompt", () => {
     force?: boolean;
     skipPlugins?: boolean;
     name?: string;
+    packageManager?: string;
   }) {
     const prompt = inquirer.prompt;
     inquirer.prompt = options.promptFn ?? ((() => ({})) as any);
@@ -23,10 +22,10 @@ describe("prompt", () => {
       await new CliStartup(
         "test",
         {
-          name: options.name ?? testName,
+          name: options.name ?? ".ipare-cache-create-inquirer",
         },
         {
-          packageManager: "npm",
+          packageManager: options.packageManager ?? "npm",
           registry: process.env.REGISTRY as string,
           skipPlugins: options.skipPlugins ?? true,
           force: options.force ?? true,
@@ -57,12 +56,14 @@ describe("prompt", () => {
     `should overwrite message when prompt return { overwrite: false }`,
     async () => {
       await runin("test/create", async () => {
+        const testName = ".ipare-cache-create-inquirer-overwrite-false";
         if (!fs.existsSync(testName)) {
           fs.mkdirSync(testName);
         }
         await runTest({
           promptFn: (() => Promise.resolve({ overwrite: false })) as any,
           force: false,
+          name: testName,
         });
 
         expect(fs.existsSync(`${testName}/package.json`)).toBeFalsy();
@@ -75,12 +76,14 @@ describe("prompt", () => {
     `should force to replace exist dir`,
     async () => {
       await runin("test/create", async () => {
+        const testName = ".ipare-cache-create-inquirer-overwrite-true";
         if (!fs.existsSync(testName)) {
           fs.mkdirSync(testName);
         }
         await runTest({
           promptFn: (() => Promise.resolve({ overwrite: false })) as any,
           force: true,
+          name: testName,
         });
 
         expect(fs.existsSync(`${testName}/package.json`)).toBeTruthy();
@@ -94,6 +97,7 @@ describe("prompt", () => {
     async () => {
       let validate = false;
       await runin("test/create", async () => {
+        const testName = ".ipare-cache-create-inquirer-ask-empty-name";
         await runTest({
           promptFn: ((args: any[]) => {
             expect(args[0].validate("abc")).toBeTruthy();
@@ -119,6 +123,7 @@ describe("prompt", () => {
     async () => {
       let done = false;
       await runin("test/create", async () => {
+        const testName = ".ipare-cache-create-inquirer-select-plugins";
         await runTest({
           promptFn: (() => {
             return { overwrite: false, plugins: ["view"] };
@@ -143,6 +148,8 @@ describe("prompt", () => {
     async () => {
       let done = false;
       await runin("test/create", async () => {
+        const testName =
+          ".ipare-cache-create-inquirer-createPackageService-create";
         if (fs.existsSync(testName)) {
           await fs.promises.rm(testName, {
             force: true,
@@ -163,6 +170,43 @@ describe("prompt", () => {
       });
 
       expect(done).toBeTruthy();
+    },
+    1000 * 60 * 5
+  );
+
+  it(
+    `should select package manager by prompt`,
+    async () => {
+      await runin("test/create", async () => {
+        const testName = ".ipare-cache-create-inquirer-select-pm";
+        await runTest({
+          promptFn: (() => Promise.resolve({ mng: "cnpm" })) as any,
+          name: testName,
+          packageManager: "",
+          before: async (ctx, md) => {
+            const mng = await md["getPackageManager"]();
+            expect(mng).toBe("cnpm");
+            return false;
+          },
+        });
+      });
+    },
+    1000 * 60 * 5
+  );
+
+  it(
+    `should select package manager by prompt`,
+    async () => {
+      await runin("test/create", async () => {
+        const testName = ".ipare-cache-create-inquirer-select-pm-null";
+        await runTest({
+          promptFn: (() => Promise.resolve({ mng: null })) as any,
+          name: testName,
+          packageManager: "",
+        });
+
+        expect(fs.existsSync(`${testName}/package.json`)).toBeFalsy();
+      });
     },
     1000 * 60 * 5
   );
