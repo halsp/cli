@@ -14,30 +14,16 @@ import * as fs from "fs";
 describe("empty-config", () => {
   it("should parse empty config", async () => {
     let callCount = 0;
-    await runin(`test/build/empty-config`, async () => {
+    await runin(`test/build/config/empty`, async () => {
       await new CliStartup().add(BuildMiddlware).run();
       callCount++;
     });
     expect(callCount).toBe(1);
   });
 
-  it(`should load empty config with other defines`, async () => {
-    let worked = false;
-    await runin("test/build/config/empty", async () => {
-      await new CliStartup()
-        .use(async (ctx) => {
-          const service = await parseInject(ctx, ConfigService);
-          expect(service.value).toEqual({});
-          worked = true;
-        })
-        .run();
-    });
-    expect(worked).toBeTruthy();
-  });
-
   it(`should build and watch assets success when config is empty`, async () => {
     let callCount = 0;
-    await runin(`test/build/empty-config`, async () => {
+    await runin(`test/build/config/empty`, async () => {
       await new CliStartup("test", undefined, { watch: true })
         .use(async (ctx, next) => {
           ctx.bag("onWatchSuccess", () => {
@@ -63,6 +49,20 @@ describe("empty-config", () => {
       callCount++;
     });
     expect(callCount).toBe(3);
+  });
+
+  it(`should load empty config when the file is not config`, async () => {
+    let worked = false;
+    await runin("test/build/config/not-config", async () => {
+      await new CliStartup()
+        .use(async (ctx) => {
+          const service = await parseInject(ctx, ConfigService);
+          expect(service.value).toEqual({});
+          worked = true;
+        })
+        .run();
+    });
+    expect(worked).toBeTruthy();
   });
 });
 

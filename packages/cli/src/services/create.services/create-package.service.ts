@@ -83,14 +83,6 @@ export class CreatePackageService {
         delete deps[key];
       });
 
-    if (!isDev) {
-      Object.keys(deps)
-        .filter((k) => dependencies[k] == false)
-        .forEach((key) => {
-          delete deps[key];
-        });
-    }
-
     Object.keys(deps)
       .filter((k) => {
         if (isDev) {

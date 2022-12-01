@@ -1,1 +1,3 @@
-export const a = 1;
+import { defineConfig } from "../../../../src";
+
+export default defineConfig(() => ({}));
