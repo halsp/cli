@@ -1,4 +1,4 @@
-import { runin } from "../utils";
+import { runin, testService } from "../utils";
 import { CliStartup } from "../../src/cli-startup";
 import { CreateMiddleware } from "../../src/middlewares/create-middleware";
 import * as fs from "fs";
@@ -261,6 +261,12 @@ describe("mock template", () => {
       expect(fs.existsSync("dist/not-exist")).toBeFalsy();
     });
   });
+
+  it(`should rename file when there is rename flat`, async () => {
+    await testTemplateDefault([], "new-name.ts", (text) => {
+      expect(text?.trim()).toBe("const a = 1;");
+    });
+  });
 });
 
 describe("error", () => {
@@ -294,4 +300,59 @@ describe("error", () => {
       expect(fs.existsSync(testName + "/package.json")).toBeFalsy();
     });
   });
+});
+
+describe("init", () => {
+  function getCliVersion() {
+    const file = path.join(__dirname, "../../package.json");
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    return require(file).version;
+  }
+  const modulesPath = path.join(__dirname, "../../template/node_modules");
+  const flagPath = path.join(modulesPath, getCliVersion());
+
+  it(
+    "should init template node_modules",
+    async () => {
+      await testService(
+        CreateTemplateService,
+        async (ctx, service) => {
+          if (fs.existsSync(flagPath)) {
+            await fs.promises.rm(flagPath);
+          }
+          await service.init("npm");
+          expect(fs.existsSync(flagPath)).toBeTruthy();
+
+          await service.init("npm");
+          expect(fs.existsSync(flagPath)).toBeTruthy();
+        },
+        {
+          options: {
+            registry: process.env.REGISTRY as string,
+          },
+        }
+      );
+    },
+    1000 * 60 * 5
+  );
+
+  it(
+    "should init template node_modules with forseInit",
+    async () => {
+      await testService(
+        CreateTemplateService,
+        async (ctx, service) => {
+          await service.init("npm");
+          expect(fs.existsSync(flagPath)).toBeTruthy();
+        },
+        {
+          options: {
+            registry: process.env.REGISTRY as string,
+            forseInit: true,
+          },
+        }
+      );
+    },
+    1000 * 60 * 5
+  );
 });
