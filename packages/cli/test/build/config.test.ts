@@ -8,7 +8,8 @@ import { TsconfigService } from "../../src/services/build.services/tsconfig.serv
 import path from "path";
 import ts from "typescript";
 import { ConfigService } from "../../src/services/build.services/config.service";
-import { Configuration } from "../../src";
+import { Configuration, defineConfig } from "../../src";
+import * as fs from "fs";
 
 describe("empty-config", () => {
   it("should parse empty config", async () => {
@@ -18,6 +19,20 @@ describe("empty-config", () => {
       callCount++;
     });
     expect(callCount).toBe(1);
+  });
+
+  it(`should load empty config with other defines`, async () => {
+    let worked = false;
+    await runin("test/build/config/empty", async () => {
+      await new CliStartup()
+        .use(async (ctx) => {
+          const service = await parseInject(ctx, ConfigService);
+          expect(service.value).toEqual({});
+          worked = true;
+        })
+        .run();
+    });
+    expect(worked).toBeTruthy();
   });
 
   it(`should build and watch assets success when config is empty`, async () => {
@@ -178,5 +193,144 @@ describe("read config", () => {
         cwd: "test/build/config",
       }
     );
+  });
+
+  it("should init config service when init called", async () => {
+    await testService(
+      ConfigService,
+      async (ctx, service) => {
+        await service.init();
+        expect(service.mode).toBeUndefined();
+        expect(Object.keys(service.value).includes("services")).toBeTruthy();
+      },
+      {
+        cwd: "test/build/config",
+      }
+    );
+  });
+
+  it("should read config with custom file", async () => {
+    await testService(
+      ConfigService,
+      async (ctx, service) => {
+        await service.init();
+        expect(service.mode).toBe("test");
+        expect(service.value).toEqual({
+          custom: 1,
+        });
+        return;
+      },
+      {
+        options: {
+          configName: "custom.config.ts",
+          mode: "test",
+        },
+        cwd: "test/build/config",
+      }
+    );
+  });
+
+  it(`should parse json config file`, async () => {
+    let worked = false;
+    await runin("test/build/config/types", async () => {
+      await new CliStartup("test", undefined, {
+        configName: `ipare-cli.config.json`,
+      })
+        .use(async (ctx) => {
+          const service = await parseInject(ctx, ConfigService);
+          expect(service.value["type"]).toBe("json");
+          worked = true;
+        })
+        .run();
+    });
+    expect(worked).toBeTruthy();
+  });
+
+  test(`should read json config from command options`, async () => {
+    let worked = false;
+    await runin("test/build/config/types", async () => {
+      await new CliStartup("test", undefined, {
+        jsonConfig: await fs.promises.readFile(
+          "ipare-cli.config.json",
+          "utf-8"
+        ),
+      })
+        .use(async (ctx) => {
+          const service = await parseInject(ctx, ConfigService);
+          expect(service.value["type"]).toBe("json");
+          worked = true;
+        })
+        .run();
+    });
+    expect(worked).toBeTruthy();
+  });
+
+  test(`it should read func config from command options`, async () => {
+    let worked = false;
+    await runin("test/build/config/types", async () => {
+      const func = defineConfig(() => ({
+        start: {
+          startupFile: "t1",
+        },
+      }));
+      await new CliStartup("test", undefined, {
+        funcConfig: func.toString(),
+      })
+        .use(async (ctx) => {
+          const service = await parseInject(ctx, ConfigService);
+          expect(service.value.start?.startupFile).toBe("t1");
+          worked = true;
+        })
+        .run();
+    });
+    expect(worked).toBeTruthy();
+  });
+
+  it(`should read js config file`, async () => {
+    let worked = false;
+    await runin("test/build/config/types", async () => {
+      await new CliStartup("test", undefined, {
+        mode: "js-test",
+        configName: `ipare-cli.config.js`,
+      })
+        .use(async (ctx) => {
+          const service = await parseInject(ctx, ConfigService);
+          expect(service.value.start?.startupFile).toBe("t1");
+          worked = true;
+        })
+        .run();
+    });
+    expect(worked).toBeTruthy();
+  });
+
+  it(`should load config with module.exports`, async () => {
+    let worked = false;
+    await runin("test/build/config/exports", async () => {
+      await new CliStartup()
+        .use(async (ctx) => {
+          const service = await parseInject(ctx, ConfigService);
+          expect(service.value["exports"]).toBe(1);
+          worked = true;
+        })
+        .run();
+    });
+    expect(worked).toBeTruthy();
+  });
+});
+
+describe("not-exist", () => {
+  it(`should load empty config when the file not exist`, async () => {
+    let worked = false;
+    await runin("test/build/config/not-exist", async () => {
+      await new CliStartup()
+        .use(async (ctx) => {
+          const service = await parseInject(ctx, ConfigService);
+          expect(service.mode).toBeUndefined();
+          expect(service.value).toEqual({});
+          worked = true;
+        })
+        .run();
+    });
+    expect(worked).toBeTruthy();
   });
 });
