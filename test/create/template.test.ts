@@ -3,7 +3,10 @@ import { CliStartup } from "../../src/cli-startup";
 import { CreateMiddleware } from "../../src/middlewares/create-middleware";
 import * as fs from "fs";
 import path from "path";
-import { PluginConfig } from "../../src/services/create.services/plugin-config.service";
+import {
+  PluginConfig,
+  SortedPluginConfig,
+} from "../../src/services/create.services/plugin-config.service";
 import { parseInject } from "@ipare/inject";
 import { CreateTemplateService } from "../../src/services/create.services/create-template.service";
 import { HookType } from "@ipare/core";
@@ -264,7 +267,13 @@ describe("mock template", () => {
 
   it(`should rename file when there is rename flat`, async () => {
     await testTemplateDefault([], "new-name.ts", (text) => {
-      expect(text?.trim()).toBe("const a = 1;");
+      expect(text?.trim()).toBe("1;");
+    });
+  });
+
+  it(`should not rename file when there is rename flat and target is empty`, async () => {
+    await testTemplateDefault([], "rename-empty.ts", (text) => {
+      expect(text?.trim()).toBe("1;");
     });
   });
 });
@@ -349,6 +358,37 @@ describe("init", () => {
           options: {
             registry: process.env.REGISTRY as string,
             forseInit: true,
+          },
+        }
+      );
+    },
+    1000 * 60 * 5
+  );
+
+  it(
+    "should sort plugin with config",
+    async () => {
+      await testService(
+        CreateTemplateService,
+        async (ctx, service) => {
+          (service as any).pluginConfigService = {
+            getSortedConfig: () => {
+              return {
+                dependencies: {
+                  "@ipare/view": true,
+                },
+                devDependencies: {
+                  "@ipare/router": true,
+                },
+              } as Partial<SortedPluginConfig>;
+            },
+          } as any;
+          const plugins = await service["sortPlugins"]([]);
+          expect(plugins).toEqual(["view", "router", "core", "methods"]);
+        },
+        {
+          options: {
+            registry: process.env.REGISTRY as string,
           },
         }
       );

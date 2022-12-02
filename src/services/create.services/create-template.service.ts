@@ -171,25 +171,17 @@ export class CreateTemplateService {
   }
 
   private getRename(code: string) {
-    if (!code.match(/\/\*\s*rename/)) {
-      return;
-    }
-
     const matchArr = code.match(/\/\*\s*rename([\s\S]+)\*\//);
     if (!matchArr?.length) return;
 
     code = code.replace(matchArr[0], "");
     return {
       code,
-      rename: matchArr[1]?.trim(),
+      rename: matchArr[1].trim(),
     };
   }
 
   private replaceCode(code: string) {
-    if (!code.match(/\/\*\s*replace/)) {
-      return code;
-    }
-
     const matchArr = code.match(/\/\*\s*replace([\s\S]+)*\*\//);
     if (!matchArr?.length) return code;
 
