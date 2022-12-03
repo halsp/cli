@@ -45,7 +45,7 @@
     "ignore-walk": "^6.0.0",
     "inquirer": "^8.2.5",
     "lodash": "^4.17.21",
-    "npm-check-updates": "^14.1.1",
+    "npm-check-updates": "^16.4.3",
     "prettier": "^2.8.0",
     "reflect-metadata": "^0.1.13",
     "shelljs": "^0.8.5",
