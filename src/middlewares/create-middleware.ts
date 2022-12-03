@@ -51,9 +51,12 @@ export class CreateMiddleware extends Middleware {
           recursive: true,
         });
       } else {
-        const message = `Target directory ${this.targetDir} already exists. Overwrite?`;
-        if (!(await this.fileService.isOverwrite(message))) {
-          return;
+        const y = this.commandService.getOptionVlaue<boolean>("y");
+        if (!y) {
+          const message = `Target directory ${this.targetDir} already exists. Overwrite?`;
+          if (!(await this.fileService.isOverwrite(message))) {
+            return;
+          }
         }
       }
     }
@@ -71,7 +74,6 @@ export class CreateMiddleware extends Middleware {
     if (!templateInitResult) return;
 
     const env = await this.createEnvService.create();
-
     const plugins = await this.getPlugins(env);
     this.logPlugins(plugins);
 
@@ -115,16 +117,18 @@ export class CreateMiddleware extends Middleware {
       const argPlugins = this.commandService.getOptionVlaue<string>("plugins");
       if (argPlugins) {
         plugins = argPlugins
-          .split(/\b|,/)
+          .split(/\,|\s/)
           .map((item) => item.trim())
-          .filter((item) => !!item)
-          .map((item) => item);
+          .filter((item) => !!item);
       } else {
         plugins = await this.pluginSelectService.select(env);
       }
     }
     if (!plugins.includes("core")) {
       plugins.push("core");
+    }
+    if (env) {
+      plugins.push(env);
     }
     plugins = await this.sortPluginsService.sortPlugins(plugins, true);
     return plugins;
