@@ -22,7 +22,7 @@ describe("plugin select", () => {
       inquirer.prompt = (() => Promise.resolve({ plugins: ["inject"] })) as any;
       try {
         const result = await service.select("http");
-        expect(result).toEqual(["inject", "http"]);
+        expect(result).toEqual(["inject"]);
       } finally {
         inquirer.prompt = prompt;
       }

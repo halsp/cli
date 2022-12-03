@@ -27,6 +27,7 @@ Command.prototype.setCreateOptions = function () {
       "-ps, --plugins <plugins>",
       "Plugins to add (e.g. view,router,inject)"
     )
+    .option("-si, --skipInstall", "Skip install project")
     .option("-se, --skipEnv", "Skip adding environment files")
     .option("-sg, --skipGit", "Skip git repository initialization")
     .option("-sp, --skipPlugins", "No plugins will be added")

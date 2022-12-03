@@ -28,6 +28,7 @@ describe("prompt", () => {
         {
           packageManager: options.packageManager ?? "npm",
           registry: process.env.REGISTRY as string,
+          skipInstall: true,
           skipPlugins: options.skipPlugins ?? true,
           force: options.force ?? true,
           y: options.y ?? false,
