@@ -109,10 +109,12 @@ export class CompilerService {
       .concat(emitResult.diagnostics);
 
     if (diagnostics.length > 0) {
-      console.error(
+      this.ctx.logger.error(
         ts.formatDiagnosticsWithColorAndContext(diagnostics, formatHost)
       );
-      console.info(`Found ${diagnostics.length} error(s).` + ts.sys.newLine);
+      this.ctx.logger.info(
+        `Found ${diagnostics.length} error(s).` + ts.sys.newLine
+      );
     }
     return diagnostics.length;
   }

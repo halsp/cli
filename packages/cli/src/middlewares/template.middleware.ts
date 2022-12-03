@@ -10,6 +10,6 @@ export class TemplateMiddleware extends Middleware {
   }
 
   override async invoke(): Promise<void> {
-    console.log("TODO", this.template, this.name);
+    this.logger.warn("TODO", this.template, this.name);
   }
 }
