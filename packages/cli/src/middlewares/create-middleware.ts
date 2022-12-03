@@ -77,14 +77,13 @@ export class CreateMiddleware extends Middleware {
     const plugins = await this.getPlugins(env);
     this.logPlugins(plugins);
 
-    const createPackageResult = await this.createPackageService.create(
-      plugins,
-      pm
-    );
-    if (!createPackageResult) return;
+    await this.createPackageService.create(plugins);
     await this.copyBaseService.copy();
-
     await this.createTemplateService.create(plugins);
+
+    const installResult = await this.install(pm);
+    if (!installResult) return;
+
     this.initGit();
     this.runApp();
   }
@@ -99,7 +98,22 @@ export class CreateMiddleware extends Middleware {
     });
   }
 
+  private async install(pm: string) {
+    if (this.commandService.getOptionVlaue<boolean>("skipInstall")) {
+      return true;
+    }
+
+    const installResult = this.packageManagerService.install(
+      pm,
+      this.targetDir
+    );
+    return installResult.status == 0;
+  }
+
   private runApp() {
+    if (this.commandService.getOptionVlaue<boolean>("skipInstall")) {
+      return;
+    }
     if (this.commandService.getOptionVlaue<boolean>("skipRun")) {
       return;
     }

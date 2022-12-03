@@ -31,7 +31,7 @@ export class CreatePackageService {
     return this.createEnvService.targetDir;
   }
 
-  public async create(plugins: string[], pm: string): Promise<boolean> {
+  public async create(plugins: string[]): Promise<void> {
     const pkg = this.getPackage();
     const pluginConfig = await this.pluginConfigService.getSortedConfig(
       plugins
@@ -51,12 +51,6 @@ export class CreatePackageService {
         parser: "json",
       })
     );
-
-    const installResult = this.packageManagerService.install(
-      pm,
-      this.targetDir
-    );
-    return installResult.status == 0;
   }
 
   private setDeps(

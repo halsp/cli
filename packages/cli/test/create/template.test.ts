@@ -297,6 +297,7 @@ describe("error", () => {
         {
           packageManager: "npm",
           force: true,
+          registry: process.env.REGISTRY as string,
         }
       )
         .hook(HookType.BeforeInvoke, (ctx, md) => {
@@ -307,6 +308,40 @@ describe("error", () => {
         .run();
       expect(fs.existsSync(testName)).toBeTruthy();
       expect(fs.existsSync(testName + "/package.json")).toBeFalsy();
+    });
+  });
+
+  it("should stop create when install error", async () => {
+    await runin("test/create", async () => {
+      const testName = ".ipare-cache-create-install-error";
+      if (fs.existsSync(testName)) {
+        fs.rmSync(testName, {
+          recursive: true,
+          force: true,
+        });
+      }
+
+      await new CliStartup(
+        "test",
+        {
+          name: testName,
+        },
+        {
+          packageManager: "npm",
+          force: true,
+          skipPlugins: true,
+          skipEnv: true,
+          registry: process.env.REGISTRY as string,
+        }
+      )
+        .hook(HookType.BeforeInvoke, (ctx, md) => {
+          md["install"] = () => false;
+          return true;
+        })
+        .add(CreateMiddleware)
+        .run();
+      expect(fs.existsSync(testName)).toBeTruthy();
+      expect(fs.existsSync(testName + "/node_modules")).toBeFalsy();
     });
   });
 });
@@ -338,6 +373,7 @@ describe("init", () => {
         {
           options: {
             registry: process.env.REGISTRY as string,
+            skipInstall: true,
           },
         }
       );
@@ -357,6 +393,7 @@ describe("init", () => {
         {
           options: {
             registry: process.env.REGISTRY as string,
+            skipInstall: true,
             forseInit: true,
           },
         }
@@ -389,6 +426,7 @@ describe("init", () => {
         {
           options: {
             registry: process.env.REGISTRY as string,
+            skipInstall: true,
           },
         }
       );
