@@ -71,6 +71,7 @@ export class CreatePackageService {
 
     Object.keys(deps)
       .filter((k) => k.startsWith("@ipare/"))
+      .filter((k) => k != "@ipare/cli")
       .filter((k) => !plugins.some((p) => `@ipare/${p}` == k))
       .filter((k) => {
         if (isDev) {
@@ -119,10 +120,13 @@ export class CreatePackageService {
   }
 
   private getCurrentVersion() {
-    let version = this.commandService.getOptionVlaue<string>("cliVersion", "");
-    if (version == "cli-test" || version == "test-cli") {
-      version = path.join(__dirname, "../../..");
+    const debug = this.commandService.getOptionVlaue<boolean>("debug", false);
+    if (debug) {
+      return path.join(__dirname, "../../..");
     }
-    return version;
+
+    const file = path.join(__dirname, "../../../package.json");
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    return require(file).version;
   }
 }

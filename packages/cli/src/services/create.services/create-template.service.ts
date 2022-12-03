@@ -240,7 +240,9 @@ export class CreateTemplateService {
     addFromConfig(pluginConfig.dependencies);
     addFromConfig(pluginConfig.devDependencies);
 
-    return await this.sortPluginsService.sortPlugins(plugins, false);
+    plugins = await this.sortPluginsService.sortPlugins(plugins, false);
+    plugins.push("cli");
+    return plugins;
   }
 
   private async getIgnoreFiles(plugins: string[]) {

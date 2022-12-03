@@ -30,7 +30,7 @@ describe("prompt", () => {
           skipPlugins: options.skipPlugins ?? true,
           force: options.force ?? true,
           skipEnv: true,
-          cliVersion: "../../../../",
+          debug: true,
           skipGit: true,
           skipRun: true,
         }

@@ -58,7 +58,7 @@ jobs:
       - name: Create
         run: |
           npm run build
-          node bin/cli.js create minimal -cv test-cli -e native -pm npm -ps inject,router,view,mva,pipe,filter,testing,static,swagger,jwt,validator,env,logger -f -sg -sr
+          node bin/cli.js create minimal --debug -e native -pm npm -ps inject,router,view,mva,pipe,filter,testing,static,swagger,jwt,validator,env,logger -f -sg -sr
           cd minimal
           npx ipare build
           cd ..

@@ -36,7 +36,7 @@ describe("template", () => {
               plugins: pluginsStr,
               force: true,
               env: "native",
-              cliVersion: "../../../../",
+              debug: true,
               skipGit: true,
               skipRun: true,
             }
@@ -384,7 +384,7 @@ describe("init", () => {
             },
           } as any;
           const plugins = await service["sortPlugins"]([]);
-          expect(plugins).toEqual(["view", "router", "core", "methods"]);
+          expect(plugins).toEqual(["view", "router", "core", "methods", "cli"]);
         },
         {
           options: {

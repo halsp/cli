@@ -19,7 +19,7 @@ describe("create-package", () => {
     );
   });
 
-  it('should set cli version with cli path when cliVersion = "cli-test"', async () => {
+  it("should set cli version with cli path when debug is true", async () => {
     await testService(
       CreatePackageService,
       async (ctx, service) => {
@@ -45,7 +45,7 @@ describe("create-package", () => {
       },
       {
         options: {
-          cliVersion: "cli-test",
+          debug: true,
         },
       }
     );
