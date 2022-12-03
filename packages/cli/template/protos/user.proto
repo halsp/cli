@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+package user;
+
+service UserService {
+  rpc getUserInfo (GetUserInfoRequest) returns (GetUserInfoReply) {}
+  rpc login (LoginRequest) returns (LoginReply) {}
+}
+
+message GetUserInfoRequest {
+}
+
+message GetUserInfoReply {
+  //{ view && !mva
+  string html = 1;
+  //}
+  //{ !view || mva
+  int32 id = 1;
+  string email = 2;
+  //}
+}
+
+message LoginRequest{
+  string account = 1;
+  string password = 2;
+}
+
+message LoginReply{
+  string account = 1;
+  int32 id = 2;
+  string email = 3;
+}

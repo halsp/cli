@@ -26,7 +26,12 @@ import { LoginDto } from "../dtos/login.dto";
   .Response(LoginDto)
 //}
 //{micro
+///{micro-grpc
+@MicroPattern("user/UserService/getUserInfo")
+///}
+///{
 @MicroPattern("getUserInfo")
+///}
 //}
 export default class extends Action {
   //{inject

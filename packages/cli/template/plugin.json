@@ -179,7 +179,8 @@
     "static/*": "static",
     "src/views/*": "view",
     ".env": "env",
-    ".env.development": "env"
+    ".env.development": "env",
+    "protos/*": "micro-grpc||micro-grpc-client"
   },
   "devDependencies": {
     "@ipare/native": "lambda||alifc"
