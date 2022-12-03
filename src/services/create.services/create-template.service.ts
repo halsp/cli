@@ -12,6 +12,8 @@ import { SortPluginsService } from "./sort-plugins.service";
 import { ExpressionObject, PluginConfigService } from "./plugin-config.service";
 import glob from "glob";
 import chalk from "chalk";
+import { InjectContext } from "@ipare/pipe";
+import { Context } from "@ipare/core";
 
 // plugin inject|router
 const commentPluginStartRegExp = /^\s*\/{2,}\s*\{\s*/;
@@ -36,6 +38,8 @@ export class CreateTemplateService {
   private readonly sortPluginsService!: SortPluginsService;
   @Inject
   private readonly pluginConfigService!: PluginConfigService;
+  @InjectContext
+  private readonly ctx!: Context;
 
   private get targetDir() {
     return this.createEnvService.targetDir;
@@ -204,12 +208,12 @@ export class CreateTemplateService {
       cliVersion
     );
     if (this.commandService.getOptionVlaue<boolean>("forseInit")) {
-      console.log("Forse init template. Please wait...");
+      this.ctx.logger.info(chalk.blue("Forse init template. Please wait..."));
     } else {
       if (fs.existsSync(initFlatFilePath)) {
         return true;
       }
-      console.log(
+      this.ctx.logger.info(
         chalk.blue(
           "The command is used for the first time and is being initialized. Please wait..."
         )

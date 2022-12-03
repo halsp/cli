@@ -184,11 +184,11 @@ export class CreateMiddleware extends Middleware {
     const consolePlugins = plugins
       .filter((p) => p != "core")
       .map((p) => `@ipare/${p}`);
-    console.log("\n");
-    console.log(
+    this.logger.info("\n");
+    this.logger.info(
       chalk.bold("Sorted plugins"),
       chalk.greenBright(consolePlugins.join(", "))
     );
-    console.log("\n");
+    this.logger.info("\n");
   }
 }

@@ -11,8 +11,8 @@ export class InfoMiddleware extends Middleware {
   @Inject
   private readonly depsService!: DepsService;
 
-  get log() {
-    return console.log;
+  get logInfo() {
+    return this.logger.info.bind(this.logger);
   }
 
   override async invoke(): Promise<void> {
@@ -24,8 +24,8 @@ export class InfoMiddleware extends Middleware {
     );
 
     const text = figlet.textSync("IPARECLI");
-    this.log("\n");
-    this.log(chalk.rgb(0x19, 0xc9, 0xac)(text));
+    this.logInfo("\n");
+    this.logInfo(chalk.rgb(0x19, 0xc9, 0xac)(text));
 
     this.logTitle("System Information");
     this.logItems([
@@ -65,13 +65,13 @@ export class InfoMiddleware extends Middleware {
   }
 
   private logTitle(titie: string) {
-    this.log("\n" + chalk.bold.cyanBright(`[${titie}]`));
+    this.logInfo("\n" + chalk.bold.cyanBright(`[${titie}]`));
   }
 
   private logItems(items: { key: string; value: string }[]) {
     const keyLen = Math.max(...items.map((item) => item.key.length));
     for (const item of items) {
-      this.log(
+      this.logInfo(
         item.key.padEnd(keyLen + 1, " ") +
           ": " +
           chalk.rgb(0x19, 0xc9, 0xac)(item.value)
