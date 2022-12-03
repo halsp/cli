@@ -180,10 +180,10 @@ const version = (() => {
 /* replace
 extends HttpStartup & MicroStartup
 ---
-//{http
+//{http&&!micro
 extends HttpStartup
 //}
-//{micro
+//{micro&&!http
 extends MicroStartup
 //}
 //{!micro&&!http
