@@ -11,6 +11,7 @@ import { CommandService } from "../command.service";
 import { SortPluginsService } from "./sort-plugins.service";
 import { ExpressionObject, PluginConfigService } from "./plugin-config.service";
 import glob from "glob";
+import chalk from "chalk";
 
 // plugin inject|router
 const commentPluginStartRegExp = /^\s*\/{2,}\s*\{\s*/;
@@ -209,7 +210,9 @@ export class CreateTemplateService {
         return true;
       }
       console.log(
-        "The command is used for the first time and is being initialized. Please wait..."
+        chalk.blue(
+          "The command is used for the first time and is being initialized. Please wait..."
+        )
       );
     }
 

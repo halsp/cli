@@ -29,10 +29,6 @@ export class PluginSelectService {
       },
     ]);
 
-    const result = plugins as string[];
-    if (env) {
-      result.push(env);
-    }
-    return result;
+    return plugins;
   }
 }

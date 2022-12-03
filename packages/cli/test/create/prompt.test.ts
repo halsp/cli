@@ -15,6 +15,7 @@ describe("prompt", () => {
     skipPlugins?: boolean;
     name?: string;
     packageManager?: string;
+    y?: boolean;
   }) {
     const prompt = inquirer.prompt;
     inquirer.prompt = options.promptFn ?? ((() => ({})) as any);
@@ -29,6 +30,7 @@ describe("prompt", () => {
           registry: process.env.REGISTRY as string,
           skipPlugins: options.skipPlugins ?? true,
           force: options.force ?? true,
+          y: options.y ?? false,
           skipEnv: true,
           debug: true,
           skipGit: true,
@@ -53,7 +55,7 @@ describe("prompt", () => {
   }
 
   it(
-    `should overwrite message when prompt return { overwrite: false }`,
+    `should ask overwrite message when prompt return { overwrite: false }`,
     async () => {
       await runin("test/create", async () => {
         const testName = ".ipare-cache-create-inquirer-overwrite-false";
@@ -83,6 +85,27 @@ describe("prompt", () => {
         await runTest({
           promptFn: (() => Promise.resolve({ overwrite: false })) as any,
           force: true,
+          name: testName,
+        });
+
+        expect(fs.existsSync(`${testName}/package.json`)).toBeTruthy();
+      });
+    },
+    1000 * 60 * 5
+  );
+
+  it(
+    `should overwrite files when use -y flag`,
+    async () => {
+      await runin("test/create", async () => {
+        const testName = ".ipare-cache-create-inquirer-y";
+        if (!fs.existsSync(testName)) {
+          fs.mkdirSync(testName);
+        }
+        await runTest({
+          promptFn: (() => Promise.resolve({ overwrite: false })) as any,
+          force: false,
+          y: true,
           name: testName,
         });
 
