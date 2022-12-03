@@ -35,14 +35,6 @@ npm install -g @ipare/cli
 
 在提交 PR 前请先阅读 [Contributing to @ipare/cli](https://github.com/ipare/cli/blob/main/CONTRIBUTING.md)
 
-### Ipare 贡献列表
-
-<a href="https://github.com/ipare/ipare/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=ipare/ipare" />
-</a>
-
-### CLI 贡献列表
-
 <a href="https://github.com/ipare/cli/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=ipare/cli" />
 </a>
