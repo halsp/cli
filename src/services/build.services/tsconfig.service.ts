@@ -56,7 +56,6 @@ export class TsconfigService {
 
   private ensureTsconfigFile() {
     if (!fs.existsSync(this.filePath)) {
-      console.log("filePath", this.filePath);
       throw new Error(
         `Could not find TypeScript configuration file ${this.fileName}`
       );
