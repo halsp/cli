@@ -21,12 +21,12 @@ export class UpdateCommand extends BaseCommand {
         "Display version information without upgrading",
         false
       )
+      .option("-si, --skipInstall", "Skip installation", false)
       .option(
         "-p, --packageManager <packageManager>",
         "Specify package manager. (npm/yarn/pnpm/cnpm)"
       )
       .option("--registry <url>", "Override configuration registry")
-      .option("-si, --skipInstall", "Skip installation", false)
       .action(async (command: Record<string, boolean | string>) => {
         await new CliStartup("update", {}, command).add(UpdateMiddleware).run();
       });
