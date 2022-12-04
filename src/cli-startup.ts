@@ -4,6 +4,7 @@ import { Context, Request, Startup } from "@ipare/core";
 import { ConfigService } from "./services/build.services/config.service";
 import { CommandType } from "./configuration";
 import { parseInject } from "@ipare/inject";
+import { ChalkService } from "./services/chalk.service";
 
 declare module "@ipare/core" {
   interface Context {
@@ -51,6 +52,11 @@ export class CliStartup extends Startup {
       .useInject()
       .inject(ConfigService, async (ctx) => {
         const result = await parseInject(ctx, new ConfigService());
+        await result.init();
+        return result;
+      })
+      .inject(ChalkService, async (ctx) => {
+        const result = await parseInject(ctx, new ChalkService());
         await result.init();
         return result;
       });

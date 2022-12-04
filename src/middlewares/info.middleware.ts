@@ -1,15 +1,17 @@
 import figlet from "figlet";
-import chalk from "chalk";
 import os from "os";
 import * as fs from "fs";
 import path from "path";
 import { DepsService } from "../services/deps.service";
 import { Inject } from "@ipare/inject";
 import { Middleware } from "@ipare/core";
+import { ChalkService } from "../services/chalk.service";
 
 export class InfoMiddleware extends Middleware {
   @Inject
   private readonly depsService!: DepsService;
+  @Inject
+  private readonly chalkService!: ChalkService;
 
   get logInfo() {
     return this.logger.info.bind(this.logger);
@@ -25,7 +27,7 @@ export class InfoMiddleware extends Middleware {
 
     const text = figlet.textSync("IPARECLI");
     this.logInfo("\n");
-    this.logInfo(chalk.rgb(0x19, 0xc9, 0xac)(text));
+    this.logInfo(this.chalkService.blueBright(text));
 
     this.logTitle("System Information");
     this.logItems([
@@ -65,7 +67,7 @@ export class InfoMiddleware extends Middleware {
   }
 
   private logTitle(titie: string) {
-    this.logInfo("\n" + chalk.bold.cyanBright(`[${titie}]`));
+    this.logInfo("\n" + this.chalkService.bold.blueBright(`[${titie}]`));
   }
 
   private logItems(items: { key: string; value: string }[]) {
@@ -74,7 +76,7 @@ export class InfoMiddleware extends Middleware {
       this.logInfo(
         item.key.padEnd(keyLen + 1, " ") +
           ": " +
-          chalk.rgb(0x19, 0xc9, 0xac)(item.value)
+          this.chalkService.cyanBright(item.value)
       );
     }
   }

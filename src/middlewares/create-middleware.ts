@@ -10,9 +10,9 @@ import { CopyBaseService } from "../services/create.services/copy-base-files.ser
 import inquirer from "inquirer";
 import { RunnerService } from "../services/runner.service";
 import { Middleware } from "@ipare/core";
-import chalk from "chalk";
 import { PackageManagerService } from "../services/package-manager.service";
 import { SortPluginsService } from "../services/create.services/sort-plugins.service";
+import { ChalkService } from "../services/chalk.service";
 
 export class CreateMiddleware extends Middleware {
   @Inject
@@ -35,6 +35,8 @@ export class CreateMiddleware extends Middleware {
   private readonly packageManagerService!: PackageManagerService;
   @Inject
   private readonly sortPluginsService!: SortPluginsService;
+  @Inject
+  private readonly chalkService!: ChalkService;
 
   private get targetDir() {
     return this.createEnvService.targetDir;
@@ -186,8 +188,8 @@ export class CreateMiddleware extends Middleware {
       .map((p) => `@ipare/${p}`);
     this.logger.info("\n");
     this.logger.info(
-      chalk.bold("Sorted plugins"),
-      chalk.greenBright(consolePlugins.join(", "))
+      this.chalkService.bold("Sorted plugins"),
+      this.chalkService.greenBright(consolePlugins.join(", "))
     );
     this.logger.info("\n");
   }
