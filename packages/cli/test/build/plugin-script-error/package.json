@@ -1,5 +1,5 @@
 {
-  "name": "script",
+  "name": "plugin-script-error",
   "dependencies": {
     "@ipare/script-test": "*"
   }
