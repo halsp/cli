@@ -4,6 +4,7 @@ import { CommandService } from "../services/command.service";
 import * as fs from "fs";
 import path from "path";
 import runLocal from "npm-check-updates/build/src/lib/runLocal";
+import { chalkInit } from "npm-check-updates/build/src/lib/chalk";
 import { Middleware } from "@ipare/core";
 
 export class UpdateMiddleware extends Middleware {
@@ -12,6 +13,12 @@ export class UpdateMiddleware extends Middleware {
   }
   private get skipUpgrade() {
     return this.commandService.getOptionVlaue<boolean>("skipUpgrade", false);
+  }
+  private get skipInstall() {
+    return this.commandService.getOptionVlaue<boolean>("skipInstall", false);
+  }
+  private get registry() {
+    return this.commandService.getOptionVlaue<string>("registry");
   }
 
   @Inject
@@ -22,7 +29,12 @@ export class UpdateMiddleware extends Middleware {
   override async invoke(): Promise<void> {
     const runResult = await this.runNcu();
 
-    if (!this.skipUpgrade && runResult && Object.keys(runResult).length > 0) {
+    if (
+      !this.skipUpgrade &&
+      !this.skipInstall &&
+      runResult &&
+      Object.keys(runResult).length > 0
+    ) {
       const packageManager = await this.getPackageManager();
       this.packageManagerService.install(packageManager);
     }
@@ -32,6 +44,7 @@ export class UpdateMiddleware extends Middleware {
     const tag = this.commandService.getOptionVlaue<string>("tag");
     const pkgData = await fs.promises.readFile(this.packagePath, "utf-8");
 
+    await chalkInit();
     return await runLocal(
       {
         upgrade: true,
@@ -39,6 +52,7 @@ export class UpdateMiddleware extends Middleware {
         filter: this.getFilter(),
         cwd: process.cwd(),
         loglevel: "warn",
+        registry: this.registry,
       },
       pkgData,
       this.skipUpgrade ? undefined : this.packagePath
