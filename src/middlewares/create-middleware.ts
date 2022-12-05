@@ -133,7 +133,7 @@ export class CreateMiddleware extends Middleware {
       const argPlugins = this.commandService.getOptionVlaue<string>("plugins");
       if (argPlugins) {
         plugins = argPlugins
-          .split(/\,|\s/)
+          .split(/\_|\,|\s/)
           .map((item) => item.trim())
           .filter((item) => !!item);
       } else {
