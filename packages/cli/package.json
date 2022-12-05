@@ -59,7 +59,7 @@
     "@types/figlet": "^1.5.5",
     "@types/ignore-walk": "^4.0.0",
     "@types/inquirer": "^8.2.5",
-    "@types/jest": "^29.2.3",
+    "@types/jest": "^29.2.4",
     "@types/lodash": "^4.14.191",
     "@types/node": "^18.11.10",
     "@types/shelljs": "^0.8.11",
