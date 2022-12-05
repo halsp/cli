@@ -2,8 +2,7 @@ type ChalkMethod = ((s: any) => string) & { bold: ChalkMethod };
 
 export class ChalkService {
   async init() {
-    const chalkModule = await import("chalk");
-    const { default: chalk } = chalkModule;
+    const { default: chalk } = await import("chalk");
 
     [
       "black",
