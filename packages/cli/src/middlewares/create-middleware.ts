@@ -77,7 +77,7 @@ export class CreateMiddleware extends Middleware {
 
     const env = await this.createEnvService.create();
     const plugins = await this.getPlugins(env);
-    this.logPlugins(plugins);
+    await this.logPlugins(plugins);
 
     await this.createPackageService.create(plugins);
     await this.copyBaseService.copy();
@@ -182,8 +182,11 @@ export class CreateMiddleware extends Middleware {
     return pm;
   }
 
-  private logPlugins(plugins: string[]) {
-    const consolePlugins = plugins
+  private async logPlugins(plugins: string[]) {
+    const existPlugins = await this.sortPluginsService.filterExistPlugins(
+      plugins
+    );
+    const consolePlugins = existPlugins
       .filter((p) => p != "core")
       .map((p) => `@ipare/${p}`);
     this.logger.info("\n");

@@ -11,22 +11,25 @@ export class SortPluginsService {
     return path.join(__dirname, "../../../template");
   }
 
-  private templatePackage?: any;
-
-  public async sortPlugins(
-    plugins: string[],
-    onlyTemplateExist: boolean
-  ): Promise<string[]> {
-    const result: string[] = [...plugins];
-    if (!this.templatePackage) {
-      this.templatePackage = JSON.parse(
+  #templatePackage?: any;
+  async #getTemplatePackage() {
+    if (!this.#templatePackage) {
+      this.#templatePackage = JSON.parse(
         await fs.promises.readFile(
           path.join(this.templateDir, "package.json"),
           "utf-8"
         )
       );
     }
-    const { dependencies, devDependencies } = this.templatePackage;
+    return this.#templatePackage;
+  }
+
+  public async sortPlugins(
+    plugins: string[],
+    onlyTemplateExist: boolean
+  ): Promise<string[]> {
+    const result: string[] = [...plugins];
+    const { dependencies, devDependencies } = await this.#getTemplatePackage();
 
     function add(plugin: string) {
       if (!result.includes(plugin)) {
@@ -58,5 +61,16 @@ export class SortPluginsService {
       }
     });
     return result;
+  }
+
+  public async filterExistPlugins(plugins: string[]) {
+    const { dependencies, devDependencies } = await this.#getTemplatePackage();
+    const depKeys = Object.keys(dependencies);
+    const devDepKeys = Object.keys(devDependencies);
+
+    return plugins.filter(
+      (p) =>
+        depKeys.includes(`@ipare/${p}`) || devDepKeys.includes(`@ipare/${p}`)
+    );
   }
 }
