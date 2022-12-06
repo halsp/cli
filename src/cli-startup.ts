@@ -22,6 +22,8 @@ export class CliStartup extends Startup {
   ) {
     super();
 
+    process.env.NODE_ENV = "development";
+
     this.use(async (ctx, next) => {
       Object.defineProperty(ctx, "command", {
         configurable: false,
