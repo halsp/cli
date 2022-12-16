@@ -12,6 +12,7 @@ export class StartCommand extends BaseCommand {
       .alias("s")
       .description("Run ipare application")
       .setBuildOptions("development")
+      .option("--startupFile <path>", "The file to startup")
       .option(
         "-b, --binaryToRun <program>",
         "Binary to run application (e.g., node, ts-node)"
