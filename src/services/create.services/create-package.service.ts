@@ -4,7 +4,6 @@ import { InjectContext } from "@ipare/pipe";
 import path from "path";
 import { CreateEnvService } from "./create-env.service";
 import * as fs from "fs";
-import { PackageManagerService } from "../package-manager.service";
 import prettier from "prettier";
 import { CommandService } from "../command.service";
 import {
@@ -19,8 +18,6 @@ export class CreatePackageService {
   private readonly commandService!: CommandService;
   @Inject
   private readonly createEnvService!: CreateEnvService;
-  @Inject
-  private readonly packageManagerService!: PackageManagerService;
   @Inject
   private readonly pluginConfigService!: PluginConfigService;
 

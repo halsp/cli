@@ -14,6 +14,7 @@ import glob from "glob";
 import { InjectContext } from "@ipare/pipe";
 import { Context } from "@ipare/core";
 import { ChalkService } from "../chalk.service";
+import { CopyIgnoreService } from "./copy-ignore.service";
 
 // plugin inject|router
 const commentPluginStartRegExp = /^\s*\/{2,}\s*\{\s*/;
@@ -42,6 +43,8 @@ export class CreateTemplateService {
   private readonly ctx!: Context;
   @Inject
   private readonly chalkService!: ChalkService;
+  @Inject
+  private readonly copyIgnoreService!: CopyIgnoreService;
 
   private get targetDir() {
     return this.createEnvService.targetDir;
@@ -58,10 +61,11 @@ export class CreateTemplateService {
     const ignoreFiles = await this.getIgnoreFiles(plugins);
     let paths = await walk({
       path: this.sourceDir,
-      ignoreFiles: [".gitignore", ".ipareignore"],
+      ignoreFiles: this.copyIgnoreService.getIgnoreFiles(),
     });
     paths = paths.filter((p) => !ignoreFiles.some((e) => e == p));
     await this.copyTemplate(plugins, paths);
+    await this.copyIgnoreService.create();
   }
 
   private async copyTemplate(plugins: string[], paths: string[]) {
