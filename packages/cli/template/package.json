@@ -1,7 +1,7 @@
 {
   "name": "name",
   "version": "0.1.0",
-  "description": "@ipare/cli 创建项目",
+  "description": "@ipare/cli 创建的项目",
   "homepage": "https://ipare.org",
   "repository": {
     "type": "git",

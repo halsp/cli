@@ -131,12 +131,18 @@ describe("mock template", () => {
       }
 
       expect((service["targetDir"] as string).endsWith("test")).toBeTruthy();
-      Object.defineProperty(service, "targetDir", {
-        get: () => path.join(process.cwd(), "dist/template"),
-      });
-      Object.defineProperty(service, "sourceDir", {
-        get: () => path.join(process.cwd(), "template"),
-      });
+
+      function defineDir(service: any) {
+        Object.defineProperty(service, "targetDir", {
+          get: () => path.join(process.cwd(), "dist/template"),
+        });
+        Object.defineProperty(service, "sourceDir", {
+          get: () => path.join(process.cwd(), "template"),
+        });
+      }
+      defineDir(service);
+      defineDir(service["copyIgnoreService"]);
+
       await service.create(plugins);
       expect(fs.existsSync("dist")).toBeTruthy();
 
@@ -212,6 +218,9 @@ describe("mock template", () => {
       Object.defineProperty(service, "targetDir", {
         get: () => path.join(process.cwd(), "dist/default"),
       });
+      Object.defineProperty(service["copyIgnoreService"], "targetDir", {
+        get: () => path.join(process.cwd(), "dist/default"),
+      });
       await service.create([]);
       expect(fs.existsSync("dist/default")).toBeTruthy();
       expect(fs.existsSync("dist/default/.eslintrc.js")).toBeTruthy();
@@ -244,12 +253,17 @@ describe("mock template", () => {
         force: true,
       });
 
-      Object.defineProperty(service, "targetDir", {
-        get: () => path.join(process.cwd(), "dist/not-exist"),
-      });
-      Object.defineProperty(service, "sourceDir", {
-        get: () => path.join(process.cwd(), "not-exist"),
-      });
+      function defineDir(service: any) {
+        Object.defineProperty(service, "targetDir", {
+          get: () => path.join(process.cwd(), "dist/not-exist"),
+        });
+        Object.defineProperty(service, "sourceDir", {
+          get: () => path.join(process.cwd(), "not-exist"),
+        });
+      }
+      defineDir(service);
+      defineDir(service["copyIgnoreService"]);
+
       expect(fs.existsSync("dist/not-exist")).toBeFalsy();
     });
   });
@@ -257,6 +271,9 @@ describe("mock template", () => {
   it(`should not copy codes when template sourceDir is error`, async () => {
     await testTemplate(async (service) => {
       Object.defineProperty(service, "sourceDir", {
+        get: () => path.join(process.cwd(), "dist/not-exist"),
+      });
+      Object.defineProperty(service["copyIgnoreService"], "sourceDir", {
         get: () => path.join(process.cwd(), "dist/not-exist"),
       });
 
