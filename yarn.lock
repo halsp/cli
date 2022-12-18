@@ -498,26 +498,26 @@
   resolved "https://registry.npmjs.org/@humanwhocodes/object-schema/-/object-schema-1.2.1.tgz"
   integrity sha512-ZnQMnLV4e7hDlUvw8H+U8ASL02SS2Gn6+9Ac3wGGLIe7+je2AeAOxPY+izIPJDfFDb7eDjev0Us8MO1iFRN8hA==
 
-"@ipare/core@^3.0.2":
-  version "3.0.2"
-  resolved "https://registry.npmmirror.com/@ipare/core/-/core-3.0.2.tgz"
-  integrity sha512-l1F3vzE27+gLVsz3kDf8PqpIsEvGk+9tE+pStN2Wi8dvHx6bE6FhNBhtXrbAiHO0QAoImsYs4N/nYa+A9KJFCA==
+"@ipare/core@^3.0.4":
+  version "3.0.4"
+  resolved "https://registry.npmmirror.com/@ipare/core/-/core-3.0.4.tgz#c0161b5875c32fdd41de050a0f6f024081b852c3"
+  integrity sha512-NTkUO44fCoCwBOWkV2Tz8gKdIWxjOo1CCccqEcD7Pxcespp6tkDxpAOoVpqIKgmITSvRs+Ng006y4fCuxQ563A==
 
-"@ipare/inject@^3.0.2":
-  version "3.0.2"
-  resolved "https://registry.npmmirror.com/@ipare/inject/-/inject-3.0.2.tgz"
-  integrity sha512-AfMSc9JPaygNCkfHDY+eRucsb6NRa/f3CWpsZWX+tCW61OV0zfGdqXzdIJaPJOU8Vv49viRDHh2c235DIVh/9g==
+"@ipare/inject@^3.0.4":
+  version "3.0.4"
+  resolved "https://registry.npmmirror.com/@ipare/inject/-/inject-3.0.4.tgz#2c502f990bcb0a3211cc1cc02f863da984bb73ad"
+  integrity sha512-cvUz7mnc2huShLevVKC/J1ZpiX95FR7nwjoS2mcpHatcEVsSVVtPjLwhm53Ue3MPV4YTZno9QBqgcyhNV5Ol2Q==
   dependencies:
-    "@ipare/core" "^3.0.2"
+    "@ipare/core" "^3.0.4"
     reflect-metadata "^0.1.13"
 
-"@ipare/pipe@^3.0.2":
-  version "3.0.2"
-  resolved "https://registry.npmmirror.com/@ipare/pipe/-/pipe-3.0.2.tgz"
-  integrity sha512-SB6ihElOfC7joA8eEW0+v2f/YIIKvRqSFTbxCO+o0RAUy8dLtspB3uR2u54BatuKjo/B6U8BFB8sQawijBkzqg==
+"@ipare/pipe@^3.0.4":
+  version "3.0.4"
+  resolved "https://registry.npmmirror.com/@ipare/pipe/-/pipe-3.0.4.tgz#a66bdb397673cf9dbaa47f6f2666ecc21e7e7cd8"
+  integrity sha512-PHzMEbNxrtPe1DvXxpgM9LNmTYt4pRvxbQrznb7dAvb3Y2wQinrIxaNxGWDmVbV1txMv4wDg2cEnJksbSyT6dQ==
   dependencies:
-    "@ipare/core" "^3.0.2"
-    "@ipare/inject" "^3.0.2"
+    "@ipare/core" "^3.0.4"
+    "@ipare/inject" "^3.0.4"
     class-transformer "^0.5.1"
     reflect-metadata "^0.1.13"
 
