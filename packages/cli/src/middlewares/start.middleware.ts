@@ -116,17 +116,14 @@ export class StartMiddleware extends Middleware {
 
   private getProcessArgs() {
     let outputFilePath = this.getStartFilePath();
-    if (!fs.existsSync(outputFilePath)) {
-      throw new Error("Can't find startup file");
-    }
-
     let childProcessArgs: string[] = [];
     const argsStartIndex = process.argv.indexOf("--");
     if (argsStartIndex >= 0) {
       childProcessArgs = process.argv.slice(argsStartIndex + 1);
     }
-    outputFilePath =
-      outputFilePath.indexOf(" ") >= 0 ? `"${outputFilePath}"` : outputFilePath;
+    outputFilePath = outputFilePath.includes(" ")
+      ? `"${outputFilePath}"`
+      : outputFilePath;
 
     const processArgs = [outputFilePath, ...childProcessArgs];
     if (this.inspect) {
@@ -145,10 +142,21 @@ export class StartMiddleware extends Middleware {
       "startu.startupFile"
     );
     if (startupFile) {
-      if (startupFile.includes(".")) {
+      const targetFile = path.resolve(this.cacheDir, startupFile);
+      if (fs.existsSync(targetFile)) {
         return startupFile;
-      } else {
+      } else if (
+        !targetFile.endsWith(".js") &&
+        fs.existsSync(targetFile + ".js")
+      ) {
         return startupFile + ".js";
+      } else if (
+        targetFile.endsWith(".ts") &&
+        fs.existsSync(targetFile.replace(/\.ts$/, ".js"))
+      ) {
+        return startupFile.replace(/\.ts$/, ".js");
+      } else {
+        throw new Error("Can't find startup file");
       }
     }
 
