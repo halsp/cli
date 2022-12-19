@@ -50,11 +50,14 @@ export class StartMiddleware extends Middleware {
     );
   }
   private get processEnv(): NodeJS.ProcessEnv {
-    return {
-      IPARE_DEBUG_PORT: this.port as string,
+    const result: NodeJS.ProcessEnv = {
       NODE_ENV: this.configService.mode,
       IPARE_ENV: "http",
     };
+    if (this.port) {
+      result.IPARE_DEBUG_PORT = this.port;
+    }
+    return result;
   }
 
   override async invoke(): Promise<void> {
