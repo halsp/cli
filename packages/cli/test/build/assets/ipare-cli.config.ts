@@ -6,7 +6,7 @@ export default defineConfig(() => ({
     assets: [
       "default/**/*",
       {
-        include: "include/**/*",
+        include: ["include/**/*"],
       },
       {
         include: "exclude/**/*",
