@@ -9,6 +9,7 @@ import { FileService } from "../file.service";
 import { ConfigService } from "./config.service";
 import { InjectContext } from "@ipare/pipe";
 import { Context } from "@ipare/core";
+import { CommandService } from "../command.service";
 
 type SortedAsset = {
   include: string;
@@ -23,6 +24,8 @@ export class AssetsService {
   @Inject
   private readonly configService!: ConfigService;
   @Inject
+  private readonly commandService!: CommandService;
+  @Inject
   private readonly fileService!: FileService;
 
   @InjectContext
@@ -31,21 +34,22 @@ export class AssetsService {
   private readonly watchers: chokidar.FSWatcher[] = [];
 
   public get assets(): SortedAsset[] {
-    let assCfg = this.configService.getOptionOrConfigValue<
-      string,
-      AssetConfig[]
-    >("assets", "build.assets", []);
-
-    if (typeof assCfg == "string") {
-      assCfg = [
-        {
-          include: assCfg.split("|"),
-        },
-      ];
+    const commandAssets = this.commandService.getOptionVlaue<string>(
+      "assets",
+      ""
+    );
+    const configAssets = this.configService.getConfigValue<AssetConfig[]>(
+      "build.assets",
+      []
+    );
+    const assets: AssetConfig[] = [];
+    if (commandAssets) {
+      assets.push(...commandAssets.split("||"));
     }
+    assets.push(...configAssets);
 
     const result: SortedAsset[] = [];
-    assCfg
+    assets
       .map((asset) => {
         if (typeof asset == "string") {
           return {
@@ -56,31 +60,34 @@ export class AssetsService {
         }
       })
       .filter((asset) => !!asset.include)
-      .forEach((asset) => {
+      .filter((asset) => !!asset.include.length)
+      .map((asset) => {
         let exclude = asset.exclude ?? [];
         if (typeof exclude == "string") {
           exclude = [exclude];
         }
 
         const outDir = path.join(this.cacheDir, asset.outDir ?? "");
-        const root = asset.root
-          ? path.resolve(process.cwd(), asset.root)
-          : process.cwd();
+        const root = path.resolve(asset.root ?? process.cwd());
 
+        return {
+          include: asset.include,
+          exclude,
+          outDir,
+          root,
+        };
+      })
+      .forEach((asset) => {
         if (typeof asset.include == "string") {
           result.push({
+            ...asset,
             include: asset.include,
-            exclude,
-            outDir,
-            root,
           });
         } else {
           for (const item of asset.include) {
             result.push({
+              ...asset,
               include: item,
-              exclude,
-              outDir,
-              root,
             });
           }
         }
