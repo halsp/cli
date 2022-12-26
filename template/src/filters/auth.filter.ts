@@ -4,7 +4,7 @@ import { AuthorizationFilter } from "@ipare/filter";
 
 export class AuthFilter implements AuthorizationFilter {
   onAuthorization(ctx: Context): boolean | Promise<boolean> {
-    ctx.bag("user", {
+    ctx.set("user", {
       id: 1,
       email: "hi@hal.wang",
     });
