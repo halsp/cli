@@ -9,15 +9,12 @@ import { treeKillSync } from "../utils/tree-kill";
 import shell from "shelljs";
 import { ConfigService } from "../services/build.services/config.service";
 import { ChildProcess } from "child_process";
-import { DepsService } from "../services/deps.service";
 
 export class StartMiddleware extends Middleware {
   @Inject
   private readonly tsconfigService!: TsconfigService;
   @Inject
   private readonly configService!: ConfigService;
-  @Inject
-  private readonly depsService!: DepsService;
 
   private get cacheDir() {
     return this.tsconfigService.cacheDir;
