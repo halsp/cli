@@ -59,7 +59,7 @@ export class StartMiddleware extends Middleware {
 
   override async invoke(): Promise<void> {
     if (this.watch) {
-      this.ctx.bag("onWatchSuccess", this.createOnWatchSuccess());
+      this.ctx.set("onWatchSuccess", this.createOnWatchSuccess());
     }
 
     await this.next();

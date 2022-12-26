@@ -149,7 +149,7 @@ describe("assets", () => {
           }
         })
         .use(async (ctx, next) => {
-          ctx.bag("onWatchSuccess", () => {
+          ctx.set("onWatchSuccess", () => {
             callCount++;
           });
 

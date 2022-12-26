@@ -26,7 +26,7 @@ describe("empty-config", () => {
     await runin(`test/build/config/empty`, async () => {
       await new CliStartup("test", undefined, { watch: true })
         .use(async (ctx, next) => {
-          ctx.bag("onWatchSuccess", () => {
+          ctx.set("onWatchSuccess", () => {
             callCount++;
           });
 

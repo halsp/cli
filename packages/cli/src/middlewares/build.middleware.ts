@@ -76,7 +76,7 @@ export class BuildMiddlware extends Middleware {
       await this.copyPackage();
       await this.hookService.execPostbuilds();
       const onWatchSuccess =
-        this.ctx.bag<() => Promise<void>>("onWatchSuccess");
+        this.ctx.get<() => Promise<void>>("onWatchSuccess");
       if (onWatchSuccess) {
         await onWatchSuccess();
       }

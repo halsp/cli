@@ -18,7 +18,7 @@ describe("build with watch", () => {
       })
         .use(async (ctx, next) => {
           if (options.callback) {
-            ctx.bag("onWatchSuccess", () => {
+            ctx.set("onWatchSuccess", () => {
               callCount++;
             });
           }
