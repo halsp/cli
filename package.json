@@ -34,7 +34,9 @@
   "dependencies": {
     "@ipare/core": "^3.0.4",
     "@ipare/inject": "^3.0.4",
+    "@ipare/native": "^3.0.4",
     "@ipare/pipe": "^3.0.4",
+    "@ipare/static": "^3.0.4",
     "@types/cross-spawn": "^6.0.2",
     "chalk": "^4.1.2",
     "child_process": "^1.0.2",
