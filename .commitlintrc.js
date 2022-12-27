@@ -33,6 +33,7 @@ module.exports = {
         "start",
         "template",
         "update",
+        "serve"
       ],
     ],
   },
