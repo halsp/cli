@@ -70,15 +70,7 @@ export default class extends Action {
 
     const userInfo = this.getUserInfo();
     //{ view && !mva
-    const html = await this.ctx.view("user", userInfo);
-    ///{ micro
-    this.res.setBody({
-      html,
-    });
-    ///}
-    ///{ !micro
-    this.ok(html);
-    ///}
+    await this.ctx.res.view("user", userInfo);
     //}
 
     //{!view || mva

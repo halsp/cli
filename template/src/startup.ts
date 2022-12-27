@@ -126,7 +126,7 @@ export default <T extends HttpStartup & MicroStartup>(startup: T) =>
       ctx.set("injectUserInfo", JSON.stringify(userInfo));
       ////}
       ////{ !view
-      ctx.ok(userInfo);
+      ctx.res.ok(userInfo);
       ////}
       ///}
       await next();
@@ -148,7 +148,7 @@ export default <T extends HttpStartup & MicroStartup>(startup: T) =>
         email: "hi@hal.wang",
       });
       //{ http
-      ctx.ok({
+      ctx.res.ok({
         html,
       });
       //}
