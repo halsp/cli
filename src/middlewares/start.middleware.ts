@@ -48,6 +48,7 @@ export class StartMiddleware extends Middleware {
   }
   private get processEnv(): NodeJS.ProcessEnv {
     const result: NodeJS.ProcessEnv = {
+      ...process.env,
       NODE_ENV: this.configService.mode,
       IPARE_ENV: "http",
     };
