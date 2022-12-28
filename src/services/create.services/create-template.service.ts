@@ -215,14 +215,14 @@ export class CreateTemplateService {
     );
     if (this.commandService.getOptionVlaue<boolean>("forseInit")) {
       this.ctx.logger.info(
-        this.chalkService.blue("Forse init template. Please wait...")
+        this.chalkService.magentaBright("Forse init template. Please wait...")
       );
     } else {
       if (fs.existsSync(initFlatFilePath)) {
         return true;
       }
       this.ctx.logger.info(
-        this.chalkService.blue(
+        this.chalkService.magentaBright(
           "The command is used for the first time and is being initialized. Please wait..."
         )
       );
