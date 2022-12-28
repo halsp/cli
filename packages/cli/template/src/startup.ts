@@ -11,7 +11,7 @@ import "@ipare/env";
 import "@ipare/logger";
 import { HttpStartup } from "@ipare/http";
 import { MicroStartup } from "@ipare/micro";
-//{http
+//{http||micro
 import * as fs from "fs";
 import path from "path";
 //}
@@ -163,7 +163,7 @@ export default <T extends HttpStartup & MicroStartup>(startup: T) =>
     .useRouter();
 // }
 
-//{http
+//{http||micro
 const version = (() => {
   const pkgName = "package.json";
   let dir = __dirname;
