@@ -1,13 +1,13 @@
 import { Context, isUndefined } from "@ipare/core";
 import { Inject } from "@ipare/inject";
-import { InjectContext } from "@ipare/pipe";
+import { Ctx } from "@ipare/pipe";
 import ts from "typescript";
 import { ConfigService } from "./config.service";
 import { PluginInterfaceService } from "./plugin-interface.service";
 import { TsconfigService } from "./tsconfig.service";
 
 export class CompilerService {
-  @InjectContext
+  @Ctx
   private readonly ctx!: Context;
   @Inject
   private readonly tsconfigService!: TsconfigService;

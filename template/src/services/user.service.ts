@@ -3,12 +3,12 @@
 import { Context, ILogger } from "@ipare/core";
 //}
 import { Logger } from "@ipare/logger";
-import { InjectContext, Query } from "@ipare/pipe";
+import { Ctx, Query } from "@ipare/pipe";
 import { V } from "@ipare/validator";
 
 export class UserService {
   //{pipe
-  @InjectContext
+  @Ctx
   private readonly ctx!: Context;
   //}
   //{logger

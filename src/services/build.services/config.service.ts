@@ -1,4 +1,4 @@
-import { InjectContext } from "@ipare/pipe";
+import { Ctx } from "@ipare/pipe";
 import { Context, isUndefined } from "@ipare/core";
 import path from "path";
 import { Configuration, ConfigEnv } from "../../configuration";
@@ -9,7 +9,7 @@ import * as tsNode from "ts-node";
 import { PluginInterfaceService } from "./plugin-interface.service";
 
 export class ConfigService {
-  @InjectContext
+  @Ctx
   private readonly ctx!: Context;
   @Inject
   private readonly fileService!: FileService;

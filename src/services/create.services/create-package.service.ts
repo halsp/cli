@@ -1,6 +1,6 @@
 import { Context } from "@ipare/core";
 import { Inject } from "@ipare/inject";
-import { InjectContext } from "@ipare/pipe";
+import { Ctx } from "@ipare/pipe";
 import path from "path";
 import { CreateEnvService } from "./create-env.service";
 import * as fs from "fs";
@@ -12,7 +12,7 @@ import {
 } from "./plugin-config.service";
 
 export class CreatePackageService {
-  @InjectContext
+  @Ctx
   private readonly ctx!: Context;
   @Inject
   private readonly commandService!: CommandService;

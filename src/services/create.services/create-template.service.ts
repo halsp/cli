@@ -11,7 +11,7 @@ import { CommandService } from "../command.service";
 import { SortPluginsService } from "./sort-plugins.service";
 import { ExpressionObject, PluginConfigService } from "./plugin-config.service";
 import glob from "glob";
-import { InjectContext } from "@ipare/pipe";
+import { Ctx } from "@ipare/pipe";
 import { Context } from "@ipare/core";
 import { ChalkService } from "../chalk.service";
 import { CopyIgnoreService } from "./copy-ignore.service";
@@ -39,7 +39,7 @@ export class CreateTemplateService {
   private readonly sortPluginsService!: SortPluginsService;
   @Inject
   private readonly pluginConfigService!: PluginConfigService;
-  @InjectContext
+  @Ctx
   private readonly ctx!: Context;
   @Inject
   private readonly chalkService!: ChalkService;

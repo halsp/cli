@@ -1,8 +1,8 @@
 import { Context, isUndefined } from "@ipare/core";
-import { InjectContext } from "@ipare/pipe";
+import { Ctx } from "@ipare/pipe";
 
 export class CommandService {
-  @InjectContext
+  @Ctx
   private readonly ctx!: Context;
 
   getOptionVlaue<T extends string | boolean>(
