@@ -213,9 +213,9 @@ export class CreateTemplateService {
       "../../../template/node_modules",
       cliVersion
     );
-    if (this.commandService.getOptionVlaue<boolean>("forseInit")) {
+    if (this.commandService.getOptionVlaue<boolean>("forceInit")) {
       this.ctx.logger.info(
-        this.chalkService.magentaBright("Forse init template. Please wait...")
+        this.chalkService.magentaBright("Force init template. Please wait...")
       );
     } else {
       if (fs.existsSync(initFlatFilePath)) {

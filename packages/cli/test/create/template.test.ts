@@ -399,7 +399,7 @@ describe("init", () => {
   );
 
   it(
-    "should init template node_modules with forseInit",
+    "should init template node_modules with forceInit",
     async () => {
       await testService(
         CreateTemplateService,
@@ -411,7 +411,7 @@ describe("init", () => {
           options: {
             registry: process.env.REGISTRY as string,
             skipInstall: true,
-            forseInit: true,
+            forceInit: true,
           },
         }
       );
