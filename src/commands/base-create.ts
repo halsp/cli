@@ -32,5 +32,5 @@ Command.prototype.setCreateOptions = function () {
     .option("-sg, --skipGit", "Skip git repository initialization")
     .option("-sp, --skipPlugins", "No plugins will be added")
     .option("-sr, --skipRun", "Skip running after completion")
-    .option("--forseInit", "Forse init template");
+    .option("--forceInit", "Force init template");
 };
