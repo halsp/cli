@@ -4,7 +4,7 @@ import * as fs from "fs";
 import path from "path";
 import { Inject } from "@ipare/inject";
 import { FileService } from "../file.service";
-import { InjectContext } from "@ipare/pipe";
+import { Ctx } from "@ipare/pipe";
 import { CommandService } from "../command.service";
 import {
   EnvPluginItem,
@@ -13,7 +13,7 @@ import {
 } from "./plugin-config.service";
 
 export class CreateEnvService {
-  @InjectContext
+  @Ctx
   private readonly ctx!: Context;
   @Inject
   private readonly fileService!: FileService;

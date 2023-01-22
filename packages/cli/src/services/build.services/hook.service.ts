@@ -2,7 +2,7 @@ import { Inject } from "@ipare/inject";
 import { ConfigService } from "./config.service";
 import { TsconfigService } from "./tsconfig.service";
 import { PluginInterfaceService } from "./plugin-interface.service";
-import { InjectContext } from "@ipare/pipe";
+import { Ctx } from "@ipare/pipe";
 import { Context } from "@ipare/core";
 
 export class HookService {
@@ -13,7 +13,7 @@ export class HookService {
   @Inject
   private readonly tsconfigService!: TsconfigService;
 
-  @InjectContext
+  @Ctx
   private readonly ctx!: Context;
 
   private get config() {

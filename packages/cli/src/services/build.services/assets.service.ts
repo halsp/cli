@@ -7,7 +7,7 @@ import { AssetConfig } from "../../configuration";
 import glob from "glob";
 import { FileService } from "../file.service";
 import { ConfigService } from "./config.service";
-import { InjectContext } from "@ipare/pipe";
+import { Ctx } from "@ipare/pipe";
 import { Context } from "@ipare/core";
 import { CommandService } from "../command.service";
 
@@ -28,7 +28,7 @@ export class AssetsService {
   @Inject
   private readonly fileService!: FileService;
 
-  @InjectContext
+  @Ctx
   private readonly ctx!: Context;
 
   private readonly watchers: chokidar.FSWatcher[] = [];
