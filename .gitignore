@@ -1,0 +1,10 @@
+.git
+dist
+node_modules
+package-lock.json
+pnpm-lock.yaml
+coverage
+.ipare-cache*
+
+*-error.log
+.husky/_

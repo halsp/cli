@@ -1,0 +1,138 @@
+name: "Publish NPM"
+
+on:
+  push:
+    tags: 
+      - 'v*'
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node_version: [14, 16, 18]
+        include:
+          # Active LTS + other OS
+          - os: macos-latest
+            node_version: 16
+          - os: windows-latest
+            node_version: 16
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: sh scripts/install-yarn.sh
+      - run: npm run bootstrap
+      - name: Run test
+        env:
+          NODE_OPTIONS: "--max-old-space-size=8192"
+        run: npm run test
+      - run: npx codecov
+
+  try-publish-npm:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: "16"
+          registry-url: https://registry.npmjs.org/
+      - run: npm install
+      - run: npm run build
+
+  try-publish-create-ipare:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: "16"
+          registry-url: https://registry.npmjs.org/
+      - run: npm install
+      - run: npm run build:create-ipare
+
+  try-create-minimal:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: "16"
+          registry-url: https://registry.npmjs.org/
+      - run: npm install
+      - name: Create
+        run: |
+          npm run build
+          node bin/cli.js create minimal --debug -e native -pm npm -ps inject,router,view,mva,pipe,filter,testing,static,swagger,jwt,validator,env,logger -f -sg -sr
+          cd minimal
+          npx ipare build
+          cd ..
+
+  publish-npm:
+    if: github.repository == 'ipare/cli'
+    needs: [test, try-publish-npm, try-publish-create-ipare, try-create-minimal]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: "16"
+          registry-url: https://registry.npmjs.org/
+      - run: npm install
+      - run: npm run build
+      - run: npm publish --access=public
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+
+  publish-create-ipare:
+    if: github.repository == 'ipare/cli'
+    needs: [test, try-publish-npm, try-publish-create-ipare, try-create-minimal]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: "16"
+          registry-url: https://registry.npmjs.org/
+      - run: npm install
+      - run: npm run build:create-ipare
+      - run: npm publish --access=public
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+
+  create-minimal:
+    if: github.repository == 'ipare/cli'
+    needs: [publish-npm]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: "16"
+          registry-url: https://registry.npmjs.org/
+      - run: npm install
+      - name: Create
+        run: |
+          npm install
+          npm run build
+
+          mv minimal.README.md README.md
+          node bin/cli.js create minimal -e native -pm npm -ps inject,router,view,mva,pipe,filter,testing,static,swagger,jwt,validator,env,logger -f -sg -sr
+          cd minimal
+          npx ipare build
+
+          git config --global user.email hi@hal.wang
+          git config --global user.name hal-wang
+          git init -b minimal
+          git add -A
+          git commit -m "create"
+      - name: push
+        uses: ad-m/github-push-action@master
+        with:
+          directory: minimal
+          repository: ipare/cli
+          force: true
+          branch: minimal
+          github_token: ${{ secrets.PERSONAL_GITHUB_TOKEN }}
