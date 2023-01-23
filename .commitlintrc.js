@@ -1,3 +1,5 @@
+const { getPackages } = require("./scripts/get-packages");
+
 module.exports = {
   extends: ["@commitlint/config-conventional"],
   rules: {
@@ -19,22 +21,6 @@ module.exports = {
         "typo"
       ],
     ],
-    "scope-enum": [
-      2,
-      "always",
-      [
-        "release",
-        "template",
-        "env",
-        "build",
-        "create",
-        "info",
-        "init",
-        "start",
-        "template",
-        "update",
-        "serve"
-      ],
-    ],
+    "scope-enum": [2, "always", ["release", ...getPackages()]],
   },
 };

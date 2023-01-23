@@ -2,7 +2,6 @@ dist
 node_modules
 coverage
 /LICENSE
-/README.md
 /jest.config.js
 /jest.setup.js
 /.eslintignore

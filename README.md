@@ -17,19 +17,18 @@
 
 ## 开始使用
 
-请访问 <https://ipare.org>
+```
+npm install -g @ipare/cli
+ipare create <project-name>
+```
+
+更多请访问 <https://ipare.org>
 
 ## 介绍
 
 `@ipare/cli` 是 `Ipare` 的命令行脚手架工具
 
 用于帮助你创建、运行、编译 Ipare 应用
-
-## 安装
-
-```
-npm install -g @ipare/cli
-```
 
 ## 贡献
 

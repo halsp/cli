@@ -2,7 +2,7 @@
 
 import { Command } from "commander";
 import path from "path";
-import { InitCommand } from "./commands/init.command";
+import { InitCommand } from "@ipare/cli/dist/commands/init.command";
 
 const program = new Command("create-ipare");
 

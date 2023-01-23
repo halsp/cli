@@ -1,0 +1,50 @@
+{
+  "name": "create-ipare",
+  "version": "0.7.6",
+  "description": "Ipare 的快速开始脚手架工具",
+  "engines": {
+    "node": ">=12.16.0"
+  },
+  "homepage": "https://github.com/ipare/cli",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ipare/cli"
+  },
+  "keywords": [
+    "ipare"
+  ],
+  "bugs": {
+    "url": "https://github.com/ipare/cli/issues",
+    "email": "support@hal.wang"
+  },
+  "main": "dist/index.js",
+  "scripts": {
+    "prebuild": "npm run lint",
+    "build": "rimraf ./dist/* && tsc",
+    "lint": "eslint src test --ext .ts",
+    "pretest": "npm run build",
+    "test": "jest"
+  },
+  "author": "hal-wang",
+  "license": "MIT",
+  "dependencies": {
+    "@ipare/cli": "^0.7.5",
+    "commander": "^9.4.1"
+  },
+  "bin": {
+    "create-ipare": "bin/create-ipare.js"
+  },
+  "files": [
+    "/bin/*",
+    "/dist/*",
+    "/src/*",
+    "/test/*",
+    ".eslintignore",
+    ".eslintrc.js",
+    ".gitignore",
+    "LICENSE",
+    "package.json",
+    "README.md",
+    "tsconfig.json"
+  ]
+}

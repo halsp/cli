@@ -7,12 +7,12 @@ runTest(DepsService, async (ctx, service) => {
   expect(Array.isArray(deps)).toBeTruthy();
   expect(deps.length > 0).toBeTruthy();
 
-  const depPath = (service as any).getPackagePath("@ipare/inject");
-  const pkgPath = path.join(
-    __dirname,
-    "../../node_modules/@ipare/inject/package.json"
-  );
-  expect(depPath).toBe(pkgPath);
+  const depPath: string = (service as any).getPackagePath("@ipare/inject");
+  expect(
+    depPath.endsWith(
+      "/node_modules/@ipare/inject/package.json".replace(/\//g, path.sep)
+    )
+  ).toBeTruthy();
 });
 
 runTest(DepsService, async (ctx, service) => {
