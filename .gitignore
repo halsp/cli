@@ -9,4 +9,3 @@ coverage
 *-error.log
 .husky/_
 packages/cli/template/yarn.lock
-packages/cli/README.md

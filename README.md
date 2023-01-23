@@ -15,6 +15,8 @@
     <a href="https://paypal.me/ihalwang" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
 </p>
 
+<!--intro-->
+
 ## 开始使用
 
 ```
@@ -29,6 +31,8 @@ ipare create <project-name>
 `@ipare/cli` 是 `Ipare` 的命令行脚手架工具
 
 用于帮助你创建、运行、编译 Ipare 应用
+
+<!--intro-end-->
 
 ## 贡献
 
