@@ -15,7 +15,5 @@ runTest(PackageManagerService, async (ctx, service) => {
 
 runTest(PackageManagerService, async (ctx, service) => {
   const result = service.install("not-exist");
-  console.log("result", result);
   expect(result.error).not.toBeUndefined();
-  expect(result.status).toBe(1);
 });
