@@ -28,7 +28,7 @@
   "author": "hal-wang",
   "license": "MIT",
   "dependencies": {
-    "@ipare/cli": "^0.7.5",
+    "@ipare/cli": "^0.7.6",
     "commander": "^9.4.1"
   },
   "bin": {
