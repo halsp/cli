@@ -1,5 +1,5 @@
 #!/usr/bin/env node
 
-'use strict';
+"use strict";
 
-require('../dist/create-ipare');
+require("../dist/create-ipare");
