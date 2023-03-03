@@ -1,8 +1,8 @@
 import path from "path";
 import * as fs from "fs";
-import { isString } from "@ipare/core";
+import { isString } from "@halsp/common";
 import { ExpressionService } from "./expression.service";
-import { Inject } from "@ipare/inject";
+import { Inject } from "@halsp/inject";
 import { SortPluginsService } from "./sort-plugins.service";
 
 export type ExpressionObject<T = string | boolean> = Record<

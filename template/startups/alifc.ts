@@ -1,4 +1,4 @@
-import { AlifcStartup } from "@ipare/alifc";
+import { AlifcStartup } from "@halsp/alifc";
 import startup from "./startup";
 
 const app = startup(new AlifcStartup());

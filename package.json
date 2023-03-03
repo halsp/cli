@@ -1,42 +1,42 @@
 {
-  "name": "@ipare/cli",
-  "version": "0.7.6",
-  "description": "Ipare 的命令行脚手架工具",
+  "name": "@halsp/cli",
+  "version": "0.1.0",
+  "description": "Halsp 的命令行脚手架工具",
   "engines": {
     "node": ">=12.16.0"
   },
-  "homepage": "https://github.com/ipare/cli",
+  "homepage": "https://github.com/halsp/cli",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ipare/cli"
+    "url": "https://github.com/halsp/cli"
   },
   "keywords": [
-    "ipare"
+    "halsp"
   ],
   "bugs": {
-    "url": "https://github.com/ipare/cli/issues",
+    "url": "https://github.com/halsp/cli/issues",
     "email": "support@hal.wang"
   },
   "main": "dist/index.js",
   "scripts": {
     "build": "rimraf ./dist/* && tsc",
-    "build:create-ipare": "ts-node scripts/create-ipare.ts && npm run build",
+    "build:create-halsp": "ts-node scripts/create-halsp.ts && npm run build",
     "publish:beta": "npm run build && npm publish --tag=beta --access=public",
     "test": "npm run build && jest",
     "test:local": "npm run build && cross-env REGISTRY='https://registry.npmmirror.com/' jest",
     "ci-test": "sh scripts/ci-test.sh",
     "lint": "eslint src --ext .ts",
-    "dev": "npm run build && npm uninstall @ipare/cli -g && npm link",
+    "dev": "npm run build && npm uninstall @halsp/cli -g && npm link",
     "prepare": "husky install"
   },
   "author": "hal-wang",
   "license": "MIT",
   "dependencies": {
-    "@ipare/core": "^3.2.1",
-    "@ipare/inject": "^3.2.1",
-    "@ipare/native": "^3.2.1",
-    "@ipare/pipe": "^3.2.1",
-    "@ipare/static": "^3.2.1",
+    "@halsp/common": "^1.0.0",
+    "@halsp/inject": "^1.0.0",
+    "@halsp/native": "^1.0.0",
+    "@halsp/pipe": "^1.0.0",
+    "@halsp/static": "^1.0.0",
     "@types/cross-spawn": "^6.0.2",
     "chalk": "^4.1.2",
     "child_process": "^1.0.2",
@@ -82,7 +82,7 @@
     "ts-jest": "^29.0.5"
   },
   "bin": {
-    "ipare": "bin/cli.js"
+    "halsp": "bin/cli.js"
   },
   "files": [
     "/.github/*",
@@ -97,7 +97,7 @@
     ".gitignore",
     "CODE_OF_CONDUCT.md",
     "CONTRIBUTING.md",
-    "create-ipare.README.md",
+    "create-halsp.README.md",
     "jest.config.js",
     "LICENSE",
     "minimal.README.md",

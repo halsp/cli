@@ -1,4 +1,4 @@
-import { HookType } from "@ipare/core";
+import { HookType } from "@halsp/common";
 import { CliStartup } from "../../src/cli-startup";
 import { CreateMiddleware } from "../../src/middlewares/create-middleware";
 import * as fs from "fs";
@@ -7,7 +7,7 @@ import { runin } from "../utils";
 
 describe("run", () => {
   async function createCacheDir(name: string) {
-    const cahceDir = "test/create/.ipare-cache-run";
+    const cahceDir = "test/create/.halsp-cache-run";
     if (!fs.existsSync(cahceDir)) {
       await fs.promises.mkdir(cahceDir);
     }

@@ -1,4 +1,4 @@
-import { Inject } from "@ipare/inject";
+import { Inject } from "@halsp/inject";
 import path from "path";
 import { AssetsService } from "../services/build.services/assets.service";
 import { CompilerService } from "../services/build.services/compiler.service";
@@ -7,7 +7,7 @@ import { TsconfigService } from "../services/build.services/tsconfig.service";
 import { WatchCompilerService } from "../services/build.services/watch-compiler.service";
 import * as fs from "fs";
 import { HookService } from "../services/build.services/hook.service";
-import { Middleware } from "@ipare/core";
+import { Middleware } from "@halsp/common";
 import prettier from "prettier";
 
 export class BuildMiddlware extends Middleware {

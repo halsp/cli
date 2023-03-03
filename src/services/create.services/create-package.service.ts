@@ -1,6 +1,6 @@
-import { Context } from "@ipare/core";
-import { Inject } from "@ipare/inject";
-import { Ctx } from "@ipare/pipe";
+import { Context } from "@halsp/common";
+import { Inject } from "@halsp/inject";
+import { Ctx } from "@halsp/pipe";
 import path from "path";
 import { CreateEnvService } from "./create-env.service";
 import * as fs from "fs";
@@ -61,9 +61,9 @@ export class CreatePackageService {
     const { dependencies, devDependencies } = pluginConfig;
 
     Object.keys(deps)
-      .filter((k) => k.startsWith("@ipare/"))
-      .filter((k) => k != "@ipare/cli")
-      .filter((k) => !plugins.some((p) => `@ipare/${p}` == k))
+      .filter((k) => k.startsWith("@halsp/"))
+      .filter((k) => k != "@halsp/cli")
+      .filter((k) => !plugins.some((p) => `@halsp/${p}` == k))
       .filter((k) => {
         if (isDev) {
           return devDependencies[k] != true;
@@ -98,15 +98,15 @@ export class CreatePackageService {
     const version = this.getCurrentVersion();
     if (
       pkg.dependencies &&
-      Object.keys(pkg.dependencies).includes("@ipare/cli")
+      Object.keys(pkg.dependencies).includes("@halsp/cli")
     ) {
-      pkg.dependencies["@ipare/cli"] = version;
+      pkg.dependencies["@halsp/cli"] = version;
     }
     if (
       pkg.devDependencies &&
-      Object.keys(pkg.devDependencies).includes("@ipare/cli")
+      Object.keys(pkg.devDependencies).includes("@halsp/cli")
     ) {
-      pkg.devDependencies["@ipare/cli"] = version;
+      pkg.devDependencies["@halsp/cli"] = version;
     }
   }
 

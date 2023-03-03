@@ -1,10 +1,10 @@
 //{inject
 //{pipe
-import { Context, ILogger } from "@ipare/core";
+import { Context, ILogger } from "@halsp/common";
 //}
-import { Logger } from "@ipare/logger";
-import { Ctx, Query } from "@ipare/pipe";
-import { V } from "@ipare/validator";
+import { Logger } from "@halsp/logger";
+import { Ctx, Query } from "@halsp/pipe";
+import { V } from "@halsp/validator";
 
 export class UserService {
   //{pipe
@@ -27,7 +27,7 @@ export class UserService {
 
   public getUserInfo() {
     //{pipe && http
-    this.ctx.res.set("test-header", "ipare");
+    this.ctx.res.set("test-header", "halsp");
     //}
     //{logger
     this.logger.info("get user info from service");

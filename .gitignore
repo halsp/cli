@@ -4,7 +4,7 @@ node_modules
 package-lock.json
 pnpm-lock.yaml
 coverage
-.ipare-cache*
+.halsp-cache*
 
 *-error.log
 .husky/_

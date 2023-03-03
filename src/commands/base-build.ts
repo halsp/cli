@@ -14,16 +14,16 @@ Command.prototype.setBuildOptions = function (defaultMode: string) {
   )
     .option(
       "-c, --config <path>",
-      "Path to ipare-cli configuration file.",
-      "ipare-cli.config.ts"
+      "Path to halsp-cli configuration file.",
+      "halsp-cli.config.ts"
     )
     .option(
       "-jc, --jsonConfig <json>",
-      "Json string of ipare-cli configuration."
+      "Json string of halsp-cli configuration."
     )
     .option(
       "-fc, --funcConfig <function>",
-      "Function string to build ipare-cli configuration."
+      "Function string to build halsp-cli configuration."
     )
     .option("-tc, --tsconfigPath <path>", "Path to tsconfig.json file.")
     .option("-w, --watch", "Run in watch mode (live-reload).")

@@ -1,5 +1,5 @@
-import { isUndefined } from "@ipare/core";
-import { Inject } from "@ipare/inject";
+import { isUndefined } from "@halsp/common";
+import { Inject } from "@halsp/inject";
 import ts from "typescript";
 import { CompilerService } from "./compiler.service";
 import { ConfigService } from "./config.service";

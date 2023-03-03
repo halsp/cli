@@ -1,6 +1,6 @@
 import { CliStartup } from "../../src/cli-startup";
 import { runin } from "../utils";
-import { isUndefined } from "@ipare/core";
+import { isUndefined } from "@halsp/common";
 
 describe("startup", () => {
   async function testCliStartup(args?: any, options?: any) {

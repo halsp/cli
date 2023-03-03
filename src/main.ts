@@ -7,7 +7,7 @@ import { StartCommand } from "./commands/start.command";
 import { TemplateCommand } from "./commands/template.command";
 import { UpdateCommand } from "./commands/update.command";
 
-const program = new Command("ipare");
+const program = new Command("halsp");
 
 program
   .usage("<command> [options]")

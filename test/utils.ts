@@ -1,5 +1,5 @@
-import { Context, ObjectConstructor } from "@ipare/core";
-import { parseInject } from "@ipare/inject";
+import { Context, ObjectConstructor } from "@halsp/common";
+import { parseInject } from "@halsp/inject";
 import { CliStartup } from "../src/cli-startup";
 
 export async function runin(path: string, fn: () => void | Promise<void>) {

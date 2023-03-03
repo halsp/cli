@@ -1,4 +1,4 @@
-import { LambdaStartup } from "@ipare/lambda";
+import { LambdaStartup } from "@halsp/lambda";
 import startup from "./startup";
 
 const app = startup(new LambdaStartup());

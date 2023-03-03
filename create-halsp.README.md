@@ -17,20 +17,30 @@
 
 ## 介绍
 
-本项目是 Halsp 的一个简易示例
+`create-halsp` 是 `Halsp` 的快速开始脚手架工具，由 @halsp/cli 自动生成
 
-由 `@halsp/cli` 以下命令自动生成
+## 开始使用
 
-```bash
-halsp create minimal -e native -pm npm -ps inject,router,view,mva,pipe,filter,testing,static,swagger,jwt,validator,env,logger -f
+```
+npm init halsp
 ```
 
-## 运行
+## 贡献
 
-```bash
-npm start
-```
+请阅读 [Contributing to @halsp/cli](https://github.com/halsp/cli/blob/main/CONTRIBUTING.md)
 
-## 在线编辑调试
+### Halsp 贡献列表
 
-StackBlitz：[minimal.halsp.org](http://minimal.halsp.org)
+<a href="https://github.com/halsp/core/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=halsp/core" />
+</a>
+
+### CLI 贡献列表
+
+<a href="https://github.com/halsp/cli/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=halsp/cli" />
+</a>
+
+## License
+
+@halsp/cli is MIT licensed.

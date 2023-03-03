@@ -1,5 +1,5 @@
 //{ lambda || alifc
-import { NativeStartup } from "@ipare/native";
+import { NativeStartup } from "@halsp/native";
 import setupStartup from "./startup";
 
 async function bootstrap() {

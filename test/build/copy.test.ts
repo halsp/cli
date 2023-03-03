@@ -3,7 +3,7 @@ import { CliStartup } from "../../src/cli-startup";
 import { BuildMiddlware } from "../../src/middlewares/build.middleware";
 import { CopyBuildResultMiddleware } from "../../src/middlewares/copy-build-result.middleware";
 import * as fs from "fs";
-import { parseInject } from "@ipare/inject";
+import { parseInject } from "@halsp/inject";
 import { AssetsService } from "../../src/services/build.services/assets.service";
 import { WatchCompilerService } from "../../src/services/build.services/watch-compiler.service";
 
@@ -18,7 +18,7 @@ describe("copy package", () => {
         .add(BuildMiddlware)
         .run();
 
-      expect(fs.existsSync("./.ipare-cache/package.json")).toBeTruthy();
+      expect(fs.existsSync("./.halsp-cache/package.json")).toBeTruthy();
       callCount++;
     });
     expect(callCount).toBe(1);
@@ -35,9 +35,9 @@ describe("copy package", () => {
         .add(BuildMiddlware)
         .run();
 
-      expect(fs.existsSync("./.ipare-cache/package.json")).toBeTruthy();
+      expect(fs.existsSync("./.halsp-cache/package.json")).toBeTruthy();
       expect(
-        JSON.parse(fs.readFileSync("./.ipare-cache/package.json", "utf-8"))
+        JSON.parse(fs.readFileSync("./.halsp-cache/package.json", "utf-8"))
           .devDependencies
       ).toEqual({});
       callCount++;
@@ -65,18 +65,18 @@ describe("copy build files", () => {
 
 describe("assets", () => {
   function expectFiles() {
-    expect(fs.existsSync("./.ipare-cache")).toBeTruthy();
-    expect(fs.existsSync("./.ipare-cache/default/test.txt")).toBeTruthy();
-    expect(fs.readFileSync("./.ipare-cache/default/test.txt", "utf-8")).toBe(
+    expect(fs.existsSync("./.halsp-cache")).toBeTruthy();
+    expect(fs.existsSync("./.halsp-cache/default/test.txt")).toBeTruthy();
+    expect(fs.readFileSync("./.halsp-cache/default/test.txt", "utf-8")).toBe(
       "test-build"
     );
-    expect(fs.existsSync("./.ipare-cache/build-test.js")).toBeTruthy();
+    expect(fs.existsSync("./.halsp-cache/build-test.js")).toBeTruthy();
 
-    expect(fs.existsSync("./.ipare-cache/root/test.txt")).toBeTruthy();
-    expect(fs.existsSync("./.ipare-cache/include/test.txt")).toBeTruthy();
-    expect(fs.existsSync("./.ipare-cache/test/outDir/test.txt")).toBeTruthy();
+    expect(fs.existsSync("./.halsp-cache/root/test.txt")).toBeTruthy();
+    expect(fs.existsSync("./.halsp-cache/include/test.txt")).toBeTruthy();
+    expect(fs.existsSync("./.halsp-cache/test/outDir/test.txt")).toBeTruthy();
 
-    expect(fs.existsSync("./.ipare-cache/exclude/test.txt")).toBeFalsy();
+    expect(fs.existsSync("./.halsp-cache/exclude/test.txt")).toBeFalsy();
   }
 
   it(`should build and copy assets`, async () => {
@@ -98,13 +98,13 @@ describe("assets", () => {
         .add(BuildMiddlware)
         .run();
 
-      expect(fs.existsSync("./.ipare-cache")).toBeTruthy();
-      expect(fs.existsSync("./.ipare-cache/default")).toBeTruthy();
-      expect(fs.existsSync("./.ipare-cache/default/test.txt")).toBeTruthy();
-      expect(fs.readFileSync("./.ipare-cache/default/test.txt", "utf-8")).toBe(
+      expect(fs.existsSync("./.halsp-cache")).toBeTruthy();
+      expect(fs.existsSync("./.halsp-cache/default")).toBeTruthy();
+      expect(fs.existsSync("./.halsp-cache/default/test.txt")).toBeTruthy();
+      expect(fs.readFileSync("./.halsp-cache/default/test.txt", "utf-8")).toBe(
         "test-build"
       );
-      expect(fs.existsSync("./.ipare-cache/build-test.js")).toBeTruthy();
+      expect(fs.existsSync("./.halsp-cache/build-test.js")).toBeTruthy();
       worked = true;
     });
     expect(worked).toBeTruthy();
@@ -113,7 +113,7 @@ describe("assets", () => {
   async function runWatchAssetsTest(type: string) {
     const cacheFileName = `test-cache-${type}.txt`;
     const cacheSourceFile = `./default/${cacheFileName}`;
-    const cacheTargetFile = `./.ipare-cache/default/${cacheFileName}`;
+    const cacheTargetFile = `./.halsp-cache/default/${cacheFileName}`;
     const cacheFileContent = "watchAssets";
     const cacheFileEditContent = "Edit";
     let callCount = 0;

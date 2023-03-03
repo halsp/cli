@@ -1,4 +1,4 @@
-import { parseInject } from "@ipare/inject";
+import { parseInject } from "@halsp/inject";
 import * as fs from "fs";
 import path from "path";
 import { CliStartup } from "../../src/cli-startup";
@@ -11,7 +11,7 @@ describe("copy ignore", () => {
     sourceFile: string | undefined,
     targetExist: boolean
   ) {
-    dir = ".ipare-cache-" + dir;
+    dir = ".halsp-cache-" + dir;
     await runin("test/create", async () => {
       fs.rmSync(dir, {
         recursive: true,

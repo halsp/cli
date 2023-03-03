@@ -1,7 +1,7 @@
-import { Context, ObjectConstructor } from "@ipare/core";
+import { Context, ObjectConstructor } from "@halsp/common";
 import { CliStartup } from "../../src/cli-startup";
 import { runin } from "../utils";
-import { parseInject } from "@ipare/inject";
+import { parseInject } from "@halsp/inject";
 
 export function runTest<T extends object = any>(
   service: ObjectConstructor<T>,

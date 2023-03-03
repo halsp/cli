@@ -1,5 +1,5 @@
-import { Context, isUndefined } from "@ipare/core";
-import { Ctx } from "@ipare/pipe";
+import { Context, isUndefined } from "@halsp/common";
+import { Ctx } from "@halsp/pipe";
 
 export class CommandService {
   @Ctx

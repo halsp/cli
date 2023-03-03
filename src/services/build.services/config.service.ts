@@ -1,8 +1,8 @@
-import { Ctx } from "@ipare/pipe";
-import { Context, isUndefined } from "@ipare/core";
+import { Ctx } from "@halsp/pipe";
+import { Context, isUndefined } from "@halsp/common";
 import path from "path";
 import { Configuration, ConfigEnv } from "../../configuration";
-import { Inject } from "@ipare/inject";
+import { Inject } from "@halsp/inject";
 import { CommandService } from "../command.service";
 import { FileService } from "../file.service";
 import * as tsNode from "ts-node";
@@ -28,18 +28,18 @@ export class ConfigService {
       } else {
         const exts = ["ts", "js", "json"];
         const names = [
-          "ipare-cli.config",
-          "iparecli.config",
-          "ipare-cli",
-          "iparecli",
+          "halsp-cli.config",
+          "halspcli.config",
+          "halsp-cli",
+          "halspcli",
 
-          "ipare-cli-config",
-          "iparecli-config",
+          "halsp-cli-config",
+          "halspcli-config",
 
-          "ipare_cli.config",
-          "iparecli_config",
-          "ipare_cli_config",
-          "ipare_cli",
+          "halsp_cli.config",
+          "halspcli_config",
+          "halsp_cli_config",
+          "halsp_cli",
         ];
 
         const files: string[] = [];

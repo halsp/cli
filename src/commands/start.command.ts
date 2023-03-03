@@ -10,7 +10,7 @@ export class StartCommand extends BaseCommand {
     command
       .command("start")
       .alias("s")
-      .description("Run ipare application")
+      .description("Run halsp application")
       .setBuildOptions("development")
       .option("--startupFile <path>", "The file to startup")
       .option(

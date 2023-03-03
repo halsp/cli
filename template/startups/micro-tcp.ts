@@ -1,4 +1,4 @@
-import { MicroTcpStartup } from "@ipare/micro-tcp";
+import { MicroTcpStartup } from "@halsp/micro-tcp";
 import startup from "./startup";
 
 startup(new MicroTcpStartup()).listen();

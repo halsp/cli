@@ -1,10 +1,10 @@
 //{ router
-import { UseFilters } from "@ipare/filter";
-import { Inject } from "@ipare/inject";
-import { Header, Query } from "@ipare/pipe";
-import { Action, MicroPattern } from "@ipare/router";
-import { V } from "@ipare/validator";
-import "@ipare/view";
+import { UseFilters } from "@halsp/filter";
+import { Inject } from "@halsp/inject";
+import { Header, Query } from "@halsp/pipe";
+import { Action, MicroPattern } from "@halsp/router";
+import { V } from "@halsp/validator";
+import "@halsp/view";
 //{filter
 import { AuthFilter } from "../filters/auth.filter";
 //}

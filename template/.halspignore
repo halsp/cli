@@ -1,4 +1,4 @@
-.ipareignore
+.halspignore
 plugin.json
 package.json
 /startups

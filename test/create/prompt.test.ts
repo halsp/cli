@@ -1,7 +1,7 @@
 import { runin } from "../utils";
 import * as fs from "fs";
 import inquirer from "inquirer";
-import { HookType, Context } from "@ipare/core";
+import { HookType, Context } from "@halsp/common";
 import { CreateMiddleware } from "../../src/middlewares/create-middleware";
 import { CliStartup } from "../../src/cli-startup";
 
@@ -23,7 +23,7 @@ describe("prompt", () => {
       await new CliStartup(
         "test",
         {
-          name: options.name ?? ".ipare-cache-create-inquirer",
+          name: options.name ?? ".halsp-cache-create-inquirer",
         },
         {
           packageManager: options.packageManager ?? "npm",
@@ -59,7 +59,7 @@ describe("prompt", () => {
     `should ask overwrite message when prompt return { overwrite: false }`,
     async () => {
       await runin("test/create", async () => {
-        const testName = ".ipare-cache-create-inquirer-overwrite-false";
+        const testName = ".halsp-cache-create-inquirer-overwrite-false";
         if (!fs.existsSync(testName)) {
           fs.mkdirSync(testName);
         }
@@ -79,7 +79,7 @@ describe("prompt", () => {
     `should force to replace exist dir`,
     async () => {
       await runin("test/create", async () => {
-        const testName = ".ipare-cache-create-inquirer-overwrite-true";
+        const testName = ".halsp-cache-create-inquirer-overwrite-true";
         if (!fs.existsSync(testName)) {
           fs.mkdirSync(testName);
         }
@@ -99,7 +99,7 @@ describe("prompt", () => {
     `should overwrite files when use -y flag`,
     async () => {
       await runin("test/create", async () => {
-        const testName = ".ipare-cache-create-inquirer-y";
+        const testName = ".halsp-cache-create-inquirer-y";
         if (!fs.existsSync(testName)) {
           fs.mkdirSync(testName);
         }
@@ -121,7 +121,7 @@ describe("prompt", () => {
     async () => {
       let validate = false;
       await runin("test/create", async () => {
-        const testName = ".ipare-cache-create-inquirer-ask-empty-name";
+        const testName = ".halsp-cache-create-inquirer-ask-empty-name";
         await runTest({
           promptFn: ((args: any[]) => {
             expect(args[0].validate("abc")).toBeTruthy();
@@ -147,13 +147,13 @@ describe("prompt", () => {
     async () => {
       let done = false;
       await runin("test/create", async () => {
-        const testName = ".ipare-cache-create-inquirer-select-plugins";
+        const testName = ".halsp-cache-create-inquirer-select-plugins";
         await runTest({
           promptFn: (() => {
             return { overwrite: false, plugins: ["view"] };
           }) as any,
           before: async (ctx, md) => {
-            expect(await (md as any).getPlugins()).toEqual(["view", "core"]);
+            expect(await (md as any).getPlugins()).toEqual(["view", "common"]);
             done = true;
             return false;
           },
@@ -173,7 +173,7 @@ describe("prompt", () => {
       let done = false;
       await runin("test/create", async () => {
         const testName =
-          ".ipare-cache-create-inquirer-createPackageService-create";
+          ".halsp-cache-create-inquirer-createPackageService-create";
         if (fs.existsSync(testName)) {
           await fs.promises.rm(testName, {
             force: true,
@@ -202,7 +202,7 @@ describe("prompt", () => {
     `should select package manager by prompt`,
     async () => {
       await runin("test/create", async () => {
-        const testName = ".ipare-cache-create-inquirer-select-pm";
+        const testName = ".halsp-cache-create-inquirer-select-pm";
         await runTest({
           promptFn: (() => Promise.resolve({ mng: "cnpm" })) as any,
           name: testName,
@@ -222,7 +222,7 @@ describe("prompt", () => {
     `should select package manager by prompt`,
     async () => {
       await runin("test/create", async () => {
-        const testName = ".ipare-cache-create-inquirer-select-pm-null";
+        const testName = ".halsp-cache-create-inquirer-select-pm-null";
         await runTest({
           promptFn: (() => Promise.resolve({ mng: null })) as any,
           name: testName,

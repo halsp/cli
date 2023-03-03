@@ -1,6 +1,6 @@
-import { Context, isUndefined } from "@ipare/core";
-import { Inject } from "@ipare/inject";
-import { Ctx } from "@ipare/pipe";
+import { Context, isUndefined } from "@halsp/common";
+import { Inject } from "@halsp/inject";
+import { Ctx } from "@halsp/pipe";
 import ts from "typescript";
 import { ConfigService } from "./config.service";
 import { PluginInterfaceService } from "./plugin-interface.service";

@@ -1,11 +1,11 @@
-import { Inject } from "@ipare/inject";
+import { Inject } from "@halsp/inject";
 import { PackageManagerService } from "../services/package-manager.service";
 import { CommandService } from "../services/command.service";
 import * as fs from "fs";
 import path from "path";
 import runLocal from "npm-check-updates/build/src/lib/runLocal";
 import { chalkInit } from "npm-check-updates/build/src/lib/chalk";
-import { Middleware } from "@ipare/core";
+import { Middleware } from "@halsp/common";
 
 export class UpdateMiddleware extends Middleware {
   private get packagePath() {
@@ -70,7 +70,7 @@ export class UpdateMiddleware extends Middleware {
       return undefined;
     }
 
-    return /^\@ipare\//;
+    return /^\@halsp\//;
   }
 
   private async getPackageManager() {

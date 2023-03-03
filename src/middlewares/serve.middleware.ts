@@ -1,5 +1,5 @@
-import { Middleware } from "@ipare/core";
-import { Inject } from "@ipare/inject";
+import { Middleware } from "@halsp/common";
+import { Inject } from "@halsp/inject";
 import { CommandService } from "../services/command.service";
 
 export class ServeMiddleware extends Middleware {
@@ -33,8 +33,8 @@ export class ServeMiddleware extends Middleware {
 
   async invoke() {
     // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const { NativeStartup } = require("@ipare/native");
-    require("@ipare/static");
+    const { NativeStartup } = require("@halsp/native");
+    require("@halsp/static");
 
     const listen = await new NativeStartup()
       .useStatic({

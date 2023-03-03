@@ -1,4 +1,4 @@
-import { Startup } from "@ipare/core";
+import { Startup } from "@halsp/common";
 
 //just be placeholder
 export default <T extends Startup>(startup: T) => {

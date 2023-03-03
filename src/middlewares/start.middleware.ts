@@ -1,5 +1,5 @@
-import { isString, Middleware } from "@ipare/core";
-import { Inject } from "@ipare/inject";
+import { isString, Middleware } from "@halsp/common";
+import { Inject } from "@halsp/inject";
 import path from "path";
 import * as fs from "fs";
 import { TsconfigService } from "../services/build.services/tsconfig.service";
@@ -50,10 +50,10 @@ export class StartMiddleware extends Middleware {
     const result: NodeJS.ProcessEnv = {
       ...process.env,
       NODE_ENV: this.configService.mode,
-      IPARE_ENV: "http",
+      HALSP_ENV: "http",
     };
     if (this.port) {
-      result.IPARE_DEBUG_PORT = this.port;
+      result.HALSP_DEBUG_PORT = this.port;
     }
     return result;
   }

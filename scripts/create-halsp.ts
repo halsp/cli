@@ -3,13 +3,13 @@ import prettier from "prettier";
 
 function editPackage() {
   const pkg = JSON.parse(fs.readFileSync("./package.json", "utf-8"));
-  pkg.name = "create-ipare";
-  pkg.description = "Ipare 快速开始脚手架工具，由 @ipare/cli 自动生成";
-  pkg.dependencies["@ipare/cli"] = pkg.version;
-  pkg.main = "dist/create-ipare.js";
+  pkg.name = "create-halsp";
+  pkg.description = "Halsp 快速开始脚手架工具，由 @halsp/cli 自动生成";
+  pkg.dependencies["@halsp/cli"] = pkg.version;
+  pkg.main = "dist/create-halsp.js";
 
-  delete pkg.bin["ipare"];
-  pkg.bin["create-ipare"] = "bin/create-ipare.js";
+  delete pkg.bin["halsp"];
+  pkg.bin["create-halsp"] = "bin/create-halsp.js";
 
   fs.writeFileSync(
     "./package.json",
@@ -21,7 +21,7 @@ function editPackage() {
 
 function editTsconfig() {
   const tsconfig = JSON.parse(fs.readFileSync("./tsconfig.json", "utf-8"));
-  tsconfig.include = ["src/create-ipare.ts"];
+  tsconfig.include = ["src/create-halsp.ts"];
 
   fs.writeFileSync(
     "./tsconfig.json",
@@ -32,7 +32,7 @@ function editTsconfig() {
 }
 
 function editReadme() {
-  const readme = fs.readFileSync("./create-ipare.README.md", "utf-8");
+  const readme = fs.readFileSync("./create-halsp.README.md", "utf-8");
   fs.writeFileSync("./README.md", readme);
 }
 

@@ -8,7 +8,7 @@ export class InfoCommand extends BaseCommand {
     command
       .command("info")
       .alias("i")
-      .description("Display ipare project details")
+      .description("Display halsp project details")
       .action(async (command: Record<string, boolean | string>) => {
         await new CliStartup("info", undefined, command)
           .add(InfoMiddleware)

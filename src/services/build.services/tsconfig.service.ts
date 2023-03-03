@@ -1,7 +1,7 @@
 import ts from "typescript";
 import * as fs from "fs";
 import path from "path";
-import { Inject } from "@ipare/inject";
+import { Inject } from "@halsp/inject";
 import { CommandService } from "../command.service";
 
 export class TsconfigService {
@@ -18,7 +18,7 @@ export class TsconfigService {
     return path.resolve(process.cwd(), this.fileName);
   }
   get cacheDir() {
-    return ".ipare-cache";
+    return ".halsp-cache";
   }
   get outDir() {
     return this.parsedCommandLine.options.outDir || "dist";

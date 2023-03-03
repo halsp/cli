@@ -1,10 +1,10 @@
-import { Context } from "@ipare/core";
+import { Context } from "@halsp/common";
 import inquirer from "inquirer";
 import * as fs from "fs";
 import path from "path";
-import { Inject } from "@ipare/inject";
+import { Inject } from "@halsp/inject";
 import { FileService } from "../file.service";
-import { Ctx } from "@ipare/pipe";
+import { Ctx } from "@halsp/pipe";
 import { CommandService } from "../command.service";
 import {
   EnvPluginItem,
@@ -94,7 +94,7 @@ export class CreateEnvService {
         choices: envConfig.map((item) => ({
           name:
             "file" in item
-              ? `${item.desc} (@ipare/${item.plugin})`
+              ? `${item.desc} (@halsp/${item.plugin})`
               : `${item.desc} ->`,
           value: item,
         })),

@@ -3,8 +3,8 @@ import os from "os";
 import * as fs from "fs";
 import path from "path";
 import { DepsService } from "../services/deps.service";
-import { Inject } from "@ipare/inject";
-import { Middleware } from "@ipare/core";
+import { Inject } from "@halsp/inject";
+import { Middleware } from "@halsp/common";
 import { ChalkService } from "../services/chalk.service";
 
 export class InfoMiddleware extends Middleware {
@@ -25,7 +25,7 @@ export class InfoMiddleware extends Middleware {
       )
     );
 
-    const text = figlet.textSync("IPARECLI");
+    const text = figlet.textSync("HALSPCLI");
     this.logInfo("\n");
     this.logInfo(this.chalkService.blueBright(text));
 
@@ -49,17 +49,17 @@ export class InfoMiddleware extends Middleware {
       },
     ]);
 
-    this.logTitle("Ipare CLI");
+    this.logTitle("Halsp CLI");
     this.logItems([
       {
-        key: "Ipare CLI Version",
+        key: "Halsp CLI Version",
         value: pkg.version,
       },
     ]);
 
-    this.logTitle("Ipare Packages Version");
+    this.logTitle("Halsp Packages Version");
     this.logItems(
-      this.depsService.getProjectIpareDeps(
+      this.depsService.getProjectHalspDeps(
         path.join(process.cwd(), "package.json")
       )
     );

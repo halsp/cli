@@ -1,16 +1,16 @@
-import "@ipare/router";
-import "@ipare/swagger";
-import "@ipare/inject";
-import "@ipare/mva";
-import "@ipare/filter";
-import "@ipare/static";
-import "@ipare/jwt";
-import "@ipare/view";
-import "@ipare/validator";
-import "@ipare/env";
-import "@ipare/logger";
-import { HttpStartup } from "@ipare/http";
-import { MicroStartup } from "@ipare/micro";
+import "@halsp/router";
+import "@halsp/swagger";
+import "@halsp/inject";
+import "@halsp/mva";
+import "@halsp/filter";
+import "@halsp/static";
+import "@halsp/jwt";
+import "@halsp/view";
+import "@halsp/validator";
+import "@halsp/env";
+import "@halsp/logger";
+import { HttpStartup } from "@halsp/http";
+import { MicroStartup } from "@halsp/micro";
 //{http||micro
 import * as fs from "fs";
 import path from "path";
@@ -18,10 +18,10 @@ import path from "path";
 // {filter
 import { GlobalActionFilter } from "./filters/global.action.filter";
 // }
-import { JwtService } from "@ipare/jwt";
+import { JwtService } from "@halsp/jwt";
 // { inject
 /// { !router || jwt
-import { parseInject } from "@ipare/inject";
+import { parseInject } from "@halsp/inject";
 /// }
 /// { !router
 import { UserService } from "./services/user.service";

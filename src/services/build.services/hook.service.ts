@@ -1,9 +1,9 @@
-import { Inject } from "@ipare/inject";
+import { Inject } from "@halsp/inject";
 import { ConfigService } from "./config.service";
 import { TsconfigService } from "./tsconfig.service";
 import { PluginInterfaceService } from "./plugin-interface.service";
-import { Ctx } from "@ipare/pipe";
-import { Context } from "@ipare/core";
+import { Ctx } from "@halsp/pipe";
+import { Context } from "@halsp/common";
 
 export class HookService {
   @Inject

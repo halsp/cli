@@ -1,4 +1,4 @@
-import { Inject } from "@ipare/inject";
+import { Inject } from "@halsp/inject";
 import path from "path";
 import { DepsService } from "../deps.service";
 import * as fs from "fs";
@@ -39,7 +39,7 @@ export class SortPluginsService {
 
     function addFromDeps(deps: any, plugin: string) {
       if (onlyTemplateExist) {
-        if (Object.keys(deps).some((dep) => dep == `@ipare/${plugin}`)) {
+        if (Object.keys(deps).some((dep) => dep == `@halsp/${plugin}`)) {
           add(plugin);
         }
       } else {
@@ -51,10 +51,10 @@ export class SortPluginsService {
       addFromDeps(dependencies, plugin);
       addFromDeps(devDependencies, plugin);
 
-      if (Object.keys(dependencies).some((dep) => dep == `@ipare/${plugin}`)) {
+      if (Object.keys(dependencies).some((dep) => dep == `@halsp/${plugin}`)) {
         this.depsService
-          .getPackageIpareDeps(`@ipare/${plugin}`, [this.templateDir])
-          .map((item) => item.key.replace(/^@ipare\//, ""))
+          .getPackageHalspDeps(`@halsp/${plugin}`, [this.templateDir])
+          .map((item) => item.key.replace(/^@halsp\//, ""))
           .forEach((dep) => {
             add(dep);
           });
@@ -70,7 +70,7 @@ export class SortPluginsService {
 
     return plugins.filter(
       (p) =>
-        depKeys.includes(`@ipare/${p}`) || devDepKeys.includes(`@ipare/${p}`)
+        depKeys.includes(`@halsp/${p}`) || devDepKeys.includes(`@halsp/${p}`)
     );
   }
 }

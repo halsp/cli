@@ -4,7 +4,7 @@ import { Command } from "commander";
 import path from "path";
 import { InitCommand } from "./commands/init.command";
 
-const program = new Command("create-ipare");
+const program = new Command("create-halsp");
 
 program
   // eslint-disable-next-line @typescript-eslint/no-var-requires

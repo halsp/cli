@@ -1,4 +1,4 @@
-import { Inject } from "@ipare/inject";
+import { Inject } from "@halsp/inject";
 import inquirer from "inquirer";
 import { CommandService } from "./command.service";
 import { RunnerService } from "./runner.service";

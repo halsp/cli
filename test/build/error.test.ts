@@ -9,7 +9,7 @@ describe("error", () => {
     await runin(`test/build/build-error`, async () => {
       await new CliStartup().add(BuildMiddlware).run();
 
-      expect(fs.existsSync("./.ipare-cache")).toBeFalsy();
+      expect(fs.existsSync("./.halsp-cache")).toBeFalsy();
       callCount++;
     });
     expect(callCount).toBe(1);

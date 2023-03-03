@@ -1,4 +1,4 @@
-import { MicroMqttStartup } from "@ipare/micro-mqtt";
+import { MicroMqttStartup } from "@halsp/micro-mqtt";
 import startup from "./startup";
 
 startup(new MicroMqttStartup()).listen();

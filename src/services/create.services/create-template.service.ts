@@ -1,4 +1,4 @@
-import { Inject } from "@ipare/inject";
+import { Inject } from "@halsp/inject";
 import path from "path";
 import { FileService } from "../file.service";
 import * as fs from "fs";
@@ -11,8 +11,8 @@ import { CommandService } from "../command.service";
 import { SortPluginsService } from "./sort-plugins.service";
 import { ExpressionObject, PluginConfigService } from "./plugin-config.service";
 import glob from "glob";
-import { Ctx } from "@ipare/pipe";
-import { Context } from "@ipare/core";
+import { Ctx } from "@halsp/pipe";
+import { Context } from "@halsp/common";
 import { ChalkService } from "../chalk.service";
 import { CopyIgnoreService } from "./copy-ignore.service";
 
@@ -21,7 +21,7 @@ const commentPluginStartRegExp = /^\s*\/{2,}\s*\{\s*/;
 // plugin end
 const commentPluginEndRegExp = /^\s*\/{2,}\s*\}\s*/;
 const importRegExp =
-  /^import\s((\"@ipare\/([^/]+?)((\")|(\/.+\")))|(.+?\sfrom\s(\"@ipare\/([^/]+?)((\")|(\/.+\")))));$/;
+  /^import\s((\"@halsp\/([^/]+?)((\")|(\/.+\")))|(.+?\sfrom\s(\"@halsp\/([^/]+?)((\")|(\/.+\")))));$/;
 const uslessRegExp = /\/{2,}\s*\!\s*/;
 
 export class CreateTemplateService {
@@ -174,7 +174,7 @@ export class CreateTemplateService {
       const pkgName = (regArr[2] ?? regArr[8])
         .replace(/^\"/, "")
         .replace(/\"$/, "");
-      if (!plugins.includes(importName) && pkgName.startsWith("@ipare/")) {
+      if (!plugins.includes(importName) && pkgName.startsWith("@halsp/")) {
         lines.splice(importIndex, 1);
         importIndex--;
       }
@@ -246,9 +246,9 @@ export class CreateTemplateService {
 
     function addFromConfig(config: ExpressionObject<boolean>) {
       Object.keys(config)
-        .filter((k) => k.startsWith("@ipare/"))
+        .filter((k) => k.startsWith("@halsp/"))
         .filter((k) => config[k] == true)
-        .map((k) => k.replace(/^@ipare\//, ""))
+        .map((k) => k.replace(/^@halsp\//, ""))
         .forEach((k) => plugins.push(k));
     }
 

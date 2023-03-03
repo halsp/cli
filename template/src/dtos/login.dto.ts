@@ -1,5 +1,5 @@
 //{pipe && router
-import { V } from "@ipare/validator";
+import { V } from "@halsp/validator";
 
 //{swagger
 @V().Description("login info")

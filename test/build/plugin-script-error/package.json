@@ -1,6 +1,6 @@
 {
   "name": "plugin-script-error",
   "dependencies": {
-    "@ipare/script-test": "*"
+    "@halsp/script-test": "*"
   }
 }

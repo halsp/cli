@@ -1,4 +1,4 @@
-import { Inject } from "@ipare/inject";
+import { Inject } from "@halsp/inject";
 import * as fs from "fs";
 import path from "path";
 import { CreateEnvService } from "./create-env.service";
@@ -24,7 +24,7 @@ export class CopyIgnoreService {
   }
 
   public getIgnoreFiles() {
-    const result = [".ipareignore"];
+    const result = [".halspignore"];
 
     const gitIgnore = this.getGitIgnoreName();
     if (gitIgnore) {

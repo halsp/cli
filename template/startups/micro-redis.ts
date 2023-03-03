@@ -1,4 +1,4 @@
-import { MicroRedisStartup } from "@ipare/micro-redis";
+import { MicroRedisStartup } from "@halsp/micro-redis";
 import startup from "./startup";
 
 startup(new MicroRedisStartup()).listen();

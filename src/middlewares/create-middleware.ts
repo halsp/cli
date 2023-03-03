@@ -1,6 +1,6 @@
 import * as fs from "fs";
 import { CreateTemplateService } from "../services/create.services/create-template.service";
-import { Inject } from "@ipare/inject";
+import { Inject } from "@halsp/inject";
 import { FileService } from "../services/file.service";
 import { CreateEnvService } from "../services/create.services/create-env.service";
 import { PluginSelectService } from "../services/create.services/plugin-select.service";
@@ -9,7 +9,7 @@ import { CommandService } from "../services/command.service";
 import { CopyBaseService } from "../services/create.services/copy-base-files.service";
 import inquirer from "inquirer";
 import { RunnerService } from "../services/runner.service";
-import { Middleware } from "@ipare/core";
+import { Middleware } from "@halsp/common";
 import { PackageManagerService } from "../services/package-manager.service";
 import { SortPluginsService } from "../services/create.services/sort-plugins.service";
 import { ChalkService } from "../services/chalk.service";
@@ -140,8 +140,8 @@ export class CreateMiddleware extends Middleware {
         plugins = await this.pluginSelectService.select(env);
       }
     }
-    if (!plugins.includes("core")) {
-      plugins.push("core");
+    if (!plugins.includes("common")) {
+      plugins.push("common");
     }
     if (env) {
       plugins.push(env);
@@ -160,7 +160,7 @@ export class CreateMiddleware extends Middleware {
         type: "input",
         message: "Project name:",
         name: "name",
-        default: "ipare-project",
+        default: "halsp-project",
         validate: (input) => {
           const result = /^[^?v\*|""<>:/]{1,256}$/.test(input.trim());
           if (result) {
@@ -187,8 +187,8 @@ export class CreateMiddleware extends Middleware {
       plugins
     );
     const consolePlugins = existPlugins
-      .filter((p) => p != "core")
-      .map((p) => `@ipare/${p}`);
+      .filter((p) => p != "common")
+      .map((p) => `@halsp/${p}`);
     this.logger.info("\n");
     this.logger.info(
       this.chalkService.bold("Sorted plugins"),

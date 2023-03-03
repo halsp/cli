@@ -1,7 +1,7 @@
 import { runin } from "../utils";
 import { CliStartup } from "../../src/cli-startup";
 import { BuildMiddlware } from "../../src/middlewares/build.middleware";
-import { parseInject } from "@ipare/inject";
+import { parseInject } from "@halsp/inject";
 import { ConfigService } from "../../src/services/build.services/config.service";
 import { AssetsService } from "../../src/services/build.services/assets.service";
 import { WatchCompilerService } from "../../src/services/build.services/watch-compiler.service";
@@ -90,8 +90,8 @@ describe("build script", () => {
         .add(BuildMiddlware)
         .run();
 
-      expect(fs.existsSync("./.ipare-cache")).toBeTruthy();
-      expect(fs.existsSync("./.ipare-cache/build-test.js")).toBeTruthy();
+      expect(fs.existsSync("./.halsp-cache")).toBeTruthy();
+      expect(fs.existsSync("./.halsp-cache/build-test.js")).toBeTruthy();
       callCount++;
     });
     expect(callCount).toBe(2);
@@ -118,7 +118,7 @@ describe("build script", () => {
         .add(BuildMiddlware)
         .run();
 
-      expect(fs.existsSync("./.ipare-cache")).toBeFalsy();
+      expect(fs.existsSync("./.halsp-cache")).toBeFalsy();
       callCount++;
     });
     expect(callCount).toBe(2);
@@ -142,8 +142,8 @@ describe("build script", () => {
         .add(BuildMiddlware)
         .run();
 
-      expect(fs.existsSync("./.ipare-cache")).toBeTruthy();
-      expect(fs.existsSync("./.ipare-cache/build-test.js")).toBeTruthy();
+      expect(fs.existsSync("./.halsp-cache")).toBeTruthy();
+      expect(fs.existsSync("./.halsp-cache/build-test.js")).toBeTruthy();
       callCount++;
     });
     expect(callCount).toBe(2);

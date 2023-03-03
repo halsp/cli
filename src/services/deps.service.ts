@@ -3,16 +3,16 @@ import * as fs from "fs";
 export type DepItem = { key: string; value: string };
 
 export class DepsService {
-  public getPackageIpareDeps(pkg: string, paths = [process.cwd()]): DepItem[] {
+  public getPackageHalspDeps(pkg: string, paths = [process.cwd()]): DepItem[] {
     const path = this.getPackagePath(pkg, paths);
-    return this.getDeps(path, /^@ipare\//, paths, false);
+    return this.getDeps(path, /^@halsp\//, paths, false);
   }
 
-  public getProjectIpareDeps(
+  public getProjectHalspDeps(
     packagePath: string,
     paths = [process.cwd()]
   ): DepItem[] {
-    return this.getDeps(packagePath, /^@ipare\//, paths, true);
+    return this.getDeps(packagePath, /^@halsp\//, paths, true);
   }
 
   public getDeps(
@@ -40,7 +40,7 @@ export class DepsService {
       return Object.keys(deps)
         .filter(
           (name) =>
-            name.startsWith("@ipare/") &&
+            name.startsWith("@halsp/") &&
             !result.some((exist) => exist.key == name)
         )
         .filter((name) => {

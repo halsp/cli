@@ -1,4 +1,4 @@
-import { Inject } from "@ipare/inject";
+import { Inject } from "@halsp/inject";
 import path from "path";
 import { CompilerHook, Postbuild, Prebuild } from "../../configuration";
 import { DepsService } from "../deps.service";
@@ -29,7 +29,7 @@ export class PluginInterfaceService {
     return this.depsService
       .getDeps(
         path.join(process.cwd(), "package.json"),
-        /^(@ipare\/|ipare\-|@\S+\/ipare\-)/
+        /^(@halsp\/|halsp\-|@\S+\/halsp\-)/
       )
       .map((dep) => {
         try {

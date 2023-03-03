@@ -1,12 +1,12 @@
-import "@ipare/core";
-import "@ipare/inject";
-import { Context, Request, Startup } from "@ipare/core";
+import "@halsp/common";
+import "@halsp/inject";
+import { Context, Request, Startup } from "@halsp/common";
 import { ConfigService } from "./services/build.services/config.service";
 import { CommandType } from "./configuration";
-import { parseInject } from "@ipare/inject";
+import { parseInject } from "@halsp/inject";
 import { ChalkService } from "./services/chalk.service";
 
-declare module "@ipare/core" {
+declare module "@halsp/common" {
   interface Context {
     get command(): CommandType;
     get commandArgs(): Record<string, string>;

@@ -25,10 +25,10 @@ describe("create-package", () => {
       async (ctx, service) => {
         const pkg = {
           dependencies: {
-            "@ipare/cli": "",
+            "@halsp/cli": "",
           },
           devDependencies: {
-            "@ipare/cli": "",
+            "@halsp/cli": "",
           },
         };
         await (service as any).setCliVersion(pkg);
@@ -36,10 +36,10 @@ describe("create-package", () => {
         const cliPath = path.join(__dirname, "../..");
         expect(pkg).toEqual({
           dependencies: {
-            "@ipare/cli": cliPath,
+            "@halsp/cli": cliPath,
           },
           devDependencies: {
-            "@ipare/cli": cliPath,
+            "@halsp/cli": cliPath,
           },
         });
       },

@@ -8,7 +8,7 @@ export class ServeCommand extends BaseCommand {
     command
       .command("serve")
       .argument("[targetPath]", "Target directory path")
-      .description("Serve static web by @ipare/static and @ipare/native")
+      .description("Serve static web by @halsp/static and @halsp/native")
       .option("-p, --port <port>", "The port on http listens")
       .option("--hostname <hostname>", "The hostname on http listens")
       .option("--hideDir", "Do not list dir")

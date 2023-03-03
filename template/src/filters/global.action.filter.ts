@@ -1,6 +1,6 @@
 //{filter
-import { Context } from "@ipare/core";
-import { ActionFilter } from "@ipare/filter";
+import { Context } from "@halsp/common";
+import { ActionFilter } from "@halsp/filter";
 
 export class GlobalActionFilter implements ActionFilter {
   onActionExecuted(ctx: Context): void | Promise<void> {

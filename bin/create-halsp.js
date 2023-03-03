@@ -2,4 +2,4 @@
 
 'use strict';
 
-require('../dist/create-ipare');
+require('../dist/create-halsp');

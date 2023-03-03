@@ -1,4 +1,4 @@
-import { Inject } from "@ipare/inject";
+import { Inject } from "@halsp/inject";
 import path from "path";
 import { TsconfigService } from "./tsconfig.service";
 import * as chokidar from "chokidar";
@@ -7,8 +7,8 @@ import { AssetConfig } from "../../configuration";
 import glob from "glob";
 import { FileService } from "../file.service";
 import { ConfigService } from "./config.service";
-import { Ctx } from "@ipare/pipe";
-import { Context } from "@ipare/core";
+import { Ctx } from "@halsp/pipe";
+import { Context } from "@halsp/common";
 import { CommandService } from "../command.service";
 
 type SortedAsset = {

@@ -3,7 +3,7 @@ import { PackageManagerService } from "../../src/services/package-manager.servic
 import { runTest } from "./runTest";
 import * as fs from "fs";
 import path from "path";
-import { parseInject } from "@ipare/inject";
+import { parseInject } from "@halsp/inject";
 import { RunnerService } from "../../src/services/runner.service";
 import { runin } from "../utils";
 

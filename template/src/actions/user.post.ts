@@ -1,7 +1,7 @@
 //{ router
-import { Action, MicroPattern } from "@ipare/router";
-import { Body } from "@ipare/pipe";
-import { V } from "@ipare/validator";
+import { Action, MicroPattern } from "@halsp/router";
+import { Body } from "@halsp/pipe";
+import { V } from "@halsp/validator";
 //{pipe
 import { LoginDto } from "../dtos/login.dto";
 //}

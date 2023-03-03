@@ -1,7 +1,7 @@
 import { runin, testService } from "../utils";
 import { CliStartup } from "../../src/cli-startup";
 import { BuildMiddlware } from "../../src/middlewares/build.middleware";
-import { parseInject } from "@ipare/inject";
+import { parseInject } from "@halsp/inject";
 import { AssetsService } from "../../src/services/build.services/assets.service";
 import { WatchCompilerService } from "../../src/services/build.services/watch-compiler.service";
 import { TsconfigService } from "../../src/services/build.services/tsconfig.service";
@@ -234,7 +234,7 @@ describe("read config", () => {
     let worked = false;
     await runin("test/build/config/types", async () => {
       await new CliStartup("test", undefined, {
-        configName: `ipare-cli.config.json`,
+        configName: `halsp-cli.config.json`,
       })
         .use(async (ctx) => {
           const service = await parseInject(ctx, ConfigService);
@@ -251,7 +251,7 @@ describe("read config", () => {
     await runin("test/build/config/types", async () => {
       await new CliStartup("test", undefined, {
         jsonConfig: await fs.promises.readFile(
-          "ipare-cli.config.json",
+          "halsp-cli.config.json",
           "utf-8"
         ),
       })
@@ -291,7 +291,7 @@ describe("read config", () => {
     await runin("test/build/config/types", async () => {
       await new CliStartup("test", undefined, {
         mode: "js-test",
-        configName: `ipare-cli.config.js`,
+        configName: `halsp-cli.config.js`,
       })
         .use(async (ctx) => {
           const service = await parseInject(ctx, ConfigService);

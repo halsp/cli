@@ -2,8 +2,8 @@ name: "Publish NPM"
 
 on:
   push:
-    tags: 
-      - 'v*'
+    tags:
+      - "v\\d+\\.\\d+\\.\\d+"
   workflow_dispatch:
 
 jobs:
@@ -37,7 +37,7 @@ jobs:
       - run: npm install
       - run: npm run build
 
-  try-publish-create-ipare:
+  try-publish-create-halsp:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -46,7 +46,7 @@ jobs:
           node-version: "16"
           registry-url: https://registry.npmjs.org/
       - run: npm install
-      - run: npm run build:create-ipare
+      - run: npm run build:create-halsp
 
   try-create-minimal:
     runs-on: ubuntu-latest
@@ -62,12 +62,12 @@ jobs:
           npm run build
           node bin/cli.js create minimal --debug -e native -pm npm -ps inject,router,view,mva,pipe,filter,testing,static,swagger,jwt,validator,env,logger -f -sg -sr
           cd minimal
-          npx ipare build
+          npx halsp build
           cd ..
 
   publish-npm:
-    if: github.repository == 'ipare/cli'
-    needs: [test, try-publish-npm, try-publish-create-ipare, try-create-minimal]
+    if: github.repository == 'halsp/cli'
+    needs: [test, try-publish-npm, try-publish-create-halsp, try-create-minimal]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -81,9 +81,9 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
 
-  publish-create-ipare:
-    if: github.repository == 'ipare/cli'
-    needs: [test, try-publish-npm, try-publish-create-ipare, try-create-minimal]
+  publish-create-halsp:
+    if: github.repository == 'halsp/cli'
+    needs: [test, try-publish-npm, try-publish-create-halsp, try-create-minimal]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -92,13 +92,13 @@ jobs:
           node-version: "16"
           registry-url: https://registry.npmjs.org/
       - run: npm install
-      - run: npm run build:create-ipare
+      - run: npm run build:create-halsp
       - run: npm publish --access=public
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
 
   create-minimal:
-    if: github.repository == 'ipare/cli'
+    if: github.repository == 'halsp/cli'
     needs: [publish-npm]
     runs-on: ubuntu-latest
     steps:
@@ -116,7 +116,7 @@ jobs:
           mv minimal.README.md README.md
           node bin/cli.js create minimal -e native -pm npm -ps inject,router,view,mva,pipe,filter,testing,static,swagger,jwt,validator,env,logger -f -sg -sr
           cd minimal
-          npx ipare build
+          npx halsp build
 
           git config --global user.email hi@hal.wang
           git config --global user.name hal-wang
@@ -127,7 +127,7 @@ jobs:
         uses: ad-m/github-push-action@master
         with:
           directory: minimal
-          repository: ipare/cli
+          repository: halsp/cli
           force: true
           branch: minimal
           github_token: ${{ secrets.PERSONAL_GITHUB_TOKEN }}

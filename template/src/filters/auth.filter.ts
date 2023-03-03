@@ -1,6 +1,6 @@
 //{ filter
-import { Context } from "@ipare/core";
-import { AuthorizationFilter } from "@ipare/filter";
+import { Context } from "@halsp/common";
+import { AuthorizationFilter } from "@halsp/filter";
 
 export class AuthFilter implements AuthorizationFilter {
   onAuthorization(ctx: Context): boolean | Promise<boolean> {
