@@ -1,6 +1,5 @@
 import { Inject } from "@halsp/inject";
 import { ConfigService } from "./config.service";
-import { TsconfigService } from "./tsconfig.service";
 import { PluginInterfaceService } from "./plugin-interface.service";
 import { Ctx } from "@halsp/pipe";
 import { Context } from "@halsp/common";
@@ -10,8 +9,6 @@ export class HookService {
   private readonly pluginInterfaceService!: PluginInterfaceService;
   @Inject
   private readonly configService!: ConfigService;
-  @Inject
-  private readonly tsconfigService!: TsconfigService;
 
   @Ctx
   private readonly ctx!: Context;
@@ -21,7 +18,7 @@ export class HookService {
   }
 
   private get cacheDir() {
-    return this.tsconfigService.cacheDir;
+    return this.configService.cacheDir;
   }
 
   public async execPrebuilds(): Promise<boolean> {

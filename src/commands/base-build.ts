@@ -31,5 +31,9 @@ Command.prototype.setBuildOptions = function (defaultMode: string) {
     .option(
       "--assets <assets>",
       "Copy files to dist (e.g. views/**/*||static/**/*)"
+    )
+    .option(
+      "--cacheDir <cacheDir>",
+      "Cache dir (default: /node_modules/.halsp)"
     );
 };

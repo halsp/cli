@@ -5,16 +5,19 @@ import * as fs from "fs";
 import { parseInject } from "@halsp/inject";
 import { AssetsService } from "../../src/services/build.services/assets.service";
 import { WatchCompilerService } from "../../src/services/build.services/watch-compiler.service";
+import path from "path";
 
 describe("build with watch", () => {
   async function runTest(options: { callback?: boolean }) {
     let callCount = 0;
     await runin(`test/build/watch`, async () => {
+      const cacheDir = ".cache-build-with-watch-" + String(options.callback);
       await new CliStartup("test", undefined, {
         watch: true,
         watchAssets: true,
         preserveWatchOutput: true,
         sourceMap: true,
+        cacheDir: path.resolve(cacheDir),
       })
         .use(async (ctx, next) => {
           if (options.callback) {
@@ -40,9 +43,9 @@ describe("build with watch", () => {
         .add(BuildMiddlware)
         .run();
 
-      expect(fs.existsSync("./.halsp-cache")).toBeTruthy();
-      expect(fs.existsSync("./.halsp-cache/build-test.js")).toBeTruthy();
-      expect(fs.existsSync("./.halsp-cache/build-test.js.map")).toBeTruthy();
+      expect(fs.existsSync(`./${cacheDir}`)).toBeTruthy();
+      expect(fs.existsSync(`./${cacheDir}/build-test.js`)).toBeTruthy();
+      expect(fs.existsSync(`./${cacheDir}/build-test.js.map`)).toBeTruthy();
       callCount++;
     });
     expect(callCount).toBe(options.callback ? 3 : 2);

@@ -66,6 +66,21 @@ export class ConfigService {
     return this.commandService.getOptionVlaue<string>("mode") as string;
   }
 
+  get cacheDir() {
+    const optDir = this.getOptionOrConfigValue<string>(
+      "cacheDir",
+      "build.cacheDir"
+    );
+    if (optDir) return optDir;
+
+    const pkgPath = require.resolve("@halsp/common");
+    const tail = "@halsp/common/dist/index.js";
+    return path.join(
+      pkgPath.substring(0, pkgPath.length - tail.length - 1),
+      ".halsp"
+    );
+  }
+
   #value: Configuration | undefined = undefined;
   public get value(): Configuration {
     return this.#value as Configuration;

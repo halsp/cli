@@ -57,6 +57,8 @@ export interface Configuration {
     sourceMap?: boolean;
     copyPackage?: boolean;
     removeDevDeps?: boolean;
+
+    cacheDir?: string;
   };
   start?: {
     port?: number;

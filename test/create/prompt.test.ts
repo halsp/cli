@@ -23,7 +23,7 @@ describe("prompt", () => {
       await new CliStartup(
         "test",
         {
-          name: options.name ?? ".halsp-cache-create-inquirer",
+          name: options.name ?? ".cache-create-inquirer",
         },
         {
           packageManager: options.packageManager ?? "npm",
@@ -59,7 +59,7 @@ describe("prompt", () => {
     `should ask overwrite message when prompt return { overwrite: false }`,
     async () => {
       await runin("test/create", async () => {
-        const testName = ".halsp-cache-create-inquirer-overwrite-false";
+        const testName = ".cache-create-inquirer-overwrite-false";
         if (!fs.existsSync(testName)) {
           fs.mkdirSync(testName);
         }
@@ -79,7 +79,7 @@ describe("prompt", () => {
     `should force to replace exist dir`,
     async () => {
       await runin("test/create", async () => {
-        const testName = ".halsp-cache-create-inquirer-overwrite-true";
+        const testName = ".cache-create-inquirer-overwrite-true";
         if (!fs.existsSync(testName)) {
           fs.mkdirSync(testName);
         }
@@ -99,7 +99,7 @@ describe("prompt", () => {
     `should overwrite files when use -y flag`,
     async () => {
       await runin("test/create", async () => {
-        const testName = ".halsp-cache-create-inquirer-y";
+        const testName = ".cache-create-inquirer-y";
         if (!fs.existsSync(testName)) {
           fs.mkdirSync(testName);
         }
@@ -121,7 +121,7 @@ describe("prompt", () => {
     async () => {
       let validate = false;
       await runin("test/create", async () => {
-        const testName = ".halsp-cache-create-inquirer-ask-empty-name";
+        const testName = ".cache-create-inquirer-ask-empty-name";
         await runTest({
           promptFn: ((args: any[]) => {
             expect(args[0].validate("abc")).toBeTruthy();
@@ -147,7 +147,7 @@ describe("prompt", () => {
     async () => {
       let done = false;
       await runin("test/create", async () => {
-        const testName = ".halsp-cache-create-inquirer-select-plugins";
+        const testName = ".cache-create-inquirer-select-plugins";
         await runTest({
           promptFn: (() => {
             return { overwrite: false, plugins: ["view"] };
@@ -172,8 +172,7 @@ describe("prompt", () => {
     async () => {
       let done = false;
       await runin("test/create", async () => {
-        const testName =
-          ".halsp-cache-create-inquirer-createPackageService-create";
+        const testName = ".cache-create-inquirer-createPackageService-create";
         if (fs.existsSync(testName)) {
           await fs.promises.rm(testName, {
             force: true,
@@ -202,7 +201,7 @@ describe("prompt", () => {
     `should select package manager by prompt`,
     async () => {
       await runin("test/create", async () => {
-        const testName = ".halsp-cache-create-inquirer-select-pm";
+        const testName = ".cache-create-inquirer-select-pm";
         await runTest({
           promptFn: (() => Promise.resolve({ mng: "cnpm" })) as any,
           name: testName,
@@ -222,7 +221,7 @@ describe("prompt", () => {
     `should select package manager by prompt`,
     async () => {
       await runin("test/create", async () => {
-        const testName = ".halsp-cache-create-inquirer-select-pm-null";
+        const testName = ".cache-create-inquirer-select-pm-null";
         await runTest({
           promptFn: (() => Promise.resolve({ mng: null })) as any,
           name: testName,

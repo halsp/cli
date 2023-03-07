@@ -67,7 +67,7 @@ export class AssetsService {
           exclude = [exclude];
         }
 
-        const outDir = path.join(this.cacheDir, asset.outDir ?? "");
+        const outDir = path.resolve(this.cacheDir, asset.outDir ?? "");
         const root = path.resolve(asset.root ?? process.cwd());
 
         return {
@@ -96,7 +96,7 @@ export class AssetsService {
   }
 
   private get cacheDir() {
-    return this.tsconfigService.cacheDir;
+    return this.configService.cacheDir;
   }
   private get watch() {
     return this.configService.getOptionOrConfigValue<boolean>(

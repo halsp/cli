@@ -5,6 +5,7 @@ package-lock.json
 pnpm-lock.yaml
 coverage
 .halsp-cache*
+.cache*
 
 *-error.log
 .husky/_

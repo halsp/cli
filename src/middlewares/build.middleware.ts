@@ -25,7 +25,7 @@ export class BuildMiddlware extends Middleware {
   private readonly hookService!: HookService;
 
   private get cacheDir() {
-    return this.tsconfigService.cacheDir;
+    return this.configService.cacheDir;
   }
   private get watch() {
     return this.configService.getOptionOrConfigValue<boolean>(
@@ -44,11 +44,6 @@ export class BuildMiddlware extends Middleware {
     if (!(await this.hookService.execPrebuilds())) {
       return;
     }
-
-    await fs.promises.rm(path.join(process.cwd(), this.cacheDir), {
-      recursive: true,
-      force: true,
-    });
 
     const compilerResult = await this.compile();
     if (compilerResult) {

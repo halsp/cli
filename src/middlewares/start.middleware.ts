@@ -2,7 +2,6 @@ import { isString, Middleware } from "@halsp/common";
 import { Inject } from "@halsp/inject";
 import path from "path";
 import * as fs from "fs";
-import { TsconfigService } from "../services/build.services/tsconfig.service";
 import spawn from "cross-spawn";
 import killProcess from "tree-kill";
 import { treeKillSync } from "../utils/tree-kill";
@@ -12,12 +11,10 @@ import { ChildProcess } from "child_process";
 
 export class StartMiddleware extends Middleware {
   @Inject
-  private readonly tsconfigService!: TsconfigService;
-  @Inject
   private readonly configService!: ConfigService;
 
   private get cacheDir() {
-    return this.tsconfigService.cacheDir;
+    return this.configService.cacheDir;
   }
   private get inspect() {
     return this.configService.getOptionOrConfigValue<boolean | string>(

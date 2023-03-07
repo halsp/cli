@@ -7,7 +7,7 @@ import { runin } from "../utils";
 
 describe("git", () => {
   async function createCacheDir(name: string) {
-    const cahceDir = "test/create/.halsp-cache-git";
+    const cahceDir = "test/create/.cache-git";
     if (!fs.existsSync(cahceDir)) {
       await fs.promises.mkdir(cahceDir);
     }

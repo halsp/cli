@@ -18,7 +18,7 @@ export class CopyBuildResultMiddleware extends Middleware {
     return this.tsconfigService.outDir;
   }
   private get cacheDir() {
-    return this.tsconfigService.cacheDir;
+    return this.configService.cacheDir;
   }
   private get deleteOutDir() {
     return this.configService.getOptionOrConfigValue<boolean>(

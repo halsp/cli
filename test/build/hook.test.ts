@@ -6,6 +6,7 @@ import { ConfigService } from "../../src/services/build.services/config.service"
 import { AssetsService } from "../../src/services/build.services/assets.service";
 import { WatchCompilerService } from "../../src/services/build.services/watch-compiler.service";
 import * as fs from "fs";
+import path from "path";
 
 describe("hooks", () => {
   it(`should build and invoke hooks`, async () => {
@@ -70,10 +71,12 @@ describe("hooks", () => {
 
 describe("build script", () => {
   it("should exec prebuild scripts", async () => {
+    const cacheDir = ".cache-build-script-prebuild";
     let callCount = 0;
     await runin(`test/build/script`, async () => {
       await new CliStartup("test", undefined, {
         mode: "production",
+        cacheDir: path.resolve(cacheDir),
       })
         .use(async (ctx, next) => {
           await next();
@@ -90,18 +93,20 @@ describe("build script", () => {
         .add(BuildMiddlware)
         .run();
 
-      expect(fs.existsSync("./.halsp-cache")).toBeTruthy();
-      expect(fs.existsSync("./.halsp-cache/build-test.js")).toBeTruthy();
+      expect(fs.existsSync(`./${cacheDir}`)).toBeTruthy();
+      expect(fs.existsSync(`./${cacheDir}/build-test.js`)).toBeTruthy();
       callCount++;
     });
     expect(callCount).toBe(2);
   }, 10000);
 
   it(`should build script failed`, async () => {
+    const cacheDir = ".cache-build-script-failed";
     let callCount = 0;
     await runin(`test/build/script`, async () => {
       await new CliStartup("test", undefined, {
         mode: "development",
+        cacheDir: path.resolve(cacheDir),
       })
         .use(async (ctx, next) => {
           await next();
@@ -118,17 +123,19 @@ describe("build script", () => {
         .add(BuildMiddlware)
         .run();
 
-      expect(fs.existsSync("./.halsp-cache")).toBeFalsy();
+      expect(fs.existsSync(`./${cacheDir}`)).toBeFalsy();
       callCount++;
     });
     expect(callCount).toBe(2);
   }, 10000);
 
   it(`should exec plugin script error`, async () => {
+    const cacheDir = ".cache-build-plugin-script-failed";
     let callCount = 0;
     await runin(`test/build/plugin-script-error`, async () => {
       await new CliStartup("test", undefined, {
         mode: "production",
+        cacheDir: path.resolve(cacheDir),
       })
         .use(async (ctx, next) => {
           await next();
@@ -142,8 +149,8 @@ describe("build script", () => {
         .add(BuildMiddlware)
         .run();
 
-      expect(fs.existsSync("./.halsp-cache")).toBeTruthy();
-      expect(fs.existsSync("./.halsp-cache/build-test.js")).toBeTruthy();
+      expect(fs.existsSync(`./${cacheDir}`)).toBeTruthy();
+      expect(fs.existsSync(`./${cacheDir}/build-test.js`)).toBeTruthy();
       callCount++;
     });
     expect(callCount).toBe(2);

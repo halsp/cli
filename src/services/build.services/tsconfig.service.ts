@@ -17,9 +17,6 @@ export class TsconfigService {
   private get filePath() {
     return path.resolve(process.cwd(), this.fileName);
   }
-  get cacheDir() {
-    return ".halsp-cache";
-  }
   get outDir() {
     return this.parsedCommandLine.options.outDir || "dist";
   }

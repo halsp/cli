@@ -7,7 +7,7 @@ import { runin } from "../utils";
 
 describe("run", () => {
   async function createCacheDir(name: string) {
-    const cahceDir = "test/create/.halsp-cache-run";
+    const cahceDir = "test/create/.cache-run";
     if (!fs.existsSync(cahceDir)) {
       await fs.promises.mkdir(cahceDir);
     }

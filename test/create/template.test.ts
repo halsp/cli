@@ -12,7 +12,7 @@ import { CreateTemplateService } from "../../src/services/create.services/create
 import { HookType } from "@halsp/common";
 
 describe("template", () => {
-  const testName = ".halsp-cache-template-create";
+  const testName = ".cache-template-create";
 
   function testTemplate(plugins: string[]) {
     const pluginsStr = plugins.join("_");
@@ -298,7 +298,7 @@ describe("mock template", () => {
 describe("error", () => {
   it("should be error when CreateTemplateService.create return false", async () => {
     await runin("test/create", async () => {
-      const testName = ".halsp-cache-create-template-return-false";
+      const testName = ".cache-create-template-return-false";
       if (fs.existsSync(testName)) {
         fs.rmSync(testName, {
           recursive: true,
@@ -330,7 +330,7 @@ describe("error", () => {
 
   it("should stop create when install error", async () => {
     await runin("test/create", async () => {
-      const testName = ".halsp-cache-create-install-error";
+      const testName = ".cache-create-install-error";
       if (fs.existsSync(testName)) {
         fs.rmSync(testName, {
           recursive: true,

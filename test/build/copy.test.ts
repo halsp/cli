@@ -6,38 +6,43 @@ import * as fs from "fs";
 import { parseInject } from "@halsp/inject";
 import { AssetsService } from "../../src/services/build.services/assets.service";
 import { WatchCompilerService } from "../../src/services/build.services/watch-compiler.service";
+import path from "path";
 
 describe("copy package", () => {
   it("should copy package", async () => {
+    const cacheDir = ".cache-copy-package";
     let callCount = 0;
     await runin(`test/build/script`, async () => {
       await new CliStartup("test", undefined, {
         copyPackage: true,
         mode: "production",
+        cacheDir: path.resolve(cacheDir),
       })
         .add(BuildMiddlware)
         .run();
 
-      expect(fs.existsSync("./.halsp-cache/package.json")).toBeTruthy();
+      expect(fs.existsSync(`./${cacheDir}/package.json`)).toBeTruthy();
       callCount++;
     });
     expect(callCount).toBe(1);
   }, 10000);
 
   it("should copy package without devDependencies", async () => {
+    const cacheDir = ".cache-copy-package-wdd";
     let callCount = 0;
     await runin(`test/build/script`, async () => {
       await new CliStartup("test", undefined, {
         copyPackage: true,
         removeDevDeps: true,
         mode: "production",
+        cacheDir: path.resolve(cacheDir),
       })
         .add(BuildMiddlware)
         .run();
 
-      expect(fs.existsSync("./.halsp-cache/package.json")).toBeTruthy();
+      expect(fs.existsSync(`./${cacheDir}/package.json`)).toBeTruthy();
       expect(
-        JSON.parse(fs.readFileSync("./.halsp-cache/package.json", "utf-8"))
+        JSON.parse(fs.readFileSync(`./${cacheDir}/package.json`, "utf-8"))
           .devDependencies
       ).toEqual({});
       callCount++;
@@ -48,9 +53,12 @@ describe("copy package", () => {
 
 describe("copy build files", () => {
   it(`should copy build files when use CopyBuildResultMiddleware`, async () => {
+    const cacheDir = ".cache-copy-build-files-with-cbrm";
     let callCount = 0;
     await runin(`test/build/copy`, async () => {
-      await new CliStartup()
+      await new CliStartup(undefined, undefined, {
+        cacheDir: path.resolve(cacheDir),
+      })
         .add(BuildMiddlware)
         .add(CopyBuildResultMiddleware)
         .run();
@@ -64,56 +72,64 @@ describe("copy build files", () => {
 });
 
 describe("assets", () => {
-  function expectFiles() {
-    expect(fs.existsSync("./.halsp-cache")).toBeTruthy();
-    expect(fs.existsSync("./.halsp-cache/default/test.txt")).toBeTruthy();
-    expect(fs.readFileSync("./.halsp-cache/default/test.txt", "utf-8")).toBe(
+  function expectAssetsFiles(cacheDir: string) {
+    expect(fs.existsSync(`./${cacheDir}`)).toBeTruthy();
+    expect(fs.existsSync(`./${cacheDir}/default/test.txt`)).toBeTruthy();
+    expect(fs.readFileSync(`./${cacheDir}/default/test.txt`, "utf-8")).toBe(
       "test-build"
     );
-    expect(fs.existsSync("./.halsp-cache/build-test.js")).toBeTruthy();
+    expect(fs.existsSync(`./${cacheDir}/build-test.js`)).toBeTruthy();
 
-    expect(fs.existsSync("./.halsp-cache/root/test.txt")).toBeTruthy();
-    expect(fs.existsSync("./.halsp-cache/include/test.txt")).toBeTruthy();
-    expect(fs.existsSync("./.halsp-cache/test/outDir/test.txt")).toBeTruthy();
+    expect(fs.existsSync(`./${cacheDir}/root/test.txt`)).toBeTruthy();
+    expect(fs.existsSync(`./${cacheDir}/include/test.txt`)).toBeTruthy();
+    expect(fs.existsSync(`./${cacheDir}/test/outDir/test.txt`)).toBeTruthy();
 
-    expect(fs.existsSync("./.halsp-cache/exclude/test.txt")).toBeFalsy();
+    expect(fs.existsSync(`./${cacheDir}/exclude/test.txt`)).toBeFalsy();
   }
 
   it(`should build and copy assets`, async () => {
+    const cacheDir = ".cache-build-and-copy-assets";
     let worked = false;
     await runin(`test/build/assets`, async () => {
-      await new CliStartup().add(BuildMiddlware).run();
-      expectFiles();
+      await new CliStartup("test", undefined, {
+        cacheDir: path.resolve(cacheDir),
+      })
+        .add(BuildMiddlware)
+        .run();
+      expectAssetsFiles(cacheDir);
       worked = true;
     });
     expect(worked).toBeTruthy();
   }, 10000);
 
   it(`should build and copy command assets`, async () => {
+    const cacheDir = ".cache-build-and-copy-command-assets";
     let worked = false;
     await runin(`test/build/assets`, async () => {
       await new CliStartup("test", undefined, {
         assets: "default/**/*",
+        cacheDir: path.resolve(cacheDir),
       })
         .add(BuildMiddlware)
         .run();
 
-      expect(fs.existsSync("./.halsp-cache")).toBeTruthy();
-      expect(fs.existsSync("./.halsp-cache/default")).toBeTruthy();
-      expect(fs.existsSync("./.halsp-cache/default/test.txt")).toBeTruthy();
-      expect(fs.readFileSync("./.halsp-cache/default/test.txt", "utf-8")).toBe(
+      expect(fs.existsSync(`./${cacheDir}`)).toBeTruthy();
+      expect(fs.existsSync(`./${cacheDir}/default`)).toBeTruthy();
+      expect(fs.existsSync(`./${cacheDir}/default/test.txt`)).toBeTruthy();
+      expect(fs.readFileSync(`./${cacheDir}/default/test.txt`, "utf-8")).toBe(
         "test-build"
       );
-      expect(fs.existsSync("./.halsp-cache/build-test.js")).toBeTruthy();
+      expect(fs.existsSync(`./${cacheDir}/build-test.js`)).toBeTruthy();
       worked = true;
     });
     expect(worked).toBeTruthy();
   }, 10000);
 
   async function runWatchAssetsTest(type: string) {
+    const cacheDir = ".cache-build-watch-assets-" + type;
     const cacheFileName = `test-cache-${type}.txt`;
     const cacheSourceFile = `./default/${cacheFileName}`;
-    const cacheTargetFile = `./.halsp-cache/default/${cacheFileName}`;
+    const cacheTargetFile = `./${cacheDir}/default/${cacheFileName}`;
     const cacheFileContent = "watchAssets";
     const cacheFileEditContent = "Edit";
     let callCount = 0;
@@ -138,6 +154,7 @@ describe("assets", () => {
       await new CliStartup("test", undefined, {
         watch: true,
         watchAssets: true,
+        cacheDir: path.resolve(cacheDir),
       })
         .use(async (ctx, next) => {
           if (fs.existsSync(cacheSourceFile)) {
@@ -210,7 +227,7 @@ describe("assets", () => {
         .add(BuildMiddlware)
         .run();
 
-      expectFiles();
+      expectAssetsFiles(cacheDir);
       callCount++;
     });
     expect(callCount).toBe(3);

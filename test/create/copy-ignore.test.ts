@@ -11,7 +11,7 @@ describe("copy ignore", () => {
     sourceFile: string | undefined,
     targetExist: boolean
   ) {
-    dir = ".halsp-cache-" + dir;
+    dir = ".cache-copy-ignore-" + dir;
     await runin("test/create", async () => {
       fs.rmSync(dir, {
         recursive: true,
