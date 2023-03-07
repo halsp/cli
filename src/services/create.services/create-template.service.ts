@@ -268,7 +268,7 @@ export class CreateTemplateService {
         continue;
       }
 
-      const paths = glob.sync(excludes, {
+      const paths = await glob(excludes, {
         cwd: this.sourceDir,
         dot: true,
         nodir: true,

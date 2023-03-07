@@ -130,7 +130,7 @@ export class AssetsService {
   }
 
   private async globCopy(asset: SortedAsset) {
-    const paths = glob.sync(asset.include, {
+    const paths = await glob(asset.include, {
       ignore: asset.exclude,
       cwd: asset.root,
       dot: true,
