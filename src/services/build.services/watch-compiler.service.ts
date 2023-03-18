@@ -1,4 +1,4 @@
-import { isUndefined } from "@halsp/common";
+import { isUndefined } from "@halsp/core";
 import { Inject } from "@halsp/inject";
 import ts from "typescript";
 import { CompilerService } from "./compiler.service";

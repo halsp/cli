@@ -1,6 +1,6 @@
 import path from "path";
 import * as fs from "fs";
-import { isString } from "@halsp/common";
+import { isString } from "@halsp/core";
 import { ExpressionService } from "./expression.service";
 import { Inject } from "@halsp/inject";
 import { SortPluginsService } from "./sort-plugins.service";

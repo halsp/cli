@@ -1,4 +1,4 @@
-import { Context } from "@halsp/common";
+import { Context } from "@halsp/core";
 import { Inject } from "@halsp/inject";
 import { Ctx } from "@halsp/pipe";
 import path from "path";

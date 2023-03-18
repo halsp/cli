@@ -1,4 +1,4 @@
-import { Context, isUndefined } from "@halsp/common";
+import { Context, isUndefined } from "@halsp/core";
 import { Ctx } from "@halsp/pipe";
 
 export class CommandService {

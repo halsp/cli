@@ -2,7 +2,7 @@ import { Inject } from "@halsp/inject";
 import { ConfigService } from "./config.service";
 import { PluginInterfaceService } from "./plugin-interface.service";
 import { Ctx } from "@halsp/pipe";
-import { Context } from "@halsp/common";
+import { Context } from "@halsp/core";
 
 export class HookService {
   @Inject

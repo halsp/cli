@@ -1,5 +1,5 @@
 //{ filter
-import { Context } from "@halsp/common";
+import { Context } from "@halsp/core";
 import { AuthorizationFilter } from "@halsp/filter";
 
 export class AuthFilter implements AuthorizationFilter {

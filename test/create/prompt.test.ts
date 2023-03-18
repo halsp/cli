@@ -1,7 +1,7 @@
 import { runin } from "../utils";
 import * as fs from "fs";
 import inquirer from "inquirer";
-import { HookType, Context } from "@halsp/common";
+import { HookType, Context } from "@halsp/core";
 import { CreateMiddleware } from "../../src/middlewares/create-middleware";
 import { CliStartup } from "../../src/cli-startup";
 

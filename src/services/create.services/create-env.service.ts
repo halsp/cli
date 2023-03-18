@@ -1,4 +1,4 @@
-import { Context } from "@halsp/common";
+import { Context } from "@halsp/core";
 import inquirer from "inquirer";
 import * as fs from "fs";
 import path from "path";

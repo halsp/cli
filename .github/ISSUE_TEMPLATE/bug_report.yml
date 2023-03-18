@@ -69,7 +69,7 @@ body:
           required: true
         - label: Check that there isn't [already an issue](https://github.com/halsp/cli/issues) that reports the same bug to avoid creating a duplicate.
           required: true
-        - label: Make sure this is a @halsp/cli issue and not @halsp/common issue or other plugins issue. For example, if it's a router bug, it should likely be reported to https://github.com/halsp/router instead.
+        - label: Make sure this is a @halsp/cli issue and not @halsp/core issue or other plugins issue. For example, if it's a router bug, it should likely be reported to https://github.com/halsp/router instead.
           required: true
         - label: Check that this is a concrete bug. For Q&A open a [GitHub Discussion](https://github.com/halsp/core/discussions).
           required: true

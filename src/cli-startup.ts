@@ -1,12 +1,12 @@
-import "@halsp/common";
+import "@halsp/core";
 import "@halsp/inject";
-import { Context, Request, Startup } from "@halsp/common";
+import { Context, Request, Startup } from "@halsp/core";
 import { ConfigService } from "./services/build.services/config.service";
 import { CommandType } from "./configuration";
 import { parseInject } from "@halsp/inject";
 import { ChalkService } from "./services/chalk.service";
 
-declare module "@halsp/common" {
+declare module "@halsp/core" {
   interface Context {
     get command(): CommandType;
     get commandArgs(): Record<string, string>;

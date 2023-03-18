@@ -1,4 +1,4 @@
-import { isString, Middleware } from "@halsp/common";
+import { isString, Middleware } from "@halsp/core";
 import { Inject } from "@halsp/inject";
 import path from "path";
 import * as fs from "fs";

@@ -7,7 +7,7 @@ import { TsconfigService } from "../services/build.services/tsconfig.service";
 import { WatchCompilerService } from "../services/build.services/watch-compiler.service";
 import * as fs from "fs";
 import { HookService } from "../services/build.services/hook.service";
-import { Middleware } from "@halsp/common";
+import { Middleware } from "@halsp/core";
 import prettier from "prettier";
 
 export class BuildMiddlware extends Middleware {

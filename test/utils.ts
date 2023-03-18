@@ -1,4 +1,4 @@
-import { Context, ObjectConstructor } from "@halsp/common";
+import { Context, ObjectConstructor } from "@halsp/core";
 import { parseInject } from "@halsp/inject";
 import { CliStartup } from "../src/cli-startup";
 

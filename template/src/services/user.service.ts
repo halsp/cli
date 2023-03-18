@@ -1,6 +1,6 @@
 //{inject
 //{pipe
-import { Context, ILogger } from "@halsp/common";
+import { Context, ILogger } from "@halsp/core";
 //}
 import { Logger } from "@halsp/logger";
 import { Ctx, Query } from "@halsp/pipe";

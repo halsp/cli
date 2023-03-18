@@ -1,4 +1,4 @@
-import { Middleware } from "@halsp/common";
+import { Middleware } from "@halsp/core";
 
 export class TemplateMiddleware extends Middleware {
   get name() {

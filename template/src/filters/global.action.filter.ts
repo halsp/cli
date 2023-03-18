@@ -1,5 +1,5 @@
 //{filter
-import { Context } from "@halsp/common";
+import { Context } from "@halsp/core";
 import { ActionFilter } from "@halsp/filter";
 
 export class GlobalActionFilter implements ActionFilter {

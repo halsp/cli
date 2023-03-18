@@ -9,7 +9,7 @@ import {
 } from "../../src/services/create.services/plugin-config.service";
 import { parseInject } from "@halsp/inject";
 import { CreateTemplateService } from "../../src/services/create.services/create-template.service";
-import { HookType } from "@halsp/common";
+import { HookType } from "@halsp/core";
 
 describe("template", () => {
   const testName = ".cache-template-create";

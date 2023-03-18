@@ -4,7 +4,7 @@ import * as fs from "fs";
 import path from "path";
 import { DepsService } from "../services/deps.service";
 import { Inject } from "@halsp/inject";
-import { Middleware } from "@halsp/common";
+import { Middleware } from "@halsp/core";
 import { ChalkService } from "../services/chalk.service";
 
 export class InfoMiddleware extends Middleware {

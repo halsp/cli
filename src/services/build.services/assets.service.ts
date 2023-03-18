@@ -8,7 +8,7 @@ import glob from "glob";
 import { FileService } from "../file.service";
 import { ConfigService } from "./config.service";
 import { Ctx } from "@halsp/pipe";
-import { Context } from "@halsp/common";
+import { Context } from "@halsp/core";
 import { CommandService } from "../command.service";
 
 type SortedAsset = {

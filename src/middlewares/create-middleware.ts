@@ -9,7 +9,7 @@ import { CommandService } from "../services/command.service";
 import { CopyBaseService } from "../services/create.services/copy-base-files.service";
 import inquirer from "inquirer";
 import { RunnerService } from "../services/runner.service";
-import { Middleware } from "@halsp/common";
+import { Middleware } from "@halsp/core";
 import { PackageManagerService } from "../services/package-manager.service";
 import { SortPluginsService } from "../services/create.services/sort-plugins.service";
 import { ChalkService } from "../services/chalk.service";

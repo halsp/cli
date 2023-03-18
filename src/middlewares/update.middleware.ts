@@ -5,7 +5,7 @@ import * as fs from "fs";
 import path from "path";
 import runLocal from "npm-check-updates/build/src/lib/runLocal";
 import { chalkInit } from "npm-check-updates/build/src/lib/chalk";
-import { Middleware } from "@halsp/common";
+import { Middleware } from "@halsp/core";
 
 export class UpdateMiddleware extends Middleware {
   private get packagePath() {

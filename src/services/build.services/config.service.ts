@@ -1,5 +1,5 @@
 import { Ctx } from "@halsp/pipe";
-import { Context, isUndefined } from "@halsp/common";
+import { Context, isUndefined } from "@halsp/core";
 import path from "path";
 import { Configuration, ConfigEnv } from "../../configuration";
 import { Inject } from "@halsp/inject";
@@ -73,8 +73,8 @@ export class ConfigService {
     );
     if (optDir) return optDir;
 
-    const pkgPath = require.resolve("@halsp/common");
-    const tail = "@halsp/common/dist/index.js";
+    const pkgPath = require.resolve("@halsp/core");
+    const tail = "@halsp/core/dist/index.js";
     return path.join(
       pkgPath.substring(0, pkgPath.length - tail.length - 1),
       ".halsp"

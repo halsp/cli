@@ -1,4 +1,4 @@
-import { HookType } from "@halsp/common";
+import { HookType } from "@halsp/core";
 import { CliStartup } from "../../src/cli-startup";
 import { CreateMiddleware } from "../../src/middlewares/create-middleware";
 import * as fs from "fs";
