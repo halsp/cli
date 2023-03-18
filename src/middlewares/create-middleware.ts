@@ -140,8 +140,8 @@ export class CreateMiddleware extends Middleware {
         plugins = await this.pluginSelectService.select(env);
       }
     }
-    if (!plugins.includes("common")) {
-      plugins.push("common");
+    if (!plugins.includes("core")) {
+      plugins.push("core");
     }
     if (env) {
       plugins.push(env);

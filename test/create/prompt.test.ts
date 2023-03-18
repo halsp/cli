@@ -153,7 +153,7 @@ describe("prompt", () => {
             return { overwrite: false, plugins: ["view"] };
           }) as any,
           before: async (ctx, md) => {
-            expect(await (md as any).getPlugins()).toEqual(["view", "common"]);
+            expect(await (md as any).getPlugins()).toEqual(["view", "core"]);
             done = true;
             return false;
           },

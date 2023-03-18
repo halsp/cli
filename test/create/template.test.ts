@@ -438,13 +438,7 @@ describe("init", () => {
             },
           } as any;
           const plugins = await service["sortPlugins"]([]);
-          expect(plugins).toEqual([
-            "view",
-            "router",
-            "common",
-            "methods",
-            "cli",
-          ]);
+          expect(plugins).toEqual(["view", "router", "core", "methods", "cli"]);
         },
         {
           options: {
