@@ -147,21 +147,38 @@ export default <T extends HttpStartup & MicroStartup>(startup: T) =>
         id: 1,
         email: "hi@hal.wang",
       });
-      //{ http
+      ////{ http
       ctx.res.ok({
         html,
       });
-      //}
-      //{ micro
+      ////}
+      ////{ micro
       ctx.res.setBody({ html });
-      //}
+      ////}
       await next();
     })
     ///}
     //}
     // { router && !mva
-    .useRouter();
-// }
+    .useRouter()
+    // }
+    //{ !view && !router && !mva
+    .use(async (ctx, next) => {
+      ///{ http
+      ctx.res.ok({
+        id: 1,
+        email: "hi@hal.wang",
+      });
+      ///}
+      ///{ micro
+      ctx.res.setBody({
+        id: 1,
+        email: "hi@hal.wang",
+      });
+      ///}
+      await next();
+    });
+//}
 
 //{http||micro
 const version = (() => {
