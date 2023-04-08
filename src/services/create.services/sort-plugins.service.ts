@@ -8,7 +8,7 @@ export class SortPluginsService {
   private readonly depsService!: DepsService;
 
   private get templateDir() {
-    return path.join(__dirname, "../../../template");
+    return path.join(__dirname, "../../../scaffold");
   }
 
   #templatePackage?: any;

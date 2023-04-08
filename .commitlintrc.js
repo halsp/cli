@@ -31,7 +31,7 @@ module.exports = {
         "info",
         "init",
         "start",
-        "template",
+        "scaffold",
         "update",
         "serve"
       ],

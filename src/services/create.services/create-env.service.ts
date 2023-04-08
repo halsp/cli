@@ -26,7 +26,7 @@ export class CreateEnvService {
     return this.ctx.commandArgs.name;
   }
   public get sourceDir() {
-    return path.join(__dirname, `../../../template/startups`);
+    return path.join(__dirname, `../../../scaffold/startups`);
   }
   public get targetDir() {
     return path.join(process.cwd(), this.name);

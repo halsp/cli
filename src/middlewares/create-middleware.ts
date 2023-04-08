@@ -1,5 +1,5 @@
 import * as fs from "fs";
-import { CreateTemplateService } from "../services/create.services/create-template.service";
+import { CreateScaffoldService } from "../services/create.services/create-scaffold.service";
 import { Inject } from "@halsp/inject";
 import { FileService } from "../services/file.service";
 import { CreateEnvService } from "../services/create.services/create-env.service";
@@ -16,7 +16,7 @@ import { ChalkService } from "../services/chalk.service";
 
 export class CreateMiddleware extends Middleware {
   @Inject
-  private readonly createTemplateService!: CreateTemplateService;
+  private readonly createScaffoldService!: CreateScaffoldService;
   @Inject
   private readonly createEnvService!: CreateEnvService;
   @Inject
@@ -72,7 +72,7 @@ export class CreateMiddleware extends Middleware {
     const pm = await this.getPackageManager();
     if (!pm) return;
 
-    const templateInitResult = await this.createTemplateService.init(pm);
+    const templateInitResult = await this.createScaffoldService.init(pm);
     if (!templateInitResult) return;
 
     const env = await this.createEnvService.create();
@@ -81,7 +81,7 @@ export class CreateMiddleware extends Middleware {
 
     await this.createPackageService.create(plugins);
     await this.copyBaseService.copy();
-    await this.createTemplateService.create(plugins);
+    await this.createScaffoldService.create(plugins);
 
     const installResult = await this.install(pm);
     if (!installResult) return;

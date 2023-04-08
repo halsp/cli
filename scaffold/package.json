@@ -8,7 +8,9 @@
     "url": "https://github.com/halsp/cli"
   },
   "keywords": [
-    "halsp"
+    "halsp",
+    "template",
+    "scaffold"
   ],
   "bugs": {
     "url": "https://github.com/halsp/cli/issues",

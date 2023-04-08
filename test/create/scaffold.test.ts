@@ -8,16 +8,16 @@ import {
   SortedPluginConfig,
 } from "../../src/services/create.services/plugin-config.service";
 import { parseInject } from "@halsp/inject";
-import { CreateTemplateService } from "../../src/services/create.services/create-template.service";
+import { CreateScaffoldService } from "../../src/services/create.services/create-scaffold.service";
 import { HookType } from "@halsp/core";
 
-describe("template", () => {
-  const testName = ".cache-template-create";
+describe("scaffold", () => {
+  const testName = ".cache-scaffold-create";
 
   function testTemplate(plugins: string[]) {
     const pluginsStr = plugins.join("_");
     it(
-      `should create template with plugins ${pluginsStr}`,
+      `should create app with plugins ${pluginsStr}`,
       async () => {
         const cacheDir = `test/create/${testName}_${pluginsStr}`;
         if (!fs.existsSync(cacheDir)) {
@@ -55,7 +55,7 @@ describe("template", () => {
     );
   }
 
-  const file = path.join(__dirname, "../../template/plugin.json");
+  const file = path.join(__dirname, "../../scaffold/plugin.json");
   const content = fs.readFileSync(file, "utf-8");
   const config: PluginConfig = JSON.parse(content);
 
@@ -92,15 +92,15 @@ describe("template", () => {
   testPlugins(plugins.length);
 });
 
-describe("mock template", () => {
+describe("mock scaffold", () => {
   async function testTemplate(
-    fn: (service: CreateTemplateService) => void | Promise<void>
+    fn: (service: CreateScaffoldService) => void | Promise<void>
   ) {
     let worked = false;
-    await runin("test/create/mock-template", async () => {
+    await runin("test/create/mock-scaffold", async () => {
       await new CliStartup("test", { name: "test" })
         .use(async (ctx) => {
-          const service = await parseInject(ctx, CreateTemplateService);
+          const service = await parseInject(ctx, CreateScaffoldService);
 
           if (!fs.existsSync("dist")) {
             fs.mkdirSync("dist");
@@ -114,14 +114,14 @@ describe("mock template", () => {
     expect(worked).toBeTruthy();
   }
 
-  async function testTemplateDefault(
+  async function testScaffoldDefault(
     plugins: string[],
     file: string,
     fn: (text?: string) => void | Promise<void>,
     beforeFn?: () => void | Promise<void>
   ) {
     await testTemplate(async (service) => {
-      fs.rmSync("./dist/template", {
+      fs.rmSync("./dist/scaffold", {
         recursive: true,
         force: true,
       });
@@ -134,10 +134,10 @@ describe("mock template", () => {
 
       function defineDir(service: any) {
         Object.defineProperty(service, "targetDir", {
-          get: () => path.join(process.cwd(), "dist/template"),
+          get: () => path.join(process.cwd(), "dist/scaffold"),
         });
         Object.defineProperty(service, "sourceDir", {
-          get: () => path.join(process.cwd(), "template"),
+          get: () => path.join(process.cwd(), "scaffold"),
         });
       }
       defineDir(service);
@@ -146,8 +146,8 @@ describe("mock template", () => {
       await service.create(plugins);
       expect(fs.existsSync("dist")).toBeTruthy();
 
-      if (fs.existsSync(`dist/template/${file}`)) {
-        const text = fs.readFileSync(`dist/template/${file}`, "utf-8");
+      if (fs.existsSync(`dist/scaffold/${file}`)) {
+        const text = fs.readFileSync(`dist/scaffold/${file}`, "utf-8");
         await fn(text);
       } else {
         await fn(undefined);
@@ -157,7 +157,7 @@ describe("mock template", () => {
 
   async function testContains(contains: boolean) {
     it(`should contains children plugins: ${contains}`, async () => {
-      await testTemplateDefault(
+      await testScaffoldDefault(
         contains ? ["router", "mva"] : ["router"],
         "contains.ts",
         (text) => {
@@ -179,7 +179,7 @@ describe("mock template", () => {
 
   async function testSelect(select: boolean) {
     it(`should select code by plugins: ${select}`, async () => {
-      await testTemplateDefault(
+      await testScaffoldDefault(
         [select ? "inject" : "router"],
         "select.ts",
         (text) => {
@@ -196,19 +196,19 @@ describe("mock template", () => {
   testSelect(false);
 
   it(`should parse files with crlf format`, async () => {
-    await testTemplateDefault(
+    await testScaffoldDefault(
       [],
       "crlf.txt",
       (text) => {
         expect(text).toBe("a\r\nb");
       },
       () => {
-        fs.writeFileSync("./template/crlf.txt", "a\r\nb");
+        fs.writeFileSync("./scaffold/crlf.txt", "a\r\nb");
       }
     );
   });
 
-  it(`should create project with default template`, async () => {
+  it(`should create project with default scaffold`, async () => {
     await testTemplate(async (service) => {
       fs.rmSync("./dist/default", {
         recursive: true,
@@ -230,7 +230,7 @@ describe("mock template", () => {
 
   function testChildren(childrenEnable: boolean) {
     it(`should select code with children plugins: ${childrenEnable}`, async () => {
-      await testTemplateDefault(
+      await testScaffoldDefault(
         childrenEnable ? ["router", "filter"] : ["router"],
         "children.ts",
         (text) => {
@@ -246,7 +246,7 @@ describe("mock template", () => {
   testChildren(true);
   testChildren(false);
 
-  it(`should not copy codes when template sourceDir is not exist`, async () => {
+  it(`should not copy codes when scaffold sourceDir is not exist`, async () => {
     await testTemplate((service) => {
       fs.rmSync("./dist/not-exist", {
         recursive: true,
@@ -268,7 +268,7 @@ describe("mock template", () => {
     });
   });
 
-  it(`should not copy codes when template sourceDir is error`, async () => {
+  it(`should not copy codes when scaffold sourceDir is error`, async () => {
     await testTemplate(async (service) => {
       Object.defineProperty(service, "sourceDir", {
         get: () => path.join(process.cwd(), "dist/not-exist"),
@@ -283,22 +283,22 @@ describe("mock template", () => {
   });
 
   it(`should rename file when there is rename flat`, async () => {
-    await testTemplateDefault([], "new-name.ts", (text) => {
+    await testScaffoldDefault([], "new-name.ts", (text) => {
       expect(text?.trim()).toBe("1;");
     });
   });
 
   it(`should not rename file when there is rename flat and target is empty`, async () => {
-    await testTemplateDefault([], "rename-empty.ts", (text) => {
+    await testScaffoldDefault([], "rename-empty.ts", (text) => {
       expect(text?.trim()).toBe("1;");
     });
   });
 });
 
 describe("error", () => {
-  it("should be error when CreateTemplateService.create return false", async () => {
+  it("should be error when CreateScaffoldService.create return false", async () => {
     await runin("test/create", async () => {
-      const testName = ".cache-create-template-return-false";
+      const testName = ".cache-create-scaffold-return-false";
       if (fs.existsSync(testName)) {
         fs.rmSync(testName, {
           recursive: true,
@@ -318,7 +318,7 @@ describe("error", () => {
         }
       )
         .hook(HookType.BeforeInvoke, (ctx, md) => {
-          md["createTemplateService"]["init"] = () => false;
+          md["createScaffoldService"]["init"] = () => false;
           return true;
         })
         .add(CreateMiddleware)
@@ -369,14 +369,14 @@ describe("init", () => {
     // eslint-disable-next-line @typescript-eslint/no-var-requires
     return require(file).version;
   }
-  const modulesPath = path.join(__dirname, "../../template/node_modules");
+  const modulesPath = path.join(__dirname, "../../scaffold/node_modules");
   const flagPath = path.join(modulesPath, getCliVersion());
 
   it(
-    "should init template node_modules",
+    "should init scaffold node_modules",
     async () => {
       await testService(
-        CreateTemplateService,
+        CreateScaffoldService,
         async (ctx, service) => {
           if (fs.existsSync(flagPath)) {
             await fs.promises.rm(flagPath);
@@ -399,10 +399,10 @@ describe("init", () => {
   );
 
   it(
-    "should init template node_modules with forceInit",
+    "should init scaffold node_modules with forceInit",
     async () => {
       await testService(
-        CreateTemplateService,
+        CreateScaffoldService,
         async (ctx, service) => {
           await service.init("npm");
           expect(fs.existsSync(flagPath)).toBeTruthy();
@@ -423,7 +423,7 @@ describe("init", () => {
     "should sort plugin with config",
     async () => {
       await testService(
-        CreateTemplateService,
+        CreateScaffoldService,
         async (ctx, service) => {
           (service as any).pluginConfigService = {
             getSortedConfig: () => {

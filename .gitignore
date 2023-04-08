@@ -9,4 +9,4 @@ coverage
 *-error.log
 .husky/_
 
-template/yarn.lock
+scaffold/yarn.lock

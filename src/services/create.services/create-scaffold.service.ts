@@ -24,7 +24,7 @@ const importRegExp =
   /^import\s((\"@halsp\/([^/]+?)((\")|(\/.+\")))|(.+?\sfrom\s(\"@halsp\/([^/]+?)((\")|(\/.+\")))));$/;
 const uslessRegExp = /\/{2,}\s*\!\s*/;
 
-export class CreateTemplateService {
+export class CreateScaffoldService {
   @Inject
   private readonly fileService!: FileService;
   @Inject
@@ -50,7 +50,7 @@ export class CreateTemplateService {
     return this.createEnvService.targetDir;
   }
   private get sourceDir() {
-    return path.join(__dirname, "../../../template");
+    return path.join(__dirname, "../../../scaffold");
   }
 
   public async create(plugins: string[]) {
@@ -210,12 +210,12 @@ export class CreateTemplateService {
     const cliVersion = getCliVersion();
     const initFlatFilePath = path.join(
       __dirname,
-      "../../../template/node_modules",
+      "../../../scaffold/node_modules",
       cliVersion
     );
     if (this.commandService.getOptionVlaue<boolean>("forceInit")) {
       this.ctx.logger.info(
-        this.chalkService.magentaBright("Force init template. Please wait...")
+        this.chalkService.magentaBright("Force init scaffold. Please wait...")
       );
     } else {
       if (fs.existsSync(initFlatFilePath)) {
@@ -230,7 +230,7 @@ export class CreateTemplateService {
 
     const installResult = this.packageManagerService.install(
       pm,
-      path.join(__dirname, "../../../template")
+      path.join(__dirname, "../../../scaffold")
     );
     if (installResult.status == 0) {
       await fs.promises.writeFile(initFlatFilePath, cliVersion);

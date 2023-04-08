@@ -44,7 +44,7 @@ export class PluginConfigService {
   private readonly sortPluginsService!: SortPluginsService;
 
   private get filePath() {
-    return path.join(__dirname, "../../../template/plugin.json");
+    return path.join(__dirname, "../../../scaffold/plugin.json");
   }
 
   #config?: PluginConfig;

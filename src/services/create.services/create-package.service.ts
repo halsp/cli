@@ -89,7 +89,7 @@ export class CreatePackageService {
   }
 
   private getPackage(): any {
-    const file = path.join(__dirname, "../../../template/package.json");
+    const file = path.join(__dirname, "../../../scaffold/package.json");
     // eslint-disable-next-line @typescript-eslint/no-var-requires
     return require(file);
   }

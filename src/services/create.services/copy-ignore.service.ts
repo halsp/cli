@@ -8,7 +8,7 @@ export class CopyIgnoreService {
   private readonly createEnvService!: CreateEnvService;
 
   private get sourceDir() {
-    return path.join(__dirname, `../../../template`);
+    return path.join(__dirname, `../../../scaffold`);
   }
   private get targetDir() {
     return this.createEnvService.targetDir;
