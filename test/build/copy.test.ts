@@ -25,7 +25,7 @@ describe("copy package", () => {
       callCount++;
     });
     callCount.should.eq(1);
-  }).timeout(10000);
+  });
 
   it("should copy package without devDependencies", async () => {
     const cacheDir = ".cache-copy-package-wdd";
@@ -48,7 +48,7 @@ describe("copy package", () => {
     });
     callCount.should.eq(1);
   });
-}).timeout(10000);
+});
 
 describe("copy build files", () => {
   it(`should copy build files when use CopyBuildResultMiddleware`, async () => {
@@ -68,7 +68,7 @@ describe("copy build files", () => {
     });
     callCount.should.eq(1);
   });
-}).timeout(10000);
+});
 
 describe("assets", () => {
   function expectAssetsFiles(cacheDir: string) {
@@ -99,7 +99,7 @@ describe("assets", () => {
       worked = true;
     });
     worked.should.true;
-  }).timeout(10000);
+  });
 
   it(`should build and copy command assets`, async () => {
     const cacheDir = ".cache-build-and-copy-command-assets";
@@ -122,7 +122,7 @@ describe("assets", () => {
       worked = true;
     });
     worked.should.true;
-  }).timeout(10000);
+  });
 
   async function runWatchAssetsTest(type: string) {
     const cacheDir = ".cache-build-watch-assets-" + type;
@@ -233,6 +233,6 @@ describe("assets", () => {
   ["add", "edit", "unlink"].forEach((e) => {
     it(`should watch assets event '${e}'`, async () => {
       await runWatchAssetsTest(e);
-    }).timeout(14000);
+    });
   });
 });

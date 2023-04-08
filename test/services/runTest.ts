@@ -24,5 +24,5 @@ export function runTest<T extends object = any>(
         .run();
     });
     worked.should.true;
-  }).timeout(10000);
+  });
 }

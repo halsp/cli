@@ -99,7 +99,7 @@ describe("build script", () => {
       callCount++;
     });
     callCount.should.eq(2);
-  }).timeout(10000);
+  });
 
   it(`should build script failed`, async () => {
     const cacheDir = ".cache-build-script-failed";
@@ -128,7 +128,7 @@ describe("build script", () => {
       callCount++;
     });
     callCount.should.eq(2);
-  }).timeout(10000);
+  });
 
   it(`should exec plugin script error`, async () => {
     const cacheDir = ".cache-build-plugin-script-failed";
@@ -155,5 +155,5 @@ describe("build script", () => {
       callCount++;
     });
     callCount.should.eq(2);
-  }).timeout(10000);
+  });
 });
