@@ -10,49 +10,46 @@ import {
 import { parseInject } from "@halsp/inject";
 import { CreateScaffoldService } from "../../src/services/create.services/create-scaffold.service";
 import { HookType } from "@halsp/core";
+import { expect } from "chai";
 
 describe("scaffold", () => {
   const testName = ".cache-scaffold-create";
 
   function testTemplate(plugins: string[]) {
     const pluginsStr = plugins.join("_");
-    it(
-      `should create app with plugins ${pluginsStr}`,
-      async () => {
-        const cacheDir = `test/create/${testName}_${pluginsStr}`;
-        if (!fs.existsSync(cacheDir)) {
-          await fs.promises.mkdir(cacheDir);
-        }
+    it(`should create app with plugins ${pluginsStr}`, async () => {
+      const cacheDir = `test/create/${testName}_${pluginsStr}`;
+      if (!fs.existsSync(cacheDir)) {
+        await fs.promises.mkdir(cacheDir);
+      }
 
-        await runin(cacheDir, async () => {
-          await new CliStartup(
-            "test",
-            {
-              name: "test",
-            },
-            {
-              packageManager: "npm",
-              registry: process.env.REGISTRY as string,
-              plugins: pluginsStr,
-              force: true,
-              env: "native",
-              debug: true,
-              skipGit: true,
-              skipRun: true,
-            }
-          )
-            .add(CreateMiddleware)
-            .run();
-        });
+      await runin(cacheDir, async () => {
+        await new CliStartup(
+          "test",
+          {
+            name: "test",
+          },
+          {
+            packageManager: "npm",
+            registry: process.env.REGISTRY as string,
+            plugins: pluginsStr,
+            force: true,
+            env: "native",
+            debug: true,
+            skipGit: true,
+            skipRun: true,
+          }
+        )
+          .add(CreateMiddleware)
+          .run();
+      });
 
-        expect(fs.existsSync(cacheDir)).toBeTruthy();
-        await fs.promises.rm(cacheDir, {
-          recursive: true,
-          force: true,
-        });
-      },
-      1000 * 60 * 5
-    );
+      fs.existsSync(cacheDir).should.true;
+      await fs.promises.rm(cacheDir, {
+        recursive: true,
+        force: true,
+      });
+    }).timeout(1000 * 60 * 5);
   }
 
   const file = path.join(__dirname, "../../scaffold/plugin.json");
@@ -111,7 +108,7 @@ describe("mock scaffold", () => {
         })
         .run();
     });
-    expect(worked).toBeTruthy();
+    worked.should.true;
   }
 
   async function testScaffoldDefault(
@@ -130,7 +127,7 @@ describe("mock scaffold", () => {
         await beforeFn();
       }
 
-      expect((service["targetDir"] as string).endsWith("test")).toBeTruthy();
+      (service["targetDir"] as string).endsWith("test").should.true;
 
       function defineDir(service: any) {
         Object.defineProperty(service, "targetDir", {
@@ -144,7 +141,7 @@ describe("mock scaffold", () => {
       defineDir(service["copyIgnoreService"]);
 
       await service.create(plugins);
-      expect(fs.existsSync("dist")).toBeTruthy();
+      fs.existsSync("dist").should.true;
 
       if (fs.existsSync(`dist/scaffold/${file}`)) {
         const text = fs.readFileSync(`dist/scaffold/${file}`, "utf-8");
@@ -162,13 +159,19 @@ describe("mock scaffold", () => {
         "contains.ts",
         (text) => {
           if (contains) {
-            expect(text?.trim()?.split("\n")?.at(0)?.trim()).toBe(
-              "// ROUTER_CONTENT"
-            );
+            text!
+              .trim()
+              .split("\n")
+              .at(0)!
+              .trim()
+              .should.eq("// ROUTER_CONTENT");
           } else {
-            expect(text?.trim()?.split("\n")?.at(0)?.trim()).toBe(
-              "// CONTAINS_CONTENT"
-            );
+            text!
+              .trim()
+              .split("\n")
+              .at(0)!
+              .trim()
+              .should.eq("// CONTAINS_CONTENT");
           }
         }
       );
@@ -184,9 +187,9 @@ describe("mock scaffold", () => {
         "select.ts",
         (text) => {
           if (select) {
-            expect(text?.trim()).toBe("// INJECT_CONTENT");
+            text?.trim().should.eq("// INJECT_CONTENT");
           } else {
-            expect(text).toBeUndefined();
+            expect(text).undefined;
           }
         }
       );
@@ -200,7 +203,7 @@ describe("mock scaffold", () => {
       [],
       "crlf.txt",
       (text) => {
-        expect(text).toBe("a\r\nb");
+        text!.should.eq("a\r\nb");
       },
       () => {
         fs.writeFileSync("./scaffold/crlf.txt", "a\r\nb");
@@ -222,9 +225,8 @@ describe("mock scaffold", () => {
         get: () => path.join(process.cwd(), "dist/default"),
       });
       await service.create([]);
-      expect(fs.existsSync("dist/default")).toBeTruthy();
-      expect(fs.existsSync("dist/default/.eslintrc.js")).toBeTruthy();
-      expect(fs.existsSync("dist/default/jest.config.js")).toBeTruthy();
+      fs.existsSync("dist/default").should.true;
+      fs.existsSync("dist/default/.eslintrc.js").should.true;
     });
   });
 
@@ -235,9 +237,9 @@ describe("mock scaffold", () => {
         "children.ts",
         (text) => {
           if (childrenEnable) {
-            expect(text?.trim()).toBe("// ROUTER_CONTENT\n// FILTER_CONTENT");
+            text?.trim().should.eq("// ROUTER_CONTENT\n// FILTER_CONTENT");
           } else {
-            expect(text?.trim()).toBe("// ROUTER_CONTENT");
+            text?.trim().should.eq("// ROUTER_CONTENT");
           }
         }
       );
@@ -264,7 +266,7 @@ describe("mock scaffold", () => {
       defineDir(service);
       defineDir(service["copyIgnoreService"]);
 
-      expect(fs.existsSync("dist/not-exist")).toBeFalsy();
+      fs.existsSync("dist/not-exist").should.false;
     });
   });
 
@@ -278,19 +280,19 @@ describe("mock scaffold", () => {
       });
 
       await service.create([]);
-      expect(fs.existsSync("dist/not-exist")).toBeFalsy();
+      fs.existsSync("dist/not-exist").should.false;
     });
   });
 
   it(`should rename file when there is rename flat`, async () => {
     await testScaffoldDefault([], "new-name.ts", (text) => {
-      expect(text?.trim()).toBe("1;");
+      text?.trim().should.eq("1;");
     });
   });
 
   it(`should not rename file when there is rename flat and target is empty`, async () => {
     await testScaffoldDefault([], "rename-empty.ts", (text) => {
-      expect(text?.trim()).toBe("1;");
+      text?.trim().should.eq("1;");
     });
   });
 });
@@ -323,8 +325,8 @@ describe("error", () => {
         })
         .add(CreateMiddleware)
         .run();
-      expect(fs.existsSync(testName)).toBeTruthy();
-      expect(fs.existsSync(testName + "/package.json")).toBeFalsy();
+      fs.existsSync(testName).should.true;
+      fs.existsSync(testName + "/package.json").should.false;
     });
   });
 
@@ -357,8 +359,8 @@ describe("error", () => {
         })
         .add(CreateMiddleware)
         .run();
-      expect(fs.existsSync(testName)).toBeTruthy();
-      expect(fs.existsSync(testName + "/node_modules")).toBeFalsy();
+      fs.existsSync(testName).should.true;
+      fs.existsSync(testName + "/node_modules").should.false;
     });
   });
 });
@@ -372,82 +374,70 @@ describe("init", () => {
   const modulesPath = path.join(__dirname, "../../scaffold/node_modules");
   const flagPath = path.join(modulesPath, getCliVersion());
 
-  it(
-    "should init scaffold node_modules",
-    async () => {
-      await testService(
-        CreateScaffoldService,
-        async (ctx, service) => {
-          if (fs.existsSync(flagPath)) {
-            await fs.promises.rm(flagPath);
-          }
-          await service.init("npm");
-          expect(fs.existsSync(flagPath)).toBeTruthy();
-
-          await service.init("npm");
-          expect(fs.existsSync(flagPath)).toBeTruthy();
-        },
-        {
-          options: {
-            registry: process.env.REGISTRY as string,
-            skipInstall: true,
-          },
+  it("should init scaffold node_modules", async () => {
+    await testService(
+      CreateScaffoldService,
+      async (ctx, service) => {
+        if (fs.existsSync(flagPath)) {
+          await fs.promises.rm(flagPath);
         }
-      );
-    },
-    1000 * 60 * 5
-  );
+        await service.init("npm");
+        fs.existsSync(flagPath).should.true;
 
-  it(
-    "should init scaffold node_modules with forceInit",
-    async () => {
-      await testService(
-        CreateScaffoldService,
-        async (ctx, service) => {
-          await service.init("npm");
-          expect(fs.existsSync(flagPath)).toBeTruthy();
+        await service.init("npm");
+        fs.existsSync(flagPath).should.true;
+      },
+      {
+        options: {
+          registry: process.env.REGISTRY as string,
+          skipInstall: true,
         },
-        {
-          options: {
-            registry: process.env.REGISTRY as string,
-            skipInstall: true,
-            forceInit: true,
-          },
-        }
-      );
-    },
-    1000 * 60 * 5
-  );
+      }
+    );
+  }).timeout(1000 * 60 * 5);
 
-  it(
-    "should sort plugin with config",
-    async () => {
-      await testService(
-        CreateScaffoldService,
-        async (ctx, service) => {
-          (service as any).pluginConfigService = {
-            getSortedConfig: () => {
-              return {
-                dependencies: {
-                  "@halsp/view": true,
-                },
-                devDependencies: {
-                  "@halsp/router": true,
-                },
-              } as Partial<SortedPluginConfig>;
-            },
-          } as any;
-          const plugins = await service["sortPlugins"]([]);
-          expect(plugins).toEqual(["view", "router", "core", "methods", "cli"]);
+  it("should init scaffold node_modules with forceInit", async () => {
+    await testService(
+      CreateScaffoldService,
+      async (ctx, service) => {
+        await service.init("npm");
+        fs.existsSync(flagPath).should.true;
+      },
+      {
+        options: {
+          registry: process.env.REGISTRY as string,
+          skipInstall: true,
+          forceInit: true,
         },
-        {
-          options: {
-            registry: process.env.REGISTRY as string,
-            skipInstall: true,
+      }
+    );
+  }).timeout(1000 * 60 * 5);
+
+  it("should sort plugin with config", async () => {
+    await testService(
+      CreateScaffoldService,
+      async (ctx, service) => {
+        (service as any).pluginConfigService = {
+          getSortedConfig: () => {
+            return {
+              dependencies: {
+                "@halsp/view": true,
+              },
+              devDependencies: {
+                "@halsp/router": true,
+              },
+            } as Partial<SortedPluginConfig>;
           },
-        }
-      );
-    },
-    1000 * 60 * 5
-  );
+        } as any;
+        const plugins = await service["sortPlugins"]([]);
+        plugins.should.deep.eq(["view", "router", "core", "methods", "cli"]);
+      },
+      {
+        options: {
+          registry: process.env.REGISTRY as string,
+          skipInstall: true,
+        },
+      }
+    );
+  }).timeout(1000 * 60 * 5);
 });

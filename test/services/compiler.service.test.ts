@@ -14,8 +14,8 @@ runTest(CompilerService, async (ctx, service) => {
   let done = true;
   try {
     const compilerResult = service.compile("dist-compiler");
-    expect(compilerResult).toBe(true);
-    expect(fs.existsSync("./dist-compiler")).toBe(true);
+    compilerResult.should.eq(true);
+    fs.existsSync("./dist-compiler").should.eq(true);
     done = true;
   } finally {
     fs.rmSync("./dist-compiler", {
@@ -23,7 +23,7 @@ runTest(CompilerService, async (ctx, service) => {
       force: true,
     });
   }
-  expect(done).toBeTruthy();
+  done.should.true;
 });
 
 runTest(WatchCompilerService, async (ctx, service) => {
@@ -31,14 +31,14 @@ runTest(WatchCompilerService, async (ctx, service) => {
     a: 1,
   });
   const newFn = (service as any).createDiagnosticReporter.bind(service)(fn);
-  expect(newFn()).toEqual({ a: 1 });
+  newFn().should.deep.eq({ a: 1 });
 });
 
 function runCompilerOptions(command: "start" | "build") {
   runTest(
     CompilerService,
     async (ctx, service) => {
-      expect((service as any).getCompilerOptions({}, "")).toEqual({
+      (service as any).getCompilerOptions({}, "").should.deep.eq({
         noEmitOnError: true,
         outDir: "",
         sourceMap: command == "start",

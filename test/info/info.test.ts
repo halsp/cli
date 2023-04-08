@@ -21,6 +21,6 @@ describe("info", () => {
         .run();
       worked = true;
     });
-    expect(worked).toBeTruthy();
+    (worked).should.true;
   });
 });

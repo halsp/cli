@@ -16,14 +16,14 @@ describe("startup", () => {
         })
         .run();
 
-      expect(res.body).toEqual({
+      res.body!.should.deep.eq({
         options: isUndefined(options) ? {} : { a: 1 },
         args: {},
         a: isUndefined(options) ? undefined : 1,
       });
       worked = true;
     });
-    expect(worked).toBeTruthy();
+    worked.should.true;
   }
   it("should invoke with options and args", async () => {
     await testCliStartup({}, { a: 1 });
@@ -46,10 +46,10 @@ describe("error", () => {
           })
           .run();
       } catch (error) {
-        expect((error as Error).message).toBe(errMsg);
+        (error as Error).message.should.eq(errMsg);
         err = true;
       }
-      expect(err).toBeTruthy();
+      err.should.true;
     });
   });
 });

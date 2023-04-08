@@ -91,7 +91,7 @@ export class CreateScaffoldService {
         if (sourceFile.endsWith(".ts")) {
           content = prettier.format(content, {
             parser: "typescript",
-          });
+          }) as string;
         }
         await this.fileService.createDir(targetFile);
         await fs.promises.writeFile(targetFile, content);

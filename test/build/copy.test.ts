@@ -21,11 +21,11 @@ describe("copy package", () => {
         .add(BuildMiddlware)
         .run();
 
-      expect(fs.existsSync(`./${cacheDir}/package.json`)).toBeTruthy();
+      fs.existsSync(`./${cacheDir}/package.json`).should.true;
       callCount++;
     });
-    expect(callCount).toBe(1);
-  }, 10000);
+    callCount.should.eq(1);
+  }).timeout(10000);
 
   it("should copy package without devDependencies", async () => {
     const cacheDir = ".cache-copy-package-wdd";
@@ -40,16 +40,15 @@ describe("copy package", () => {
         .add(BuildMiddlware)
         .run();
 
-      expect(fs.existsSync(`./${cacheDir}/package.json`)).toBeTruthy();
-      expect(
-        JSON.parse(fs.readFileSync(`./${cacheDir}/package.json`, "utf-8"))
-          .devDependencies
-      ).toEqual({});
+      fs.existsSync(`./${cacheDir}/package.json`).should.true;
+      JSON.parse(
+        fs.readFileSync(`./${cacheDir}/package.json`, "utf-8")
+      ).devDependencies.should.deep.eq({});
       callCount++;
     });
-    expect(callCount).toBe(1);
-  }, 10000);
-});
+    callCount.should.eq(1);
+  });
+}).timeout(10000);
 
 describe("copy build files", () => {
   it(`should copy build files when use CopyBuildResultMiddleware`, async () => {
@@ -63,28 +62,28 @@ describe("copy build files", () => {
         .add(CopyBuildResultMiddleware)
         .run();
 
-      expect(fs.existsSync("./dist")).toBeTruthy();
-      expect(fs.existsSync("./dist/build-test.js")).toBeTruthy();
+      fs.existsSync("./dist").should.true;
+      fs.existsSync("./dist/build-test.js").should.true;
       callCount++;
     });
-    expect(callCount).toBe(1);
-  }, 10000);
-});
+    callCount.should.eq(1);
+  });
+}).timeout(10000);
 
 describe("assets", () => {
   function expectAssetsFiles(cacheDir: string) {
-    expect(fs.existsSync(`./${cacheDir}`)).toBeTruthy();
-    expect(fs.existsSync(`./${cacheDir}/default/test.txt`)).toBeTruthy();
-    expect(fs.readFileSync(`./${cacheDir}/default/test.txt`, "utf-8")).toBe(
+    fs.existsSync(`./${cacheDir}`).should.true;
+    fs.existsSync(`./${cacheDir}/default/test.txt`).should.true;
+    fs.readFileSync(`./${cacheDir}/default/test.txt`, "utf-8").should.eq(
       "test-build"
     );
-    expect(fs.existsSync(`./${cacheDir}/build-test.js`)).toBeTruthy();
+    fs.existsSync(`./${cacheDir}/build-test.js`).should.true;
 
-    expect(fs.existsSync(`./${cacheDir}/root/test.txt`)).toBeTruthy();
-    expect(fs.existsSync(`./${cacheDir}/include/test.txt`)).toBeTruthy();
-    expect(fs.existsSync(`./${cacheDir}/test/outDir/test.txt`)).toBeTruthy();
+    fs.existsSync(`./${cacheDir}/root/test.txt`).should.true;
+    fs.existsSync(`./${cacheDir}/include/test.txt`).should.true;
+    fs.existsSync(`./${cacheDir}/test/outDir/test.txt`).should.true;
 
-    expect(fs.existsSync(`./${cacheDir}/exclude/test.txt`)).toBeFalsy();
+    fs.existsSync(`./${cacheDir}/exclude/test.txt`).should.false;
   }
 
   it(`should build and copy assets`, async () => {
@@ -99,8 +98,8 @@ describe("assets", () => {
       expectAssetsFiles(cacheDir);
       worked = true;
     });
-    expect(worked).toBeTruthy();
-  }, 10000);
+    worked.should.true;
+  }).timeout(10000);
 
   it(`should build and copy command assets`, async () => {
     const cacheDir = ".cache-build-and-copy-command-assets";
@@ -113,17 +112,17 @@ describe("assets", () => {
         .add(BuildMiddlware)
         .run();
 
-      expect(fs.existsSync(`./${cacheDir}`)).toBeTruthy();
-      expect(fs.existsSync(`./${cacheDir}/default`)).toBeTruthy();
-      expect(fs.existsSync(`./${cacheDir}/default/test.txt`)).toBeTruthy();
-      expect(fs.readFileSync(`./${cacheDir}/default/test.txt`, "utf-8")).toBe(
+      fs.existsSync(`./${cacheDir}`).should.true;
+      fs.existsSync(`./${cacheDir}/default`).should.true;
+      fs.existsSync(`./${cacheDir}/default/test.txt`).should.true;
+      fs.readFileSync(`./${cacheDir}/default/test.txt`, "utf-8").should.eq(
         "test-build"
       );
-      expect(fs.existsSync(`./${cacheDir}/build-test.js`)).toBeTruthy();
+      fs.existsSync(`./${cacheDir}/build-test.js`).should.true;
       worked = true;
     });
-    expect(worked).toBeTruthy();
-  }, 10000);
+    worked.should.true;
+  }).timeout(10000);
 
   async function runWatchAssetsTest(type: string) {
     const cacheDir = ".cache-build-watch-assets-" + type;
@@ -195,8 +194,8 @@ describe("assets", () => {
               () => fs.readFileSync(cacheTargetFile, "utf-8") == text
             );
 
-            expect(fs.existsSync(cacheTargetFile)).toBeTruthy();
-            expect(fs.readFileSync(cacheTargetFile, "utf-8")).toBe(
+            fs.existsSync(cacheTargetFile).should.true;
+            fs.readFileSync(cacheTargetFile, "utf-8").should.eq(
               cacheFileContent + cacheFileEditContent
             );
           }
@@ -209,7 +208,7 @@ describe("assets", () => {
             fs.unlinkSync(cacheSourceFile);
             await testWaiting(() => fs.existsSync(cacheTargetFile));
 
-            expect(fs.existsSync(cacheTargetFile)).toBeFalsy();
+            fs.existsSync(cacheTargetFile).should.false;
           }
         })
         // add
@@ -219,10 +218,8 @@ describe("assets", () => {
           await fs.promises.writeFile(cacheSourceFile, cacheFileContent);
           await testWaiting(() => !fs.existsSync(cacheTargetFile));
 
-          expect(fs.existsSync(cacheTargetFile)).toBeTruthy();
-          expect(fs.readFileSync(cacheTargetFile, "utf-8")).toBe(
-            cacheFileContent
-          );
+          fs.existsSync(cacheTargetFile).should.true;
+          fs.readFileSync(cacheTargetFile, "utf-8").should.eq(cacheFileContent);
         })
         .add(BuildMiddlware)
         .run();
@@ -230,12 +227,12 @@ describe("assets", () => {
       expectAssetsFiles(cacheDir);
       callCount++;
     });
-    expect(callCount).toBe(3);
+    callCount.should.eq(3);
   }
 
   ["add", "edit", "unlink"].forEach((e) => {
     it(`should watch assets event '${e}'`, async () => {
       await runWatchAssetsTest(e);
-    }, 14000);
+    }).timeout(14000);
   });
 });

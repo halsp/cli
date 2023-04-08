@@ -43,12 +43,12 @@ describe("build with watch", () => {
         .add(BuildMiddlware)
         .run();
 
-      expect(fs.existsSync(`./${cacheDir}`)).toBeTruthy();
-      expect(fs.existsSync(`./${cacheDir}/build-test.js`)).toBeTruthy();
-      expect(fs.existsSync(`./${cacheDir}/build-test.js.map`)).toBeTruthy();
+      fs.existsSync(`./${cacheDir}`).should.true;
+      fs.existsSync(`./${cacheDir}/build-test.js`).should.true;
+      fs.existsSync(`./${cacheDir}/build-test.js.map`).should.true;
       callCount++;
     });
-    expect(callCount).toBe(options.callback ? 3 : 2);
+    callCount.should.eq(options.callback ? 3 : 2);
   }
 
   it("should build with callback options", async () => {

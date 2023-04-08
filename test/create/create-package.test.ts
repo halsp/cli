@@ -9,7 +9,7 @@ describe("create-package", () => {
       async (ctx, service) => {
         const pkg = {};
         await (service as any).setCliVersion(pkg);
-        expect(pkg).toEqual({});
+        pkg.should.deep.eq({});
       },
       {
         options: {
@@ -34,7 +34,7 @@ describe("create-package", () => {
         await (service as any).setCliVersion(pkg);
 
         const cliPath = path.join(__dirname, "../..");
-        expect(pkg).toEqual({
+        pkg.should.deep.eq({
           dependencies: {
             "@halsp/cli": cliPath,
           },
@@ -72,7 +72,7 @@ describe("create-package", () => {
         },
         false
       );
-      expect(deps).toEqual({});
+      deps.should.deep.eq({});
     });
   });
 });

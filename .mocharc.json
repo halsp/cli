@@ -1,0 +1,4 @@
+{
+  "file": ["scripts/test-file.ts"],
+  "require": ["ts-node/register", "source-map-support/register"]
+}

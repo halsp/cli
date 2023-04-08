@@ -7,6 +7,7 @@ import { AssetsService } from "../../src/services/build.services/assets.service"
 import { WatchCompilerService } from "../../src/services/build.services/watch-compiler.service";
 import * as fs from "fs";
 import path from "path";
+import { expect } from "chai";
 
 describe("hooks", () => {
   it(`should build and invoke hooks`, async () => {
@@ -19,16 +20,16 @@ describe("hooks", () => {
           const configService = await parseInject(ctx, ConfigService);
           const dict = configService.value["dict"]();
 
-          expect(!!dict["beforeHook"]).toBeTruthy();
-          expect(!!dict["afterHook"]).toBeTruthy();
-          expect(!!dict["afterDeclarationsHook"]).toBeTruthy();
+          (!!dict["beforeHook"]).should.true;
+          (!!dict["afterHook"]).should.true;
+          (!!dict["afterDeclarationsHook"]).should.true;
           callCount++;
         })
         .add(BuildMiddlware)
         .run();
       callCount++;
     });
-    expect(callCount).toBe(2);
+    callCount.should.eq(2);
   });
 
   it(`should build and invoke hooks with watch`, async () => {
@@ -56,16 +57,16 @@ describe("hooks", () => {
           const configService = await parseInject(ctx, ConfigService);
           const dict = configService.value["dict"]();
 
-          expect(!!dict["beforeHook"]).toBeTruthy();
-          expect(!!dict["afterHook"]).toBeTruthy();
-          expect(!!dict["afterDeclarationsHook"]).toBeTruthy();
+          (!!dict["beforeHook"]).should.true;
+          (!!dict["afterHook"]).should.true;
+          (!!dict["afterDeclarationsHook"]).should.true;
           callCount++;
         })
         .add(BuildMiddlware)
         .run();
       callCount++;
     });
-    expect(callCount).toBe(3);
+    callCount.should.eq(3);
   });
 });
 
@@ -83,22 +84,22 @@ describe("build script", () => {
 
           const configService = await parseInject(ctx, ConfigService);
           const cfg = configService.value;
-          expect(cfg["prebuild1"]).toBeTruthy();
-          expect(cfg["prebuild2"]).toBeTruthy();
-          expect(cfg["prebuild3"]).toBeTruthy();
-          expect(cfg["postbuild1"]).toBeTruthy();
-          expect(cfg["postbuild1"]).toBeTruthy();
+          cfg["prebuild1"].should.true;
+          cfg["prebuild2"].should.true;
+          cfg["prebuild3"].should.true;
+          cfg["postbuild1"].should.true;
+          cfg["postbuild1"].should.true;
           callCount++;
         })
         .add(BuildMiddlware)
         .run();
 
-      expect(fs.existsSync(`./${cacheDir}`)).toBeTruthy();
-      expect(fs.existsSync(`./${cacheDir}/build-test.js`)).toBeTruthy();
+      fs.existsSync(`./${cacheDir}`).should.true;
+      fs.existsSync(`./${cacheDir}/build-test.js`).should.true;
       callCount++;
     });
-    expect(callCount).toBe(2);
-  }, 10000);
+    callCount.should.eq(2);
+  }).timeout(10000);
 
   it(`should build script failed`, async () => {
     const cacheDir = ".cache-build-script-failed";
@@ -113,21 +114,21 @@ describe("build script", () => {
 
           const configService = await parseInject(ctx, ConfigService);
           const cfg = configService.value;
-          expect(cfg["prebuild1"]).toBeTruthy();
-          expect(cfg["prebuild2"]).toBeTruthy();
-          expect(cfg["prebuild3"]).toBeUndefined();
-          expect(cfg["postbuild1"]).toBeUndefined();
-          expect(cfg["postbuild1"]).toBeUndefined();
+          cfg["prebuild1"].should.true;
+          cfg["prebuild2"].should.true;
+          expect(cfg["prebuild3"]).undefined;
+          expect(cfg["postbuild1"]).undefined;
+          expect(cfg["postbuild1"]).undefined;
           callCount++;
         })
         .add(BuildMiddlware)
         .run();
 
-      expect(fs.existsSync(`./${cacheDir}`)).toBeFalsy();
+      fs.existsSync(`./${cacheDir}`).should.false;
       callCount++;
     });
-    expect(callCount).toBe(2);
-  }, 10000);
+    callCount.should.eq(2);
+  }).timeout(10000);
 
   it(`should exec plugin script error`, async () => {
     const cacheDir = ".cache-build-plugin-script-failed";
@@ -142,17 +143,17 @@ describe("build script", () => {
 
           const configService = await parseInject(ctx, ConfigService);
           const cfg = configService.value;
-          expect(cfg["prebuild"]).toBeUndefined();
-          expect(cfg["postbuild"]).toBeUndefined();
+          expect(cfg["prebuild"]).undefined;
+          expect(cfg["postbuild"]).undefined;
           callCount++;
         })
         .add(BuildMiddlware)
         .run();
 
-      expect(fs.existsSync(`./${cacheDir}`)).toBeTruthy();
-      expect(fs.existsSync(`./${cacheDir}/build-test.js`)).toBeTruthy();
+      fs.existsSync(`./${cacheDir}`).should.true;
+      fs.existsSync(`./${cacheDir}/build-test.js`).should.true;
       callCount++;
     });
-    expect(callCount).toBe(2);
-  }, 10000);
+    callCount.should.eq(2);
+  }).timeout(10000);
 });

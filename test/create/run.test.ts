@@ -41,7 +41,7 @@ describe("run", () => {
         .add(CreateMiddleware)
         .run();
 
-      expect(worked).toBeTruthy();
+      (worked).should.true;
     });
   }
   runApp(true);

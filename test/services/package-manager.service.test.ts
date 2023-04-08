@@ -12,7 +12,7 @@ runTest(PackageManagerService, async (ctx, service) => {
   inquirer.prompt = (() => Promise.resolve({ mng: "cnpm" })) as any;
   try {
     const result = await service.pickPackageManager();
-    expect(result).toBe("cnpm");
+    result.should.eq("cnpm");
   } finally {
     inquirer.prompt = prompt;
   }
@@ -39,6 +39,6 @@ runTest(PackageManagerService, async (ctx, service) => {
     service.install("npm");
   });
 
-  expect(fs.existsSync(path.join(dir, "package-lock.json"))).toBeTruthy();
-  expect(fs.existsSync(path.join(dir, "package.json"))).toBeTruthy();
+  fs.existsSync(path.join(dir, "package-lock.json")).should.true;
+  fs.existsSync(path.join(dir, "package.json")).should.true;
 });

@@ -1,12 +1,13 @@
 import inquirer from "inquirer";
 import { CreateEnvService } from "../../src/services/create.services/create-env.service";
 import { runTest } from "./runTest";
+import { expect } from "chai";
 
 runTest(
   CreateEnvService,
   async (ctx, service) => {
     const env = await (service as any).getEnv();
-    expect(env).toBeUndefined();
+    expect(env).undefined;
   },
   undefined,
   undefined,
@@ -19,7 +20,7 @@ runTest(
   CreateEnvService,
   async (ctx, service) => {
     const env = await (service as any).getEnv();
-    expect(env.file).toBe("lambda");
+    env.file.should.eq("lambda");
   },
   undefined,
   undefined,
@@ -35,10 +36,10 @@ runTest(
     try {
       await (service as any).getEnv();
     } catch (error) {
-      expect((error as Error)?.message).toBe("The env is not exist");
+      (error as Error)?.message.should.eq("The env is not exist");
       err = true;
     }
-    expect(err).toBeTruthy();
+    err.should.true;
   },
   undefined,
   undefined,
@@ -53,8 +54,8 @@ runTest(CreateEnvService, async (ctx, service) => {
     Promise.resolve({ env: { plugin: "lambda", file: "lambda" } })) as any;
   try {
     const env = await (service as any).getEnv();
-    expect(env.plugin).toBe("lambda");
-    expect(env.file).toBe("lambda");
+    env.plugin.should.eq("lambda");
+    env.file.should.eq("lambda");
   } finally {
     inquirer.prompt = prompt;
   }
@@ -85,8 +86,8 @@ runTest(CreateEnvService, async (ctx, service) => {
   }) as any;
   try {
     const env = await (service as any).getEnv();
-    expect(env.plugin).toBe("native");
-    expect(env.file).toBe("sls-http-tcloud");
+    env.plugin.should.eq("native");
+    env.file.should.eq("sls-http-tcloud");
   } finally {
     inquirer.prompt = prompt;
   }

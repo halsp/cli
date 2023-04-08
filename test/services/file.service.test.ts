@@ -8,7 +8,7 @@ function testOverwrite(value: boolean) {
     inquirer.prompt = (() => Promise.resolve({ overwrite: value })) as any;
     try {
       const result = await service.isOverwrite("abc");
-      expect(result).toBe(value);
+      result.should.eq(value);
     } finally {
       inquirer.prompt = prompt;
     }

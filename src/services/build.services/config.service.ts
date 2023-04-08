@@ -137,12 +137,16 @@ export class ConfigService {
 
     const isTS = this.configFileName.toLowerCase().endsWith(".ts");
     if (isTS) {
-      const registerer = await this.registerTsNode();
-      registerer.enabled(true);
-      try {
+      if (!!process[tsNode.REGISTER_INSTANCE]) {
         return this.requireConfig(configFilePath);
-      } finally {
-        registerer.enabled(false);
+      } else {
+        const registerer = await this.registerTsNode();
+        registerer.enabled(true);
+        try {
+          return this.requireConfig(configFilePath);
+        } finally {
+          registerer.enabled(false);
+        }
       }
     }
 

@@ -45,12 +45,12 @@ describe("copy ignore", () => {
           });
 
           await service.create();
-          expect(fs.existsSync(dir + "-target/.gitignore")).toBe(targetExist);
+          (fs.existsSync(dir + "-target/.gitignore")).should.eq(targetExist)
 
           worked = true;
         })
         .run();
-      expect(worked).toBeTruthy();
+      (worked).should.true;
     });
   }
 

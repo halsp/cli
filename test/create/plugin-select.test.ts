@@ -9,7 +9,7 @@ describe("plugin select", () => {
       inquirer.prompt = (() => Promise.resolve({ plugins: ["inject"] })) as any;
       try {
         const result = await service.select();
-        expect(result).toEqual(["inject"]);
+        result.should.deep.eq(["inject"]);
       } finally {
         inquirer.prompt = prompt;
       }
@@ -22,7 +22,7 @@ describe("plugin select", () => {
       inquirer.prompt = (() => Promise.resolve({ plugins: ["inject"] })) as any;
       try {
         const result = await service.select("http");
-        expect(result).toEqual(["inject"]);
+        result.should.deep.eq(["inject"]);
       } finally {
         inquirer.prompt = prompt;
       }

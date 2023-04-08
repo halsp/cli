@@ -34,9 +34,7 @@ describe("git", () => {
             await runin(cacheDir, async () => {
               await (md as any).initGit();
             });
-            expect(fs.existsSync(path.join(cacheDir, "git", ".git"))).toBe(
-              !skip
-            );
+            fs.existsSync(path.join(cacheDir, "git", ".git")).should.eq(!skip);
             worked = true;
           }
           return false;
@@ -44,7 +42,7 @@ describe("git", () => {
         .add(CreateMiddleware)
         .run();
 
-      expect(worked).toBeTruthy();
+      worked.should.true;
     });
   }
   initGit(true);

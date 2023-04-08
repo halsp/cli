@@ -15,9 +15,9 @@ describe("error", () => {
         .add(BuildMiddlware)
         .run();
 
-      expect(fs.existsSync(`./${cacheDir}`)).toBeFalsy();
+      fs.existsSync(`./${cacheDir}`).should.false;
       callCount++;
     });
-    expect(callCount).toBe(1);
+    callCount.should.eq(1);
   });
 });

@@ -55,182 +55,150 @@ describe("prompt", () => {
     }
   }
 
-  it(
-    `should ask overwrite message when prompt return { overwrite: false }`,
-    async () => {
-      await runin("test/create", async () => {
-        const testName = ".cache-create-inquirer-overwrite-false";
-        if (!fs.existsSync(testName)) {
-          fs.mkdirSync(testName);
-        }
-        await runTest({
-          promptFn: (() => Promise.resolve({ overwrite: false })) as any,
-          force: false,
-          name: testName,
-        });
-
-        expect(fs.existsSync(`${testName}/package.json`)).toBeFalsy();
+  it(`should ask overwrite message when prompt return { overwrite: false }`, async () => {
+    await runin("test/create", async () => {
+      const testName = ".cache-create-inquirer-overwrite-false";
+      if (!fs.existsSync(testName)) {
+        fs.mkdirSync(testName);
+      }
+      await runTest({
+        promptFn: (() => Promise.resolve({ overwrite: false })) as any,
+        force: false,
+        name: testName,
       });
-    },
-    1000 * 60 * 5
-  );
 
-  it(
-    `should force to replace exist dir`,
-    async () => {
-      await runin("test/create", async () => {
-        const testName = ".cache-create-inquirer-overwrite-true";
-        if (!fs.existsSync(testName)) {
-          fs.mkdirSync(testName);
-        }
-        await runTest({
-          promptFn: (() => Promise.resolve({ overwrite: false })) as any,
+      fs.existsSync(`${testName}/package.json`).should.false;
+    });
+  }).timeout(1000 * 60 * 5);
+
+  it(`should force to replace exist dir`, async () => {
+    await runin("test/create", async () => {
+      const testName = ".cache-create-inquirer-overwrite-true";
+      if (!fs.existsSync(testName)) {
+        fs.mkdirSync(testName);
+      }
+      await runTest({
+        promptFn: (() => Promise.resolve({ overwrite: false })) as any,
+        force: true,
+        name: testName,
+      });
+
+      fs.existsSync(`${testName}/package.json`).should.true;
+    });
+  }).timeout(1000 * 60 * 5);
+
+  it(`should overwrite files when use -y flag`, async () => {
+    await runin("test/create", async () => {
+      const testName = ".cache-create-inquirer-y";
+      if (!fs.existsSync(testName)) {
+        fs.mkdirSync(testName);
+      }
+      await runTest({
+        promptFn: (() => Promise.resolve({ overwrite: false })) as any,
+        force: false,
+        y: true,
+        name: testName,
+      });
+
+      fs.existsSync(`${testName}/package.json`).should.true;
+    });
+  }).timeout(1000 * 60 * 5);
+
+  it(`should ask name if name args is empty`, async () => {
+    let validate = false;
+    await runin("test/create", async () => {
+      const testName = ".cache-create-inquirer-ask-empty-name";
+      await runTest({
+        promptFn: ((args: any[]) => {
+          args[0].validate("abc").should.true;
+          args[0]
+            .validate("invalid?\\/")
+            .should.eq("Illegal name, please try again.");
+          validate = true;
+          return { name: testName, overwrite: false };
+        }) as any,
+        force: true,
+        name: "",
+      });
+
+      fs.existsSync(`${testName}/package.json`).should.true;
+    });
+    validate.should.true;
+  }).timeout(1000 * 60 * 5);
+
+  it(`should select plugins from prompt`, async () => {
+    let done = false;
+    await runin("test/create", async () => {
+      const testName = ".cache-create-inquirer-select-plugins";
+      await runTest({
+        promptFn: (() => {
+          return { overwrite: false, plugins: ["view"] };
+        }) as any,
+        before: async (ctx, md) => {
+          (await (md as any).getPlugins()).should.deep.eq(["view", "core"]);
+          done = true;
+          return false;
+        },
+        force: true,
+        name: testName,
+        skipPlugins: false,
+      });
+    });
+    done.should.true;
+  }).timeout(1000 * 60 * 5);
+
+  it(`should be error when createPackageService.create return false`, async () => {
+    let done = false;
+    await runin("test/create", async () => {
+      const testName = ".cache-create-inquirer-createPackageService-create";
+      if (fs.existsSync(testName)) {
+        await fs.promises.rm(testName, {
           force: true,
-          name: testName,
+          recursive: true,
         });
+      }
 
-        expect(fs.existsSync(`${testName}/package.json`)).toBeTruthy();
-      });
-    },
-    1000 * 60 * 5
-  );
-
-  it(
-    `should overwrite files when use -y flag`,
-    async () => {
-      await runin("test/create", async () => {
-        const testName = ".cache-create-inquirer-y";
-        if (!fs.existsSync(testName)) {
-          fs.mkdirSync(testName);
-        }
-        await runTest({
-          promptFn: (() => Promise.resolve({ overwrite: false })) as any,
-          force: false,
-          y: true,
-          name: testName,
-        });
-
-        expect(fs.existsSync(`${testName}/package.json`)).toBeTruthy();
-      });
-    },
-    1000 * 60 * 5
-  );
-
-  it(
-    `should ask name if name args is empty`,
-    async () => {
-      let validate = false;
-      await runin("test/create", async () => {
-        const testName = ".cache-create-inquirer-ask-empty-name";
-        await runTest({
-          promptFn: ((args: any[]) => {
-            expect(args[0].validate("abc")).toBeTruthy();
-            expect(args[0].validate("invalid?\\/")).toBe(
-              "Illegal name, please try again."
-            );
-            validate = true;
-            return { name: testName, overwrite: false };
-          }) as any,
-          force: true,
-          name: "",
-        });
-
-        expect(fs.existsSync(`${testName}/package.json`)).toBeTruthy();
-      });
-      expect(validate).toBeTruthy();
-    },
-    1000 * 60 * 5
-  );
-
-  it(
-    `should select plugins from prompt`,
-    async () => {
-      let done = false;
-      await runin("test/create", async () => {
-        const testName = ".cache-create-inquirer-select-plugins";
-        await runTest({
-          promptFn: (() => {
-            return { overwrite: false, plugins: ["view"] };
-          }) as any,
-          before: async (ctx, md) => {
-            expect(await (md as any).getPlugins()).toEqual(["view", "core"]);
-            done = true;
-            return false;
-          },
-          force: true,
-          name: testName,
-          skipPlugins: false,
-        });
-      });
-      expect(done).toBeTruthy();
-    },
-    1000 * 60 * 5
-  );
-
-  it(
-    `should be error when createPackageService.create return false`,
-    async () => {
-      let done = false;
-      await runin("test/create", async () => {
-        const testName = ".cache-create-inquirer-createPackageService-create";
-        if (fs.existsSync(testName)) {
-          await fs.promises.rm(testName, {
-            force: true,
-            recursive: true,
-          });
-        }
-
-        await runTest({
-          promptFn: (() => Promise.resolve({ overwrite: false })) as any,
-          before: async (ctx, md) => {
-            (md as any).createPackageService.create = () => false;
-            done = true;
-          },
-          force: true,
-        });
-
-        expect(fs.existsSync(`${testName}/package.json`)).toBeFalsy();
+      await runTest({
+        promptFn: (() => Promise.resolve({ overwrite: false })) as any,
+        before: async (ctx, md) => {
+          (md as any).createPackageService.create = () => false;
+          done = true;
+        },
+        force: true,
       });
 
-      expect(done).toBeTruthy();
-    },
-    1000 * 60 * 5
-  );
+      fs.existsSync(`${testName}/package.json`).should.false;
+    });
 
-  it(
-    `should select package manager by prompt`,
-    async () => {
-      await runin("test/create", async () => {
-        const testName = ".cache-create-inquirer-select-pm";
-        await runTest({
-          promptFn: (() => Promise.resolve({ mng: "cnpm" })) as any,
-          name: testName,
-          packageManager: "",
-          before: async (ctx, md) => {
-            const mng = await md["getPackageManager"]();
-            expect(mng).toBe("cnpm");
-            return false;
-          },
-        });
+    done.should.true;
+  }).timeout(1000 * 60 * 5);
+
+  it(`should select package manager by prompt`, async () => {
+    await runin("test/create", async () => {
+      const testName = ".cache-create-inquirer-select-pm";
+      await runTest({
+        promptFn: (() => Promise.resolve({ mng: "cnpm" })) as any,
+        name: testName,
+        packageManager: "",
+        before: async (ctx, md) => {
+          const mng = await md["getPackageManager"]();
+          mng.should.eq("cnpm");
+          return false;
+        },
       });
-    },
-    1000 * 60 * 5
-  );
+    });
+  }).timeout(1000 * 60 * 5);
 
-  it(
-    `should select package manager by prompt`,
-    async () => {
-      await runin("test/create", async () => {
-        const testName = ".cache-create-inquirer-select-pm-null";
-        await runTest({
-          promptFn: (() => Promise.resolve({ mng: null })) as any,
-          name: testName,
-          packageManager: "",
-        });
-
-        expect(fs.existsSync(`${testName}/package.json`)).toBeFalsy();
+  it(`should select package manager by prompt`, async () => {
+    await runin("test/create", async () => {
+      const testName = ".cache-create-inquirer-select-pm-null";
+      await runTest({
+        promptFn: (() => Promise.resolve({ mng: null })) as any,
+        name: testName,
+        packageManager: "",
       });
-    },
-    1000 * 60 * 5
-  );
+
+      fs.existsSync(`${testName}/package.json`).should.false;
+    });
+  }).timeout(1000 * 60 * 5);
 });
