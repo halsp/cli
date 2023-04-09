@@ -6,7 +6,6 @@ import { AssetsService } from "../../src/services/build.services/assets.service"
 import { WatchCompilerService } from "../../src/services/build.services/watch-compiler.service";
 import { TsconfigService } from "../../src/services/build.services/tsconfig.service";
 import path from "path";
-import ts from "typescript";
 import { ConfigService } from "../../src/services/build.services/config.service";
 import { Configuration, defineConfig } from "../../src";
 import * as fs from "fs";
@@ -110,26 +109,6 @@ describe("tsconfig", () => {
         options: {
           tsconfigPath: "empty.tsconfig.json",
         },
-        cwd: "test/build/tsconfig",
-      }
-    );
-  });
-
-  it("should be failed when ts.getParsedCommandLineOfConfigFile return undefined", async () => {
-    await testService(
-      TsconfigService,
-      async (ctx, service) => {
-        const getParsedCommandLineOfConfigFile =
-          ts.getParsedCommandLineOfConfigFile;
-        try {
-          ts.getParsedCommandLineOfConfigFile = () => undefined;
-          (() => service.getParsedCommandLine()).should.throw("failed");
-        } finally {
-          ts.getParsedCommandLineOfConfigFile =
-            getParsedCommandLineOfConfigFile;
-        }
-      },
-      {
         cwd: "test/build/tsconfig",
       }
     );

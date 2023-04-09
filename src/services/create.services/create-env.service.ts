@@ -1,5 +1,4 @@
 import { Context } from "@halsp/core";
-import inquirer from "inquirer";
 import * as fs from "fs";
 import path from "path";
 import { Inject } from "@halsp/inject";
@@ -11,6 +10,7 @@ import {
   EnvSelectItem,
   PluginConfigService,
 } from "./plugin-config.service";
+import { InquirerService } from "../inquirer.service";
 
 export class CreateEnvService {
   @Ctx
@@ -21,6 +21,8 @@ export class CreateEnvService {
   private readonly commandService!: CommandService;
   @Inject
   private readonly pluginConfigService!: PluginConfigService;
+  @Inject
+  private readonly inquirerService!: InquirerService;
 
   private get name() {
     return this.ctx.commandArgs.name;
@@ -85,7 +87,7 @@ export class CreateEnvService {
     message?: string
   ): Promise<string> {
     message = message ?? "Pick the environment to run application";
-    const answer = await inquirer.prompt([
+    const answer = await this.inquirerService.prompt([
       {
         type: "list",
         message: message,

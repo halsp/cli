@@ -5,6 +5,7 @@ import { ConfigService } from "./services/build.services/config.service";
 import { CommandType } from "./configuration";
 import { parseInject } from "@halsp/inject";
 import { ChalkService } from "./services/chalk.service";
+import { InquirerService } from "./services/inquirer.service";
 
 declare module "@halsp/core" {
   interface Context {
@@ -59,6 +60,11 @@ export class CliStartup extends Startup {
       })
       .inject(ChalkService, async (ctx) => {
         const result = await parseInject(ctx, new ChalkService());
+        await result.init();
+        return result;
+      })
+      .inject(InquirerService, async (ctx) => {
+        const result = await parseInject(ctx, new InquirerService());
         await result.init();
         return result;
       });

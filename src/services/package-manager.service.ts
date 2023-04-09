@@ -1,6 +1,6 @@
 import { Inject } from "@halsp/inject";
-import inquirer from "inquirer";
 import { CommandService } from "./command.service";
+import { InquirerService } from "./inquirer.service";
 import { RunnerService } from "./runner.service";
 
 export class PackageManagerService {
@@ -8,9 +8,11 @@ export class PackageManagerService {
   private readonly runnerService!: RunnerService;
   @Inject
   private readonly commandService!: CommandService;
+  @Inject
+  private readonly inquirerService!: InquirerService;
 
   public async pickPackageManager(): Promise<string> {
-    const { mng } = await inquirer.prompt([
+    const { mng } = await this.inquirerService.prompt([
       {
         type: "list",
         message:

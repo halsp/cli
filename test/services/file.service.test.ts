@@ -1,17 +1,17 @@
 import { FileService } from "../../src/services/file.service";
 import { runTest } from "./runTest";
-import inquirer from "inquirer";
+import { InquirerService } from "../../src/services/inquirer.service";
+import { parseInject } from "@halsp/inject";
 
 function testOverwrite(value: boolean) {
   runTest(FileService, async (ctx, service) => {
-    const prompt = inquirer.prompt;
-    inquirer.prompt = (() => Promise.resolve({ overwrite: value })) as any;
-    try {
-      const result = await service.isOverwrite("abc");
-      result.should.eq(value);
-    } finally {
-      inquirer.prompt = prompt;
-    }
+    const inquirerService = await parseInject(ctx, InquirerService);
+    Object.defineProperty(inquirerService, "prompt", {
+      value: () => Promise.resolve({ overwrite: value }),
+    });
+
+    const result = await service.isOverwrite("abc");
+    result.should.eq(value);
   });
 }
 testOverwrite(true);

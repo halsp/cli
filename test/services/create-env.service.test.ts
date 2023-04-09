@@ -1,7 +1,8 @@
-import inquirer from "inquirer";
 import { CreateEnvService } from "../../src/services/create.services/create-env.service";
 import { runTest } from "./runTest";
 import { expect } from "chai";
+import { InquirerService } from "../../src/services/inquirer.service";
+import { parseInject } from "@halsp/inject";
 
 runTest(
   CreateEnvService,
@@ -49,46 +50,47 @@ runTest(
 );
 
 runTest(CreateEnvService, async (ctx, service) => {
-  const prompt = inquirer.prompt;
-  inquirer.prompt = (() =>
-    Promise.resolve({ env: { plugin: "lambda", file: "lambda" } })) as any;
-  try {
-    const env = await (service as any).getEnv();
-    env.plugin.should.eq("lambda");
-    env.file.should.eq("lambda");
-  } finally {
-    inquirer.prompt = prompt;
-  }
+  const inquirerService = await parseInject(ctx, InquirerService);
+  Object.defineProperty(inquirerService, "prompt", {
+    value: () => Promise.resolve({ env: { plugin: "lambda", file: "lambda" } }),
+  });
+
+  const env = await (service as any).getEnv();
+  env.plugin.should.eq("lambda");
+  env.file.should.eq("lambda");
 });
 
 runTest(CreateEnvService, async (ctx, service) => {
-  const prompt = inquirer.prompt;
-  inquirer.prompt = (() => {
-    inquirer.prompt = (() =>
-      Promise.resolve({
-        env: { file: "sls-http-tcloud", plugin: "native" },
-      })) as any;
-    return Promise.resolve({
-      env: {
-        pickMessage: "",
-        children: [
-          {
-            file: "lambda",
-            plugin: "lambda",
-          },
-          {
-            file: "sls-http-tcloud",
-            plugin: "native",
-          },
-        ],
-      },
-    });
-  }) as any;
-  try {
-    const env = await (service as any).getEnv();
-    env.plugin.should.eq("native");
-    env.file.should.eq("sls-http-tcloud");
-  } finally {
-    inquirer.prompt = prompt;
-  }
+  const inquirerService = await parseInject(ctx, InquirerService);
+  Object.defineProperty(inquirerService, "prompt", {
+    writable: true,
+    value: () => {
+      Object.defineProperty(inquirerService, "prompt", {
+        writable: true,
+        value: () =>
+          Promise.resolve({
+            env: { file: "sls-http-tcloud", plugin: "native" },
+          }),
+      });
+      return Promise.resolve({
+        env: {
+          pickMessage: "",
+          children: [
+            {
+              file: "lambda",
+              plugin: "lambda",
+            },
+            {
+              file: "sls-http-tcloud",
+              plugin: "native",
+            },
+          ],
+        },
+      });
+    },
+  });
+
+  const env = await (service as any).getEnv();
+  env.plugin.should.eq("native");
+  env.file.should.eq("sls-http-tcloud");
 });

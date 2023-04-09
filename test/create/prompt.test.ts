@@ -1,58 +1,59 @@
 import { runin } from "../utils";
 import * as fs from "fs";
-import inquirer from "inquirer";
 import { HookType, Context } from "@halsp/core";
 import { CreateMiddleware } from "../../src/middlewares/create-middleware";
 import { CliStartup } from "../../src/cli-startup";
+import { InquirerService } from "../../src/services/inquirer.service";
+import { parseInject } from "@halsp/inject";
 
 describe("prompt", () => {
-  type promptType = typeof inquirer.prompt;
   async function runTest(options: {
     before?: (ctx: Context, md: CreateMiddleware) => Promise<boolean | void>;
     after?: (ctx: Context) => Promise<void>;
-    promptFn?: promptType;
+    promptFn?: InquirerService["prompt"];
     force?: boolean;
     skipPlugins?: boolean;
     name?: string;
     packageManager?: string;
     y?: boolean;
   }) {
-    const prompt = inquirer.prompt;
-    inquirer.prompt = options.promptFn ?? ((() => ({})) as any);
-    try {
-      await new CliStartup(
-        "test",
-        {
-          name: options.name ?? ".cache-create-inquirer",
-        },
-        {
-          packageManager: options.packageManager ?? "npm",
-          registry: process.env.REGISTRY as string,
-          skipInstall: true,
-          skipPlugins: options.skipPlugins ?? true,
-          force: options.force ?? true,
-          y: options.y ?? false,
-          skipEnv: true,
-          debug: true,
-          skipGit: true,
-          skipRun: true,
+    await new CliStartup(
+      "test",
+      {
+        name: options.name ?? ".cache-create-inquirer",
+      },
+      {
+        packageManager: options.packageManager ?? "npm",
+        registry: process.env.REGISTRY as string,
+        skipInstall: true,
+        skipPlugins: options.skipPlugins ?? true,
+        force: options.force ?? true,
+        y: options.y ?? false,
+        skipEnv: true,
+        debug: true,
+        skipGit: true,
+        skipRun: true,
+      }
+    )
+      .use(async (ctx, next) => {
+        const inquirerService = await parseInject(ctx, InquirerService);
+        Object.defineProperty(inquirerService, "prompt", {
+          value: options.promptFn ?? ((() => ({})) as any),
+        });
+        await next();
+      })
+      .hook(HookType.BeforeInvoke, async (ctx, md) => {
+        if (md instanceof CreateMiddleware && options.before) {
+          return await options.before(ctx, md);
         }
-      )
-        .hook(HookType.BeforeInvoke, async (ctx, md) => {
-          if (md instanceof CreateMiddleware && options.before) {
-            return await options.before(ctx, md);
-          }
-        })
-        .add(CreateMiddleware)
-        .use(async (ctx) => {
-          if (options.after) {
-            await options.after(ctx);
-          }
-        })
-        .run();
-    } finally {
-      inquirer.prompt = prompt;
-    }
+      })
+      .add(CreateMiddleware)
+      .use(async (ctx) => {
+        if (options.after) {
+          await options.after(ctx);
+        }
+      })
+      .run();
   }
 
   it(`should ask overwrite message when prompt return { overwrite: false }`, async () => {

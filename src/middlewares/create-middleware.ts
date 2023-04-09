@@ -7,12 +7,12 @@ import { PluginSelectService } from "../services/create.services/plugin-select.s
 import { CreatePackageService } from "../services/create.services/create-package.service";
 import { CommandService } from "../services/command.service";
 import { CopyBaseService } from "../services/create.services/copy-base-files.service";
-import inquirer from "inquirer";
 import { RunnerService } from "../services/runner.service";
 import { Middleware } from "@halsp/core";
 import { PackageManagerService } from "../services/package-manager.service";
 import { SortPluginsService } from "../services/create.services/sort-plugins.service";
 import { ChalkService } from "../services/chalk.service";
+import { InquirerService } from "../services/inquirer.service";
 
 export class CreateMiddleware extends Middleware {
   @Inject
@@ -37,6 +37,8 @@ export class CreateMiddleware extends Middleware {
   private readonly sortPluginsService!: SortPluginsService;
   @Inject
   private readonly chalkService!: ChalkService;
+  @Inject
+  private readonly inquirerService!: InquirerService;
 
   private get targetDir() {
     return this.createEnvService.targetDir;
@@ -155,7 +157,7 @@ export class CreateMiddleware extends Middleware {
       return;
     }
 
-    const { name } = await inquirer.prompt([
+    const { name } = await this.inquirerService.prompt([
       {
         type: "input",
         message: "Project name:",
