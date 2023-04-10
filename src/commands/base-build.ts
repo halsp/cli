@@ -7,11 +7,12 @@ declare module "commander" {
 }
 
 Command.prototype.setBuildOptions = function (defaultMode: string) {
-  return this.option(
-    "-m, --mode <mode>",
-    "Run mode (e.g., development,production).",
-    defaultMode
-  )
+  return this.argument("[app]", "Where is the app")
+    .option(
+      "-m, --mode <mode>",
+      "Run mode (e.g., development,production).",
+      defaultMode
+    )
     .option(
       "-c, --config <path>",
       "Path to halsp-cli configuration file.",

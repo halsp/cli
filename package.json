@@ -26,7 +26,7 @@
     "test:local": "npm run build && c8 cross-env REGISTRY='https://registry.npmmirror.com/' mocha test test/**/*.test.ts",
     "ci-test": "sh scripts/ci-test.sh",
     "lint": "eslint src --ext .ts",
-    "dev": "npm run build && npm uninstall @halsp/cli -g && npm link",
+    "dev:link": "npm run build && npm uninstall @halsp/cli -g && npm link",
     "prepare": "husky install"
   },
   "author": "hal-wang",

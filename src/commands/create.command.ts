@@ -9,7 +9,7 @@ export class CreateCommand extends BaseCommand {
     command
       .command("create")
       .alias("c")
-      .description("Generate halsp application")
+      .description("Generate Halsp application")
       .argument("[name]", "Aapplication name")
       .setCreateOptions()
       .action(

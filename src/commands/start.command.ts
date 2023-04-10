@@ -4,13 +4,14 @@ import { BuildMiddlware } from "../middlewares/build.middleware";
 import { CliStartup } from "../cli-startup";
 import { StartMiddleware } from "../middlewares/start.middleware";
 import "./base-build";
+import { ChdirMiddleware } from "../middlewares/chdir.middleware";
 
 export class StartCommand extends BaseCommand {
   register(command: Command): void {
     command
       .command("start")
       .alias("s")
-      .description("Run halsp application")
+      .description("Run Halsp application")
       .setBuildOptions("development")
       .option("--startupFile <path>", "The file to startup")
       .option(
@@ -19,11 +20,14 @@ export class StartCommand extends BaseCommand {
       )
       .option("-p, --port <port>", "The port on http listens")
       .option("--inspect <hostport>", "Run in inspect mode")
-      .action(async (command: Record<string, boolean | string>) => {
-        await new CliStartup("start", undefined, command)
-          .add(StartMiddleware)
-          .add(BuildMiddlware)
-          .run();
-      });
+      .action(
+        async (app: string, command: Record<string, boolean | string>) => {
+          await new CliStartup("start", { app }, command)
+            .add(ChdirMiddleware)
+            .add(StartMiddleware)
+            .add(BuildMiddlware)
+            .run();
+        }
+      );
   }
 }
