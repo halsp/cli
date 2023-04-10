@@ -71,14 +71,9 @@ export class ConfigService {
       "cacheDir",
       "build.cacheDir"
     );
-    if (optDir) return optDir;
+    if (optDir) return path.resolve(optDir);
 
-    const pkgPath = require.resolve("@halsp/core");
-    const tail = "@halsp/core/dist/index.js";
-    return path.join(
-      pkgPath.substring(0, pkgPath.length - tail.length - 1),
-      ".halsp"
-    );
+    return path.resolve("node_modules", ".halsp");
   }
 
   #value: Configuration | undefined = undefined;
