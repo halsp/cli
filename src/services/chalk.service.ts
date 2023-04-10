@@ -1,42 +1,13 @@
-type ChalkMethod = ((s: any) => string) & { bold: ChalkMethod };
+import { dynamicImportDefault } from "../utils/dynamic-import";
+import { Chalk } from "../utils/dynamic-types/chalk";
 
 export class ChalkService {
   async init() {
-    const { default: chalk } = await import("chalk");
+    const chalk = await dynamicImportDefault<Chalk>("chalk");
 
-    [
-      "black",
-      "red",
-      "green",
-      "yellow",
-      "blue",
-      "magenta",
-      "cyan",
-      "white",
-    ].forEach((property) => {
-      this[property] = chalk[property];
-      this[property + "Bright"] = chalk[property + "Bright"];
-    });
-    this["bold"] = chalk["bold"] as any;
+    this["__proto__"] = chalk;
   }
 }
 
-export interface ChalkService {
-  bold: ChalkMethod & ChalkService;
-  black: ChalkMethod;
-  blackBright: ChalkMethod;
-  red: ChalkMethod;
-  redBright: ChalkMethod;
-  green: ChalkMethod;
-  greenBright: ChalkMethod;
-  yellow: ChalkMethod;
-  yellowBright: ChalkMethod;
-  blue: ChalkMethod;
-  blueBright: ChalkMethod;
-  magenta: ChalkMethod;
-  magentaBright: ChalkMethod;
-  cyan: ChalkMethod;
-  cyanBright: ChalkMethod;
-  white: ChalkMethod;
-  whiteBright: ChalkMethod;
-}
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface ChalkService extends Chalk {}

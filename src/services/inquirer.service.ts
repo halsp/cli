@@ -1,16 +1,13 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
-export type Inquirer = typeof import("inquirer").default;
+import { dynamicImportDefault } from "../utils/dynamic-import";
+import { Inquirer } from "../utils/dynamic-types/inquirer";
 
 export class InquirerService {
-  #inquirer!: Inquirer;
-
   async init() {
-    const { default: inquirer } = await import("inquirer");
-    this.#inquirer = inquirer;
-  }
+    const inquirer = await dynamicImportDefault<Inquirer>("inquirer");
 
-  public get prompt(): Inquirer["prompt"] {
-    return this.#inquirer.prompt.bind(this.#inquirer);
+    this["__proto__"] = inquirer;
   }
 }
+
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface InquirerService extends Inquirer {}
