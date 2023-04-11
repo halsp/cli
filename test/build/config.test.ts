@@ -203,7 +203,7 @@ describe("read config", () => {
       },
       {
         options: {
-          configName: "custom.config.ts",
+          config: "custom.config.ts",
           mode: "test",
         },
         cwd: "test/build/config",
@@ -215,7 +215,23 @@ describe("read config", () => {
     let worked = false;
     await runin("test/build/config/types", async () => {
       await new CliStartup("test", undefined, {
-        configName: `halsp-cli.config.json`,
+        config: `.halsprc.json`,
+      })
+        .use(async (ctx) => {
+          const service = await parseInject(ctx, ConfigService);
+          service.value["type"].should.eq("json");
+          worked = true;
+        })
+        .run();
+    });
+    worked.should.true;
+  });
+
+  it(`should parse json config file without ext`, async () => {
+    let worked = false;
+    await runin("test/build/config/types", async () => {
+      await new CliStartup("test", undefined, {
+        config: `.halsprc`,
       })
         .use(async (ctx) => {
           const service = await parseInject(ctx, ConfigService);
@@ -231,10 +247,7 @@ describe("read config", () => {
     let worked = false;
     await runin("test/build/config/types", async () => {
       await new CliStartup("test", undefined, {
-        jsonConfig: await fs.promises.readFile(
-          "halsp-cli.config.json",
-          "utf-8"
-        ),
+        jsonConfig: await fs.promises.readFile(".halsprc.json", "utf-8"),
       })
         .use(async (ctx) => {
           const service = await parseInject(ctx, ConfigService);
@@ -272,7 +285,7 @@ describe("read config", () => {
     await runin("test/build/config/types", async () => {
       await new CliStartup("test", undefined, {
         mode: "js-test",
-        configName: `halsp-cli.config.js`,
+        config: `.halsprc.js`,
       })
         .use(async (ctx) => {
           const service = await parseInject(ctx, ConfigService);

@@ -13,18 +13,11 @@ Command.prototype.setBuildOptions = function (defaultMode: string) {
       "Run mode (e.g., development,production).",
       defaultMode
     )
-    .option(
-      "-c, --config <path>",
-      "Path to halsp-cli configuration file.",
-      "halsp-cli.config.ts"
-    )
-    .option(
-      "-jc, --jsonConfig <json>",
-      "Json string of halsp-cli configuration."
-    )
+    .option("-c, --config <path>", "Path to configuration file.")
+    .option("-jc, --jsonConfig <json>", "Json string of Halsp configuration.")
     .option(
       "-fc, --funcConfig <function>",
-      "Function string to build halsp-cli configuration."
+      "Function string to build Halsp configuration."
     )
     .option("-tc, --tsconfigPath <path>", "Path to tsconfig.json file.")
     .option("-w, --watch", "Run in watch mode (live-reload).")

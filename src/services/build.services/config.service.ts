@@ -7,6 +7,7 @@ import { CommandService } from "../command.service";
 import { FileService } from "../file.service";
 import * as tsNode from "ts-node";
 import { PluginInterfaceService } from "./plugin-interface.service";
+import * as fs from "fs";
 
 export class ConfigService {
   @Ctx
@@ -22,31 +23,19 @@ export class ConfigService {
   private get configFileName() {
     if (this.#configFileName == undefined) {
       const optionsConfigName =
-        this.commandService.getOptionVlaue<string>("configName");
+        this.commandService.getOptionVlaue<string>("config");
       if (optionsConfigName) {
         this.#configFileName = optionsConfigName;
       } else {
         const exts = ["ts", "js", "json"];
-        const names = [
-          "halsp-cli.config",
-          "halspcli.config",
-          "halsp-cli",
-          "halspcli",
-
-          "halsp-cli-config",
-          "halspcli-config",
-
-          "halsp_cli.config",
-          "halspcli_config",
-          "halsp_cli_config",
-          "halsp_cli",
-        ];
+        const names = [".halsprc", "halsp.config"];
 
         const files: string[] = [];
         names.forEach((name) => {
           exts.forEach((ext) => {
             files.push(`${name}.${ext}`);
           });
+          files.push(name);
         });
 
         this.#configFileName = this.fileService.existAny(files) ?? "";
@@ -125,11 +114,6 @@ export class ConfigService {
   private async readConfigFile(
     configFilePath: string
   ): Promise<Configuration | undefined> {
-    const jsJson = this.configFileName.toLowerCase().endsWith(".json");
-    if (jsJson) {
-      return require(configFilePath);
-    }
-
     const isTS = this.configFileName.toLowerCase().endsWith(".ts");
     if (isTS) {
       if (!!process[tsNode.REGISTER_INSTANCE]) {
@@ -149,6 +133,14 @@ export class ConfigService {
     if (isJS) {
       return this.requireConfig(configFilePath);
     }
+
+    const jsJson = this.configFileName.toLowerCase().endsWith(".json");
+    if (jsJson) {
+      return require(configFilePath);
+    }
+
+    const txt = await fs.promises.readFile(configFilePath, "utf-8");
+    return JSON.parse(txt);
   }
 
   private async requireConfig(configFilePath: string) {
