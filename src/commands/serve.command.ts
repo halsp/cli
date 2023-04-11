@@ -18,6 +18,7 @@ export class ServeCommand extends BaseCommand {
       )
       .option("--prefix <prefix>", "File prefix")
       .option("--encoding <encoding>", "Buffer encoding (e.g. utf8)")
+      .setCommonOptions()
       .action(
         async (
           targetPath: string,

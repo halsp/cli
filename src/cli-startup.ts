@@ -6,6 +6,7 @@ import { CommandType } from "./configuration";
 import { parseInject } from "@halsp/inject";
 import { ChalkService } from "./services/chalk.service";
 import { InquirerService } from "./services/inquirer.service";
+import { CheckUpdateMiddleware } from "./middlewares/check-update.middleware";
 
 declare module "@halsp/core" {
   interface Context {
@@ -67,7 +68,8 @@ export class CliStartup extends Startup {
         const result = await parseInject(ctx, new InquirerService());
         await result.init();
         return result;
-      });
+      })
+      .add(CheckUpdateMiddleware);
   }
 
   async run() {

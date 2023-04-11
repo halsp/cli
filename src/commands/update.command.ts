@@ -27,6 +27,7 @@ export class UpdateCommand extends BaseCommand {
         "Specify package manager. (npm/yarn/pnpm/cnpm)"
       )
       .option("--registry <url>", "Override configuration registry")
+      .setCommonOptions()
       .action(async (command: Record<string, boolean | string>) => {
         await new CliStartup("update", {}, command).add(UpdateMiddleware).run();
       });

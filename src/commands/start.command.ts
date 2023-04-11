@@ -20,6 +20,7 @@ export class StartCommand extends BaseCommand {
       )
       .option("-p, --port <port>", "The port on http listens")
       .option("--inspect <hostport>", "Run in inspect mode")
+      .setCommonOptions()
       .action(
         async (app: string, command: Record<string, boolean | string>) => {
           await new CliStartup("start", { app }, command)

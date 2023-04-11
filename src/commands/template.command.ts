@@ -11,6 +11,7 @@ export class TemplateCommand extends BaseCommand {
       .description("Generate a project from a remote template")
       .argument("<template>", "Template name")
       .argument("<name>", "Aapplication name")
+      .setCommonOptions()
       .action(
         async (
           template: string,

@@ -19,6 +19,7 @@ export class BuildCommand extends BaseCommand {
         "--removeDevDeps",
         "Remove devDependencies in package.json file when --copyPackage is true."
       )
+      .setCommonOptions()
       .action(
         async (app: string, command: Record<string, boolean | string>) => {
           await new CliStartup("build", { app }, command)

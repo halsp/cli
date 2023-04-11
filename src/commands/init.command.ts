@@ -10,6 +10,7 @@ export class InitCommand extends BaseCommand {
       .argument("[name]", "Application name")
       .description("Generate halsp application")
       .setCreateOptions()
+      .setCommonOptions()
       .action(
         async (name: string, command: Record<string, boolean | string>) => {
           await new CliStartup("init", { name }, command)

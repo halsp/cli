@@ -9,6 +9,7 @@ export class InfoCommand extends BaseCommand {
       .command("info")
       .alias("i")
       .description("Display halsp project details")
+      .setCommonOptions()
       .action(async (command: Record<string, boolean | string>) => {
         await new CliStartup("info", undefined, command)
           .add(InfoMiddleware)
