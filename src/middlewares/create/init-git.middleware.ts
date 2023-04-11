@@ -1,14 +1,14 @@
 import { Middleware } from "@halsp/core";
 import { Inject } from "@halsp/inject";
 import { CommandService } from "../../services/command.service";
-import { CreateEnvService } from "../../services/create.services/create-env.service";
+import { CreateService } from "../../services/create.service";
 import { RunnerService } from "../../services/runner.service";
 
 export class InitGitMiddleware extends Middleware {
   @Inject
   private readonly commandService!: CommandService;
   @Inject
-  private readonly createEnvService!: CreateEnvService;
+  private readonly createService!: CreateService;
   @Inject
   private readonly runnerService!: RunnerService;
 
@@ -18,7 +18,7 @@ export class InitGitMiddleware extends Middleware {
     }
 
     this.runnerService.run("git", "init", {
-      cwd: this.createEnvService.targetDir,
+      cwd: this.createService.targetDir,
     });
 
     await this.next();

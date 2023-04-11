@@ -1,17 +1,17 @@
 import { Inject } from "@halsp/inject";
 import * as fs from "fs";
 import path from "path";
-import { CreateEnvService } from "./create-env.service";
+import { CreateService } from "../create.service";
 
 export class CopyIgnoreService {
   @Inject
-  private readonly createEnvService!: CreateEnvService;
+  private readonly createService!: CreateService;
 
   private get sourceDir() {
     return path.join(__dirname, `../../../scaffold`);
   }
   private get targetDir() {
-    return this.createEnvService.targetDir;
+    return this.createService.targetDir;
   }
 
   public async create(): Promise<void> {

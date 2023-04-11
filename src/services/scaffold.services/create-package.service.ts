@@ -2,7 +2,6 @@ import { Context } from "@halsp/core";
 import { Inject } from "@halsp/inject";
 import { Ctx } from "@halsp/pipe";
 import path from "path";
-import { CreateEnvService } from "./create-env.service";
 import * as fs from "fs";
 import prettier from "prettier";
 import { CommandService } from "../command.service";
@@ -10,6 +9,7 @@ import {
   PluginConfigService,
   SortedPluginConfig,
 } from "./plugin-config.service";
+import { CreateService } from "../create.service";
 
 export class CreatePackageService {
   @Ctx
@@ -17,15 +17,15 @@ export class CreatePackageService {
   @Inject
   private readonly commandService!: CommandService;
   @Inject
-  private readonly createEnvService!: CreateEnvService;
-  @Inject
   private readonly pluginConfigService!: PluginConfigService;
+  @Inject
+  private readonly createService!: CreateService;
 
   private get name() {
     return this.ctx.commandArgs.name;
   }
   private get targetDir() {
-    return this.createEnvService.targetDir;
+    return this.createService.targetDir;
   }
 
   public async create(plugins: string[]): Promise<void> {

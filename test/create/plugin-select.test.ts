@@ -1,5 +1,5 @@
 import { parseInject } from "@halsp/inject";
-import { PluginSelectService } from "../../src/services/create.services/plugin-select.service";
+import { PluginSelectService } from "../../src/services/scaffold.services/plugin-select.service";
 import { InquirerService } from "../../src/services/inquirer.service";
 import { testService } from "../utils";
 

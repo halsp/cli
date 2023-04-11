@@ -2,7 +2,7 @@ import { Inject } from "@halsp/inject";
 import * as fs from "fs";
 import { FileService } from "../file.service";
 import path from "path";
-import { CreateEnvService } from "./create-env.service";
+import { CreateService } from "../create.service";
 
 const files = ["README.md", "LICENSE"];
 
@@ -10,10 +10,10 @@ export class CopyBaseService {
   @Inject
   private readonly fileService!: FileService;
   @Inject
-  private readonly createEnvService!: CreateEnvService;
+  private readonly createService!: CreateService;
 
   private get targetDir() {
-    return this.createEnvService.targetDir;
+    return this.createService.targetDir;
   }
 
   public async copy() {

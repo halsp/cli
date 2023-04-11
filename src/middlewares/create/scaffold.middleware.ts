@@ -1,15 +1,16 @@
 import * as fs from "fs";
-import { CreateScaffoldService } from "../../services/create.services/create-scaffold.service";
+import { CreateScaffoldService } from "../../services/scaffold.services/create-scaffold.service";
 import { Inject } from "@halsp/inject";
-import { CreateEnvService } from "../../services/create.services/create-env.service";
-import { PluginSelectService } from "../../services/create.services/plugin-select.service";
-import { CreatePackageService } from "../../services/create.services/create-package.service";
+import { CreateEnvService } from "../../services/scaffold.services/create-env.service";
+import { PluginSelectService } from "../../services/scaffold.services/plugin-select.service";
+import { CreatePackageService } from "../../services/scaffold.services/create-package.service";
 import { CommandService } from "../../services/command.service";
-import { CopyBaseService } from "../../services/create.services/copy-base-files.service";
+import { CopyBaseService } from "../../services/scaffold.services/copy-base-files.service";
 import { Middleware } from "@halsp/core";
-import { SortPluginsService } from "../../services/create.services/sort-plugins.service";
+import { SortPluginsService } from "../../services/scaffold.services/sort-plugins.service";
 import { ChalkService } from "../../services/chalk.service";
 import { PackageManagerService } from "../../services/package-manager.service";
+import { CreateService } from "../../services/create.service";
 
 export class ScaffoldMiddleware extends Middleware {
   @Inject
@@ -30,9 +31,11 @@ export class ScaffoldMiddleware extends Middleware {
   private readonly chalkService!: ChalkService;
   @Inject
   private readonly packageManagerService!: PackageManagerService;
+  @Inject
+  private readonly createService!: CreateService;
 
   private get targetDir() {
-    return this.createEnvService.targetDir;
+    return this.createService.targetDir;
   }
 
   override async invoke(): Promise<void> {

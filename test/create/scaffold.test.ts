@@ -10,9 +10,9 @@ import path from "path";
 import {
   PluginConfig,
   SortedPluginConfig,
-} from "../../src/services/create.services/plugin-config.service";
+} from "../../src/services/scaffold.services/plugin-config.service";
 import { parseInject } from "@halsp/inject";
-import { CreateScaffoldService } from "../../src/services/create.services/create-scaffold.service";
+import { CreateScaffoldService } from "../../src/services/scaffold.services/create-scaffold.service";
 import { HookType } from "@halsp/core";
 import { expect } from "chai";
 

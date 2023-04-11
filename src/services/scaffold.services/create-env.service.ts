@@ -1,9 +1,7 @@
-import { Context } from "@halsp/core";
 import * as fs from "fs";
 import path from "path";
 import { Inject } from "@halsp/inject";
 import { FileService } from "../file.service";
-import { Ctx } from "@halsp/pipe";
 import { CommandService } from "../command.service";
 import {
   EnvPluginItem,
@@ -11,10 +9,9 @@ import {
   PluginConfigService,
 } from "./plugin-config.service";
 import { InquirerService } from "../inquirer.service";
+import { CreateService } from "../create.service";
 
 export class CreateEnvService {
-  @Ctx
-  private readonly ctx!: Context;
   @Inject
   private readonly fileService!: FileService;
   @Inject
@@ -23,15 +20,14 @@ export class CreateEnvService {
   private readonly pluginConfigService!: PluginConfigService;
   @Inject
   private readonly inquirerService!: InquirerService;
+  @Inject
+  private readonly createService!: CreateService;
 
-  private get name() {
-    return this.ctx.commandArgs.name;
-  }
   public get sourceDir() {
     return path.join(__dirname, `../../../scaffold/startups`);
   }
   public get targetDir() {
-    return path.join(process.cwd(), this.name);
+    return this.createService.targetDir;
   }
 
   public async create(): Promise<string | undefined> {

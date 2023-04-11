@@ -1,14 +1,14 @@
 import { Middleware } from "@halsp/core";
 import { Inject } from "@halsp/inject";
 import { CommandService } from "../../services/command.service";
-import { CreateEnvService } from "../../services/create.services/create-env.service";
+import { CreateService } from "../../services/create.service";
 import { PackageManagerService } from "../../services/package-manager.service";
 
 export class InstallMiddleware extends Middleware {
   @Inject
   private readonly commandService!: CommandService;
   @Inject
-  private readonly createEnvService!: CreateEnvService;
+  private readonly createService!: CreateService;
   @Inject
   private readonly packageManagerService!: PackageManagerService;
 
@@ -20,7 +20,7 @@ export class InstallMiddleware extends Middleware {
     const pm = await this.packageManagerService.get();
     const installResult = this.packageManagerService.install(
       pm,
-      this.createEnvService.targetDir
+      this.createService.targetDir
     );
     if (!installResult) {
       return;

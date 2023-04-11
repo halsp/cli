@@ -2,7 +2,7 @@ import { parseInject } from "@halsp/inject";
 import * as fs from "fs";
 import path from "path";
 import { CliStartup } from "../../src/cli-startup";
-import { CopyIgnoreService } from "../../src/services/create.services/copy-ignore.service";
+import { CopyIgnoreService } from "../../src/services/scaffold.services/copy-ignore.service";
 import { runin } from "../utils";
 
 describe("copy ignore", () => {
@@ -45,12 +45,12 @@ describe("copy ignore", () => {
           });
 
           await service.create();
-          (fs.existsSync(dir + "-target/.gitignore")).should.eq(targetExist)
+          fs.existsSync(dir + "-target/.gitignore").should.eq(targetExist);
 
           worked = true;
         })
         .run();
-      (worked).should.true;
+      worked.should.true;
     });
   }
 

@@ -1,23 +1,23 @@
 import { Middleware } from "@halsp/core";
 import { Inject } from "@halsp/inject";
 import { CommandService } from "../../services/command.service";
-import { CreateEnvService } from "../../services/create.services/create-env.service";
 import * as fs from "fs";
 import { FileService } from "../../services/file.service";
 import { InquirerService } from "../../services/inquirer.service";
+import { CreateService } from "../../services/create.service";
 
 export class CheckNameMiddleware extends Middleware {
   @Inject
   private readonly commandService!: CommandService;
   @Inject
-  private readonly createEnvService!: CreateEnvService;
+  private readonly createService!: CreateService;
   @Inject
   private readonly fileService!: FileService;
   @Inject
   private readonly inquirerService!: InquirerService;
 
   private get targetDir() {
-    return this.createEnvService.targetDir;
+    return this.createService.targetDir;
   }
 
   async invoke() {

@@ -1,4 +1,4 @@
-import { CreateEnvService } from "../../src/services/create.services/create-env.service";
+import { CreateEnvService } from "../../src/services/scaffold.services/create-env.service";
 import { runTest } from "./runTest";
 import { expect } from "chai";
 import { InquirerService } from "../../src/services/inquirer.service";

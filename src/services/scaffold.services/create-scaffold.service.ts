@@ -4,7 +4,6 @@ import { FileService } from "../file.service";
 import * as fs from "fs";
 import walk from "ignore-walk";
 import { ExpressionService } from "./expression.service";
-import { CreateEnvService } from "./create-env.service";
 import prettier from "prettier";
 import { PackageManagerService } from "../package-manager.service";
 import { CommandService } from "../command.service";
@@ -15,6 +14,7 @@ import { Ctx } from "@halsp/pipe";
 import { Context } from "@halsp/core";
 import { ChalkService } from "../chalk.service";
 import { CopyIgnoreService } from "./copy-ignore.service";
+import { CreateService } from "../create.service";
 
 // plugin inject|router
 const commentPluginStartRegExp = /^\s*\/{2,}\s*\{\s*/;
@@ -30,8 +30,6 @@ export class CreateScaffoldService {
   @Inject
   private readonly expressionService!: ExpressionService;
   @Inject
-  private readonly createEnvService!: CreateEnvService;
-  @Inject
   private readonly commandService!: CommandService;
   @Inject
   private readonly packageManagerService!: PackageManagerService;
@@ -45,9 +43,11 @@ export class CreateScaffoldService {
   private readonly chalkService!: ChalkService;
   @Inject
   private readonly copyIgnoreService!: CopyIgnoreService;
+  @Inject
+  private readonly createService!: CreateService;
 
   private get targetDir() {
-    return this.createEnvService.targetDir;
+    return this.createService.targetDir;
   }
   private get sourceDir() {
     return path.join(__dirname, "../../../scaffold");
