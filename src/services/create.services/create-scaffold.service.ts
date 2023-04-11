@@ -63,7 +63,9 @@ export class CreateScaffoldService {
       path: this.sourceDir,
       ignoreFiles: this.copyIgnoreService.getIgnoreFiles(),
     });
-    paths = paths.filter((p) => !ignoreFiles.some((e) => e == p));
+    paths = paths
+      .map((item) => item.replace(/\\/g, ""))
+      .filter((p) => !ignoreFiles.some((e) => e == p));
     await this.copyTemplate(plugins, paths);
     await this.copyIgnoreService.create();
   }
@@ -275,7 +277,7 @@ export class CreateScaffoldService {
       });
       result.push(...paths);
     }
-    return result;
+    return result.map((item) => item.replace(/\\/g, "/"));
   }
 }
 
