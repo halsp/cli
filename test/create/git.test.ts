@@ -1,6 +1,5 @@
-import { HookType } from "@halsp/core";
 import { CliStartup } from "../../src/cli-startup";
-import { CreateMiddleware } from "../../src/middlewares/create-middleware";
+import { InitGitMiddleware } from "../../src/middlewares/create/init-git.middleware";
 import * as fs from "fs";
 import path from "path";
 import { runin } from "../utils";
@@ -26,23 +25,13 @@ describe("git", () => {
 
   function initGit(skip: boolean) {
     it(`should init git with skip: ${skip}`, async () => {
-      let worked = false;
-      await new CliStartup("test", { name: "git" }, { skipGit: skip })
-        .hook(HookType.BeforeInvoke, async (ctx, md) => {
-          if (md instanceof CreateMiddleware) {
-            const cacheDir = await createCacheDir("git");
-            await runin(cacheDir, async () => {
-              await (md as any).initGit();
-            });
-            fs.existsSync(path.join(cacheDir, "git", ".git")).should.eq(!skip);
-            worked = true;
-          }
-          return false;
-        })
-        .add(CreateMiddleware)
-        .run();
-
-      worked.should.true;
+      const cacheDir = await createCacheDir("git");
+      await runin(cacheDir, async () => {
+        await new CliStartup("test", { name: "git" }, { skipGit: skip })
+          .add(InitGitMiddleware)
+          .run();
+      });
+      fs.existsSync(path.join(cacheDir, "git", ".git")).should.eq(!skip);
     });
   }
   initGit(true);

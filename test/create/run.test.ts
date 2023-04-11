@@ -1,9 +1,7 @@
-import { HookType } from "@halsp/core";
 import { CliStartup } from "../../src/cli-startup";
-import { CreateMiddleware } from "../../src/middlewares/create-middleware";
+import { RunMiddleware } from "../../src/middlewares/create/run.middleware";
 import * as fs from "fs";
 import path from "path";
-import { runin } from "../utils";
 
 describe("run", () => {
   async function createCacheDir(name: string) {
@@ -26,22 +24,9 @@ describe("run", () => {
 
   function runApp(skip: boolean) {
     it(`should run app with skip: ${skip}`, async () => {
-      let worked = false;
-      await new CliStartup("test", { name: "runApp" }, { skipGit: skip })
-        .hook(HookType.BeforeInvoke, async (ctx, md) => {
-          if (md instanceof CreateMiddleware) {
-            const cacheDir = await createCacheDir("runApp");
-            await runin(cacheDir, async () => {
-              await (md as any).runApp();
-            });
-            worked = true;
-          }
-          return false;
-        })
-        .add(CreateMiddleware)
+      await new CliStartup("test", { name: "runApp" }, { skipRun: skip })
+        .add(RunMiddleware)
         .run();
-
-      (worked).should.true;
     });
   }
   runApp(true);

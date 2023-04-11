@@ -1,6 +1,10 @@
 import { runin, testService } from "../utils";
 import { CliStartup } from "../../src/cli-startup";
-import { CreateMiddleware } from "../../src/middlewares/create-middleware";
+import { ScaffoldMiddleware } from "../../src/middlewares/create/scaffold.middleware";
+import { CheckNameMiddleware } from "../../src/middlewares/create/check-name.middleware";
+import { InitGitMiddleware } from "../../src/middlewares/create/init-git.middleware";
+import { RunMiddleware } from "../../src/middlewares/create/run.middleware";
+import { InstallMiddleware } from "../../src/middlewares/create/install.middleware";
 import * as fs from "fs";
 import path from "path";
 import {
@@ -40,7 +44,11 @@ describe("scaffold", () => {
             skipRun: true,
           }
         )
-          .add(CreateMiddleware)
+          .add(CheckNameMiddleware)
+          .add(ScaffoldMiddleware)
+          .add(InitGitMiddleware)
+          .add(InstallMiddleware)
+          .add(RunMiddleware)
           .run();
       });
 
@@ -320,47 +328,19 @@ describe("error", () => {
         }
       )
         .hook(HookType.BeforeInvoke, (ctx, md) => {
-          md["createScaffoldService"]["init"] = () => false;
+          if (md instanceof ScaffoldMiddleware) {
+            md["createScaffoldService"]["init"] = async () => false;
+          }
           return true;
         })
-        .add(CreateMiddleware)
+        .add(CheckNameMiddleware)
+        .add(ScaffoldMiddleware)
+        .add(InitGitMiddleware)
+        .add(InstallMiddleware)
+        .add(RunMiddleware)
         .run();
       fs.existsSync(testName).should.true;
       fs.existsSync(testName + "/package.json").should.false;
-    });
-  });
-
-  it("should stop create when install error", async () => {
-    await runin("test/create", async () => {
-      const testName = ".cache-create-install-error";
-      if (fs.existsSync(testName)) {
-        fs.rmSync(testName, {
-          recursive: true,
-          force: true,
-        });
-      }
-
-      await new CliStartup(
-        "test",
-        {
-          name: testName,
-        },
-        {
-          packageManager: "npm",
-          force: true,
-          skipPlugins: true,
-          skipEnv: true,
-          registry: process.env.REGISTRY as string,
-        }
-      )
-        .hook(HookType.BeforeInvoke, (ctx, md) => {
-          md["install"] = () => false;
-          return true;
-        })
-        .add(CreateMiddleware)
-        .run();
-      fs.existsSync(testName).should.true;
-      fs.existsSync(testName + "/node_modules").should.false;
     });
   });
 });

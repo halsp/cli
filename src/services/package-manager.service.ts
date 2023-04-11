@@ -11,7 +11,20 @@ export class PackageManagerService {
   @Inject
   private readonly inquirerService!: InquirerService;
 
-  public async pickPackageManager(): Promise<string> {
+  private packageManager?: string;
+  public async get(): Promise<string> {
+    if (!this.packageManager) {
+      let pm = this.commandService.getOptionVlaue<string>("packageManager");
+      if (!pm) {
+        pm = await this.pick();
+      }
+      this.packageManager = pm;
+    }
+
+    return this.packageManager;
+  }
+
+  private async pick(): Promise<string> {
     const { mng } = await this.inquirerService.prompt([
       {
         type: "list",

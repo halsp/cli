@@ -35,8 +35,8 @@ export class UpdateMiddleware extends Middleware {
       runResult &&
       Object.keys(runResult).length > 0
     ) {
-      const packageManager = await this.getPackageManager();
-      this.packageManagerService.install(packageManager);
+      const pm = await this.packageManagerService.get();
+      this.packageManagerService.install(pm);
     }
   }
 
@@ -71,16 +71,6 @@ export class UpdateMiddleware extends Middleware {
     }
 
     return /^\@halsp\//;
-  }
-
-  private async getPackageManager() {
-    let result =
-      this.commandService.getOptionVlaue<string>("packageManager") ??
-      this.parsePackageManager();
-    if (!result) {
-      result = await this.packageManagerService.pickPackageManager();
-    }
-    return result;
   }
 
   private parsePackageManager(): "pnpm" | "yarn" | "npm" {

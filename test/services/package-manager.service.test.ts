@@ -13,8 +13,8 @@ runTest(PackageManagerService, async (ctx, service) => {
     value: () => Promise.resolve({ mng: "cnpm" }),
   });
 
-  const result = await service.pickPackageManager();
-  result.should.eq("cnpm");
+  const result = await service.get();
+  result!.should.eq("cnpm");
 });
 
 runTest(PackageManagerService, async (ctx, service) => {
@@ -40,4 +40,14 @@ runTest(PackageManagerService, async (ctx, service) => {
 
   fs.existsSync(path.join(dir, "package-lock.json")).should.true;
   fs.existsSync(path.join(dir, "package.json")).should.true;
+});
+
+runTest(PackageManagerService, async (ctx, service) => {
+  const inquirerService = await parseInject(ctx, InquirerService);
+  Object.defineProperty(inquirerService, "prompt", {
+    value: () => Promise.resolve({ mng: "cnpm" }),
+  });
+
+  const result = await service.get();
+  result!.should.eq("cnpm");
 });

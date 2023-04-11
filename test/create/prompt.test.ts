@@ -1,14 +1,18 @@
 import { runin } from "../utils";
 import * as fs from "fs";
-import { HookType, Context } from "@halsp/core";
-import { CreateMiddleware } from "../../src/middlewares/create-middleware";
+import { Context, HookType } from "@halsp/core";
 import { CliStartup } from "../../src/cli-startup";
 import { InquirerService } from "../../src/services/inquirer.service";
 import { parseInject } from "@halsp/inject";
+import { ScaffoldMiddleware } from "../../src/middlewares/create/scaffold.middleware";
+import { CheckNameMiddleware } from "../../src/middlewares/create/check-name.middleware";
+import { InitGitMiddleware } from "../../src/middlewares/create/init-git.middleware";
+import { RunMiddleware } from "../../src/middlewares/create/run.middleware";
+import { InstallMiddleware } from "../../src/middlewares/create/install.middleware";
 
 describe("prompt", () => {
   async function runTest(options: {
-    before?: (ctx: Context, md: CreateMiddleware) => Promise<boolean | void>;
+    before?: (ctx: Context, md: ScaffoldMiddleware) => Promise<boolean | void>;
     after?: (ctx: Context) => Promise<void>;
     promptFn?: InquirerService["prompt"];
     force?: boolean;
@@ -43,11 +47,15 @@ describe("prompt", () => {
         await next();
       })
       .hook(HookType.BeforeInvoke, async (ctx, md) => {
-        if (md instanceof CreateMiddleware && options.before) {
+        if (md instanceof ScaffoldMiddleware && options.before) {
           return await options.before(ctx, md);
         }
       })
-      .add(CreateMiddleware)
+      .add(CheckNameMiddleware)
+      .add(ScaffoldMiddleware)
+      .add(InitGitMiddleware)
+      .add(InstallMiddleware)
+      .add(RunMiddleware)
       .use(async (ctx) => {
         if (options.after) {
           await options.after(ctx);
@@ -172,34 +180,5 @@ describe("prompt", () => {
     });
 
     done.should.true;
-  }).timeout(1000 * 60 * 5);
-
-  it(`should select package manager by prompt`, async () => {
-    await runin("test/create", async () => {
-      const testName = ".cache-create-inquirer-select-pm";
-      await runTest({
-        promptFn: (() => Promise.resolve({ mng: "cnpm" })) as any,
-        name: testName,
-        packageManager: "",
-        before: async (ctx, md) => {
-          const mng = await md["getPackageManager"]();
-          mng.should.eq("cnpm");
-          return false;
-        },
-      });
-    });
-  }).timeout(1000 * 60 * 5);
-
-  it(`should select package manager by prompt`, async () => {
-    await runin("test/create", async () => {
-      const testName = ".cache-create-inquirer-select-pm-null";
-      await runTest({
-        promptFn: (() => Promise.resolve({ mng: null })) as any,
-        name: testName,
-        packageManager: "",
-      });
-
-      fs.existsSync(`${testName}/package.json`).should.false;
-    });
   }).timeout(1000 * 60 * 5);
 });

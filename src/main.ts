@@ -14,7 +14,7 @@ program
   // eslint-disable-next-line @typescript-eslint/no-var-requires
   .version(require("../package").version);
 
-new CreateCommand().register(program);
+new CreateCommand(true).register(program);
 new TemplateCommand().register(program);
 new BuildCommand().register(program);
 new StartCommand().register(program);
