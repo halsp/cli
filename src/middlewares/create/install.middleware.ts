@@ -22,7 +22,7 @@ export class InstallMiddleware extends Middleware {
       pm,
       this.createService.targetDir
     );
-    if (!installResult) {
+    if (installResult.status != 0) {
       return;
     }
 

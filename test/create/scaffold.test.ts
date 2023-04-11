@@ -343,6 +343,45 @@ describe("error", () => {
       fs.existsSync(testName + "/package.json").should.false;
     });
   });
+
+  it("should be failed when install error", async () => {
+    await runin("test/create", async () => {
+      const testName = ".cache-create-scaffold-install-failed";
+      if (fs.existsSync(testName)) {
+        fs.rmSync(testName, {
+          recursive: true,
+          force: true,
+        });
+      }
+
+      const { ctx } = await new CliStartup(
+        "test",
+        {
+          name: testName,
+        },
+        {
+          packageManager: "npm",
+          force: true,
+        }
+      )
+        .hook(HookType.BeforeInvoke, (ctx, md) => {
+          if (md instanceof InstallMiddleware) {
+            md["packageManagerService"]["install"] = (async () => {
+              return {
+                status: 0,
+              };
+            }) as any;
+          }
+          return true;
+        })
+        .add(InstallMiddleware)
+        .use(async (ctx) => {
+          ctx.set("end", true);
+        })
+        .run();
+      expect(ctx.get("end")).undefined;
+    });
+  });
 });
 
 describe("init", () => {
