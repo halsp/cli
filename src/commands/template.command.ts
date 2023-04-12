@@ -20,7 +20,7 @@ export class TemplateCommand extends BaseCommand {
         "Force create application, delete existing files. ",
         false
       )
-      .option("-y, --y", "Override existing files. ", false)
+      .option("-y, --yes", "Override existing files. ", false)
       .option(
         "-pm, --packageManager <packageManager>",
         "Specify package manager. (npm/yarn/pnpm/cnpm)"

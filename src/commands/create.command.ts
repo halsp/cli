@@ -24,7 +24,7 @@ export class CreateCommand extends BaseCommand {
         "Force create application, delete existing files. ",
         false
       )
-      .option("-y, --y", "Override existing files. ", false)
+      .option("-y, --yes", "Override existing files. ", false)
       .option(
         "-e, --env <env>",
         "The environment to run application. (lambda/native/azure/micro-tcp/...)"

@@ -37,13 +37,13 @@ export class TemplateMiddleware extends Middleware {
     return `https://github.com/${this.template}`;
   }
   get cacheDir() {
-    return ".halsp-templates";
+    return ".halsp-cli-templates";
   }
   get nodeModulesPath() {
     return path.resolve(__dirname, "../../../node_modules");
   }
   get excludesFiles() {
-    return [".git/**"];
+    return [".git/**", ".halspignore"];
   }
 
   async invoke() {
