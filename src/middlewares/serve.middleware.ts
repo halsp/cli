@@ -1,6 +1,7 @@
 import { Middleware } from "@halsp/core";
 import { Inject } from "@halsp/inject";
 import { CommandService } from "../services/command.service";
+import * as net from "net";
 
 export class ServeMiddleware extends Middleware {
   @Inject
@@ -47,6 +48,10 @@ export class ServeMiddleware extends Middleware {
       })
       .dynamicListen(this.port, this.hostname);
 
-    this.ctx.res.setBody(listen);
+    const server = listen.server as net.Server;
+    await new Promise((resolve, reject) => {
+      server.on("close", resolve);
+      server.on("error", reject);
+    });
   }
 }
