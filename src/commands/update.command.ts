@@ -1,5 +1,6 @@
 import { Command } from "commander";
 import { CliStartup } from "../cli-startup";
+import { ChdirMiddleware } from "../middlewares/chdir.middleware";
 import { UpdateMiddleware } from "../middlewares/update.middleware";
 import { BaseCommand } from "./base.command";
 
@@ -9,6 +10,7 @@ export class UpdateCommand extends BaseCommand {
       .command("update")
       .alias("u")
       .description("Update halsp dependencies")
+      .argument("[app]", "Where is the app")
       .option("-n, --name <name>", "Specify to update a package")
       .option("-a, --all", "Update all dependencies", false)
       .option(
@@ -28,8 +30,13 @@ export class UpdateCommand extends BaseCommand {
       )
       .option("--registry <url>", "Override configuration registry")
       .setCommonOptions()
-      .action(async (command: Record<string, boolean | string>) => {
-        await new CliStartup("update", {}, command).add(UpdateMiddleware).run();
-      });
+      .action(
+        async (app: string, command: Record<string, boolean | string>) => {
+          await new CliStartup("update", { app }, command)
+            .add(ChdirMiddleware)
+            .add(UpdateMiddleware)
+            .run();
+        }
+      );
   }
 }
