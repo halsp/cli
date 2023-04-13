@@ -6,9 +6,6 @@ export class ServeMiddleware extends Middleware {
   @Inject
   private readonly commandService!: CommandService;
 
-  private get targetPath() {
-    return this.ctx.commandArgs.targetPath;
-  }
   private get port() {
     return this.commandService.getOptionVlaue<string>("port");
   }
@@ -38,7 +35,7 @@ export class ServeMiddleware extends Middleware {
 
     const listen = await new NativeStartup()
       .useStatic({
-        dir: this.targetPath ?? process.cwd(),
+        dir: process.cwd(),
         listDir: !this.hideDir,
         use404: true,
         useIndex: true,
