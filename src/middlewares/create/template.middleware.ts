@@ -7,6 +7,7 @@ import walk from "ignore-walk";
 import { FileService } from "../../services/file.service";
 import { CreateService } from "../../services/create.service";
 import glob from "glob";
+import { CommandService } from "../../services/command.service";
 
 export class TemplateMiddleware extends Middleware {
   @Inject
@@ -15,6 +16,8 @@ export class TemplateMiddleware extends Middleware {
   private readonly fileService!: FileService;
   @Inject
   private readonly createService!: CreateService;
+  @Inject
+  private readonly commandService!: CommandService;
 
   get name() {
     return this.ctx.commandArgs.name;
@@ -26,21 +29,31 @@ export class TemplateMiddleware extends Middleware {
     return this.ctx.commandArgs.template;
   }
   get templateUrl() {
+    if (!this.template.includes("/")) {
+      return `https://github.com/halsp/templates`;
+    }
+
     if (this.template.startsWith("http")) {
       return this.template;
     }
 
-    if (!this.template.includes("/")) {
-      return `https://github.com/halsp/templates:${this.template}`;
-    }
-
     return `https://github.com/${this.template}`;
   }
-  get cacheDir() {
-    return ".halsp-cli-templates";
+  get templateChildPath() {
+    if (!this.template.includes("/")) {
+      return this.template;
+    } else {
+      return this.commandService.getOptionVlaue<string>("path");
+    }
   }
   get nodeModulesPath() {
     return path.resolve(__dirname, "../../../node_modules");
+  }
+  get cacheDir() {
+    return ".halsp-cli-template";
+  }
+  get cacheDirPath() {
+    return path.resolve(this.nodeModulesPath, this.cacheDir);
   }
   get excludesFiles() {
     return [".git/**", ".halspignore"];
@@ -49,8 +62,14 @@ export class TemplateMiddleware extends Middleware {
   async invoke() {
     await this.clean();
 
-    const templateDir = this.getTemplateDir();
-    if (!templateDir) return;
+    if (!this.cloneTemplate(this.templateUrl)) {
+      return;
+    }
+
+    const templateDir = path.resolve(
+      this.cacheDirPath,
+      this.templateChildPath ?? ""
+    );
 
     let paths = await walk({
       path: templateDir,
@@ -74,9 +93,8 @@ export class TemplateMiddleware extends Middleware {
   }
 
   private async clean() {
-    const cacheDirPath = path.resolve(this.nodeModulesPath, this.cacheDir);
-    if (fs.existsSync(cacheDirPath)) {
-      await fs.promises.rm(cacheDirPath, {
+    if (fs.existsSync(this.cacheDirPath)) {
+      await fs.promises.rm(this.cacheDirPath, {
         force: true,
         recursive: true,
       });
@@ -98,7 +116,7 @@ export class TemplateMiddleware extends Middleware {
     const result: string[] = [];
     for (const excludes of this.excludesFiles) {
       const paths = await glob(excludes, {
-        cwd: path.resolve(this.nodeModulesPath, this.cacheDir),
+        cwd: this.cacheDirPath,
         dot: true,
         nodir: true,
       });
@@ -117,26 +135,17 @@ export class TemplateMiddleware extends Middleware {
     return undefined;
   }
 
-  private getTemplateDir() {
-    const [url, tmpDir] = this.templateUrl
-      .split("|")
-      .filter((item) => !!item.trim());
-
-    if (!this.cloneTemplate(url)) {
-      return;
-    }
-
-    return path.resolve(this.nodeModulesPath, this.cacheDir, tmpDir ?? "");
-  }
-
   private cloneTemplate(url: string) {
-    const cloneResult = this.runnerService.run(
-      "git",
-      ["clone", url, ".halsp-templates"],
-      {
-        cwd: this.nodeModulesPath,
-      }
-    );
+    const branch = this.commandService.getOptionVlaue<string>("branch");
+
+    const args = ["clone", url, this.cacheDir];
+    if (branch) {
+      args.push("-b");
+      args.push(branch);
+    }
+    const cloneResult = this.runnerService.run("git", args, {
+      cwd: this.nodeModulesPath,
+    });
     return cloneResult.status == 0;
   }
 }

@@ -26,6 +26,8 @@ export class TemplateCommand extends BaseCommand {
         "Specify package manager. (npm/yarn/pnpm/cnpm)"
       )
       .option("--registry <url>", "Override configuration registry")
+      .option("-b, --branch <branch>", "The name of repository branch")
+      .option("-p, --path <path>", "Path to template files")
       .option("--debug", "Debug mode")
       .option("-si, --skipInstall", "Skip install project")
       .option("-sg, --skipGit", "Skip git repository initialization")

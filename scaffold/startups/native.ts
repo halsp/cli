@@ -1,4 +1,4 @@
 import { NativeStartup } from "@halsp/native";
 import startup from "./startup";
 
-startup(new NativeStartup()).dynamicListen();
+startup(new NativeStartup().useHttpJsonBody()).dynamicListen();
