@@ -48,6 +48,7 @@ export class ServeMiddleware extends Middleware {
       })
       .dynamicListen(this.port, this.hostname);
 
+    this.ctx.res.setBody(listen);
     const server = listen.server as net.Server;
     await new Promise((resolve, reject) => {
       server.on("close", resolve);

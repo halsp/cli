@@ -1,35 +1,59 @@
 import { Server } from "http";
 import { CliStartup } from "../../src/cli-startup";
 import { ServeMiddleware } from "../../src/middlewares/serve.middleware";
+import { ChdirMiddleware } from "../../src/middlewares/chdir.middleware";
 import supertest from "supertest";
+import { Context } from "@halsp/core";
 import { runin } from "../utils";
+
+function testResultAfter2000ms(
+  ctx: Context,
+  test: (server: Server) => Promise<void>,
+  cb: (err?: Error) => void
+) {
+  setTimeout(async () => {
+    const server = (ctx.res.body as any).server as Server;
+    try {
+      await test(server);
+    } catch (e) {
+      cb(e as Error);
+    } finally {
+      server.close(() => {
+        cb();
+      });
+    }
+  }, 2000);
+}
 
 describe("exclude", () => {
   async function runTest(exclude: string) {
-    const res = await new CliStartup(
-      "serve",
-      {
-        targetPath: "test/serve/static",
-      },
-      {
-        exclude: exclude,
-      }
-    )
-      .add(ServeMiddleware)
-      .run();
-
-    const server = (res.body as any).server as Server;
-
-    await supertest(server)
-      .get("/index")
-      .expect(exclude ? 404 : 200)
-      .expect((exclude ? /<span>404<\/span>/ : "test") as any)
-      .expect("content-type", "text/html");
-
-    await new Promise<void>((resolve) => {
-      server.close(() => {
-        resolve();
-      });
+    await new Promise<void>(async (resolve, reject) => {
+      await new CliStartup(
+        "serve",
+        {
+          app: "test/serve/static",
+        },
+        {
+          exclude: exclude,
+        }
+      )
+        .use(async (ctx, next) => {
+          testResultAfter2000ms(
+            ctx,
+            async (server) => {
+              await supertest(server)
+                .get("/index")
+                .expect(exclude ? 404 : 200)
+                .expect((exclude ? /<span>404<\/span>/ : "test") as any)
+                .expect("content-type", "text/html");
+            },
+            (err) => (err ? reject(err) : resolve())
+          );
+          await next();
+        })
+        .add(ChdirMiddleware)
+        .add(ServeMiddleware)
+        .run();
     });
   }
 
@@ -46,30 +70,35 @@ describe("exclude", () => {
 
 describe("dir", () => {
   async function runTest(hideDir: true | undefined) {
-    const res = await new CliStartup(
-      "serve",
-      {
-        targetPath: "test/serve/static",
-      },
-      {
-        hideDir: hideDir as any,
-      }
-    )
-      .add(ServeMiddleware)
-      .run();
-
-    const server = (res.body as any).server as Server;
-
-    await supertest(server)
-      .get("/dir")
-      .expect(hideDir ? 404 : 200)
-      .expect((hideDir ? /<span>404<\/span>/ : /<ul id="files">/) as any)
-      .expect("content-type", "text/html");
-
-    await new Promise<void>((resolve) => {
-      server.close(() => {
-        resolve();
-      });
+    await new Promise<void>(async (resolve, reject) => {
+      await new CliStartup(
+        "serve",
+        {
+          app: "test/serve/static",
+        },
+        {
+          hideDir: hideDir as any,
+        }
+      )
+        .use(async (ctx, next) => {
+          testResultAfter2000ms(
+            ctx,
+            async (server) => {
+              await supertest(server)
+                .get("/dir")
+                .expect(hideDir ? 404 : 200)
+                .expect(
+                  (hideDir ? /<span>404<\/span>/ : /<ul id="files">/) as any
+                )
+                .expect("content-type", "text/html");
+            },
+            (err) => (err ? reject(err) : resolve())
+          );
+          await next();
+        })
+        .add(ChdirMiddleware)
+        .add(ServeMiddleware)
+        .run();
     });
   }
 
@@ -82,25 +111,28 @@ describe("dir", () => {
   });
 });
 
-describe("targetPath", () => {
-  it("should serve process.cwd() when target path is undefined", async () => {
+describe("app", () => {
+  it("should serve process.cwd() when arg app is undefined", async () => {
     await runin("test/serve/static", async () => {
-      const res = await new CliStartup("serve", {}, {})
-        .add(ServeMiddleware)
-        .run();
-
-      const server = (res.body as any).server as Server;
-
-      await supertest(server)
-        .get("/")
-        .expect(200)
-        .expect("test")
-        .expect("content-type", "text/html");
-
-      await new Promise<void>((resolve) => {
-        server.close(() => {
-          resolve();
-        });
+      await new Promise<void>(async (resolve, reject) => {
+        await new CliStartup("serve", {}, {})
+          .use(async (ctx, next) => {
+            testResultAfter2000ms(
+              ctx,
+              async (server) => {
+                await supertest(server)
+                  .get("/")
+                  .expect(200)
+                  .expect("test")
+                  .expect("content-type", "text/html");
+              },
+              (err) => (err ? reject(err) : resolve())
+            );
+            await next();
+          })
+          .add(ChdirMiddleware)
+          .add(ServeMiddleware)
+          .run();
       });
     });
   });
