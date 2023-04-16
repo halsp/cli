@@ -35,7 +35,7 @@ describe("scaffold", () => {
           },
           {
             packageManager: "npm",
-            registry: process.env.REGISTRY as string,
+            registry: process.env.REGISTRY || "https://registry.npmjs.org/",
             plugins: pluginsStr,
             force: true,
             env: "native",

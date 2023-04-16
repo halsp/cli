@@ -14,7 +14,7 @@ export class CreateCommand extends BaseCommand {
 
   register(command: Command): void {
     if (this.withCommand) {
-      command.command("create").alias("c");
+      command = command.command("create").alias("c");
     }
     command
       .description("Generate Halsp application")
