@@ -26,7 +26,7 @@ export class TemplateMiddleware extends Middleware {
     return this.createService.targetDir;
   }
   get template() {
-    return this.ctx.commandArgs.template;
+    return this.commandService.getOptionVlaue<string>("template")!;
   }
   get templateUrl() {
     if (!this.template.includes("/")) {

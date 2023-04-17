@@ -6,6 +6,9 @@ import { RunMiddleware } from "../middlewares/create/run.middleware";
 import { InstallMiddleware } from "../middlewares/create/install.middleware";
 import { InitGitMiddleware } from "../middlewares/create/init-git.middleware";
 import { CheckNameMiddleware } from "../middlewares/create/check-name.middleware";
+import { CommandService } from "../services/command.service";
+import { parseInject } from "@halsp/inject";
+import { TemplateMiddleware } from "../middlewares/create/template.middleware";
 
 export class CreateCommand extends BaseCommand {
   constructor(private readonly withCommand: boolean) {
@@ -45,12 +48,25 @@ export class CreateCommand extends BaseCommand {
       .option("-sp, --skipPlugins", "No plugins will be added")
       .option("-sr, --skipRun", "Skip running after completion")
       .option("--forceInit", "Force init scaffold")
+      .option(
+        "-t, --template <url>",
+        "Generate a project from a remote template"
+      )
+      .option("-b, --branch <branch>", "The name of template repository branch")
+      .option("--path <path>", "Path to template files")
       .setCommonOptions()
       .action(
         async (name: string, command: Record<string, boolean | string>) => {
           await new CliStartup("create", { name }, command)
             .add(CheckNameMiddleware)
-            .add(ScaffoldMiddleware)
+            .add(async (ctx) => {
+              const commandService = await parseInject(ctx, CommandService);
+              if (commandService.getOptionVlaue("template")) {
+                return TemplateMiddleware;
+              } else {
+                return ScaffoldMiddleware;
+              }
+            })
             .add(InitGitMiddleware)
             .add(InstallMiddleware)
             .add(RunMiddleware)
