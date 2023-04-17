@@ -23,17 +23,14 @@ export class CreateEnvService {
   @Inject
   private readonly createService!: CreateService;
 
-  public get sourceDir() {
+  private get sourceDir() {
     return path.join(__dirname, `../../../scaffold/startups`);
   }
-  public get targetDir() {
+  private get targetDir() {
     return this.createService.targetDir;
   }
 
-  public async create(): Promise<string | undefined> {
-    const env = await this.getEnv();
-    if (!env) return;
-
+  public async create(env: EnvPluginItem): Promise<string | undefined> {
     const sourceFilePath = path.join(this.sourceDir, `${env.file}.ts`);
     const targetFilePath = path.join(this.targetDir, `src/index.ts`);
 
@@ -42,7 +39,7 @@ export class CreateEnvService {
     return env.plugin;
   }
 
-  private async getEnv(): Promise<EnvPluginItem | undefined> {
+  public async getEnv(): Promise<EnvPluginItem | undefined> {
     if (this.commandService.getOptionVlaue<boolean>("skipEnv")) {
       return undefined;
     }

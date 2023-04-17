@@ -30,7 +30,7 @@ export class TemplateMiddleware extends Middleware {
   }
   get templateUrl() {
     if (!this.template.includes("/")) {
-      return `https://github.com/halsp/templates`;
+      return `https://github.com/halsp/template`;
     }
 
     if (this.template.startsWith("http")) {
@@ -56,7 +56,7 @@ export class TemplateMiddleware extends Middleware {
     return path.resolve(this.nodeModulesPath, this.cacheDir);
   }
   get excludesFiles() {
-    return [".git/**", ".halspignore"];
+    return [".halspignore"];
   }
 
   async invoke() {

@@ -19,8 +19,8 @@ export class FileService {
     return overwrite as boolean;
   }
 
-  public async createDir(p: string) {
-    const dirname = path.dirname(p);
+  public async createDir(filePath: string) {
+    const dirname = path.dirname(filePath);
 
     if (!fs.existsSync(dirname)) {
       await fs.promises.mkdir(dirname, {

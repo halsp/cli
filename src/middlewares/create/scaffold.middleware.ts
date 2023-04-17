@@ -1,4 +1,3 @@
-import * as fs from "fs";
 import { CreateScaffoldService } from "../../services/scaffold.services/create-scaffold.service";
 import { Inject } from "@halsp/inject";
 import { CreateEnvService } from "../../services/scaffold.services/create-env.service";
@@ -10,7 +9,6 @@ import { Middleware } from "@halsp/core";
 import { SortPluginsService } from "../../services/scaffold.services/sort-plugins.service";
 import { ChalkService } from "../../services/chalk.service";
 import { PackageManagerService } from "../../services/package-manager.service";
-import { CreateService } from "../../services/create.service";
 
 export class ScaffoldMiddleware extends Middleware {
   @Inject
@@ -31,28 +29,19 @@ export class ScaffoldMiddleware extends Middleware {
   private readonly chalkService!: ChalkService;
   @Inject
   private readonly packageManagerService!: PackageManagerService;
-  @Inject
-  private readonly createService!: CreateService;
-
-  private get targetDir() {
-    return this.createService.targetDir;
-  }
 
   override async invoke(): Promise<void> {
-    if (!fs.existsSync(this.targetDir)) {
-      await fs.promises.mkdir(this.targetDir, {
-        recursive: true,
-      });
-    }
-
     const pm = await this.packageManagerService.get();
     const ir = await this.createScaffoldService.init(pm);
     if (!ir) return;
 
-    const env = await this.createEnvService.create();
-    const plugins = await this.getPlugins(env);
+    const env = await this.createEnvService.getEnv();
+    const plugins = await this.getPlugins(env?.plugin);
     await this.logPlugins(plugins);
 
+    if (env) {
+      await this.createEnvService.create(env);
+    }
     await this.createPackageService.create(plugins);
     await this.copyBaseService.copy();
     await this.createScaffoldService.create(plugins);

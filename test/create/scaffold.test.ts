@@ -339,8 +339,7 @@ describe("error", () => {
         .add(InstallMiddleware)
         .add(RunMiddleware)
         .run();
-      fs.existsSync(testName).should.true;
-      fs.existsSync(testName + "/package.json").should.false;
+      fs.existsSync(testName).should.false;
     });
   });
 

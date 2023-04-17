@@ -10,6 +10,7 @@ import {
   SortedPluginConfig,
 } from "./plugin-config.service";
 import { CreateService } from "../create.service";
+import { FileService } from "../file.service";
 
 export class CreatePackageService {
   @Ctx
@@ -20,6 +21,8 @@ export class CreatePackageService {
   private readonly pluginConfigService!: PluginConfigService;
   @Inject
   private readonly createService!: CreateService;
+  @Inject
+  private readonly fileService!: FileService;
 
   private get name() {
     return this.ctx.commandArgs.name;
@@ -42,6 +45,7 @@ export class CreatePackageService {
     pkg.version = this.getCurrentVersion().replace(/^\^/, "");
 
     const filePath = path.join(this.targetDir, "package.json");
+    await this.fileService.createDir(filePath);
     await fs.promises.writeFile(
       filePath,
       prettier.format(JSON.stringify(pkg), {
