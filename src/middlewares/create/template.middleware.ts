@@ -7,7 +7,7 @@ import { RunnerService } from "../../services/runner.service";
 import path from "path";
 import * as fs from "fs";
 import walk from "ignore-walk";
-import glob from "glob";
+import { glob } from "glob";
 import { ChalkService } from "../../services/chalk.service";
 
 type CopyConfig = {

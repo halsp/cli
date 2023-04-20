@@ -4,7 +4,7 @@ import { TsconfigService } from "./tsconfig.service";
 import * as chokidar from "chokidar";
 import * as fs from "fs";
 import { AssetConfig } from "../../configuration";
-import glob from "glob";
+import { glob } from "glob";
 import { FileService } from "../file.service";
 import { ConfigService } from "./config.service";
 import { Ctx } from "@halsp/pipe";

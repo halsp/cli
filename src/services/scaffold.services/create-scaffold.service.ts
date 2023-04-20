@@ -9,7 +9,7 @@ import { PackageManagerService } from "../package-manager.service";
 import { CommandService } from "../command.service";
 import { SortPluginsService } from "./sort-plugins.service";
 import { ExpressionObject, PluginConfigService } from "./plugin-config.service";
-import glob from "glob";
+import { glob } from "glob";
 import { Ctx } from "@halsp/pipe";
 import { Context } from "@halsp/core";
 import { ChalkService } from "../chalk.service";
