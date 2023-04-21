@@ -6,7 +6,7 @@ export class CreateService {
   @Ctx
   private readonly ctx!: Context;
 
-  private get name() {
+  public get name() {
     return this.ctx.commandArgs.name;
   }
   public get targetDir() {

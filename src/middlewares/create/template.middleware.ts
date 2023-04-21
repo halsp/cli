@@ -9,6 +9,12 @@ import * as fs from "fs";
 import walk from "ignore-walk";
 import { glob } from "glob";
 import { ChalkService } from "../../services/chalk.service";
+import { PackageManagerService } from "../../services/package-manager.service";
+import { CliStartup } from "../../cli-startup";
+import { InitGitMiddleware } from "./init-git.middleware";
+import { RunMiddleware } from "./run.middleware";
+import { InstallMiddleware } from "./install.middleware";
+import { ScaffoldMiddleware } from "./scaffold.middleware";
 
 type CopyConfig = {
   template: string;
@@ -16,10 +22,16 @@ type CopyConfig = {
   branch?: string;
 };
 
+type ScaffoldConfig = {
+  options?: Record<string, string | boolean>;
+  args?: Record<string, string>;
+};
+
 type TemplateConfig = {
   extends?: CopyConfig;
   preCommand?: string;
   postCommand?: string;
+  scaffold?: ScaffoldConfig;
 };
 
 export class TemplateMiddleware extends Middleware {
@@ -33,6 +45,8 @@ export class TemplateMiddleware extends Middleware {
   private readonly createService!: CreateService;
   @Inject
   private readonly chalkService!: ChalkService;
+  @Inject
+  private readonly packageManagerService!: PackageManagerService;
 
   private get targetDir() {
     return this.createService.targetDir;
@@ -84,6 +98,10 @@ export class TemplateMiddleware extends Middleware {
       if (!this.runHook(templateDir, templateConfig.preCommand)) {
         return false;
       }
+    }
+
+    if (templateConfig.scaffold) {
+      await this.runScaffold(templateConfig.scaffold);
     }
 
     let paths = await walk({
@@ -210,5 +228,29 @@ export class TemplateMiddleware extends Middleware {
     } else {
       return {};
     }
+  }
+
+  private async runScaffold(scaffold: ScaffoldConfig) {
+    const options = {
+      ...this.ctx.commandOptions,
+      ...(scaffold.options ?? {}),
+    };
+    delete options["template"];
+    if (!options.packageManager) {
+      options.packageManager = await this.packageManagerService.get();
+    }
+
+    const args = {
+      ...this.ctx.commandArgs,
+      ...(scaffold.args ?? {}),
+      name: this.createService.name,
+    };
+
+    await new CliStartup("create", args, options)
+      .add(ScaffoldMiddleware)
+      .add(InitGitMiddleware)
+      .add(InstallMiddleware)
+      .add(RunMiddleware)
+      .run();
   }
 }
