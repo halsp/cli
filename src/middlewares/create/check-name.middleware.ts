@@ -36,8 +36,8 @@ export class CheckNameMiddleware extends Middleware {
         recursive: true,
       });
     } else {
-      const y = this.commandService.getOptionVlaue<boolean>("y");
-      if (!y) {
+      const override = this.commandService.getOptionVlaue<boolean>("override");
+      if (!override) {
         const message = `Target directory ${this.targetDir} already exists. Overwrite?`;
         if (!(await this.fileService.isOverwrite(message))) {
           return;

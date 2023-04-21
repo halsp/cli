@@ -19,7 +19,7 @@ describe("prompt", () => {
     skipPlugins?: boolean;
     name?: string;
     packageManager?: string;
-    y?: boolean;
+    override?: boolean;
   }) {
     await new CliStartup(
       "test",
@@ -32,7 +32,7 @@ describe("prompt", () => {
         skipInstall: true,
         skipPlugins: options.skipPlugins ?? true,
         force: options.force ?? true,
-        y: options.y ?? false,
+        override: options.override ?? false,
         skipEnv: true,
         debug: true,
         skipGit: true,
@@ -96,16 +96,16 @@ describe("prompt", () => {
     });
   }).timeout(1000 * 60 * 5);
 
-  it(`should overwrite files when use -y flag`, async () => {
+  it(`should overwrite files when use -override flag`, async () => {
     await runin("test/create", async () => {
-      const testName = ".cache-create-inquirer-y";
+      const testName = ".cache-create-inquirer-override";
       if (!fs.existsSync(testName)) {
         fs.mkdirSync(testName);
       }
       await runTest({
         promptFn: (() => Promise.resolve({ overwrite: false })) as any,
         force: false,
-        y: true,
+        override: true,
         name: testName,
       });
 
