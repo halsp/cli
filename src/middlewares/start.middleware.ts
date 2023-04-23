@@ -14,6 +14,11 @@ export class StartMiddleware extends Middleware {
   private readonly configService!: ConfigService;
 
   private get cacheDir() {
+    console.log(
+      "this.configService.cacheDir",
+      process.cwd(),
+      this.configService.cacheDir
+    );
     return this.configService.cacheDir;
   }
   private get inspect() {
@@ -56,13 +61,21 @@ export class StartMiddleware extends Middleware {
   }
 
   override async invoke(): Promise<void> {
+    let createOnWatchClose!: () => void;
+    let watchPromise!: Promise<void>;
     if (this.watch) {
+      watchPromise = new Promise<void>((resolve) => {
+        createOnWatchClose = () => resolve();
+      });
       this.ctx.set("onWatchSuccess", this.createOnWatchSuccess());
+      this.ctx.set("onWatchClose", createOnWatchClose);
     }
 
     await this.next();
 
-    if (!this.watch) {
+    if (this.watch) {
+      await watchPromise;
+    } else {
       const processArgs = this.getProcessArgs();
       shell.exec(`${this.binaryToRun} ${processArgs.join(" ")}`, {
         cwd: this.cacheDir,

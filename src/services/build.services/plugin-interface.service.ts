@@ -32,13 +32,12 @@ export class PluginInterfaceService {
         /^(@halsp\/|halsp\-|@\S+\/halsp\-)/
       )
       .map((dep) => {
-        try {
-          // eslint-disable-next-line @typescript-eslint/no-var-requires
-          const module = require(dep.key);
-          return module[name];
-        } catch (err) {
-          return undefined;
-        }
+        const depPath = require.resolve(dep.key, {
+          paths: [process.cwd()],
+        });
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
+        const module = require(depPath);
+        return module[name];
       })
       .filter((script) => !!script);
   }

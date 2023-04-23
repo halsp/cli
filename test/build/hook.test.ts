@@ -143,8 +143,8 @@ describe("build script", () => {
 
           const configService = await parseInject(ctx, ConfigService);
           const cfg = configService.value;
-          expect(cfg["prebuild"]).undefined;
-          expect(cfg["postbuild"]).undefined;
+          expect(cfg["prebuild"]).true;
+          expect(cfg["postbuild"]).true;
           callCount++;
         })
         .add(BuildMiddlware)
