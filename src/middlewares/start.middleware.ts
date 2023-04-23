@@ -61,14 +61,14 @@ export class StartMiddleware extends Middleware {
   }
 
   override async invoke(): Promise<void> {
-    let createOnWatchClose!: () => void;
+    let createOnWatchStoped!: () => void;
     let watchPromise!: Promise<void>;
     if (this.watch) {
       watchPromise = new Promise<void>((resolve) => {
-        createOnWatchClose = () => resolve();
+        createOnWatchStoped = () => resolve();
       });
       this.ctx.set("onWatchSuccess", this.createOnWatchSuccess());
-      this.ctx.set("onWatchClose", createOnWatchClose);
+      this.ctx.set("onWatchStoped", createOnWatchStoped);
     }
 
     await this.next();

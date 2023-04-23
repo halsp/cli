@@ -66,16 +66,25 @@ export class BuildMiddlware extends Middleware {
   }
 
   private watchCompile() {
-    return this.watchCompilerService.compile(this.cacheDir, async () => {
-      await this.assetsService.copy();
-      await this.copyPackage();
-      await this.hookService.execPostbuilds();
-      const onWatchSuccess =
-        this.ctx.get<() => Promise<void>>("onWatchSuccess");
-      if (onWatchSuccess) {
-        await onWatchSuccess();
+    return this.watchCompilerService.compile(
+      this.cacheDir,
+      async () => {
+        await this.assetsService.copy();
+        await this.copyPackage();
+        await this.hookService.execPostbuilds();
+        const onWatchSuccess =
+          this.ctx.get<() => Promise<void>>("onWatchSuccess");
+        if (onWatchSuccess) {
+          await onWatchSuccess();
+        }
+      },
+      () => {
+        const onWatchStoped = this.ctx.get<() => void>("onWatchStoped");
+        if (onWatchStoped) {
+          onWatchStoped();
+        }
       }
-    });
+    );
   }
 
   public async copyPackage() {

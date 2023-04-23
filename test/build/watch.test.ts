@@ -24,6 +24,9 @@ describe("build with watch", () => {
             ctx.set("onWatchSuccess", () => {
               callCount++;
             });
+            ctx.set("onWatchStoped", () => {
+              callCount++;
+            });
           }
           try {
             await next();
@@ -48,7 +51,7 @@ describe("build with watch", () => {
       fs.existsSync(`./${cacheDir}/build-test.js.map`).should.true;
       callCount++;
     });
-    callCount.should.eq(options.callback ? 3 : 2);
+    callCount.should.eq(options.callback ? 5 : 2);
   }
 
   it("should build with callback options", async () => {

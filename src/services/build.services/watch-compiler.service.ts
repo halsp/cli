@@ -14,6 +14,7 @@ export class WatchCompilerService {
   private readonly compilerService!: CompilerService;
 
   private watcher?: ts.WatchOfConfigFile<ts.EmitAndSemanticDiagnosticsBuilderProgram>;
+  private onStoped?: () => void;
 
   private get preserveWatchOutput() {
     return this.configService.getOptionOrConfigValue<boolean, boolean>(
@@ -22,7 +23,9 @@ export class WatchCompilerService {
     );
   }
 
-  compile(outDir: string, onSuccess?: () => void) {
+  compile(outDir: string, onSuccess?: () => void, onStoped?: () => void) {
+    this.onStoped = onStoped;
+
     const { projectReferences, fileNames, options } =
       this.tsconfigService.parsedCommandLine;
 
@@ -44,14 +47,14 @@ export class WatchCompilerService {
       this.createWatchStatusChanged(origWatchStatusReporter, onSuccess)
     );
 
-    const origCreateProgram = host.createProgram;
+    const originCreateProgram = host.createProgram;
     host.createProgram = (
       rootNames: ReadonlyArray<string> | undefined,
       options: ts.CompilerOptions | undefined,
       host?: ts.CompilerHost,
       oldProgram?: ts.EmitAndSemanticDiagnosticsBuilderProgram
     ) => {
-      const program = origCreateProgram.bind(this)(
+      const program = originCreateProgram.bind(this)(
         rootNames,
         options,
         host,
@@ -60,7 +63,7 @@ export class WatchCompilerService {
         projectReferences
       );
 
-      const origProgramEmit = program.emit;
+      const originEmit = program.emit;
       program.emit = (
         targetSourceFile?: ts.SourceFile,
         writeFile?: ts.WriteFileCallback,
@@ -72,7 +75,7 @@ export class WatchCompilerService {
           customTransformers ?? {},
           this.compilerService.getHooks(program.getProgram())
         );
-        return origProgramEmit(
+        return originEmit(
           targetSourceFile,
           writeFile,
           cancellationToken,
@@ -90,6 +93,7 @@ export class WatchCompilerService {
   stop() {
     this.watcher?.close();
     this.watcher = undefined;
+    this.onStoped && this.onStoped();
   }
 
   private getCompilerOptions(options: ts.CompilerOptions, outDir: string) {
