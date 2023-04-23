@@ -14,11 +14,6 @@ export class StartMiddleware extends Middleware {
   private readonly configService!: ConfigService;
 
   private get cacheDir() {
-    console.log(
-      "this.configService.cacheDir",
-      process.cwd(),
-      this.configService.cacheDir
-    );
     return this.configService.cacheDir;
   }
   private get inspect() {
