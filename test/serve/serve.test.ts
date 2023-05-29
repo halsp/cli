@@ -12,7 +12,7 @@ function testResultAfter2000ms(
   cb: (err?: Error) => void
 ) {
   setTimeout(async () => {
-    const server = (ctx.res.body as any).server as Server;
+    const server = ctx.res.body as Server;
     try {
       await test(server);
     } catch (e) {

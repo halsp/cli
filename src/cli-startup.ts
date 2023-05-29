@@ -1,6 +1,6 @@
 import "@halsp/core";
 import "@halsp/inject";
-import { Context, Request, Startup } from "@halsp/core";
+import { Context, HookType, Request, Startup } from "@halsp/core";
 import { ConfigService } from "./services/build.services/config.service";
 import { CommandType } from "./configuration";
 import { parseInject } from "@halsp/inject";
@@ -26,33 +26,36 @@ export class CliStartup extends Startup {
 
     process.env.NODE_ENV = "development";
 
-    this.use(async (ctx, next) => {
-      Object.defineProperty(ctx, "command", {
-        configurable: false,
-        enumerable: false,
-        get: () => {
-          return mode;
-        },
-      });
-
-      Object.defineProperty(ctx, "commandArgs", {
-        configurable: false,
-        enumerable: false,
-        get: () => {
-          return args;
-        },
-      });
-
-      Object.defineProperty(ctx, "commandOptions", {
-        configurable: false,
-        enumerable: false,
-        get: () => {
-          return options;
-        },
-      });
-
-      await next();
+    this.hook(HookType.Unhandled, (ctx, md, err) => {
+      this.#errorStack.push(err);
     })
+      .use(async (ctx, next) => {
+        Object.defineProperty(ctx, "command", {
+          configurable: false,
+          enumerable: false,
+          get: () => {
+            return mode;
+          },
+        });
+
+        Object.defineProperty(ctx, "commandArgs", {
+          configurable: false,
+          enumerable: false,
+          get: () => {
+            return args;
+          },
+        });
+
+        Object.defineProperty(ctx, "commandOptions", {
+          configurable: false,
+          enumerable: false,
+          get: () => {
+            return options;
+          },
+        });
+
+        await next();
+      })
       .useInject()
       .inject(ConfigService, async (ctx) => {
         const result = await parseInject(ctx, new ConfigService());
@@ -72,10 +75,12 @@ export class CliStartup extends Startup {
       .add(CheckUpdateMiddleware);
   }
 
+  #errorStack: Error[] = [];
+
   async run() {
     const res = await super.invoke(new Context(new Request()));
-    if (res.ctx.errorStack.length) {
-      throw res.ctx.errorStack[0];
+    if (this.#errorStack.length) {
+      throw this.#errorStack[0];
     }
     return res;
   }

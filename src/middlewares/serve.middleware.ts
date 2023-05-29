@@ -1,7 +1,8 @@
-import { Middleware } from "@halsp/core";
+import { Middleware, Startup } from "@halsp/core";
 import { Inject } from "@halsp/inject";
 import { CommandService } from "../services/command.service";
-import * as net from "net";
+import { dynamicImport, dynamicImportDefault } from "../utils/dynamic-import";
+import { GetPort } from "../utils/dynamic-types/get-port";
 
 export class ServeMiddleware extends Middleware {
   @Inject
@@ -30,12 +31,16 @@ export class ServeMiddleware extends Middleware {
   }
 
   async invoke() {
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const { NativeStartup } = require("@halsp/native");
+    require("@halsp/native");
     require("@halsp/static");
 
-    const listen = await new NativeStartup()
-      .useStatic({
+    const port = Number(this.port) || (await this.getDefPort());
+    const server = await new Startup()
+      ["useNative"]({
+        port: port,
+        host: this.hostname,
+      })
+      ["useStatic"]({
         dir: process.cwd(),
         listDir: !this.hideDir,
         use404: true,
@@ -46,13 +51,18 @@ export class ServeMiddleware extends Middleware {
         prefix: this.prefix,
         encoding: this.encoding as BufferEncoding,
       })
-      .dynamicListen(this.port, this.hostname);
+      .listen();
 
-    this.ctx.res.setBody(listen);
-    const server = listen.server as net.Server;
+    this.ctx.res.setBody(server);
     await new Promise((resolve, reject) => {
       server.on("close", resolve);
       server.on("error", reject);
     });
+  }
+
+  private async getDefPort() {
+    const { portNumbers } = await dynamicImport("get-port");
+    const getPort = await dynamicImportDefault<GetPort>("get-port");
+    return await getPort({ port: portNumbers(9504, 9600) });
   }
 }
