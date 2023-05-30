@@ -78,7 +78,7 @@
   "envs": [
     {
       "desc": "原生 NodeJS",
-      "file": "native",
+      "flag": "native",
       "plugin": "native"
     },
     {
@@ -87,24 +87,24 @@
       "children": [
         {
           "desc": "事件函数",
-          "file": "lambda",
+          "flag": "lambda",
           "plugin": "lambda"
         },
         {
           "desc": "Web 函数",
-          "file": "sls-http-tcloud",
+          "flag": "sls-http-tcloud",
           "plugin": "native"
         }
       ]
     },
     {
       "desc": "Azure Function App",
-      "file": "azure",
+      "flag": "azure",
       "plugin": "lambda"
     },
     {
       "desc": "AWS Lambda",
-      "file": "lambda",
+      "flag": "lambda",
       "plugin": "lambda"
     },
     {
@@ -113,12 +113,12 @@
       "children": [
         {
           "desc": "处理事件请求",
-          "file": "lambda",
+          "flag": "lambda",
           "plugin": "lambda"
         },
         {
           "desc": "处理 HTTP 请求",
-          "file": "alifc",
+          "flag": "alifc",
           "plugin": "alifc"
         }
       ]
@@ -129,12 +129,12 @@
       "children": [
         {
           "desc": "事件函数",
-          "file": "lambda",
+          "flag": "lambda",
           "plugin": "lambda"
         },
         {
           "desc": "Web 函数",
-          "file": "sls-http-huawei",
+          "flag": "sls-http-huawei",
           "plugin": "native"
         }
       ]
@@ -145,27 +145,27 @@
       "children": [
         {
           "desc": "TCP",
-          "file": "micro-tcp",
+          "flag": "micro-tcp",
           "plugin": "micro-tcp"
         },
         {
           "desc": "gRPC",
-          "file": "micro-grpc",
+          "flag": "micro-grpc",
           "plugin": "micro-grpc"
         },
         {
           "desc": "MQTT",
-          "file": "micro-mqtt",
+          "flag": "micro-mqtt",
           "plugin": "micro-mqtt"
         },
         {
           "desc": "Redis",
-          "file": "micro-redis",
+          "flag": "micro-redis",
           "plugin": "micro-redis"
         },
         {
           "desc": "NATS",
-          "file": "micro-nats",
+          "flag": "micro-nats",
           "plugin": "micro-nats"
         }
       ]

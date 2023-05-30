@@ -12,7 +12,7 @@ export type ExpressionObject<T = string | boolean> = Record<
 
 export type EnvPluginItem = {
   desc: string;
-  file: string;
+  flag: string;
   plugin: string;
 };
 export type EnvParentItem = {

@@ -1,7 +1,4 @@
-import * as fs from "fs";
-import path from "path";
 import { Inject } from "@halsp/inject";
-import { FileService } from "../file.service";
 import { CommandService } from "../command.service";
 import {
   EnvPluginItem,
@@ -9,35 +6,14 @@ import {
   PluginConfigService,
 } from "./plugin-config.service";
 import { InquirerService } from "../inquirer.service";
-import { CreateService } from "../create.service";
 
 export class CreateEnvService {
-  @Inject
-  private readonly fileService!: FileService;
   @Inject
   private readonly commandService!: CommandService;
   @Inject
   private readonly pluginConfigService!: PluginConfigService;
   @Inject
   private readonly inquirerService!: InquirerService;
-  @Inject
-  private readonly createService!: CreateService;
-
-  private get sourceDir() {
-    return path.join(__dirname, `../../../scaffold/startups`);
-  }
-  private get targetDir() {
-    return this.createService.targetDir;
-  }
-
-  public async create(env: EnvPluginItem): Promise<string | undefined> {
-    const sourceFilePath = path.join(this.sourceDir, `${env.file}.ts`);
-    const targetFilePath = path.join(this.targetDir, `src/index.ts`);
-
-    await this.fileService.createDir(targetFilePath);
-    await fs.promises.copyFile(sourceFilePath, targetFilePath);
-    return env.plugin;
-  }
 
   public async getEnv(): Promise<EnvPluginItem | undefined> {
     if (this.commandService.getOptionVlaue<boolean>("skipEnv")) {
@@ -48,13 +24,13 @@ export class CreateEnvService {
     const { envs: envConfig } = await this.pluginConfigService.getConfig();
     const envs = this.getEnvs(envConfig);
     envType = this.commandService.getOptionVlaue<string>("env") as string;
-    if (envType && !envs.some((e) => e.file == envType)) {
+    if (envType && !envs.some((e) => e.flag == envType)) {
       throw new Error("The env is not exist");
     }
     if (!envType) {
       envType = await this.getEnvByInquirer(envConfig);
     }
-    return envs.filter((e) => e.file == envType)[0];
+    return envs.filter((e) => e.flag == envType)[0];
   }
 
   private getEnvs(config: EnvSelectItem[]) {
@@ -88,7 +64,7 @@ export class CreateEnvService {
         default: envConfig[0],
         choices: envConfig.map((item) => ({
           name:
-            "file" in item
+            "flag" in item
               ? `${item.desc} (@halsp/${item.plugin})`
               : `${item.desc} ->`,
           value: item,
@@ -96,8 +72,8 @@ export class CreateEnvService {
       },
     ]);
     const env = answer.env as EnvSelectItem;
-    if ("file" in env) {
-      return env.file;
+    if ("flag" in env) {
+      return env.flag;
     } else {
       return await this.getEnvByInquirer(env.children, env.pickMessage);
     }

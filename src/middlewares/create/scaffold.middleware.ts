@@ -39,12 +39,11 @@ export class ScaffoldMiddleware extends Middleware {
     const plugins = await this.getPlugins(env?.plugin);
     await this.logPlugins(plugins);
 
-    if (env) {
-      await this.createEnvService.create(env);
-    }
     await this.createPackageService.create(plugins);
     await this.copyBaseService.copy();
-    await this.createScaffoldService.create(plugins);
+
+    const exFlags = env?.flag ? [env.flag] : [];
+    await this.createScaffoldService.create(plugins, ...exFlags);
 
     await this.next();
   }

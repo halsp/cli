@@ -21,7 +21,7 @@ runTest(
   CreateEnvService,
   async (ctx, service) => {
     const env = await (service as any).getEnv();
-    env.file.should.eq("lambda");
+    env.flag.should.eq("lambda");
   },
   undefined,
   undefined,
@@ -52,12 +52,12 @@ runTest(
 runTest(CreateEnvService, async (ctx, service) => {
   const inquirerService = await parseInject(ctx, InquirerService);
   Object.defineProperty(inquirerService, "prompt", {
-    value: () => Promise.resolve({ env: { plugin: "lambda", file: "lambda" } }),
+    value: () => Promise.resolve({ env: { plugin: "lambda", flag: "lambda" } }),
   });
 
   const env = await (service as any).getEnv();
   env.plugin.should.eq("lambda");
-  env.file.should.eq("lambda");
+  env.flag.should.eq("lambda");
 });
 
 runTest(CreateEnvService, async (ctx, service) => {
@@ -69,7 +69,7 @@ runTest(CreateEnvService, async (ctx, service) => {
         writable: true,
         value: () =>
           Promise.resolve({
-            env: { file: "sls-http-tcloud", plugin: "native" },
+            env: { flag: "sls-http-tcloud", plugin: "native" },
           }),
       });
       return Promise.resolve({
@@ -77,11 +77,11 @@ runTest(CreateEnvService, async (ctx, service) => {
           pickMessage: "",
           children: [
             {
-              file: "lambda",
+              flag: "lambda",
               plugin: "lambda",
             },
             {
-              file: "sls-http-tcloud",
+              flag: "sls-http-tcloud",
               plugin: "native",
             },
           ],
@@ -92,5 +92,5 @@ runTest(CreateEnvService, async (ctx, service) => {
 
   const env = await (service as any).getEnv();
   env.plugin.should.eq("native");
-  env.file.should.eq("sls-http-tcloud");
+  env.flag.should.eq("sls-http-tcloud");
 });

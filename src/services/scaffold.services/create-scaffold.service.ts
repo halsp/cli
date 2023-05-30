@@ -53,7 +53,7 @@ export class CreateScaffoldService {
     return path.join(__dirname, "../../../scaffold");
   }
 
-  public async create(plugins: string[]) {
+  public async create(plugins: string[], ...exFlags: string[]) {
     if (!fs.existsSync(this.sourceDir)) return;
 
     plugins = await this.sortPlugins(plugins);
@@ -66,11 +66,13 @@ export class CreateScaffoldService {
     paths = paths
       .map((item) => item.replace(/\\/g, ""))
       .filter((p) => !ignoreFiles.some((e) => e == p));
-    await this.copyTemplate(plugins, paths);
+
+    const flags = [...plugins, ...exFlags];
+    await this.copyTemplate(flags, paths);
     await this.copyIgnoreService.create();
   }
 
-  private async copyTemplate(plugins: string[], paths: string[]) {
+  private async copyTemplate(flags: string[], paths: string[]) {
     for (const p of paths) {
       const sourceFile = path.join(this.sourceDir, p);
       let targetFile = path.join(this.targetDir, p);
@@ -79,7 +81,7 @@ export class CreateScaffoldService {
         sourceFile,
         "utf-8"
       );
-      content = this.readFile(content, plugins);
+      content = this.readFile(content, flags);
       const renameInfo = this.getRename(content);
       if (renameInfo) {
         content = renameInfo.code;
@@ -101,11 +103,11 @@ export class CreateScaffoldService {
     }
   }
 
-  private readFile(code: string, plugins: string[]): string {
+  private readFile(code: string, flags: string[]): string {
     const lines = code.trimStart().replace(/\r\n/g, "\n").split("\n");
 
-    this.removeCommentLine(lines, plugins);
-    this.removeImportLine(lines, plugins);
+    this.removeCommentLine(lines, flags);
+    this.removeImportLine(lines, flags);
 
     const lineEnd = code.includes("\r\n") ? "\r\n" : "\n";
     let result = lines.join(lineEnd).trimStart();
@@ -117,7 +119,7 @@ export class CreateScaffoldService {
     }
   }
 
-  private async removeCommentLine(lines: string[], plugins: string[]) {
+  private async removeCommentLine(lines: string[], flags: string[]) {
     while (true) {
       const index = lines.findIndex((line) => uslessRegExp.test(line));
       if (index < 0) {
@@ -137,7 +139,7 @@ export class CreateScaffoldService {
       }
 
       const expression = lines[start].replace(commentPluginStartRegExp, "");
-      if (this.expressionService.calcPlugins(expression, plugins)) {
+      if (this.expressionService.calcPlugins(expression, flags)) {
         lines.splice(end, 1);
         lines.splice(start, 1);
       } else {
@@ -162,7 +164,7 @@ export class CreateScaffoldService {
     return -1;
   }
 
-  private removeImportLine(lines: string[], plugins: string[]) {
+  private removeImportLine(lines: string[], flags: string[]) {
     let importIndex = -1;
     while (true) {
       importIndex = lines.findIndex(
@@ -176,7 +178,7 @@ export class CreateScaffoldService {
       const pkgName = (regArr[2] ?? regArr[8])
         .replace(/^\"/, "")
         .replace(/\"$/, "");
-      if (!plugins.includes(importName) && pkgName.startsWith("@halsp/")) {
+      if (!flags.includes(importName) && pkgName.startsWith("@halsp/")) {
         lines.splice(importIndex, 1);
         importIndex--;
       }
