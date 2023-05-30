@@ -1,4 +1,4 @@
-import { Middleware } from "@halsp/core";
+import { Middleware, isString } from "@halsp/core";
 import { Inject } from "@halsp/inject";
 import { CommandService } from "../../services/command.service";
 import { CreateService } from "../../services/create.service";
@@ -15,6 +15,7 @@ import { InitGitMiddleware } from "./init-git.middleware";
 import { RunMiddleware } from "./run.middleware";
 import { InstallMiddleware } from "./install.middleware";
 import { ScaffoldMiddleware } from "./scaffold.middleware";
+import { InquirerService } from "../../services/inquirer.service";
 
 type CopyConfig = {
   template: string;
@@ -28,6 +29,7 @@ type ScaffoldConfig = {
 };
 
 type TemplateConfig = {
+  desc?: string;
   extends?: CopyConfig;
   preCommand?: string;
   postCommand?: string;
@@ -47,6 +49,8 @@ export class TemplateMiddleware extends Middleware {
   private readonly chalkService!: ChalkService;
   @Inject
   private readonly packageManagerService!: PackageManagerService;
+  @Inject
+  private readonly inquirerService!: InquirerService;
 
   private get targetDir() {
     return this.createService.targetDir;
@@ -60,28 +64,87 @@ export class TemplateMiddleware extends Middleware {
   private get cacheDirPath() {
     return path.resolve(this.nodeModulesPath, this.cacheDir);
   }
+  private get temprcName() {
+    return ".halsptemprc.json";
+  }
+  private get ignoreName() {
+    return ".halspignore";
+  }
   private get excludesFiles() {
-    return [".halspignore", ".halsptemprc.json"];
+    return [this.ignoreName, this.temprcName];
   }
 
   async invoke() {
-    const copyResult = await this.copy({
-      template: this.commandService.getOptionVlaue<string>("template")!,
-      branch: this.commandService.getOptionVlaue<string>("branch"),
-      path: this.commandService.getOptionVlaue<string>("path"),
-    });
+    const branch = this.commandService.getOptionVlaue<string>("branch");
+    const template = await this.getTemplate(branch);
+    console.log("template", template);
+    if (!template) return;
+
+    const copyResult = await this.copy(
+      {
+        template,
+        branch,
+        path: this.commandService.getOptionVlaue<string>("path"),
+      },
+      this.#isSelTemplate
+    );
     if (copyResult) {
       await this.next();
     }
   }
 
-  async copy(config: CopyConfig): Promise<boolean> {
-    await this.clean();
+  #isSelTemplate = false;
+  async getTemplate(branch?: string) {
+    const template = this.commandService.getOptionVlaue<string>("template");
+    if (template && isString(template)) return template;
 
-    if (
-      !this.cloneTemplate(this.getTemplateUrl(config.template), config.branch)
-    ) {
-      return false;
+    await this.clean();
+    if (!this.cloneTemplate(this.getTemplateUrl(""), branch)) {
+      return;
+    }
+
+    const templates = await fs.promises.readdir(this.cacheDirPath);
+    const templateListConfig = await Promise.all(
+      templates
+        .filter((t) =>
+          fs.statSync(path.resolve(this.cacheDirPath, t)).isDirectory()
+        )
+        .filter((t) =>
+          fs.existsSync(path.resolve(this.cacheDirPath, t, this.temprcName))
+        )
+        .map(async (t) => {
+          return {
+            name: t,
+            config: await this.getTemprc(path.resolve(this.cacheDirPath, t)),
+          };
+        })
+    );
+
+    this.#isSelTemplate = true;
+    const { name } = await this.inquirerService.prompt([
+      {
+        type: "list",
+        message: "Select template",
+        name: "name",
+        choices: templateListConfig.map((t) => ({
+          value: t.name,
+          name: t.config.desc ? `${t.name} (${t.config.desc})` : t.name,
+        })),
+      },
+    ]);
+
+    return name;
+  }
+
+  async copy(config: CopyConfig, ensureTemplate?: boolean): Promise<boolean> {
+    if (!ensureTemplate) {
+      await this.clean();
+
+      if (
+        !this.cloneTemplate(this.getTemplateUrl(config.template), config.branch)
+      ) {
+        return false;
+      }
     }
 
     const templateDir = path.resolve(
@@ -156,7 +219,7 @@ export class TemplateMiddleware extends Middleware {
   }
 
   private getIgnoreFiles(dir: string) {
-    const result = [".halspignore"];
+    const result = [this.ignoreName];
 
     const gitIgnore = this.getGitIgnoreName(dir);
     if (gitIgnore) {
@@ -222,7 +285,7 @@ export class TemplateMiddleware extends Middleware {
   }
 
   private async getTemprc(dir: string): Promise<TemplateConfig> {
-    const filePath = path.join(dir, ".halsptemprc.json");
+    const filePath = path.join(dir, this.temprcName);
     if (fs.existsSync(filePath)) {
       return JSON.parse(await fs.promises.readFile(filePath, "utf-8"));
     } else {

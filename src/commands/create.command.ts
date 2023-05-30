@@ -49,7 +49,7 @@ export class CreateCommand extends BaseCommand {
       .option("-sr, --skipRun", "Skip running after completion")
       .option("--forceInit", "Force init scaffold")
       .option(
-        "-t, --template <url>",
+        "-t, --template [url]",
         "Generate a project from a remote template"
       )
       .option("-b, --branch <branch>", "The name of template repository branch")
