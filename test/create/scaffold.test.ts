@@ -303,6 +303,31 @@ describe("mock scaffold", () => {
       text?.trim().should.eq("1;");
     });
   });
+
+  function testReplace(http: boolean) {
+    function test(micro: boolean) {
+      const plugins: string[] = [];
+      if (http) plugins.push("http");
+      if (micro) plugins.push("micro");
+      it(`replace code with plugins: ${plugins.join(",")}`, async () => {
+        await testScaffoldDefault(plugins, "replace.ts", (text) => {
+          if (http && micro) {
+            text?.trim().should.eq("const a = 2;");
+          } else if (!http && micro) {
+            text?.trim().should.eq("const a = 5;");
+          } else if (http && !micro) {
+            text?.trim().should.eq("const a = 4;");
+          } else {
+            text?.trim().should.eq("const a = 3;");
+          }
+        });
+      });
+    }
+    test(true);
+    test(false);
+  }
+  testReplace(true);
+  testReplace(false);
 });
 
 describe("error", () => {
