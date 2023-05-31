@@ -1,11 +1,11 @@
-import { CreateEnvService } from "../../src/services/scaffold.services/create-env.service";
+import { EnvService } from "../../src/services/scaffold.services/env.service";
 import { runTest } from "./runTest";
 import { expect } from "chai";
 import { InquirerService } from "../../src/services/inquirer.service";
 import { parseInject } from "@halsp/inject";
 
 runTest(
-  CreateEnvService,
+  EnvService,
   async (ctx, service) => {
     const env = await (service as any).getEnv();
     expect(env).undefined;
@@ -18,7 +18,7 @@ runTest(
 );
 
 runTest(
-  CreateEnvService,
+  EnvService,
   async (ctx, service) => {
     const env = await (service as any).getEnv();
     env.flag.should.eq("lambda");
@@ -31,7 +31,7 @@ runTest(
 );
 
 runTest(
-  CreateEnvService,
+  EnvService,
   async (ctx, service) => {
     let err = false;
     try {
@@ -49,7 +49,7 @@ runTest(
   }
 );
 
-runTest(CreateEnvService, async (ctx, service) => {
+runTest(EnvService, async (ctx, service) => {
   const inquirerService = await parseInject(ctx, InquirerService);
   Object.defineProperty(inquirerService, "prompt", {
     value: () => Promise.resolve({ env: { plugin: "lambda", flag: "lambda" } }),
@@ -60,7 +60,7 @@ runTest(CreateEnvService, async (ctx, service) => {
   env.flag.should.eq("lambda");
 });
 
-runTest(CreateEnvService, async (ctx, service) => {
+runTest(EnvService, async (ctx, service) => {
   const inquirerService = await parseInject(ctx, InquirerService);
   Object.defineProperty(inquirerService, "prompt", {
     writable: true,

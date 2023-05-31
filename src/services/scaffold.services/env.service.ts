@@ -7,7 +7,7 @@ import {
 } from "./plugin-config.service";
 import { InquirerService } from "../inquirer.service";
 
-export class CreateEnvService {
+export class EnvService {
   @Inject
   private readonly commandService!: CommandService;
   @Inject

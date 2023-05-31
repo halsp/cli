@@ -1,6 +1,6 @@
 import { CopyScaffoldService } from "../../services/scaffold.services/copy-scaffold.service";
 import { Inject } from "@halsp/inject";
-import { CreateEnvService } from "../../services/scaffold.services/create-env.service";
+import { EnvService } from "../../services/scaffold.services/env.service";
 import { PluginSelectService } from "../../services/scaffold.services/plugin-select.service";
 import { CreatePackageService } from "../../services/scaffold.services/create-package.service";
 import { CommandService } from "../../services/command.service";
@@ -14,7 +14,7 @@ export class ScaffoldMiddleware extends Middleware {
   @Inject
   private readonly copyScaffoldService!: CopyScaffoldService;
   @Inject
-  private readonly createEnvService!: CreateEnvService;
+  private readonly envService!: EnvService;
   @Inject
   private readonly createPackageService!: CreatePackageService;
   @Inject
@@ -35,7 +35,7 @@ export class ScaffoldMiddleware extends Middleware {
     const ir = await this.copyScaffoldService.init(pm);
     if (!ir) return;
 
-    const env = await this.createEnvService.getEnv();
+    const env = await this.envService.getEnv();
     const plugins = await this.getPlugins(env?.plugin);
     await this.logPlugins(plugins);
 
