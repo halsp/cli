@@ -1,6 +1,6 @@
 export class ExpressionService {
-  public calcPlugins(expression: string, plugins: string[]) {
-    [...plugins]
+  public calc(expression: string, flags: string[]) {
+    [...flags]
       .sort((a, b) => b.length - a.length)
       .forEach((plugin) => {
         expression = expression.replace(

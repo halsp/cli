@@ -1,4 +1,4 @@
-import { CreateScaffoldService } from "../../services/scaffold.services/create-scaffold.service";
+import { CopyScaffoldService } from "../../services/scaffold.services/copy-scaffold.service";
 import { Inject } from "@halsp/inject";
 import { CreateEnvService } from "../../services/scaffold.services/create-env.service";
 import { PluginSelectService } from "../../services/scaffold.services/plugin-select.service";
@@ -12,7 +12,7 @@ import { PackageManagerService } from "../../services/package-manager.service";
 
 export class ScaffoldMiddleware extends Middleware {
   @Inject
-  private readonly createScaffoldService!: CreateScaffoldService;
+  private readonly copyScaffoldService!: CopyScaffoldService;
   @Inject
   private readonly createEnvService!: CreateEnvService;
   @Inject
@@ -32,7 +32,7 @@ export class ScaffoldMiddleware extends Middleware {
 
   override async invoke(): Promise<void> {
     const pm = await this.packageManagerService.get();
-    const ir = await this.createScaffoldService.init(pm);
+    const ir = await this.copyScaffoldService.init(pm);
     if (!ir) return;
 
     const env = await this.createEnvService.getEnv();
@@ -43,7 +43,7 @@ export class ScaffoldMiddleware extends Middleware {
     await this.copyBaseService.copy();
 
     const exFlags = env?.flag ? [env.flag] : [];
-    await this.createScaffoldService.create(plugins, ...exFlags);
+    await this.copyScaffoldService.create(plugins, ...exFlags);
 
     await this.next();
   }

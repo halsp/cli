@@ -66,7 +66,7 @@ export class PluginConfigService {
       for (const key in obj) {
         const value = obj[key];
         if (isString(value)) {
-          obj[key] = this.expressionService.calcPlugins(value, plugins);
+          obj[key] = this.expressionService.calc(value, plugins);
         }
       }
     };
@@ -76,7 +76,7 @@ export class PluginConfigService {
     calcExpression(config.devDependencies);
     for (const plugin of config.plugins) {
       if (isString(plugin.when)) {
-        plugin.when = this.expressionService.calcPlugins(plugin.when, plugins);
+        plugin.when = this.expressionService.calc(plugin.when, plugins);
       }
     }
 

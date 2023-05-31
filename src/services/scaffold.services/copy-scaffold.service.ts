@@ -24,7 +24,7 @@ const importRegExp =
   /^import\s((\"@halsp\/([^/]+?)((\")|(\/.+\")))|(.+?\sfrom\s(\"@halsp\/([^/]+?)((\")|(\/.+\")))));$/;
 const uslessRegExp = /\/{2,}\s*\!\s*/;
 
-export class CreateScaffoldService {
+export class CopyScaffoldService {
   @Inject
   private readonly fileService!: FileService;
   @Inject
@@ -139,7 +139,7 @@ export class CreateScaffoldService {
       }
 
       const expression = lines[start].replace(commentPluginStartRegExp, "");
-      if (this.expressionService.calcPlugins(expression, flags)) {
+      if (this.expressionService.calc(expression, flags)) {
         lines.splice(end, 1);
         lines.splice(start, 1);
       } else {

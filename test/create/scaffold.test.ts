@@ -12,7 +12,7 @@ import {
   SortedPluginConfig,
 } from "../../src/services/scaffold.services/plugin-config.service";
 import { parseInject } from "@halsp/inject";
-import { CreateScaffoldService } from "../../src/services/scaffold.services/create-scaffold.service";
+import { CopyScaffoldService } from "../../src/services/scaffold.services/copy-scaffold.service";
 import { HookType } from "@halsp/core";
 import { expect } from "chai";
 
@@ -99,13 +99,13 @@ describe("scaffold", () => {
 
 describe("mock scaffold", () => {
   async function testTemplate(
-    fn: (service: CreateScaffoldService) => void | Promise<void>
+    fn: (service: CopyScaffoldService) => void | Promise<void>
   ) {
     let worked = false;
     await runin("test/create/mock-scaffold", async () => {
       await new CliStartup("test", { name: "test" })
         .use(async (ctx) => {
-          const service = await parseInject(ctx, CreateScaffoldService);
+          const service = await parseInject(ctx, CopyScaffoldService);
 
           if (!fs.existsSync("dist")) {
             fs.mkdirSync("dist");
@@ -331,7 +331,7 @@ describe("mock scaffold", () => {
 });
 
 describe("error", () => {
-  it("should be error when CreateScaffoldService.create return false", async () => {
+  it("should be error when CopyScaffoldService.create return false", async () => {
     await runin("test/create", async () => {
       const testName = ".cache-create-scaffold-return-false";
       if (fs.existsSync(testName)) {
@@ -354,7 +354,7 @@ describe("error", () => {
       )
         .hook(HookType.BeforeInvoke, (ctx, md) => {
           if (md instanceof ScaffoldMiddleware) {
-            md["createScaffoldService"]["init"] = async () => false;
+            md["copyScaffoldService"]["init"] = async () => false;
           }
           return true;
         })
@@ -419,7 +419,7 @@ describe("init", () => {
 
   it("should init scaffold node_modules", async () => {
     await testService(
-      CreateScaffoldService,
+      CopyScaffoldService,
       async (ctx, service) => {
         if (fs.existsSync(flagPath)) {
           await fs.promises.rm(flagPath);
@@ -441,7 +441,7 @@ describe("init", () => {
 
   it("should init scaffold node_modules with forceInit", async () => {
     await testService(
-      CreateScaffoldService,
+      CopyScaffoldService,
       async (ctx, service) => {
         await service.init("npm");
         fs.existsSync(flagPath).should.true;
@@ -458,7 +458,7 @@ describe("init", () => {
 
   it("should sort plugin with config", async () => {
     await testService(
-      CreateScaffoldService,
+      CopyScaffoldService,
       async (ctx, service) => {
         (service as any).pluginConfigService = {
           getSortedConfig: () => {
