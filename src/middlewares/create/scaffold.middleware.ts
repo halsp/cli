@@ -4,7 +4,7 @@ import { EnvService } from "../../services/scaffold.services/env.service";
 import { PluginSelectService } from "../../services/scaffold.services/plugin-select.service";
 import { CreatePackageService } from "../../services/scaffold.services/create-package.service";
 import { CommandService } from "../../services/command.service";
-import { CopyBaseService } from "../../services/scaffold.services/copy-base-files.service";
+import { CopyRootService } from "../../services/scaffold.services/copy-root.service";
 import { Middleware } from "@halsp/core";
 import { SortPluginsService } from "../../services/scaffold.services/sort-plugins.service";
 import { ChalkService } from "../../services/chalk.service";
@@ -22,7 +22,7 @@ export class ScaffoldMiddleware extends Middleware {
   @Inject
   private readonly commandService!: CommandService;
   @Inject
-  private readonly copyBaseService!: CopyBaseService;
+  private readonly copyRootService!: CopyRootService;
   @Inject
   private readonly sortPluginsService!: SortPluginsService;
   @Inject
@@ -40,7 +40,7 @@ export class ScaffoldMiddleware extends Middleware {
     await this.logPlugins(plugins);
 
     await this.createPackageService.create(plugins);
-    await this.copyBaseService.copy();
+    await this.copyRootService.copy();
 
     const exFlags = env?.flag ? [env.flag] : [];
     await this.copyScaffoldService.create(plugins, ...exFlags);

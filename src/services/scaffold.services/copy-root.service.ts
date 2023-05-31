@@ -6,7 +6,7 @@ import { CreateService } from "../create.service";
 
 const files = ["README.md", "LICENSE"];
 
-export class CopyBaseService {
+export class CopyRootService {
   @Inject
   private readonly fileService!: FileService;
   @Inject
