@@ -156,10 +156,10 @@ describe("prompt", () => {
     done.should.true;
   }).timeout(1000 * 60 * 5);
 
-  it(`should be error when createPackageService.create return false`, async () => {
+  it(`should be error when copyPackageService.create return false`, async () => {
     let done = false;
     await runin("test/create", async () => {
-      const testName = ".cache-create-inquirer-createPackageService-create";
+      const testName = ".cache-create-inquirer-copyPackageService-create";
       if (fs.existsSync(testName)) {
         await fs.promises.rm(testName, {
           force: true,
@@ -170,7 +170,7 @@ describe("prompt", () => {
       await runTest({
         promptFn: (() => Promise.resolve({ overwrite: false })) as any,
         before: async (ctx, md) => {
-          (md as any).createPackageService.create = () => false;
+          (md as any).copyPackageService.create = () => false;
           done = true;
         },
         force: true,

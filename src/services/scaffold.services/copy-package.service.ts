@@ -12,7 +12,7 @@ import {
 import { CreateService } from "../create.service";
 import { FileService } from "../file.service";
 
-export class CreatePackageService {
+export class CopyPackageService {
   @Ctx
   private readonly ctx!: Context;
   @Inject
