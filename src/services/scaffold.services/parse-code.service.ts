@@ -1,6 +1,6 @@
 import { Inject } from "@halsp/inject";
 import { ExpressionService } from "./expression.service";
-import { Context, isNil } from "@halsp/core";
+import { Context } from "@halsp/core";
 import { Ctx } from "@halsp/pipe";
 
 // plugin inject|router
@@ -10,6 +10,7 @@ const commentPluginEndRegExp = /^\s*\/{2,}\s*\}\s*/;
 const uslessRegExp = /\/{2,}\s*\!\s*/;
 const importRegExp =
   /^import\s((\"@halsp\/([^/]+?)((\")|(\/.+\")))|(.+?\sfrom\s(\"@halsp\/([^/]+?)((\")|(\/.+\")))));$/;
+const commandRegExp = /\$\$\{\{([\s\S]*?)\}\}/;
 
 export class ParseCodeService {
   @Inject
@@ -18,9 +19,10 @@ export class ParseCodeService {
   private readonly ctx!: Context;
 
   public parse(code: string, flags: string[]) {
+    code = this.execCommand(code, flags);
+
     const lines = code.trimStart().replace(/\r\n/g, "\n").split("\n");
 
-    this.execCommand(lines, flags);
     this.removeCommentLine(lines, flags);
     this.removeImportLine(lines, flags);
 
@@ -34,22 +36,29 @@ export class ParseCodeService {
     }
   }
 
-  private execCommand(lines: string[], flags: string[]) {
-    const opts = this.ctx.commandOptions;
-    const optKeys = Object.keys(opts);
+  private execCommand(code: string, flags: string[]) {
+    while (true) {
+      const regArr = commandRegExp.exec(code);
+      if (!regArr) break;
 
-    lines.forEach((item, index) => {
-      optKeys.forEach((key) => {
-        if (item.includes(`{{${key}}}`)) {
-          const val = opts[key]?.toString();
-          if (isNil(val)) {
-            lines.splice(index, 1, item.replace(`{{${key}}}`, ""));
-          } else {
-            lines.splice(index, 1, item.replace(`{{${key}}}`, val));
-          }
-        }
+      const command = regArr[1];
+
+      const evalFn = (() => eval(command)).bind({
+        ctx: this.ctx,
+        flags,
       });
-    });
+
+      code = code.replace(regArr[0], evalFn() ?? "");
+    }
+
+    while (true) {
+      const regArr = /\\{1,2}\$\\{1,2}\$/.exec(code);
+      if (!regArr) break;
+
+      code = code.replace(regArr[0], () => "$$");
+    }
+
+    return code;
   }
 
   private removeImportLine(lines: string[], flags: string[]) {

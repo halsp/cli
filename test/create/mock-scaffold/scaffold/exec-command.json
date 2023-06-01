@@ -1,0 +1,6 @@
+{
+  "ctx": "$${{this.ctx}}",
+  "opts": "$${{Object.keys(this.ctx.commandArgs).join(',')}}",
+  "empty": "$${{}}",
+  "escape": "\\$\\$"
+}

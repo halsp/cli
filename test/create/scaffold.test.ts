@@ -329,6 +329,18 @@ describe("mock scaffold", () => {
   }
   testReplace(true);
   testReplace(false);
+
+  it("should exec command in code", async () => {
+    await testScaffoldDefault([], "exec-command.json", (text) => {
+      const json = JSON.parse(text!);
+      json.should.deep.eq({
+        ctx: {}.toString(),
+        opts: "name",
+        empty: "",
+        escape: "$$",
+      });
+    });
+  });
 });
 
 describe("error", () => {
