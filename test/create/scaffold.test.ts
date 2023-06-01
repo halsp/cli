@@ -15,6 +15,7 @@ import { parseInject } from "@halsp/inject";
 import { CopyScaffoldService } from "../../src/services/scaffold.services/copy-scaffold.service";
 import { HookType } from "@halsp/core";
 import { expect } from "chai";
+import { InitService } from "../../src/services/scaffold.services/init.service";
 
 describe("scaffold", () => {
   const testName = ".cache-scaffold-create";
@@ -354,7 +355,7 @@ describe("error", () => {
       )
         .hook(HookType.BeforeInvoke, (ctx, md) => {
           if (md instanceof ScaffoldMiddleware) {
-            md["copyScaffoldService"]["init"] = async () => false;
+            md["initService"]["init"] = async () => false;
           }
           return true;
         })
@@ -419,7 +420,7 @@ describe("init", () => {
 
   it("should init scaffold node_modules", async () => {
     await testService(
-      CopyScaffoldService,
+      InitService,
       async (ctx, service) => {
         if (fs.existsSync(flagPath)) {
           await fs.promises.rm(flagPath);
@@ -441,7 +442,7 @@ describe("init", () => {
 
   it("should init scaffold node_modules with forceInit", async () => {
     await testService(
-      CopyScaffoldService,
+      InitService,
       async (ctx, service) => {
         await service.init("npm");
         fs.existsSync(flagPath).should.true;

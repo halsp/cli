@@ -3,44 +3,23 @@ import path from "path";
 import { FileService } from "../file.service";
 import * as fs from "fs";
 import walk from "ignore-walk";
-import { ExpressionService } from "./expression.service";
 import prettier from "prettier";
-import { PackageManagerService } from "../package-manager.service";
-import { CommandService } from "../command.service";
 import { SortPluginsService } from "./sort-plugins.service";
 import { ExpressionObject, PluginConfigService } from "./plugin-config.service";
 import { glob } from "glob";
-import { Ctx } from "@halsp/pipe";
-import { Context } from "@halsp/core";
-import { ChalkService } from "../chalk.service";
 import { CopyIgnoreService } from "./copy-ignore.service";
 import { CreateService } from "../create.service";
-
-// plugin inject|router
-const commentPluginStartRegExp = /^\s*\/{2,}\s*\{\s*/;
-// plugin end
-const commentPluginEndRegExp = /^\s*\/{2,}\s*\}\s*/;
-const importRegExp =
-  /^import\s((\"@halsp\/([^/]+?)((\")|(\/.+\")))|(.+?\sfrom\s(\"@halsp\/([^/]+?)((\")|(\/.+\")))));$/;
-const uslessRegExp = /\/{2,}\s*\!\s*/;
+import { ParseCodeService } from "./parse-code.service";
 
 export class CopyScaffoldService {
   @Inject
   private readonly fileService!: FileService;
   @Inject
-  private readonly expressionService!: ExpressionService;
-  @Inject
-  private readonly commandService!: CommandService;
-  @Inject
-  private readonly packageManagerService!: PackageManagerService;
+  private readonly parseCodeService!: ParseCodeService;
   @Inject
   private readonly sortPluginsService!: SortPluginsService;
   @Inject
   private readonly pluginConfigService!: PluginConfigService;
-  @Ctx
-  private readonly ctx!: Context;
-  @Inject
-  private readonly chalkService!: ChalkService;
   @Inject
   private readonly copyIgnoreService!: CopyIgnoreService;
   @Inject
@@ -81,7 +60,7 @@ export class CopyScaffoldService {
         sourceFile,
         "utf-8"
       );
-      content = this.readFile(content, flags);
+      content = this.parseCodeService.parse(content, flags);
       const renameInfo = this.getRename(content);
       if (renameInfo) {
         content = renameInfo.code;
@@ -103,88 +82,6 @@ export class CopyScaffoldService {
     }
   }
 
-  private readFile(code: string, flags: string[]): string {
-    const lines = code.trimStart().replace(/\r\n/g, "\n").split("\n");
-
-    this.removeCommentLine(lines, flags);
-    this.removeImportLine(lines, flags);
-
-    const lineEnd = code.includes("\r\n") ? "\r\n" : "\n";
-    let result = lines.join(lineEnd).trimStart();
-    result = this.replaceCode(result);
-    if (!!result.trim()) {
-      return result;
-    } else {
-      return "";
-    }
-  }
-
-  private async removeCommentLine(lines: string[], flags: string[]) {
-    while (true) {
-      const index = lines.findIndex((line) => uslessRegExp.test(line));
-      if (index < 0) {
-        break;
-      }
-
-      lines.splice(index, 2);
-    }
-
-    while (true) {
-      const start = lines.findIndex((line) =>
-        commentPluginStartRegExp.test(line)
-      );
-      const end = this.findEndIndex(lines, start);
-      if (start < 0 || end < 0) {
-        break;
-      }
-
-      const expression = lines[start].replace(commentPluginStartRegExp, "");
-      if (this.expressionService.calc(expression, flags)) {
-        lines.splice(end, 1);
-        lines.splice(start, 1);
-      } else {
-        lines.splice(start, end - start + 1);
-      }
-    }
-  }
-
-  private findEndIndex(lines: string[], startIndex: number) {
-    let children = 0;
-    for (let i = startIndex + 1; i < lines.length; i++) {
-      if (commentPluginStartRegExp.test(lines[i])) {
-        children++;
-      }
-      if (commentPluginEndRegExp.test(lines[i])) {
-        children--;
-      }
-      if (children < 0) {
-        return i;
-      }
-    }
-    return -1;
-  }
-
-  private removeImportLine(lines: string[], flags: string[]) {
-    let importIndex = -1;
-    while (true) {
-      importIndex = lines.findIndex(
-        (line, index) => index > importIndex && importRegExp.test(line)
-      );
-      if (importIndex < 0) {
-        break;
-      }
-      const regArr = importRegExp.exec(lines[importIndex]) as RegExpExecArray;
-      const importName = regArr[3] ?? regArr[9];
-      const pkgName = (regArr[2] ?? regArr[8])
-        .replace(/^\"/, "")
-        .replace(/\"$/, "");
-      if (!flags.includes(importName) && pkgName.startsWith("@halsp/")) {
-        lines.splice(importIndex, 1);
-        importIndex--;
-      }
-    }
-  }
-
   private getRename(code: string) {
     const matchArr = code.match(/\/\*\s*rename([\s\S]+)\*\//);
     if (!matchArr?.length) return;
@@ -194,52 +91,6 @@ export class CopyScaffoldService {
       code,
       rename: matchArr[1].trim(),
     };
-  }
-
-  private replaceCode(code: string) {
-    const matchArr = code.match(/\/\*\s*replace([\s\S]+)*\*\//);
-    if (!matchArr?.length) return code;
-
-    code = code.replace(matchArr[0], "");
-    const replaceContent = matchArr[1]
-      .trim()
-      .split("---")
-      .map((item) => item.trim())
-      .filter((item) => !!item);
-    code = code.replace(replaceContent[0], replaceContent[1]);
-    return code;
-  }
-
-  public async init(pm: string) {
-    const cliVersion = getCliVersion();
-    const initFlatFilePath = path.join(
-      __dirname,
-      "../../../scaffold/node_modules",
-      cliVersion
-    );
-    if (this.commandService.getOptionVlaue<boolean>("forceInit")) {
-      this.ctx.logger.info(
-        this.chalkService.magentaBright("Force init scaffold. Please wait...")
-      );
-    } else {
-      if (fs.existsSync(initFlatFilePath)) {
-        return true;
-      }
-      this.ctx.logger.info(
-        this.chalkService.magentaBright(
-          "The command is used for the first time and is being initialized. Please wait..."
-        )
-      );
-    }
-
-    const installResult = this.packageManagerService.install(
-      pm,
-      path.join(__dirname, "../../../scaffold")
-    );
-    if (installResult.status == 0) {
-      await fs.promises.writeFile(initFlatFilePath, cliVersion);
-    }
-    return installResult.status == 0;
   }
 
   private async sortPlugins(plugins: string[]) {
@@ -281,10 +132,4 @@ export class CopyScaffoldService {
     }
     return result.map((item) => item.replace(/\\/g, "/"));
   }
-}
-
-function getCliVersion() {
-  const file = path.join(__dirname, "../../../package.json");
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  return require(file).version;
 }

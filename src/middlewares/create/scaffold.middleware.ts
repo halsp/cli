@@ -9,10 +9,13 @@ import { Middleware } from "@halsp/core";
 import { SortPluginsService } from "../../services/scaffold.services/sort-plugins.service";
 import { ChalkService } from "../../services/chalk.service";
 import { PackageManagerService } from "../../services/package-manager.service";
+import { InitService } from "../../services/scaffold.services/init.service";
 
 export class ScaffoldMiddleware extends Middleware {
   @Inject
   private readonly copyScaffoldService!: CopyScaffoldService;
+  @Inject
+  private readonly initService!: InitService;
   @Inject
   private readonly envService!: EnvService;
   @Inject
@@ -32,7 +35,7 @@ export class ScaffoldMiddleware extends Middleware {
 
   override async invoke(): Promise<void> {
     const pm = await this.packageManagerService.get();
-    const ir = await this.copyScaffoldService.init(pm);
+    const ir = await this.initService.init(pm);
     if (!ir) return;
 
     const env = await this.envService.getEnv();
