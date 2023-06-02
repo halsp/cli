@@ -1,6 +1,5 @@
 .halspignore
 plugin.json
 package.json
-/startups
 .npmignore
 .gitignore

@@ -6,12 +6,12 @@ import { ServeCommand } from "./commands/serve.command";
 import { StartCommand } from "./commands/start.command";
 import { UpdateCommand } from "./commands/update.command";
 
-const program = new Command("halsp");
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const version = require("../package").version;
 
-program
+const program = new Command("halsp")
   .usage("<command> [options]")
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  .version(require("../package").version);
+  .version(version, "-v, --version, -V, -version, -Version");
 
 new CreateCommand(true).register(program);
 new BuildCommand().register(program);
