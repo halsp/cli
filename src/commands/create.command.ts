@@ -7,7 +7,6 @@ import { InstallMiddleware } from "../middlewares/create/install.middleware";
 import { InitGitMiddleware } from "../middlewares/create/init-git.middleware";
 import { CheckNameMiddleware } from "../middlewares/create/check-name.middleware";
 import { CommandService } from "../services/command.service";
-import { parseInject } from "@halsp/inject";
 import { TemplateMiddleware } from "../middlewares/create/template.middleware";
 
 export class CreateCommand extends BaseCommand {
@@ -60,7 +59,7 @@ export class CreateCommand extends BaseCommand {
           await new CliStartup("create", { name }, command)
             .add(CheckNameMiddleware)
             .add(async (ctx) => {
-              const commandService = await parseInject(ctx, CommandService);
+              const commandService = await ctx.getService(CommandService);
               if (commandService.getOptionVlaue("template")) {
                 return TemplateMiddleware;
               } else {

@@ -2,13 +2,12 @@ import { PackageManagerService } from "../../src/services/package-manager.servic
 import { runTest } from "./runTest";
 import * as fs from "fs";
 import path from "path";
-import { parseInject } from "@halsp/inject";
 import { RunnerService } from "../../src/services/runner.service";
 import { runin } from "../utils";
 import { InquirerService } from "../../src/services/inquirer.service";
 
 runTest(PackageManagerService, async (ctx, service) => {
-  const inquirerService = await parseInject(ctx, InquirerService);
+  const inquirerService = await ctx.getService(InquirerService);
   Object.defineProperty(inquirerService, "prompt", {
     value: () => Promise.resolve({ mng: "cnpm" }),
   });
@@ -31,7 +30,7 @@ runTest(PackageManagerService, async (ctx, service) => {
   }
   await fs.promises.mkdir(dir);
 
-  const runner = await parseInject(ctx, RunnerService);
+  const runner = await ctx.getService(RunnerService);
   await runin(dir, async () => {
     runner.run("npm");
     runner.run("npm", ["init", "-y"]);
@@ -43,7 +42,7 @@ runTest(PackageManagerService, async (ctx, service) => {
 });
 
 runTest(PackageManagerService, async (ctx, service) => {
-  const inquirerService = await parseInject(ctx, InquirerService);
+  const inquirerService = await ctx.getService(InquirerService);
   Object.defineProperty(inquirerService, "prompt", {
     value: () => Promise.resolve({ mng: "cnpm" }),
   });

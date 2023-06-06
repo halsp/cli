@@ -41,9 +41,6 @@ import { JwtService } from "@halsp/jwt";
 import { GlobalActionFilter } from "./filters/global.action.filter";
 // }
 // { inject
-/// { !router || jwt
-import { parseInject } from "@halsp/inject";
-/// }
 /// { !router
 import { UserService } from "./services/user.service";
 /// }
@@ -154,7 +151,7 @@ const startup = new Startup()
     ///}
   })
   .use(async (ctx, next) => {
-    const jwtService = await parseInject(ctx, JwtService);
+    const jwtService = await ctx.getService(JwtService);
     const testJwt = await jwtService.sign({
       id: 1,
     });
@@ -174,7 +171,7 @@ const startup = new Startup()
   //}
   // { inject&&!router
   .use(async (ctx, next) => {
-    const userService = await parseInject(ctx, UserService);
+    const userService = await ctx.getService(UserService);
     const userInfo = userService.getUserInfo();
     ///{ micro
     ctx.res.setBody(userInfo);

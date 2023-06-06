@@ -1,7 +1,6 @@
 import { Context, ObjectConstructor } from "@halsp/core";
 import { CliStartup } from "../../src/cli-startup";
 import { runin } from "../utils";
-import { parseInject } from "@halsp/inject";
 import { expect } from "chai";
 
 export function runTest<T extends object = any>(
@@ -16,7 +15,7 @@ export function runTest<T extends object = any>(
     await runin("test/services", async () => {
       await new CliStartup(mode, args, options)
         .use(async (ctx) => {
-          const svc = await parseInject(ctx, service);
+          const svc = await ctx.getService(service);
           expect(svc).not.undefined;
           await expectFn(ctx, svc);
           worked = true;

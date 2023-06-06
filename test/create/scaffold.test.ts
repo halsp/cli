@@ -11,7 +11,6 @@ import {
   PluginConfig,
   SortedPluginConfig,
 } from "../../src/services/scaffold.services/plugin-config.service";
-import { parseInject } from "@halsp/inject";
 import { CopyScaffoldService } from "../../src/services/scaffold.services/copy-scaffold.service";
 import { HookType } from "@halsp/core";
 import { expect } from "chai";
@@ -106,7 +105,7 @@ describe("mock scaffold", () => {
     await runin("test/create/mock-scaffold", async () => {
       await new CliStartup("test", { name: "test" })
         .use(async (ctx) => {
-          const service = await parseInject(ctx, CopyScaffoldService);
+          const service = await ctx.getService(CopyScaffoldService);
 
           if (!fs.existsSync("dist")) {
             fs.mkdirSync("dist");

@@ -1,4 +1,3 @@
-import { parseInject } from "@halsp/inject";
 import { PluginSelectService } from "../../src/services/scaffold.services/plugin-select.service";
 import { InquirerService } from "../../src/services/inquirer.service";
 import { testService } from "../utils";
@@ -6,7 +5,7 @@ import { testService } from "../utils";
 describe("plugin select", () => {
   it("should select plugin by prompt", async () => {
     await testService(PluginSelectService, async (ctx, service) => {
-      const inquirerService = await parseInject(ctx, InquirerService);
+      const inquirerService = await ctx.getService(InquirerService);
       Object.defineProperty(inquirerService, "prompt", {
         value: () => Promise.resolve({ plugins: ["inject"] }),
       });
@@ -18,7 +17,7 @@ describe("plugin select", () => {
 
   it("should select plugin by prompt with env", async () => {
     await testService(PluginSelectService, async (ctx, service) => {
-      const inquirerService = await parseInject(ctx, InquirerService);
+      const inquirerService = await ctx.getService(InquirerService);
       Object.defineProperty(inquirerService, "prompt", {
         value: () => Promise.resolve({ plugins: ["inject"] }),
       });

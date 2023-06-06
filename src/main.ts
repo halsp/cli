@@ -1,3 +1,4 @@
+import "@halsp/inject";
 import { Command } from "commander";
 import { BuildCommand } from "./commands/build.command";
 import { CreateCommand } from "./commands/create.command";

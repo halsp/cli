@@ -1,7 +1,6 @@
 import { runin, testService } from "../utils";
 import { CliStartup } from "../../src/cli-startup";
 import { BuildMiddlware } from "../../src/middlewares/build.middleware";
-import { parseInject } from "@halsp/inject";
 import { AssetsService } from "../../src/services/build.services/assets.service";
 import { WatchCompilerService } from "../../src/services/build.services/watch-compiler.service";
 import { TsconfigService } from "../../src/services/build.services/tsconfig.service";
@@ -34,11 +33,10 @@ describe("empty-config", () => {
           try {
             await next();
           } finally {
-            const assetsService = await parseInject(ctx, AssetsService);
+            const assetsService = await ctx.getService(AssetsService);
             await assetsService.stopWatch();
 
-            const watchCompilerService = await parseInject(
-              ctx,
+            const watchCompilerService = await ctx.getService(
               WatchCompilerService
             );
             watchCompilerService.stop();
@@ -57,7 +55,7 @@ describe("empty-config", () => {
     await runin("test/build/config/not-config", async () => {
       await new CliStartup()
         .use(async (ctx) => {
-          const service = await parseInject(ctx, ConfigService);
+          const service = await ctx.getService(ConfigService);
           service.value.should.deep.eq({});
           worked = true;
         })
@@ -218,7 +216,7 @@ describe("read config", () => {
         config: `.halsprc.json`,
       })
         .use(async (ctx) => {
-          const service = await parseInject(ctx, ConfigService);
+          const service = await ctx.getService(ConfigService);
           service.value["type"].should.eq("json");
           worked = true;
         })
@@ -234,7 +232,7 @@ describe("read config", () => {
         config: `.halsprc`,
       })
         .use(async (ctx) => {
-          const service = await parseInject(ctx, ConfigService);
+          const service = await ctx.getService(ConfigService);
           service.value["type"].should.eq("json");
           worked = true;
         })
@@ -250,7 +248,7 @@ describe("read config", () => {
         jsonConfig: await fs.promises.readFile(".halsprc.json", "utf-8"),
       })
         .use(async (ctx) => {
-          const service = await parseInject(ctx, ConfigService);
+          const service = await ctx.getService(ConfigService);
           service.value["type"].should.eq("json");
           worked = true;
         })
@@ -271,7 +269,7 @@ describe("read config", () => {
         funcConfig: func.toString(),
       })
         .use(async (ctx) => {
-          const service = await parseInject(ctx, ConfigService);
+          const service = await ctx.getService(ConfigService);
           service.value.start!.startupFile!.should.eq("t1");
           worked = true;
         })
@@ -288,7 +286,7 @@ describe("read config", () => {
         config: `.halsprc.js`,
       })
         .use(async (ctx) => {
-          const service = await parseInject(ctx, ConfigService);
+          const service = await ctx.getService(ConfigService);
           service.value.start!.startupFile!.should.eq("t1");
           worked = true;
         })
@@ -302,7 +300,7 @@ describe("read config", () => {
     await runin("test/build/config/exports", async () => {
       await new CliStartup()
         .use(async (ctx) => {
-          const service = await parseInject(ctx, ConfigService);
+          const service = await ctx.getService(ConfigService);
           service.value["exports"].should.eq(1);
           worked = true;
         })
@@ -337,7 +335,7 @@ describe("not-exist", () => {
     await runin("test/build/config/not-exist", async () => {
       await new CliStartup()
         .use(async (ctx) => {
-          const service = await parseInject(ctx, ConfigService);
+          const service = await ctx.getService(ConfigService);
           console.log("service.mode", service.mode);
           expect(service.mode).undefined;
           service.value.should.deep.eq({});

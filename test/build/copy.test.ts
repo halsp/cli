@@ -3,7 +3,6 @@ import { CliStartup } from "../../src/cli-startup";
 import { BuildMiddlware } from "../../src/middlewares/build.middleware";
 import { CopyBuildResultMiddleware } from "../../src/middlewares/copy-build-result.middleware";
 import * as fs from "fs";
-import { parseInject } from "@halsp/inject";
 import { AssetsService } from "../../src/services/build.services/assets.service";
 import { WatchCompilerService } from "../../src/services/build.services/watch-compiler.service";
 import path from "path";
@@ -172,11 +171,10 @@ describe("assets", () => {
           try {
             await next();
           } finally {
-            const assetsService = await parseInject(ctx, AssetsService);
+            const assetsService = await ctx.getService(AssetsService);
             await assetsService.stopWatch();
 
-            const watchCompilerService = await parseInject(
-              ctx,
+            const watchCompilerService = await ctx.getService(
               WatchCompilerService
             );
             watchCompilerService.stop();

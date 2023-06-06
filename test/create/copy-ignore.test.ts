@@ -1,4 +1,3 @@
-import { parseInject } from "@halsp/inject";
 import * as fs from "fs";
 import path from "path";
 import { CliStartup } from "../../src/cli-startup";
@@ -36,7 +35,7 @@ describe("copy ignore", () => {
         name: "test",
       })
         .use(async (ctx) => {
-          const service = await parseInject(ctx, CopyIgnoreService);
+          const service = await ctx.getService(CopyIgnoreService);
           Object.defineProperty(service, "targetDir", {
             get: () => dir + "-target",
           });

@@ -3,7 +3,6 @@ import * as fs from "fs";
 import { Context, HookType } from "@halsp/core";
 import { CliStartup } from "../../src/cli-startup";
 import { InquirerService } from "../../src/services/inquirer.service";
-import { parseInject } from "@halsp/inject";
 import { ScaffoldMiddleware } from "../../src/middlewares/create/scaffold.middleware";
 import { CheckNameMiddleware } from "../../src/middlewares/create/check-name.middleware";
 import { InitGitMiddleware } from "../../src/middlewares/create/init-git.middleware";
@@ -40,7 +39,7 @@ describe("prompt", () => {
       }
     )
       .use(async (ctx, next) => {
-        const inquirerService = await parseInject(ctx, InquirerService);
+        const inquirerService = await ctx.getService(InquirerService);
         Object.defineProperty(inquirerService, "prompt", {
           value: options.promptFn ?? ((() => ({})) as any),
         });
