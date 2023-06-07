@@ -203,9 +203,7 @@ const startup = new Startup()
       email: "hi@hal.wang",
     });
     ////{ http
-    ctx.res.ok({
-      html,
-    });
+    ctx.res.ok(html);
     ////}
     ////{ micro
     ctx.res.setBody({ html });

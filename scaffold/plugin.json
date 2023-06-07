@@ -57,22 +57,6 @@
     {
       "name": "logger",
       "desc": "日志插件 (@halsp/logger)"
-    },
-    {
-      "name": "micro-grpc-client",
-      "desc": "微服务 gRPC 客户端 (@halsp/micro-grpc-client)"
-    },
-    {
-      "name": "micro-tcp-client",
-      "desc": "微服务 Tcp 客户端 (@halsp/micro-tcp-client)"
-    },
-    {
-      "name": "micro-redis-client",
-      "desc": "微服务 Redis 客户端 (@halsp/micro-redis-client)"
-    },
-    {
-      "name": "micro-mqtt-client",
-      "desc": "微服务 MQTT 客户端 (@halsp/micro-mqtt-client)"
     }
   ],
   "envs": [
@@ -180,7 +164,7 @@
     "src/views/*": "view",
     ".env": "env",
     ".env.development": "env",
-    "protos/*": "micro-grpc||micro-grpc-client"
+    "protos/*": "micro-grpc"
   },
   "devDependencies": {
     "@halsp/native": "lambda||alifc"
