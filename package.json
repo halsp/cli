@@ -1,6 +1,6 @@
 {
   "name": "@halsp/cli",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "description": "Halsp 的命令行脚手架工具",
   "engines": {
     "node": ">=12.16.0"
@@ -36,11 +36,11 @@
   "author": "hal-wang",
   "license": "MIT",
   "dependencies": {
-    "@halsp/core": "^2.1.0",
-    "@halsp/inject": "^2.1.0",
-    "@halsp/native": "^2.1.0",
-    "@halsp/pipe": "^2.1.0",
-    "@halsp/static": "^2.1.0",
+    "@halsp/core": "^2.1.1",
+    "@halsp/inject": "^2.1.1",
+    "@halsp/native": "^2.1.1",
+    "@halsp/pipe": "^2.1.1",
+    "@halsp/static": "^2.1.1",
     "chalk": "^5.2.0",
     "child_process": "^1.0.2",
     "chokidar": "^3.5.3",
@@ -48,7 +48,7 @@
     "cross-spawn": "^7.0.3",
     "figlet": "^1.6.0",
     "get-port": "^7.0.0",
-    "glob": "^10.2.6",
+    "glob": "^10.2.7",
     "ignore-walk": "^6.0.3",
     "inquirer": "^9.2.7",
     "lodash": "^4.17.21",
