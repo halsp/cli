@@ -57,6 +57,11 @@
     {
       "name": "logger",
       "desc": "Logger (@halsp/logger)"
+    },
+    {
+      "name": "ws",
+      "desc": "WebSocket (@halsp/ws)",
+      "when": "!micro"
     }
   ],
   "envs": [

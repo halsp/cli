@@ -11,6 +11,7 @@ import "@halsp/env";
 import "@halsp/logger";
 import "@halsp/native";
 import "@halsp/http";
+import "@halsp/ws";
 //{ micro-grpc
 import "@halsp/micro-grpc/server";
 //}
@@ -138,8 +139,8 @@ const startup = new Startup()
   .useStatic({
     dir: "static",
     prefix: "s",
-    useIndex:true,
-    useExt:true,
+    useIndex: true,
+    useExt: true,
   })
   //}
   //{validator
@@ -170,6 +171,23 @@ const startup = new Startup()
   })
   // default verify
   .useJwtVerify()
+  //}
+  //{ ws
+  .useWebSocket()
+  ///{ !router
+  .use(async (ctx, next) => {
+    if (ctx.req.path == "ws") {
+      const ws = await ctx.acceptWebSocket();
+      ws.on("ping", () => {
+        ws.pong();
+      });
+      setTimeout(() => {
+        ws.send("Hello!");
+      }, 1000);
+    }
+    await next();
+  })
+  ///}
   //}
   // { inject&&!router
   .use(async (ctx, next) => {
