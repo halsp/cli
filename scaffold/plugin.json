@@ -17,7 +17,7 @@
     {
       "name": "mva",
       "desc": "MVA Framework (@halsp/mva)",
-      "when": "!micro"
+      "when": "http"
     },
     {
       "name": "pipe",
@@ -39,12 +39,12 @@
     {
       "name": "static",
       "desc": "Static resources (@halsp/static)",
-      "when": "!micro"
+      "when": "http"
     },
     {
       "name": "swagger",
       "desc": "Swagger pages (@halsp/swagger)",
-      "when": "!micro"
+      "when": "http"
     },
     {
       "name": "jwt",
@@ -61,7 +61,12 @@
     {
       "name": "ws",
       "desc": "WebSocket (@halsp/ws)",
-      "when": "!micro"
+      "when": "http"
+    },
+    {
+      "name": "cors",
+      "desc": "CORS (@halsp/cors)",
+      "when": "http"
     }
   ],
   "envs": [

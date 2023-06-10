@@ -12,6 +12,7 @@ import "@halsp/logger";
 import "@halsp/native";
 import "@halsp/http";
 import "@halsp/ws";
+import "@halsp/cors";
 //{ micro-grpc
 import "@halsp/micro-grpc/server";
 //}
@@ -88,6 +89,9 @@ const startup = new Startup()
   //}
   //{env
   .useEnv()
+  //}
+  //{ cors
+  .useCors()
   //}
   //{http
   .use(async (ctx, next) => {

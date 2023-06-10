@@ -28,6 +28,7 @@
   "dependencies": {
     "@halsp/alifc": "^2.1.1",
     "@halsp/core": "^2.1.1",
+    "@halsp/cors": "^2.1.1",
     "@halsp/env": "^2.1.1",
     "@halsp/filter": "^2.1.1",
     "@halsp/inject": "^2.1.1",
@@ -57,7 +58,7 @@
     "@halsp/cli": "../",
     "@halsp/native": "^2.1.1",
     "@halsp/testing": "^2.1.1",
-    "@types/node": "^20.2.5",
+    "@types/node": "^20.2.6",
     "@typescript-eslint/eslint-plugin": "^5.59.9",
     "@typescript-eslint/parser": "^5.59.9",
     "eslint": "^8.42.0",
