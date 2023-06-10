@@ -138,6 +138,8 @@ const startup = new Startup()
   .useStatic({
     dir: "static",
     prefix: "s",
+    useIndex:true,
+    useExt:true,
   })
   //}
   //{validator

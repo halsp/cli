@@ -2,80 +2,80 @@
   "plugins": [
     {
       "name": "inject",
-      "desc": "依赖注入 (@halsp/inject)",
+      "desc": "Dependency injection and Inversion of control (@halsp/inject)",
       "default": true
     },
     {
       "name": "router",
-      "desc": "路由 (@halsp/router)",
+      "desc": "Router (@halsp/router)",
       "default": true
     },
     {
       "name": "view",
-      "desc": "视图渲染 (@halsp/view)"
+      "desc": "Page rendering (@halsp/view)"
     },
     {
       "name": "mva",
-      "desc": "Mva 框架 (@halsp/mva)",
+      "desc": "MVA Framework (@halsp/mva)",
       "when": "!micro"
     },
     {
       "name": "pipe",
-      "desc": "管道 (用于参数格式化) (@halsp/pipe)",
+      "desc": "Pipe (Used to format parameters) (@halsp/pipe)",
       "default": true
     },
     {
       "name": "filter",
-      "desc": "过滤器 (用于拦截请求) (@halsp/filter)"
+      "desc": "Filter (Used to intercept requests) (@halsp/filter)"
     },
     {
       "name": "validator",
-      "desc": "请求参数校验 (@halsp/validator)"
+      "desc": "Verify request parameters (@halsp/validator)"
     },
     {
       "name": "testing",
-      "desc": "测试工具 (@halsp/testing)"
+      "desc": "Unit testing (@halsp/testing)"
     },
     {
       "name": "static",
-      "desc": "静态资源 (@halsp/static)",
+      "desc": "Static resources (@halsp/static)",
       "when": "!micro"
     },
     {
       "name": "swagger",
-      "desc": "Swagger 文档 (@halsp/swagger)",
+      "desc": "Swagger pages (@halsp/swagger)",
       "when": "!micro"
     },
     {
       "name": "jwt",
-      "desc": "jwt 身份验证中间件 (@halsp/jwt)"
+      "desc": "JWT authentication middleware (@halsp/jwt)"
     },
     {
       "name": "env",
-      "desc": "环境配置插件 (@halsp/env)"
+      "desc": "Environment configuration (@halsp/env)"
     },
     {
       "name": "logger",
-      "desc": "日志插件 (@halsp/logger)"
+      "desc": "Logger (@halsp/logger)"
     }
   ],
   "envs": [
     {
-      "desc": "原生 NodeJS",
+      "desc": "Native",
       "flag": "native",
       "plugin": "native"
     },
     {
-      "desc": "腾讯云函数",
-      "pickMessage": "选择云函数类型",
+      "desc": "Tencent Cloud Function",
+      "pickMessage": "Select function type",
       "children": [
         {
-          "desc": "事件函数",
+          "desc": "Event",
           "flag": "lambda",
           "plugin": "lambda"
         },
         {
-          "desc": "Web 函数",
+          "desc": "Web Http",
           "flag": "sls-http-tcloud",
           "plugin": "native"
         }
@@ -92,40 +92,40 @@
       "plugin": "lambda"
     },
     {
-      "desc": "阿里云函数计算",
-      "pickMessage": "选择云函数类型",
+      "desc": "Aliyun Function",
+      "pickMessage": "Select function type",
       "children": [
         {
-          "desc": "处理事件请求",
+          "desc": "Handling event requests",
           "flag": "lambda",
           "plugin": "lambda"
         },
         {
-          "desc": "处理 HTTP 请求",
+          "desc": "HTTP Requests",
           "flag": "alifc",
           "plugin": "alifc"
         }
       ]
     },
     {
-      "desc": "华为云函数工作流",
-      "pickMessage": "选择云函数类型",
+      "desc": "Huawei Cloud Function Workflow",
+      "pickMessage": "Select function type",
       "children": [
         {
-          "desc": "事件函数",
+          "desc": "Event Function",
           "flag": "lambda",
           "plugin": "lambda"
         },
         {
-          "desc": "Web 函数",
+          "desc": "Web Function",
           "flag": "sls-http-huawei",
           "plugin": "native"
         }
       ]
     },
     {
-      "desc": "微服务",
-      "pickMessage": "选择微服务通讯方式",
+      "desc": "Microservice",
+      "pickMessage": "Select the communication mode of Microservices",
       "children": [
         {
           "desc": "TCP",
