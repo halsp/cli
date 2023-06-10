@@ -3,3 +3,5 @@ plugin.json
 package.json
 .npmignore
 .gitignore
+package-lock.json
+yarn.lock
