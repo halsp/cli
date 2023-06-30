@@ -2,13 +2,12 @@ import path from "path";
 import * as fs from "fs";
 import { Context } from "@halsp/core";
 import { ChalkService } from "../chalk.service";
-import { Ctx } from "@halsp/pipe";
 import { Inject } from "@halsp/inject";
 import { CommandService } from "../command.service";
 import { PackageManagerService } from "../package-manager.service";
 
 export class InitService {
-  @Ctx
+  @Inject
   private readonly ctx!: Context;
   @Inject
   private readonly chalkService!: ChalkService;

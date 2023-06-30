@@ -1,9 +1,9 @@
 import { Context } from "@halsp/core";
 import path from "path";
-import { Ctx } from "@halsp/pipe";
+import { Inject } from "@halsp/inject";
 
 export class CreateService {
-  @Ctx
+  @Inject
   private readonly ctx!: Context;
 
   public get name() {

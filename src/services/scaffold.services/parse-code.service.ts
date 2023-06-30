@@ -1,7 +1,6 @@
 import { Inject } from "@halsp/inject";
 import { ExpressionService } from "./expression.service";
 import { Context } from "@halsp/core";
-import { Ctx } from "@halsp/pipe";
 
 // plugin inject|router
 const commentPluginStartRegExp = /^\s*\/{2,}\s*\{\s*/;
@@ -15,7 +14,7 @@ const commandRegExp = /\$\$\{\{([\s\S]*?)\}\}/;
 export class ParseCodeService {
   @Inject
   private readonly expressionService!: ExpressionService;
-  @Ctx
+  @Inject
   private readonly ctx!: Context;
 
   public parse(code: string, flags: string[]) {

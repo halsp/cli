@@ -1,6 +1,5 @@
 import { Context } from "@halsp/core";
 import { Inject } from "@halsp/inject";
-import { Ctx } from "@halsp/pipe";
 import path from "path";
 import * as fs from "fs";
 import prettier from "prettier";
@@ -13,7 +12,7 @@ import { CreateService } from "../create.service";
 import { FileService } from "../file.service";
 
 export class CopyPackageService {
-  @Ctx
+  @Inject
   private readonly ctx!: Context;
   @Inject
   private readonly commandService!: CommandService;

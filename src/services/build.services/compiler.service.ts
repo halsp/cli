@@ -1,13 +1,12 @@
 import { Context, isUndefined } from "@halsp/core";
 import { Inject } from "@halsp/inject";
-import { Ctx } from "@halsp/pipe";
 import ts from "typescript";
 import { ConfigService } from "./config.service";
 import { PluginInterfaceService } from "./plugin-interface.service";
 import { TsconfigService } from "./tsconfig.service";
 
 export class CompilerService {
-  @Ctx
+  @Inject
   private readonly ctx!: Context;
   @Inject
   private readonly tsconfigService!: TsconfigService;

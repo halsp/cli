@@ -1,7 +1,6 @@
 import { Inject } from "@halsp/inject";
 import { ConfigService } from "./config.service";
 import { PluginInterfaceService } from "./plugin-interface.service";
-import { Ctx } from "@halsp/pipe";
 import { Context } from "@halsp/core";
 
 export class HookService {
@@ -9,8 +8,7 @@ export class HookService {
   private readonly pluginInterfaceService!: PluginInterfaceService;
   @Inject
   private readonly configService!: ConfigService;
-
-  @Ctx
+  @Inject
   private readonly ctx!: Context;
 
   private get config() {

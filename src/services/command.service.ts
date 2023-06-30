@@ -1,8 +1,8 @@
 import { Context, isUndefined } from "@halsp/core";
-import { Ctx } from "@halsp/pipe";
+import { Inject } from "@halsp/inject";
 
 export class CommandService {
-  @Ctx
+  @Inject
   private readonly ctx!: Context;
 
   getOptionVlaue<T extends string | boolean>(

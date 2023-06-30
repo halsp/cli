@@ -1,19 +1,16 @@
 //{inject
-//{pipe
-import { Context, ILogger } from "@halsp/core";
-//}
+import { Context } from "@halsp/core";
 import { Logger } from "@halsp/logger";
-import { Ctx, Query } from "@halsp/pipe";
+import { Query } from "@halsp/pipe";
 import { V } from "@halsp/validator";
+import { Inject } from "@halsp/inject";
 
 export class UserService {
-  //{pipe
-  @Ctx
+  @Inject
   private readonly ctx!: Context;
-  //}
   //{logger
   @Logger()
-  private readonly logger!: ILogger;
+  private readonly logger!: Logger;
   //}
 
   //{!router && validator && http
@@ -26,7 +23,7 @@ export class UserService {
   //}
 
   public getUserInfo() {
-    //{pipe && http
+    //{http
     this.ctx.res.set("test-header", "halsp");
     //}
     //{logger

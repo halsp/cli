@@ -12,7 +12,7 @@ const version = require("../package").version;
 
 const program = new Command("halsp")
   .usage("<command> [options]")
-  .version(version, "-v, --version, -V, -version, -Version");
+  .version(version, "-v, --version, -version, -V");
 
 new CreateCommand(true).register(program);
 new BuildCommand().register(program);

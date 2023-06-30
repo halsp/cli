@@ -1,4 +1,3 @@
-import { Ctx } from "@halsp/pipe";
 import { Context, isUndefined } from "@halsp/core";
 import path from "path";
 import { Configuration, ConfigEnv } from "../../configuration";
@@ -10,7 +9,7 @@ import { PluginInterfaceService } from "./plugin-interface.service";
 import * as fs from "fs";
 
 export class ConfigService {
-  @Ctx
+  @Inject
   private readonly ctx!: Context;
   @Inject
   private readonly fileService!: FileService;
