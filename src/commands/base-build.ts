@@ -29,5 +29,9 @@ Command.prototype.setBuildOptions = function (defaultMode: string) {
     .option(
       "--cacheDir <cacheDir>",
       "Cache dir (default: /node_modules/.halsp)"
+    )
+    .option(
+      "-e, --env <variables...>",
+      "Environment Variable, e.g. FOO=BAR,CUSTOM_ENV=abc"
     );
 };

@@ -5,6 +5,7 @@ import { CliStartup } from "../cli-startup";
 import { StartMiddleware } from "../middlewares/start.middleware";
 import "./base-build";
 import { ChdirMiddleware } from "../middlewares/chdir.middleware";
+import { EnvMiddleware } from "../middlewares/env.middleware";
 
 export class StartCommand extends BaseCommand {
   register(command: Command): void {
@@ -25,6 +26,7 @@ export class StartCommand extends BaseCommand {
         async (app: string, command: Record<string, boolean | string>) => {
           await new CliStartup("start", { app }, command)
             .add(ChdirMiddleware)
+            .add(EnvMiddleware)
             .add(StartMiddleware)
             .add(BuildMiddlware)
             .run();

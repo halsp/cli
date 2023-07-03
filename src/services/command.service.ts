@@ -5,14 +5,14 @@ export class CommandService {
   @Inject
   private readonly ctx!: Context;
 
-  getOptionVlaue<T extends string | boolean>(
+  getOptionVlaue<T extends string | string[] | boolean>(
     commands: string[] | string
   ): T | undefined;
-  getOptionVlaue<T extends string | boolean>(
+  getOptionVlaue<T extends string | string[] | boolean>(
     commands: string[] | string,
     defaultVal: T
   ): T;
-  getOptionVlaue<T extends string | boolean>(
+  getOptionVlaue<T extends string | string[] | boolean>(
     commands: string[] | string,
     defaultVal?: T
   ): T | undefined {
