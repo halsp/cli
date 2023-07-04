@@ -59,9 +59,9 @@ export class ConfigService {
       "cacheDir",
       "build.cacheDir"
     );
-    if (optDir) return path.resolve(optDir);
+    if (optDir) return optDir;
 
-    return path.resolve("node_modules", ".halsp");
+    return "node_modules/.halsp";
   }
 
   #value: Configuration | undefined = undefined;
