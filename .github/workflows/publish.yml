@@ -114,7 +114,7 @@ jobs:
           npm run build
 
           mv minimal.README.md README.md
-          node bin/cli.js create minimal -e native -pm npm -ps inject,router,view,mva,pipe,filter,testing,static,swagger,jwt,validator,env,logger -f -sg -sr
+          node bin/cli.js create minimal -e native -pm npm -ps inject,router,view,mva,pipe,filter,testing,static,swagger,jwt,validator,env,logger -f -sg -sr -sr
           cd minimal
           npx halsp build
 
