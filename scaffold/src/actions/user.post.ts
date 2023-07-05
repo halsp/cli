@@ -1,10 +1,13 @@
 //{ router
-import { Action, MicroPattern } from "@halsp/router";
+import { Action } from "@halsp/router";
 import { Body } from "@halsp/pipe";
 import { V } from "@halsp/validator";
-//{pipe
+///{micro
+import { MicroPattern } from "@halsp/router";
+///}
+///{pipe
 import { LoginDto } from "../dtos/login.dto";
-//}
+///}
 
 //{swagger
 @V()
