@@ -114,9 +114,8 @@ jobs:
           npm run build
 
           mv minimal.README.md README.md
-          node bin/cli.js create minimal -e native -pm npm -ps inject,router,view,mva,pipe,filter,testing,static,swagger,jwt,validator,env,logger -f -sg -sr -sr
+          node bin/cli.js create minimal -e native -pm npm -ps inject,router,view,mva,pipe,filter,testing,static,swagger,jwt,validator,env,logger -f -sg -sr -si
           cd minimal
-          npx halsp build
 
           git config --global user.email hi@hal.wang
           git config --global user.name hal-wang

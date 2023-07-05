@@ -1,6 +1,6 @@
 {
   "name": "@halsp/cli",
-  "version": "0.4.5",
+  "version": "0.4.6",
   "description": "Halsp 的命令行脚手架工具",
   "engines": {
     "node": ">=12.16.0"

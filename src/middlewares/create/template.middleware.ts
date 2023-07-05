@@ -77,7 +77,6 @@ export class TemplateMiddleware extends Middleware {
   async invoke() {
     const branch = this.commandService.getOptionVlaue<string>("branch");
     const template = await this.getTemplate(branch);
-    console.log("template", template);
     if (!template) return;
 
     const copyResult = await this.copy(
@@ -94,7 +93,7 @@ export class TemplateMiddleware extends Middleware {
   }
 
   #isSelTemplate = false;
-  async getTemplate(branch?: string) {
+  async getTemplate(branch?: string): Promise<string | undefined> {
     const template = this.commandService.getOptionVlaue<string>("template");
     if (template && isString(template)) return template;
 
