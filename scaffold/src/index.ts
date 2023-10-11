@@ -55,8 +55,14 @@ const startup = new Startup()
   //{alifc
   .useAlifc()
   //}
-  //{lambda||alifc||native||azure
+  //{ native && !lambda && !alifc && !azure
   .useNative()
+  //}
+  //{ lambda||alifc||azure
+  .call(
+    () => process.env.NODE_ENV == "development",
+    (s) => s.useNative()
+  )
   //}
   //{sls-http-huawei
   .useNative({
