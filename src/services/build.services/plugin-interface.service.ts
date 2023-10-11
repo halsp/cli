@@ -11,14 +11,14 @@ export class PluginInterfaceService {
   private readonly depsService!: DepsService;
 
   public get(
-    name: "cliConfigHook"
+    name: "cliConfigHook",
   ): ((config: Configuration, options: ConfigEnv) => Configuration | void)[];
   public get(name: "postbuild"): Postbuild[];
   public get(name: "prebuild"): Prebuild[];
   public get(name: "beforeCompile"): CompilerHook<ts.SourceFile>[];
   public get(name: "afterCompile"): CompilerHook<ts.SourceFile>[];
   public get(
-    name: "afterCompileDeclarations"
+    name: "afterCompileDeclarations",
   ): CompilerHook<ts.SourceFile | ts.Bundle>[];
   public get(name: string) {
     const pkgPath = path.join(process.cwd(), "package.json");
@@ -29,7 +29,7 @@ export class PluginInterfaceService {
     return this.depsService
       .getDeps(
         path.join(process.cwd(), "package.json"),
-        /^(@halsp\/|halsp\-|@\S+\/halsp\-)/
+        /^(@halsp\/|halsp\-|@\S+\/halsp\-)/,
       )
       .map((dep) => {
         const depPath = require.resolve(dep.key, {

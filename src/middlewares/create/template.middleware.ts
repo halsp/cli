@@ -85,7 +85,7 @@ export class TemplateMiddleware extends Middleware {
         branch,
         path: this.commandService.getOptionVlaue<string>("path"),
       },
-      this.#isSelTemplate
+      this.#isSelTemplate,
     );
     if (copyResult) {
       await this.next();
@@ -106,17 +106,17 @@ export class TemplateMiddleware extends Middleware {
     const templateListConfig = await Promise.all(
       templates
         .filter((t) =>
-          fs.statSync(path.resolve(this.cacheDirPath, t)).isDirectory()
+          fs.statSync(path.resolve(this.cacheDirPath, t)).isDirectory(),
         )
         .filter((t) =>
-          fs.existsSync(path.resolve(this.cacheDirPath, t, this.temprcName))
+          fs.existsSync(path.resolve(this.cacheDirPath, t, this.temprcName)),
         )
         .map(async (t) => {
           return {
             name: t,
             config: await this.getTemprc(path.resolve(this.cacheDirPath, t)),
           };
-        })
+        }),
     );
 
     this.#isSelTemplate = true;
@@ -148,14 +148,14 @@ export class TemplateMiddleware extends Middleware {
 
     const templateDir = path.resolve(
       this.cacheDirPath,
-      this.getTemplateChildPath(config) ?? ""
+      this.getTemplateChildPath(config) ?? "",
     );
     const templateConfig = await this.getTemprc(templateDir);
     if (templateConfig.preCommand) {
       console.log(
         this.chalkService.blueBright(
-          `Execute preCommand of ${config.template}: ${templateConfig.preCommand}`
-        )
+          `Execute preCommand of ${config.template}: ${templateConfig.preCommand}`,
+        ),
       );
       if (!this.runHook(templateDir, templateConfig.preCommand)) {
         return false;
@@ -185,8 +185,8 @@ export class TemplateMiddleware extends Middleware {
     if (templateConfig.postCommand) {
       console.log(
         this.chalkService.blueBright(
-          `Execute postCommand of ${config.template}: ${templateConfig.postCommand}`
-        )
+          `Execute postCommand of ${config.template}: ${templateConfig.postCommand}`,
+        ),
       );
       if (!this.runHook(this.targetDir, templateConfig.postCommand)) {
         return false;

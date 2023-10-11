@@ -32,9 +32,8 @@ export class CopyPackageService {
 
   public async create(plugins: string[]): Promise<void> {
     const pkg = this.getPackage();
-    const pluginConfig = await this.pluginConfigService.getSortedConfig(
-      plugins
-    );
+    const pluginConfig =
+      await this.pluginConfigService.getSortedConfig(plugins);
 
     this.setDeps(pkg.dependencies, plugins, pluginConfig, false);
     this.setDeps(pkg.devDependencies, plugins, pluginConfig, true);
@@ -47,9 +46,9 @@ export class CopyPackageService {
     await this.fileService.createDir(filePath);
     await fs.promises.writeFile(
       filePath,
-      prettier.format(JSON.stringify(pkg), {
+      await prettier.format(JSON.stringify(pkg), {
         parser: "json",
-      })
+      }),
     );
   }
 
@@ -57,7 +56,7 @@ export class CopyPackageService {
     deps: Record<string, string>,
     plugins: string[],
     pluginConfig: SortedPluginConfig,
-    isDev: boolean
+    isDev: boolean,
   ) {
     if (!deps) return;
 

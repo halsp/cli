@@ -31,11 +31,11 @@ export class AssetsService {
   public get assets(): SortedAsset[] {
     const commandAssets = this.commandService.getOptionVlaue<string>(
       "assets",
-      ""
+      "",
     );
     const configAssets = this.configService.getConfigValue<AssetConfig[]>(
       "build.assets",
-      []
+      [],
     );
     const assets: AssetConfig[] = [];
     if (commandAssets) {
@@ -97,14 +97,14 @@ export class AssetsService {
     return this.configService.getOptionOrConfigValue<boolean>(
       "watch",
       "build.watch",
-      this.ctx.command == "start"
+      this.ctx.command == "start",
     );
   }
   private get watchAssets() {
     return this.configService.getOptionOrConfigValue<boolean>(
       "watchAssets",
       "build.watchAssets",
-      this.watch
+      this.watch,
     );
   }
 

@@ -11,7 +11,7 @@ export class TsconfigService {
   private get fileName() {
     return this.commandService.getOptionVlaue<string>(
       "tsconfigPath",
-      "tsconfig.json"
+      "tsconfig.json",
     );
   }
   private get filePath() {
@@ -35,7 +35,7 @@ export class TsconfigService {
     const parsedCmd = ts.getParsedCommandLineOfConfigFile(
       this.filePath,
       undefined,
-      ts.sys as unknown as ts.ParseConfigFileHost
+      ts.sys as unknown as ts.ParseConfigFileHost,
     );
     return parsedCmd!;
   }
@@ -43,7 +43,7 @@ export class TsconfigService {
   private ensureTsconfigFile() {
     if (!fs.existsSync(this.filePath)) {
       throw new Error(
-        `Could not find TypeScript configuration file ${this.fileName}`
+        `Could not find TypeScript configuration file ${this.fileName}`,
       );
     }
   }

@@ -25,9 +25,8 @@ export class CheckUpdateMiddleware extends Middleware {
   }
 
   private async getNotifier(pkg: any) {
-    const updateNotifier = await dynamicImportDefault<UpdateNotifier>(
-      "update-notifier"
-    );
+    const updateNotifier =
+      await dynamicImportDefault<UpdateNotifier>("update-notifier");
     return updateNotifier({
       pkg,
       updateCheckInterval: 1000 * 60 * 60 * 24, // 1 day
@@ -38,8 +37,8 @@ export class CheckUpdateMiddleware extends Middleware {
     return JSON.parse(
       await fs.promises.readFile(
         path.join(__dirname, "../../package.json"),
-        "utf-8"
-      )
+        "utf-8",
+      ),
     );
   }
 }

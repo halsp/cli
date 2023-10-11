@@ -17,7 +17,7 @@ export class StartCommand extends BaseCommand {
       .option("--startupFile <path>", "The file to startup")
       .option(
         "-b, --binaryToRun <program>",
-        "Binary to run application (e.g., node, ts-node)"
+        "Binary to run application (e.g., node, ts-node)",
       )
       .option("-p, --port <port>", "The port on http listens")
       .option("--inspect <hostport>", "Run in inspect mode")
@@ -30,7 +30,7 @@ export class StartCommand extends BaseCommand {
             .add(StartMiddleware)
             .add(BuildMiddlware)
             .run();
-        }
+        },
       );
   }
 }

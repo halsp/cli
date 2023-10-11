@@ -16,17 +16,17 @@ export class UpdateCommand extends BaseCommand {
       .option(
         "-t, --tag <tag>",
         "Upgrade to tagged packages (latest | beta | rc | next tag)",
-        "latest"
+        "latest",
       )
       .option(
         "-su, --skipUpgrade",
         "Display version information without upgrading",
-        false
+        false,
       )
       .option("-si, --skipInstall", "Skip installation", false)
       .option(
         "-p, --packageManager <packageManager>",
-        "Specify package manager. (npm/yarn/pnpm/cnpm)"
+        "Specify package manager. (npm/yarn/pnpm/cnpm)",
       )
       .option("--registry <url>", "Override configuration registry")
       .setCommonOptions()
@@ -36,7 +36,7 @@ export class UpdateCommand extends BaseCommand {
             .add(ChdirMiddleware)
             .add(UpdateMiddleware)
             .run();
-        }
+        },
       );
   }
 }

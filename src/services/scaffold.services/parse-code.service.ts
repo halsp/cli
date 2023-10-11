@@ -64,7 +64,7 @@ export class ParseCodeService {
     let importIndex = -1;
     while (true) {
       importIndex = lines.findIndex(
-        (line, index) => index > importIndex && importRegExp.test(line)
+        (line, index) => index > importIndex && importRegExp.test(line),
       );
       if (importIndex < 0) {
         break;
@@ -107,7 +107,7 @@ export class ParseCodeService {
 
     while (true) {
       const start = lines.findIndex((line) =>
-        commentPluginStartRegExp.test(line)
+        commentPluginStartRegExp.test(line),
       );
       const end = this.findEndIndex(lines, start);
       if (start < 0 || end < 0) {

@@ -25,7 +25,7 @@ export class CompilerService {
 
     return this.configService.getOptionOrConfigValue<boolean, boolean>(
       "sourceMap",
-      "build.sourceMap"
+      "build.sourceMap",
     );
   }
 
@@ -71,13 +71,13 @@ export class CompilerService {
       undefined,
       undefined,
       undefined,
-      this.getHooks(program)
+      this.getHooks(program),
     );
 
     const errorsCount = this.reportAfterCompilationDiagnostic(
       program as any,
       emitResult,
-      formatHost
+      formatHost,
     );
     return !errorsCount;
   }
@@ -101,7 +101,7 @@ export class CompilerService {
   private reportAfterCompilationDiagnostic(
     program: ts.EmitAndSemanticDiagnosticsBuilderProgram,
     emitResult: ts.EmitResult,
-    formatHost: ts.FormatDiagnosticsHost
+    formatHost: ts.FormatDiagnosticsHost,
   ): number {
     const diagnostics = ts
       .getPreEmitDiagnostics(program as unknown as ts.Program)
@@ -109,10 +109,10 @@ export class CompilerService {
 
     if (diagnostics.length > 0) {
       this.ctx.logger.error(
-        ts.formatDiagnosticsWithColorAndContext(diagnostics, formatHost)
+        ts.formatDiagnosticsWithColorAndContext(diagnostics, formatHost),
       );
       this.ctx.logger.info(
-        `Found ${diagnostics.length} error(s).` + ts.sys.newLine
+        `Found ${diagnostics.length} error(s).` + ts.sys.newLine,
       );
     }
     return diagnostics.length;

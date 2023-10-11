@@ -15,7 +15,7 @@ export class ServeCommand extends BaseCommand {
       .option("--hideDir", "Do not list dir")
       .option(
         "--exclude <files>",
-        'Exclude files, glob string, separate with space (e.g. "**/*.key secret/*.crt")'
+        'Exclude files, glob string, separate with space (e.g. "**/*.key secret/*.crt")',
       )
       .option("--prefix <prefix>", "File prefix")
       .option("--encoding <encoding>", "Buffer encoding (e.g. utf8)")
@@ -26,7 +26,7 @@ export class ServeCommand extends BaseCommand {
             .add(ChdirMiddleware)
             .add(ServeMiddleware)
             .run();
-        }
+        },
       );
   }
 }

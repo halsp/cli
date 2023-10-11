@@ -7,7 +7,7 @@ export class GlobalActionFilter implements ActionFilter {
     ctx.res.setHeader("excuted", 1);
   }
   onActionExecuting(
-    ctx: Context
+    ctx: Context,
   ): boolean | void | Promise<void> | Promise<boolean> {
     ctx.res.setHeader("action", 1);
     return true;

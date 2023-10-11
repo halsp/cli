@@ -24,22 +24,22 @@ export class CreateCommand extends BaseCommand {
       .option(
         "-f, --force",
         "Force create application, delete existing files. ",
-        false
+        false,
       )
       .option("--override", "Override existing files. ", false)
       .option(
         "-e, --env <env>",
-        "The environment to run application. (lambda/native/azure/micro-tcp/...)"
+        "The environment to run application. (lambda/native/azure/micro-tcp/...)",
       )
       .option(
         "-pm, --packageManager <packageManager>",
-        "Specify package manager. (npm/yarn/pnpm/cnpm)"
+        "Specify package manager. (npm/yarn/pnpm/cnpm)",
       )
       .option("--registry <url>", "Override configuration registry")
       .option("--debug", "Debug mode")
       .option(
         "-ps, --plugins <plugins>",
-        "Plugins to add (e.g. view,router,inject)"
+        "Plugins to add (e.g. view,router,inject)",
       )
       .option("-si, --skipInstall", "Skip install project")
       .option("-se, --skipEnv", "Skip adding environment files")
@@ -49,7 +49,7 @@ export class CreateCommand extends BaseCommand {
       .option("--forceInit", "Force init scaffold")
       .option(
         "-t, --template [url]",
-        "Generate a project from a remote template"
+        "Generate a project from a remote template",
       )
       .option("-b, --branch <branch>", "The name of template repository branch")
       .option("--path <path>", "Path to template files")
@@ -70,7 +70,7 @@ export class CreateCommand extends BaseCommand {
             .add(InstallMiddleware)
             .add(RunMiddleware)
             .run();
-        }
+        },
       );
   }
 }

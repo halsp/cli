@@ -17,8 +17,8 @@ export class SortPluginsService {
       this.#templatePackage = JSON.parse(
         await fs.promises.readFile(
           path.join(this.templateDir, "package.json"),
-          "utf-8"
-        )
+          "utf-8",
+        ),
       );
     }
     return this.#templatePackage;
@@ -26,7 +26,7 @@ export class SortPluginsService {
 
   public async sortPlugins(
     plugins: string[],
-    onlyTemplateExist: boolean
+    onlyTemplateExist: boolean,
   ): Promise<string[]> {
     const result: string[] = [...plugins];
     const { dependencies, devDependencies } = await this.#getTemplatePackage();
@@ -70,7 +70,7 @@ export class SortPluginsService {
 
     return plugins.filter(
       (p) =>
-        depKeys.includes(`@halsp/${p}`) || devDepKeys.includes(`@halsp/${p}`)
+        depKeys.includes(`@halsp/${p}`) || devDepKeys.includes(`@halsp/${p}`),
     );
   }
 }

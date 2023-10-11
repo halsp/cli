@@ -20,7 +20,7 @@ export type Transformer<T extends ts.Node> =
   | ts.TransformerFactory<T>
   | ts.CustomTransformerFactory;
 export type CompilerHook<T extends ts.Node> = (
-  program: ts.Program
+  program: ts.Program,
 ) => Transformer<T>;
 
 export type ScriptOptions = {
@@ -29,7 +29,7 @@ export type ScriptOptions = {
 } & ConfigEnv;
 
 export type Prebuild = (
-  options: ScriptOptions
+  options: ScriptOptions,
 ) => Promise<boolean> | boolean | Promise<void> | void;
 export type Postbuild = (options: ScriptOptions) => Promise<void> | void;
 
@@ -69,13 +69,13 @@ export interface Configuration {
 }
 
 export function defineConfig(
-  config: Configuration
+  config: Configuration,
 ): (options: ConfigEnv) => Configuration;
 export function defineConfig(
-  config: (options: ConfigEnv) => Configuration
+  config: (options: ConfigEnv) => Configuration,
 ): (options: ConfigEnv) => Configuration;
 export function defineConfig(
-  config: Configuration | ((options: ConfigEnv) => Configuration)
+  config: Configuration | ((options: ConfigEnv) => Configuration),
 ): (options: ConfigEnv) => Configuration {
   if (typeof config == "object") {
     return () => config;

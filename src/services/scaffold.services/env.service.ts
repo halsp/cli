@@ -53,7 +53,7 @@ export class EnvService {
 
   private async getEnvByInquirer(
     envConfig: EnvSelectItem[],
-    message?: string
+    message?: string,
   ): Promise<string> {
     message = message ?? "Pick the environment to run application";
     const answer = await this.inquirerService.prompt([

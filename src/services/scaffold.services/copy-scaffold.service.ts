@@ -58,7 +58,7 @@ export class CopyScaffoldService {
 
       let content: string | null = await fs.promises.readFile(
         sourceFile,
-        "utf-8"
+        "utf-8",
       );
       content = this.parseCodeService.parse(content, flags);
       const renameInfo = this.getRename(content);
@@ -72,9 +72,9 @@ export class CopyScaffoldService {
       }
       if (!!content.trim()) {
         if (sourceFile.endsWith(".ts")) {
-          content = prettier.format(content, {
+          content = (await prettier.format(content, {
             parser: "typescript",
-          }) as string;
+          })) as string;
         }
         await this.fileService.createDir(targetFile);
         await fs.promises.writeFile(targetFile, content);
@@ -94,9 +94,8 @@ export class CopyScaffoldService {
   }
 
   private async sortPlugins(plugins: string[]) {
-    const pluginConfig = await this.pluginConfigService.getSortedConfig(
-      plugins
-    );
+    const pluginConfig =
+      await this.pluginConfigService.getSortedConfig(plugins);
     plugins = [...plugins];
 
     function addFromConfig(config: ExpressionObject<boolean>) {

@@ -19,7 +19,7 @@ export class WatchCompilerService {
   private get preserveWatchOutput() {
     return this.configService.getOptionOrConfigValue<boolean, boolean>(
       "preserveWatchOutput",
-      "build.preserveWatchOutput"
+      "build.preserveWatchOutput",
     );
   }
 
@@ -31,11 +31,11 @@ export class WatchCompilerService {
 
     const origDiagnosticReporter = (ts as any).createDiagnosticReporter(
       ts.sys,
-      true
+      true,
     );
     const origWatchStatusReporter = (ts as any).createWatchStatusReporter(
       ts.sys,
-      true
+      true,
     );
 
     const host = ts.createWatchCompilerHost(
@@ -44,7 +44,7 @@ export class WatchCompilerService {
       ts.sys,
       ts.createEmitAndSemanticDiagnosticsBuilderProgram,
       this.createDiagnosticReporter(origDiagnosticReporter),
-      this.createWatchStatusChanged(origWatchStatusReporter, onSuccess)
+      this.createWatchStatusChanged(origWatchStatusReporter, onSuccess),
     );
 
     const originCreateProgram = host.createProgram;
@@ -52,7 +52,7 @@ export class WatchCompilerService {
       rootNames: ReadonlyArray<string> | undefined,
       options: ts.CompilerOptions | undefined,
       host?: ts.CompilerHost,
-      oldProgram?: ts.EmitAndSemanticDiagnosticsBuilderProgram
+      oldProgram?: ts.EmitAndSemanticDiagnosticsBuilderProgram,
     ) => {
       const program = originCreateProgram.bind(this)(
         rootNames,
@@ -60,7 +60,7 @@ export class WatchCompilerService {
         host,
         oldProgram,
         undefined,
-        projectReferences
+        projectReferences,
       );
 
       const originEmit = program.emit;
@@ -69,18 +69,18 @@ export class WatchCompilerService {
         writeFile?: ts.WriteFileCallback,
         cancellationToken?: ts.CancellationToken,
         emitOnlyDtsFiles?: boolean,
-        customTransformers?: ts.CustomTransformers
+        customTransformers?: ts.CustomTransformers,
       ) => {
         const transforms = Object.assign(
           customTransformers ?? {},
-          this.compilerService.getHooks(program.getProgram())
+          this.compilerService.getHooks(program.getProgram()),
         );
         return originEmit(
           targetSourceFile,
           writeFile,
           cancellationToken,
           emitOnlyDtsFiles,
-          transforms
+          transforms,
         );
       };
       return program;
@@ -106,7 +106,7 @@ export class WatchCompilerService {
   }
 
   private createDiagnosticReporter(
-    diagnosticReporter: (diagnostic: ts.Diagnostic, ...args: any[]) => any
+    diagnosticReporter: (diagnostic: ts.Diagnostic, ...args: any[]) => any,
   ) {
     return function (this: any, diagnostic: ts.Diagnostic, ...args: any[]) {
       return diagnosticReporter.call(this, diagnostic, ...args);
@@ -115,7 +115,7 @@ export class WatchCompilerService {
 
   private createWatchStatusChanged(
     watchStatusReporter: (diagnostic: ts.Diagnostic, ...args: any[]) => any,
-    onSuccess?: () => void
+    onSuccess?: () => void,
   ) {
     return function (this: any, diagnostic: ts.Diagnostic, ...args: any[]) {
       const messageText = diagnostic && diagnostic.messageText;

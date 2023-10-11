@@ -24,7 +24,7 @@ export class CopyBuildResultMiddleware extends Middleware {
     return this.configService.getOptionOrConfigValue<boolean>(
       "deleteOutDir",
       "build.deleteOutDir",
-      true
+      true,
     );
   }
 
@@ -40,7 +40,7 @@ export class CopyBuildResultMiddleware extends Middleware {
 
     await fs.promises.rename(
       path.resolve(process.cwd(), this.cacheDir),
-      path.resolve(process.cwd(), this.outDir)
+      path.resolve(process.cwd(), this.outDir),
     );
   }
 }

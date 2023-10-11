@@ -77,16 +77,15 @@ export class ScaffoldMiddleware extends Middleware {
   }
 
   private async logPlugins(plugins: string[]) {
-    const existPlugins = await this.sortPluginsService.filterExistPlugins(
-      plugins
-    );
+    const existPlugins =
+      await this.sortPluginsService.filterExistPlugins(plugins);
     const consolePlugins = existPlugins
       .filter((p) => p != "common")
       .map((p) => `@halsp/${p}`);
     this.logger.info("\n");
     this.logger.info(
       this.chalkService.bold("Sorted plugins"),
-      this.chalkService.greenBright(consolePlugins.join(", "))
+      this.chalkService.greenBright(consolePlugins.join(", ")),
     );
     this.logger.info("\n");
   }

@@ -6,9 +6,9 @@ export class ExpressionService {
         expression = expression.replace(
           new RegExp(
             `(([^a-zA-Z\\-\\_\\.])|^)${plugin}(([^a-zA-Z\\-\\_\\.])|$)`,
-            "g"
+            "g",
           ),
-          (str) => str.replace(plugin, "↑")
+          (str) => str.replace(plugin, "↑"),
         );
       });
     expression = expression.replace(/[a-zA-Z\-\_\.]+/g, "false");

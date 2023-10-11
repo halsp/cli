@@ -19,7 +19,7 @@ export class CliStartup extends Startup {
   constructor(
     mode = "test",
     args: Record<string, string> = {},
-    options: Record<string, string | boolean> = {}
+    options: Record<string, string | boolean> = {},
   ) {
     super();
 

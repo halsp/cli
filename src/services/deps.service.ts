@@ -10,7 +10,7 @@ export class DepsService {
 
   public getProjectHalspDeps(
     packagePath: string,
-    paths = [process.cwd()]
+    paths = [process.cwd()],
   ): DepItem[] {
     return this.getDeps(packagePath, /^@halsp\//, paths, true);
   }
@@ -19,7 +19,7 @@ export class DepsService {
     packagePath: string,
     regExp: RegExp | ((dep: string) => boolean),
     paths = [process.cwd()],
-    containsDev = true
+    containsDev = true,
   ) {
     const result: DepItem[] = [];
     this.loadDeps(result, packagePath, paths, regExp, containsDev);
@@ -31,7 +31,7 @@ export class DepsService {
     packagePath: string,
     paths: string[],
     regExp: RegExp | ((dep: string) => boolean),
-    containsDev: boolean
+    containsDev: boolean,
   ) {
     const pkg = JSON.parse(fs.readFileSync(packagePath, "utf-8"));
 
@@ -41,7 +41,7 @@ export class DepsService {
         .filter(
           (name) =>
             name.startsWith("@halsp/") &&
-            !result.some((exist) => exist.key == name)
+            !result.some((exist) => exist.key == name),
         )
         .filter((name) => {
           if (typeof regExp == "function") {

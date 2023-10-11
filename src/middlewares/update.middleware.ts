@@ -55,7 +55,7 @@ export class UpdateMiddleware extends Middleware {
         registry: this.registry,
       },
       pkgData,
-      this.skipUpgrade ? undefined : this.packagePath
+      this.skipUpgrade ? undefined : this.packagePath,
     );
   }
 

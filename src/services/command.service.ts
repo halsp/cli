@@ -6,15 +6,15 @@ export class CommandService {
   private readonly ctx!: Context;
 
   getOptionVlaue<T extends string | string[] | boolean>(
-    commands: string[] | string
+    commands: string[] | string,
   ): T | undefined;
   getOptionVlaue<T extends string | string[] | boolean>(
     commands: string[] | string,
-    defaultVal: T
+    defaultVal: T,
   ): T;
   getOptionVlaue<T extends string | string[] | boolean>(
     commands: string[] | string,
-    defaultVal?: T
+    defaultVal?: T,
   ): T | undefined {
     if (!Array.isArray(commands)) {
       commands = [commands];

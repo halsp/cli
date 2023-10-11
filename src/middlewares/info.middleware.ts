@@ -21,8 +21,8 @@ export class InfoMiddleware extends Middleware {
     const pkg = JSON.parse(
       await fs.promises.readFile(
         path.join(__dirname, "../../package.json"),
-        "utf-8"
-      )
+        "utf-8",
+      ),
     );
 
     const text = figlet.textSync("HALSPCLI");
@@ -60,8 +60,8 @@ export class InfoMiddleware extends Middleware {
     this.logTitle("Halsp Packages Version");
     this.logItems(
       this.depsService.getProjectHalspDeps(
-        path.join(process.cwd(), "package.json")
-      )
+        path.join(process.cwd(), "package.json"),
+      ),
     );
     await this.next();
   }
@@ -76,7 +76,7 @@ export class InfoMiddleware extends Middleware {
       this.logInfo(
         item.key.padEnd(keyLen + 1, " ") +
           ": " +
-          this.chalkService.cyanBright(item.value)
+          this.chalkService.cyanBright(item.value),
       );
     }
   }

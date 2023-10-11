@@ -61,7 +61,7 @@ const startup = new Startup()
   //{ lambda||alifc||azure
   .call(
     () => process.env.NODE_ENV == "development",
-    (s) => s.useNative()
+    (s) => s.useNative(),
   )
   //}
   //{sls-http-huawei

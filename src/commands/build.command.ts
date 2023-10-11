@@ -18,7 +18,7 @@ export class BuildCommand extends BaseCommand {
       .option("-cp, --copyPackage", "Copy package.json to out dir.")
       .option(
         "--removeDevDeps",
-        "Remove devDependencies in package.json file when --copyPackage is true."
+        "Remove devDependencies in package.json file when --copyPackage is true.",
       )
       .setCommonOptions()
       .action(
@@ -29,7 +29,7 @@ export class BuildCommand extends BaseCommand {
             .add(BuildMiddlware)
             .add(CopyBuildResultMiddleware)
             .run();
-        }
+        },
       );
   }
 }

@@ -20,27 +20,27 @@ export class StartMiddleware extends Middleware {
     return this.configService.getOptionOrConfigValue<boolean | string>(
       "inspect",
       "start.inspect",
-      false
+      false,
     );
   }
   private get port() {
     return this.configService.getOptionOrConfigValue<string>(
       "port",
-      "start.port"
+      "start.port",
     );
   }
   private get watch() {
     return this.configService.getOptionOrConfigValue<boolean>(
       "watch",
       "build.watch",
-      true
+      true,
     );
   }
   private get binaryToRun() {
     return this.configService.getOptionOrConfigValue<string>(
       "binaryToRun",
       "start.binaryToRun",
-      "node"
+      "node",
     );
   }
   private get processEnv(): NodeJS.ProcessEnv {
@@ -83,7 +83,7 @@ export class StartMiddleware extends Middleware {
     let childProcessRef: ChildProcess | undefined;
     process.on(
       "exit",
-      () => childProcessRef?.pid && treeKillSync(childProcessRef.pid)
+      () => childProcessRef?.pid && treeKillSync(childProcessRef.pid),
     );
 
     const createChildProcess = () => {
@@ -145,7 +145,7 @@ export class StartMiddleware extends Middleware {
   private getStartFilePath() {
     const startupFile = this.configService.getOptionOrConfigValue<string>(
       "startupFile",
-      "startu.startupFile"
+      "startu.startupFile",
     );
     if (startupFile) {
       const targetFile = path.resolve(this.cacheDir, startupFile);

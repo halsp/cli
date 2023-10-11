@@ -18,7 +18,7 @@ export class InfoCommand extends BaseCommand {
             .add(ChdirMiddleware)
             .add(InfoMiddleware)
             .run();
-        }
+        },
       );
   }
 }

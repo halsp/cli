@@ -57,7 +57,7 @@ export class ConfigService {
   get cacheDir() {
     const optDir = this.getOptionOrConfigValue<string>(
       "cacheDir",
-      "build.cacheDir"
+      "build.cacheDir",
     );
     if (optDir) return optDir;
 
@@ -111,7 +111,7 @@ export class ConfigService {
   }
 
   private async readConfigFile(
-    configFilePath: string
+    configFilePath: string,
   ): Promise<Configuration | undefined> {
     const isTS = this.configFileName.toLowerCase().endsWith(".ts");
     if (isTS) {
@@ -169,7 +169,7 @@ export class ConfigService {
   getConfigValue<T = any>(paths: string[] | string, defaultVal: T): T;
   getConfigValue<T = any>(
     paths: string[] | string,
-    defaultVal?: T
+    defaultVal?: T,
   ): T | undefined {
     if (!Array.isArray(paths)) {
       paths = [paths];
@@ -186,7 +186,7 @@ export class ConfigService {
 
   private getDeepConfigValue<T = any>(
     obj: any,
-    property: string
+    property: string,
   ): T | undefined {
     if (!property || !obj) {
       return undefined;
@@ -207,32 +207,32 @@ export class ConfigService {
 
     return this.getDeepConfigValue(
       obj[firstFragment],
-      property.replace(/^.*?\./, "")
+      property.replace(/^.*?\./, ""),
     );
   }
 
   getOptionOrConfigValue<T = any>(
     optionCommands: string[] | string,
-    configPaths: string[] | string
+    configPaths: string[] | string,
   ): T | undefined;
   getOptionOrConfigValue<T = any>(
     optionCommands: string[] | string,
     configPaths: string[] | string,
-    defaultVal: T
+    defaultVal: T,
   ): T;
   getOptionOrConfigValue<T extends string | boolean, U = any>(
     optionCommands: string[] | string,
-    configPaths: string[] | string
+    configPaths: string[] | string,
   ): T | U | undefined;
   getOptionOrConfigValue<T extends string | boolean, U = any>(
     optionCommands: string[] | string,
     configPaths: string[] | string,
-    defaultVal: T | U
+    defaultVal: T | U,
   ): T | U;
   getOptionOrConfigValue<T extends string | boolean, U = any>(
     optionCommands: string[] | string,
     configPaths: string[] | string,
-    defaultVal?: T | U
+    defaultVal?: T | U,
   ): T | U | undefined {
     if (!Array.isArray(optionCommands)) {
       optionCommands = [optionCommands];

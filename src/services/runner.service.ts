@@ -10,19 +10,19 @@ export class RunnerService {
   public run(
     command: string,
     args?: string[] | string,
-    options?: SpawnSyncOptionsWithStringEncoding
+    options?: SpawnSyncOptionsWithStringEncoding,
   ): SpawnSyncReturns<string>;
   public run(
     command: string,
     args?: string[] | string,
-    options?: SpawnSyncOptionsWithBufferEncoding
+    options?: SpawnSyncOptionsWithBufferEncoding,
   ): SpawnSyncReturns<Buffer>;
   public run(
     command: string,
     args: string[] | string = [],
     options?:
       | SpawnSyncOptionsWithStringEncoding
-      | SpawnSyncOptionsWithBufferEncoding
+      | SpawnSyncOptionsWithBufferEncoding,
   ): SpawnSyncReturns<string> | SpawnSyncReturns<Buffer> {
     const opts = _.merge(
       {
@@ -30,7 +30,7 @@ export class RunnerService {
         stdio: "inherit",
         encoding: "utf-8",
       } as SpawnSyncOptionsWithStringEncoding,
-      options
+      options,
     );
 
     if (!Array.isArray(args)) {

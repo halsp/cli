@@ -31,7 +31,7 @@ export class BuildMiddlware extends Middleware {
     return this.configService.getOptionOrConfigValue<boolean>(
       "watch",
       "build.watch",
-      this.ctx.command == "start"
+      this.ctx.command == "start",
     );
   }
 
@@ -83,7 +83,7 @@ export class BuildMiddlware extends Middleware {
         if (onWatchStoped) {
           onWatchStoped();
         }
-      }
+      },
     );
   }
 
@@ -91,13 +91,13 @@ export class BuildMiddlware extends Middleware {
     const copy = this.configService.getOptionOrConfigValue(
       "copyPackage",
       "build.copyPackage",
-      false
+      false,
     );
     if (!copy) return;
     const removeDevDeps = this.configService.getOptionOrConfigValue(
       "removeDevDeps",
       "build.removeDevDeps",
-      false
+      false,
     );
 
     const filePath = path.join(process.cwd(), "package.json");
@@ -114,9 +114,9 @@ export class BuildMiddlware extends Middleware {
       json["devDependencies"] = {};
       await fs.promises.writeFile(
         targetPath,
-        prettier.format(JSON.stringify(json), {
+        await prettier.format(JSON.stringify(json), {
           parser: "json",
-        })
+        }),
       );
     }
   }

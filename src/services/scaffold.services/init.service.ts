@@ -21,11 +21,11 @@ export class InitService {
     const initFlatFilePath = path.join(
       __dirname,
       "../../../scaffold/node_modules",
-      cliVersion
+      cliVersion,
     );
     if (this.commandService.getOptionVlaue<boolean>("forceInit")) {
       this.ctx.logger.info(
-        this.chalkService.magentaBright("Force init scaffold. Please wait...")
+        this.chalkService.magentaBright("Force init scaffold. Please wait..."),
       );
     } else {
       if (fs.existsSync(initFlatFilePath)) {
@@ -33,14 +33,14 @@ export class InitService {
       }
       this.ctx.logger.info(
         this.chalkService.magentaBright(
-          "The command is used for the first time and is being initialized. Please wait..."
-        )
+          "The command is used for the first time and is being initialized. Please wait...",
+        ),
       );
     }
 
     const installResult = this.packageManagerService.install(
       pm,
-      path.join(__dirname, "../../../scaffold")
+      path.join(__dirname, "../../../scaffold"),
     );
     if (installResult.status == 0) {
       await fs.promises.writeFile(initFlatFilePath, cliVersion);
