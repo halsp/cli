@@ -8,7 +8,7 @@ describe("copy ignore", () => {
   async function runTest(
     dir: string,
     sourceFile: string | undefined,
-    targetExist: boolean
+    targetExist: boolean,
   ) {
     dir = ".cache-copy-ignore-" + dir;
     await runin("test/create", async () => {

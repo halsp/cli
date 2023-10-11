@@ -48,7 +48,7 @@ function runCompilerOptions(command: "start" | "build") {
     undefined,
     {
       sourceMap: false,
-    }
+    },
   );
 }
 runCompilerOptions("start");

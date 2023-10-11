@@ -33,9 +33,8 @@ describe("build with watch", () => {
             const assetsService = await ctx.getService(AssetsService);
             await assetsService.stopWatch();
 
-            const watchCompilerService = await ctx.getService(
-              WatchCompilerService
-            );
+            const watchCompilerService =
+              await ctx.getService(WatchCompilerService);
             watchCompilerService.stop();
             watchCompilerService.stop(); // test again
           }

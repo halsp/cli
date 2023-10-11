@@ -42,7 +42,7 @@ describe("scaffold", () => {
             debug: true,
             skipGit: true,
             skipRun: true,
-          }
+          },
         )
           .add(CheckNameMiddleware)
           .add(ScaffoldMiddleware)
@@ -99,7 +99,7 @@ describe("scaffold", () => {
 
 describe("mock scaffold", () => {
   async function testTemplate(
-    fn: (service: CopyScaffoldService) => void | Promise<void>
+    fn: (service: CopyScaffoldService) => void | Promise<void>,
   ) {
     let worked = false;
     await runin("test/create/mock-scaffold", async () => {
@@ -123,7 +123,7 @@ describe("mock scaffold", () => {
     plugins: string[],
     file: string,
     fn: (text?: string) => void | Promise<void>,
-    beforeFn?: () => void | Promise<void>
+    beforeFn?: () => void | Promise<void>,
   ) {
     await testTemplate(async (service) => {
       fs.rmSync("./dist/scaffold", {
@@ -181,7 +181,7 @@ describe("mock scaffold", () => {
               .trim()
               .should.eq("// CONTAINS_CONTENT");
           }
-        }
+        },
       );
     });
   }
@@ -199,7 +199,7 @@ describe("mock scaffold", () => {
           } else {
             expect(text).undefined;
           }
-        }
+        },
       );
     });
   }
@@ -215,7 +215,7 @@ describe("mock scaffold", () => {
       },
       () => {
         fs.writeFileSync("./scaffold/crlf.txt", "a\r\nb");
-      }
+      },
     );
   });
 
@@ -249,7 +249,7 @@ describe("mock scaffold", () => {
           } else {
             text?.trim().should.eq("// ROUTER_CONTENT");
           }
-        }
+        },
       );
     });
   }
@@ -362,7 +362,7 @@ describe("error", () => {
           packageManager: "npm",
           force: true,
           registry: process.env.REGISTRY as string,
-        }
+        },
       )
         .hook(HookType.BeforeInvoke, (ctx, md) => {
           if (md instanceof ScaffoldMiddleware) {
@@ -398,7 +398,7 @@ describe("error", () => {
         {
           packageManager: "npm",
           force: true,
-        }
+        },
       )
         .hook(HookType.BeforeInvoke, (ctx, md) => {
           if (md instanceof InstallMiddleware) {
@@ -447,7 +447,7 @@ describe("init", () => {
           registry: process.env.REGISTRY as string,
           skipInstall: true,
         },
-      }
+      },
     );
   }).timeout(1000 * 60 * 5);
 
@@ -464,7 +464,7 @@ describe("init", () => {
           skipInstall: true,
           forceInit: true,
         },
-      }
+      },
     );
   }).timeout(1000 * 60 * 5);
 
@@ -492,7 +492,7 @@ describe("init", () => {
           registry: process.env.REGISTRY as string,
           skipInstall: true,
         },
-      }
+      },
     );
   }).timeout(1000 * 60 * 5);
 });

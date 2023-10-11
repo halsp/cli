@@ -36,9 +36,8 @@ describe("empty-config", () => {
             const assetsService = await ctx.getService(AssetsService);
             await assetsService.stopWatch();
 
-            const watchCompilerService = await ctx.getService(
-              WatchCompilerService
-            );
+            const watchCompilerService =
+              await ctx.getService(WatchCompilerService);
             watchCompilerService.stop();
           }
           callCount++;
@@ -76,7 +75,7 @@ describe("tsconfig", () => {
       },
       {
         cwd: "test/build/tsconfig",
-      }
+      },
     );
   });
 
@@ -85,7 +84,7 @@ describe("tsconfig", () => {
       TsconfigService,
       async (ctx, service) => {
         (() => service.parsedCommandLine).should.throw(
-          "Could not find TypeScript configuration file not-exist.json"
+          "Could not find TypeScript configuration file not-exist.json",
         );
       },
       {
@@ -93,7 +92,7 @@ describe("tsconfig", () => {
           tsconfigPath: "not-exist.json",
         },
         cwd: "test/build/tsconfig",
-      }
+      },
     );
   });
 
@@ -108,7 +107,7 @@ describe("tsconfig", () => {
           tsconfigPath: "empty.tsconfig.json",
         },
         cwd: "test/build/tsconfig",
-      }
+      },
     );
   });
 });
@@ -140,7 +139,7 @@ describe("read config", () => {
           jsonConfig: `{"start":{"startupFile":"t1"}}`,
         },
         cwd: "test/build/config",
-      }
+      },
     );
   });
 
@@ -170,7 +169,7 @@ describe("read config", () => {
           jsonConfig: `{"start":{"startupFile":"t2"}}`,
         },
         cwd: "test/build/config",
-      }
+      },
     );
   });
 
@@ -184,7 +183,7 @@ describe("read config", () => {
       },
       {
         cwd: "test/build/config",
-      }
+      },
     );
   });
 
@@ -205,7 +204,7 @@ describe("read config", () => {
           mode: "test",
         },
         cwd: "test/build/config",
-      }
+      },
     );
   });
 
@@ -321,7 +320,7 @@ describe("read config", () => {
         },
         {
           cwd: "test/build/config",
-        }
+        },
       );
     } finally {
       process[tsNode.REGISTER_INSTANCE] = register;

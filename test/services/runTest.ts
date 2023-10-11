@@ -8,7 +8,7 @@ export function runTest<T extends object = any>(
   expectFn: (ctx: Context, service: T) => Promise<void>,
   mode = "test",
   args?: any,
-  options?: any
+  options?: any,
 ) {
   it(`service ${service.name} ${!!args} ${!!options}`, async () => {
     let worked = false;

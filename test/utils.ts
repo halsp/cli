@@ -20,7 +20,7 @@ export async function testService<T extends object = any>(
     args?: any;
     options?: any;
     cwd?: string;
-  } = {}
+  } = {},
 ) {
   let worked = false;
   await runin(args.cwd ?? process.cwd(), async () => {

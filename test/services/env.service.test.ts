@@ -13,7 +13,7 @@ runTest(
   undefined,
   {
     skipEnv: true,
-  }
+  },
 );
 
 runTest(
@@ -26,7 +26,7 @@ runTest(
   undefined,
   {
     env: "lambda",
-  }
+  },
 );
 
 runTest(
@@ -45,7 +45,7 @@ runTest(
   undefined,
   {
     env: "not-exist",
-  }
+  },
 );
 
 runTest(EnvService, async (ctx, service) => {

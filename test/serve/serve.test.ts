@@ -9,7 +9,7 @@ import { runin } from "../utils";
 function testResultAfter2000ms(
   ctx: Context,
   test: (server: Server) => Promise<void>,
-  cb: (err?: Error) => void
+  cb: (err?: Error) => void,
 ) {
   setTimeout(async () => {
     const server = ctx.res.body as Server;
@@ -35,7 +35,7 @@ describe("exclude", () => {
         },
         {
           exclude: exclude,
-        }
+        },
       )
         .use(async (ctx, next) => {
           testResultAfter2000ms(
@@ -47,7 +47,7 @@ describe("exclude", () => {
                 .expect((exclude ? /<span>404<\/span>/ : "test") as any)
                 .expect("content-type", "text/html");
             },
-            (err) => (err ? reject(err) : resolve())
+            (err) => (err ? reject(err) : resolve()),
           );
           await next();
         })
@@ -78,7 +78,7 @@ describe("dir", () => {
         },
         {
           hideDir: hideDir as any,
-        }
+        },
       )
         .use(async (ctx, next) => {
           testResultAfter2000ms(
@@ -88,11 +88,11 @@ describe("dir", () => {
                 .get("/dir")
                 .expect(hideDir ? 404 : 200)
                 .expect(
-                  (hideDir ? /<span>404<\/span>/ : /<ul id="files">/) as any
+                  (hideDir ? /<span>404<\/span>/ : /<ul id="files">/) as any,
                 )
                 .expect("content-type", "text/html");
             },
-            (err) => (err ? reject(err) : resolve())
+            (err) => (err ? reject(err) : resolve()),
           );
           await next();
         })
@@ -126,7 +126,7 @@ describe("app", () => {
                   .expect("test")
                   .expect("content-type", "text/html");
               },
-              (err) => (err ? reject(err) : resolve())
+              (err) => (err ? reject(err) : resolve()),
             );
             await next();
           })

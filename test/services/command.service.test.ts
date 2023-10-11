@@ -16,7 +16,7 @@ runTest(
   },
   undefined,
   undefined,
-  { "from-command": 1 }
+  { "from-command": 1 },
 );
 
 runTest(
@@ -27,7 +27,7 @@ runTest(
   },
   undefined,
   undefined,
-  { "from-command": 1 }
+  { "from-command": 1 },
 );
 
 runTest(ConfigService, async (ctx, service) => {
@@ -48,8 +48,8 @@ runTest(ConfigService, async (ctx, service) => {
   expect(
     service.getOptionOrConfigValue(
       "services1.from-config",
-      "services1.from-config"
-    )
+      "services1.from-config",
+    ),
   ).undefined;
   return;
 });

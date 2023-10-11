@@ -41,7 +41,7 @@ describe("copy package", () => {
 
       fs.existsSync(`./${cacheDir}/package.json`).should.true;
       JSON.parse(
-        fs.readFileSync(`./${cacheDir}/package.json`, "utf-8")
+        fs.readFileSync(`./${cacheDir}/package.json`, "utf-8"),
       ).devDependencies.should.deep.eq({});
       callCount++;
     });
@@ -74,7 +74,7 @@ describe("assets", () => {
     fs.existsSync(`./${cacheDir}`).should.true;
     fs.existsSync(`./${cacheDir}/default/test.txt`).should.true;
     fs.readFileSync(`./${cacheDir}/default/test.txt`, "utf-8").should.eq(
-      "test-build"
+      "test-build",
     );
     fs.existsSync(`./${cacheDir}/build-test.js`).should.true;
 
@@ -115,7 +115,7 @@ describe("assets", () => {
       fs.existsSync(`./${cacheDir}/default`).should.true;
       fs.existsSync(`./${cacheDir}/default/test.txt`).should.true;
       fs.readFileSync(`./${cacheDir}/default/test.txt`, "utf-8").should.eq(
-        "test-build"
+        "test-build",
       );
       fs.existsSync(`./${cacheDir}/build-test.js`).should.true;
       worked = true;
@@ -174,9 +174,8 @@ describe("assets", () => {
             const assetsService = await ctx.getService(AssetsService);
             await assetsService.stopWatch();
 
-            const watchCompilerService = await ctx.getService(
-              WatchCompilerService
-            );
+            const watchCompilerService =
+              await ctx.getService(WatchCompilerService);
             watchCompilerService.stop();
           }
           callCount++;
@@ -189,12 +188,12 @@ describe("assets", () => {
             const text = fs.readFileSync(cacheTargetFile, "utf-8");
             fs.writeFileSync(cacheSourceFile, text + cacheFileEditContent);
             await testWaiting(
-              () => fs.readFileSync(cacheTargetFile, "utf-8") == text
+              () => fs.readFileSync(cacheTargetFile, "utf-8") == text,
             );
 
             fs.existsSync(cacheTargetFile).should.true;
             fs.readFileSync(cacheTargetFile, "utf-8").should.eq(
-              cacheFileContent + cacheFileEditContent
+              cacheFileContent + cacheFileEditContent,
             );
           }
         })

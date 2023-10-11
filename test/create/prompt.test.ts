@@ -36,7 +36,7 @@ describe("prompt", () => {
         debug: true,
         skipGit: true,
         skipRun: true,
-      }
+      },
     )
       .use(async (ctx, next) => {
         const inquirerService = await ctx.getService(InquirerService);

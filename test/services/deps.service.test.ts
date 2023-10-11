@@ -10,7 +10,7 @@ runTest(DepsService, async (ctx, service) => {
   const depPath = (service as any).getPackagePath("@halsp/inject");
   const pkgPath = path.join(
     __dirname,
-    "../../node_modules/@halsp/inject/package.json"
+    "../../node_modules/@halsp/inject/package.json",
   );
   depPath.should.eq(pkgPath);
 });

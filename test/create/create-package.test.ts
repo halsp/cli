@@ -15,7 +15,7 @@ describe("create-package", () => {
         options: {
           skipEnv: true,
         },
-      }
+      },
     );
   });
 
@@ -47,7 +47,7 @@ describe("create-package", () => {
         options: {
           debug: true,
         },
-      }
+      },
     );
   });
 
@@ -70,7 +70,7 @@ describe("create-package", () => {
             test: false,
           },
         },
-        false
+        false,
       );
       deps.should.deep.eq({});
     });
