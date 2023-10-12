@@ -65,7 +65,7 @@ describe("prompt", () => {
 
   it(`should ask overwrite message when prompt return { overwrite: false }`, async () => {
     await runin("test/create", async () => {
-      const testName = ".cache-create-inquirer-overwrite-false";
+      const testName = ".cache-create-inquirer-overwrite-false-and-force-false";
       if (!fs.existsSync(testName)) {
         fs.mkdirSync(testName);
       }
@@ -81,7 +81,7 @@ describe("prompt", () => {
 
   it(`should force to replace exist dir`, async () => {
     await runin("test/create", async () => {
-      const testName = ".cache-create-inquirer-overwrite-true";
+      const testName = ".cache-create-inquirer-overwrite-false-and-force-true";
       if (!fs.existsSync(testName)) {
         fs.mkdirSync(testName);
       }

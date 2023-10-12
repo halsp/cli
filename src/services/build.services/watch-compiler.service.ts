@@ -26,7 +26,7 @@ export class WatchCompilerService {
   compile(outDir: string, onSuccess?: () => void, onStoped?: () => void) {
     this.onStoped = onStoped;
 
-    const { projectReferences, fileNames, options } =
+    const { projectReferences, options } =
       this.tsconfigService.parsedCommandLine;
 
     const origDiagnosticReporter = (ts as any).createDiagnosticReporter(
@@ -39,7 +39,7 @@ export class WatchCompilerService {
     );
 
     const host = ts.createWatchCompilerHost(
-      fileNames,
+      this.tsconfigService.filePath,
       this.getCompilerOptions(options, outDir),
       ts.sys,
       ts.createEmitAndSemanticDiagnosticsBuilderProgram,

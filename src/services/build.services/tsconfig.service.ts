@@ -14,10 +14,10 @@ export class TsconfigService {
       "tsconfig.json",
     );
   }
-  private get filePath() {
+  public get filePath() {
     return path.resolve(process.cwd(), this.fileName);
   }
-  get outDir() {
+  public get outDir() {
     return this.parsedCommandLine.options.outDir || "dist";
   }
 
@@ -29,7 +29,7 @@ export class TsconfigService {
     return this.#parsedCommandLine;
   }
 
-  public getParsedCommandLine() {
+  private getParsedCommandLine() {
     this.ensureTsconfigFile();
 
     const parsedCmd = ts.getParsedCommandLineOfConfigFile(
