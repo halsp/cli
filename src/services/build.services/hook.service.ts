@@ -1,15 +1,16 @@
 import { Inject } from "@halsp/inject";
 import { ConfigService } from "./config.service";
-import { PluginInterfaceService } from "./plugin-interface.service";
 import { Context } from "@halsp/core";
+import { DepsService } from "../deps.service";
+import { Prebuild } from "../../configuration";
 
 export class HookService {
-  @Inject
-  private readonly pluginInterfaceService!: PluginInterfaceService;
   @Inject
   private readonly configService!: ConfigService;
   @Inject
   private readonly ctx!: Context;
+  @Inject
+  private readonly depsService!: DepsService;
 
   private get config() {
     return this.configService.value;
@@ -20,7 +21,7 @@ export class HookService {
   }
 
   public async execPrebuilds(): Promise<boolean> {
-    const internalPrebuild = this.pluginInterfaceService.get("prebuild");
+    const internalPrebuild = this.getHooks("prebuild");
     const options = this.getScriptOptions();
 
     for (const fn of [
@@ -35,7 +36,7 @@ export class HookService {
   }
 
   public async execPostbuilds() {
-    const internalPostbuild = this.pluginInterfaceService.get("postbuild");
+    const internalPostbuild = this.getHooks("postbuild");
     const options = this.getScriptOptions();
 
     for (const fn of [
@@ -53,5 +54,9 @@ export class HookService {
       cacheDir: this.cacheDir,
       mode: this.configService.mode,
     };
+  }
+
+  private getHooks(name: string) {
+    return this.depsService.getInterfaces<Prebuild>(name);
   }
 }

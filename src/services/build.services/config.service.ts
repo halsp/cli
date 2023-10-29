@@ -5,8 +5,8 @@ import { Inject } from "@halsp/inject";
 import { CommandService } from "../command.service";
 import { FileService } from "../file.service";
 import * as tsNode from "ts-node";
-import { PluginInterfaceService } from "./plugin-interface.service";
 import * as fs from "fs";
+import { DepsService } from "../deps.service";
 
 export class ConfigService {
   @Inject
@@ -16,7 +16,7 @@ export class ConfigService {
   @Inject
   private readonly commandService!: CommandService;
   @Inject
-  private readonly pluginInterfaceService!: PluginInterfaceService;
+  private readonly depsService!: DepsService;
 
   #configFileName: string | undefined = undefined;
   private get configFileName() {
@@ -78,7 +78,10 @@ export class ConfigService {
   private async loadConfig(): Promise<Configuration> {
     let config = await this.getConfig();
 
-    const cliConfigHooks = this.pluginInterfaceService.get("cliConfigHook");
+    const cliConfigHooks =
+      this.depsService.getInterfaces<
+        (config: Configuration, options: ConfigEnv) => Configuration | void
+      >("cliConfigHook");
     for (const hook of cliConfigHooks) {
       config = hook(config, this.configEnv) ?? config;
     }

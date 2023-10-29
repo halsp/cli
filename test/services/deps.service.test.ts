@@ -17,7 +17,7 @@ runTest(DepsService, async (ctx, service) => {
 
 runTest(DepsService, async (ctx, service) => {
   const depPath = (service as any).getPackagePath("@halsp/inject");
-  const deps = service.getDeps(depPath, () => false);
+  const deps = service["getDeps"](depPath, () => false);
   Array.isArray(deps).should.true;
   deps.length.should.eq(0);
 });

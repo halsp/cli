@@ -1,21 +1,10 @@
 import * as fs from "fs";
+import path from "path";
 
 export type DepItem = { key: string; value: string };
 
 export class DepsService {
-  public getPackageHalspDeps(pkg: string, paths = [process.cwd()]): DepItem[] {
-    const path = this.getPackagePath(pkg, paths);
-    return this.getDeps(path, /^@halsp\//, paths, false);
-  }
-
-  public getProjectHalspDeps(
-    packagePath: string,
-    paths = [process.cwd()],
-  ): DepItem[] {
-    return this.getDeps(packagePath, /^@halsp\//, paths, true);
-  }
-
-  public getDeps(
+  private getDeps(
     packagePath: string,
     regExp: RegExp | ((dep: string) => boolean),
     paths = [process.cwd()],
@@ -74,5 +63,38 @@ export class DepsService {
     return require.resolve(pkg + "/package.json", {
       paths: paths,
     });
+  }
+
+  public getPackageHalspDeps(pkg: string, paths = [process.cwd()]): DepItem[] {
+    const path = this.getPackagePath(pkg, paths);
+    return this.getDeps(path, /^@halsp\//, paths, false);
+  }
+
+  public getProjectHalspDeps(
+    packagePath: string,
+    paths = [process.cwd()],
+  ): DepItem[] {
+    return this.getDeps(packagePath, /^@halsp\//, paths, true);
+  }
+
+  public getInterfaces<T>(name: string): T[] {
+    const pkgPath = path.join(process.cwd(), "package.json");
+    if (!fs.existsSync(pkgPath)) {
+      return [];
+    }
+
+    return this.getDeps(
+      path.join(process.cwd(), "package.json"),
+      /^(@halsp\/|halsp\-|@\S+\/halsp\-)/,
+    )
+      .map((dep) => {
+        const depPath = require.resolve(dep.key, {
+          paths: [process.cwd()],
+        });
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
+        const module = require(depPath);
+        return module[name];
+      })
+      .filter((script) => !!script);
   }
 }

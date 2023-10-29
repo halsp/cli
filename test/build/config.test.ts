@@ -117,7 +117,7 @@ describe("read config", () => {
     await testService(
       ConfigService,
       async (ctx, service) => {
-        (service as any).pluginInterfaceService.get = (name) => {
+        (service as any).depsService.getInterfaces = (name: string) => {
           if (name == "cliConfigHook") {
             return [
               (config: Configuration) => {
@@ -147,7 +147,7 @@ describe("read config", () => {
     await testService(
       ConfigService,
       async (ctx, service) => {
-        (service as any).pluginInterfaceService.get = (name) => {
+        (service as any).depsService.getInterfaces = (name: string) => {
           if (name == "cliConfigHook") {
             return [
               () => ({

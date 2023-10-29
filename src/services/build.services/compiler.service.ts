@@ -2,8 +2,9 @@ import { Context, isUndefined } from "@halsp/core";
 import { Inject } from "@halsp/inject";
 import ts from "typescript";
 import { ConfigService } from "./config.service";
-import { PluginInterfaceService } from "./plugin-interface.service";
 import { TsconfigService } from "./tsconfig.service";
+import { CompilerHook } from "../../configuration";
+import { DepsService } from "../deps.service";
 
 export class CompilerService {
   @Inject
@@ -13,7 +14,7 @@ export class CompilerService {
   @Inject
   private readonly configService!: ConfigService;
   @Inject
-  private readonly pluginInterfaceService!: PluginInterfaceService;
+  private readonly depsService!: DepsService;
 
   private get config() {
     return this.configService.value;
@@ -31,15 +32,19 @@ export class CompilerService {
 
   public getHooks(program: ts.Program) {
     const before = [
-      ...this.pluginInterfaceService.get("beforeCompile"),
+      ...this.getInterfaces<CompilerHook<ts.SourceFile>>("beforeCompile"),
       ...(this.config.build?.beforeHooks ?? []),
     ].map((hook) => hook(program));
+
     const after = [
-      ...this.pluginInterfaceService.get("afterCompile"),
+      ...this.getInterfaces<CompilerHook<ts.SourceFile>>("afterCompile"),
       ...(this.config.build?.afterHooks ?? []),
     ].map((hook) => hook(program));
+
     const afterDeclarations = [
-      ...this.pluginInterfaceService.get("afterCompileDeclarations"),
+      ...this.getInterfaces<CompilerHook<ts.SourceFile | ts.Bundle>>(
+        "afterCompileDeclarations",
+      ),
       ...(this.config.build?.afterDeclarationsHooks ?? []),
     ].map((hook) => hook(program));
 
@@ -48,6 +53,14 @@ export class CompilerService {
       after,
       afterDeclarations,
     };
+  }
+
+  private getInterfaces<
+    T extends
+      | CompilerHook<ts.SourceFile>
+      | CompilerHook<ts.SourceFile | ts.Bundle>,
+  >(name: string) {
+    return this.depsService.getInterfaces<T>(name);
   }
 
   public compile(outDir: string) {
