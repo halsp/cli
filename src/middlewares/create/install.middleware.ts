@@ -17,9 +17,8 @@ export class InstallMiddleware extends Middleware {
       return await this.next();
     }
 
-    const pm = await this.packageManagerService.get();
-    const installResult = this.packageManagerService.install(
-      pm,
+    const installResult = await this.packageManagerService.install(
+      undefined,
       this.createService.targetDir,
     );
     if (installResult.status != 0) {

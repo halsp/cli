@@ -38,7 +38,7 @@ export class InitService {
       );
     }
 
-    const installResult = this.packageManagerService.install(
+    const installResult = await this.packageManagerService.install(
       pm,
       path.join(__dirname, "../../../scaffold"),
     );

@@ -404,7 +404,7 @@ describe("error", () => {
           if (md instanceof InstallMiddleware) {
             md["packageManagerService"]["install"] = (async () => {
               return {
-                status: 0,
+                status: -1,
               };
             }) as any;
           }

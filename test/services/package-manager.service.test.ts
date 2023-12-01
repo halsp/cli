@@ -34,7 +34,7 @@ runTest(PackageManagerService, async (ctx, service) => {
   await runin(dir, async () => {
     runner.run("npm");
     runner.run("npm", ["init", "-y"]);
-    service.install("npm");
+    await service.install("npm");
   });
 
   fs.existsSync(path.join(dir, "package-lock.json")).should.true;

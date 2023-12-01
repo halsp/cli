@@ -35,8 +35,7 @@ export class UpdateMiddleware extends Middleware {
       runResult &&
       Object.keys(runResult).length > 0
     ) {
-      const pm = await this.packageManagerService.get();
-      this.packageManagerService.install(pm);
+      await this.packageManagerService.install();
     }
   }
 

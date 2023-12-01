@@ -55,17 +55,27 @@ export class PackageManagerService {
     return mng;
   }
 
-  public install(pm: string, dir = process.cwd()) {
-    const args: string[] = ["install"];
+  public async exec(args: string | string[], pm?: string, dir = process.cwd()) {
+    args = Array.isArray(args) ? [...args] : [args];
+
     const registry = this.commandService.getOptionVlaue<string>("registry");
     if (registry) {
       args.push("--registry");
       args.push(registry);
     }
 
+    pm ||= await this.get();
     return this.runnerService.run(pm, args, {
       cwd: dir,
       encoding: "utf-8",
     });
+  }
+
+  public async install(pm?: string, dir = process.cwd()) {
+    return await this.exec("install", pm, dir);
+  }
+
+  public async add(name: string, pm?: string, dir = process.cwd()) {
+    return await this.exec(["add", name], pm, dir);
   }
 }
