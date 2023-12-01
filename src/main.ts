@@ -6,6 +6,7 @@ import { InfoCommand } from "./commands/info.command";
 import { ServeCommand } from "./commands/serve.command";
 import { StartCommand } from "./commands/start.command";
 import { UpdateCommand } from "./commands/update.command";
+import { PluginCommand } from "./commands/plugin.command";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const version = require("../package").version;
@@ -20,6 +21,7 @@ new StartCommand().register(program);
 new InfoCommand().register(program);
 new UpdateCommand().register(program);
 new ServeCommand().register(program);
+new PluginCommand().register(program);
 
 program.parse(process.argv);
 

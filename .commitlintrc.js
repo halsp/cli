@@ -16,7 +16,7 @@ module.exports = {
         "revert",
         "style",
         "test",
-        "typo"
+        "typo",
       ],
     ],
     "scope-enum": [
@@ -33,7 +33,8 @@ module.exports = {
         "start",
         "scaffold",
         "update",
-        "serve"
+        "serve",
+        "plugin",
       ],
     ],
   },
