@@ -78,4 +78,8 @@ export class PackageManagerService {
   public async add(name: string, pm?: string, dir = process.cwd()) {
     return await this.exec(["add", name], pm, dir);
   }
+
+  public async uninstall(name: string, dir = process.cwd()) {
+    return await this.exec(["uninstall", name], "npm", dir);
+  }
 }

@@ -77,24 +77,51 @@ export class DepsService {
     return this.getDeps(packagePath, /^@halsp\//, paths, true);
   }
 
-  public getInterfaces<T>(name: string): T[] {
-    const pkgPath = path.join(process.cwd(), "package.json");
+  public getInterfaces<T>(
+    name: string,
+    packagePath: string | undefined,
+    containsPackage: true,
+  ): {
+    package: string;
+    interface: T;
+  }[];
+  public getInterfaces<T>(name: string, packagePath?: string): T[];
+  public getInterfaces<T>(
+    name: string,
+    packagePath: string | undefined,
+    containsPackage?: boolean,
+  ): (
+    | {
+        package: string;
+        interface: T;
+      }
+    | T
+  )[] {
+    const pkgPath = packagePath ?? path.join(process.cwd(), "package.json");
     if (!fs.existsSync(pkgPath)) {
       return [];
     }
 
-    return this.getDeps(
-      path.join(process.cwd(), "package.json"),
-      /^(@halsp\/|halsp\-|@\S+\/halsp\-)/,
-    )
+    return this.getDeps(pkgPath, /^(@halsp\/|halsp\-|@\S+\/halsp\-)/)
       .map((dep) => {
         const depPath = require.resolve(dep.key, {
           paths: [process.cwd()],
         });
         // eslint-disable-next-line @typescript-eslint/no-var-requires
         const module = require(depPath);
-        return module[name];
+        const inter = module[name];
+        if (containsPackage) {
+          return inter
+            ? {
+                package: dep.key,
+                interface: module[name],
+              }
+            : null;
+        } else {
+          return inter;
+        }
       })
-      .filter((script) => !!script);
+      .filter((script) => !!script)
+      .map((item) => item!);
   }
 }

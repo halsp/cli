@@ -7,6 +7,7 @@ import { ServeCommand } from "./commands/serve.command";
 import { StartCommand } from "./commands/start.command";
 import { UpdateCommand } from "./commands/update.command";
 import { PluginCommand } from "./commands/plugin.command";
+import { getPluginsWithOut } from "./services/plugin.service";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const version = require("../package").version;
@@ -22,6 +23,9 @@ new InfoCommand().register(program);
 new UpdateCommand().register(program);
 new ServeCommand().register(program);
 new PluginCommand().register(program);
+
+const plugins = getPluginsWithOut();
+plugins.forEach((p) => p.interface(program));
 
 program.parse(process.argv);
 

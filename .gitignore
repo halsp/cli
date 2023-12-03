@@ -10,3 +10,4 @@ coverage
 .husky/_
 
 scaffold/yarn.lock
+.cli-plugins

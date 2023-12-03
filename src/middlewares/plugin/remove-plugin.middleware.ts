@@ -5,7 +5,7 @@ import path from "path";
 import { ChalkService } from "../../services/chalk.service";
 import { PluginService } from "../../services/plugin.service";
 
-export class AddPluginMiddleware extends Middleware {
+export class RemovePluginMiddleware extends Middleware {
   @Inject
   private readonly packageManagerService!: PackageManagerService;
   @Inject
@@ -14,26 +14,28 @@ export class AddPluginMiddleware extends Middleware {
   private readonly pluginService!: PluginService;
 
   async invoke() {
-    const cliDir = path.join(__dirname, "../../..");
     const name = this.ctx.commandArgs.name;
-
     const plugins = this.pluginService.get();
-    if (plugins.filter((p) => p.package == name).length) {
-      this.logger.error(`This plugin has already been added.`);
+    const plugin = plugins.filter((p) => p.package == name)[0];
+    if (!plugin) {
+      this.logger.error(`The plugin does not exist.`);
       return;
     }
 
-    const installResult = await this.packageManagerService.add(
-      name,
-      undefined,
-      cliDir,
-    );
+    let dir = "";
+    if (plugin.cwd) {
+      dir = process.cwd();
+    } else {
+      dir = path.join(__dirname, "../../../");
+    }
+
+    const installResult = await this.packageManagerService.uninstall(name, dir);
     if (installResult.status != 0) {
       return;
     }
 
     this.logger.info(
-      "Add plugin " + this.chalkService.bold.greenBright(name) + " success.",
+      "Remove plugin " + this.chalkService.bold.greenBright(name) + " success.",
     );
   }
 }

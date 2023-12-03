@@ -42,6 +42,7 @@ export class UpdateMiddleware extends Middleware {
   private async runNcu() {
     const tag = this.commandService.getOptionVlaue<string>("tag");
     const pkgData = await fs.promises.readFile(this.packagePath, "utf-8");
+    const packageManager = await this.packageManagerService.get();
 
     await chalkInit();
     return await runLocal(
@@ -52,6 +53,7 @@ export class UpdateMiddleware extends Middleware {
         cwd: process.cwd(),
         loglevel: "warn",
         registry: this.registry,
+        packageManager: packageManager as any,
       },
       pkgData,
       this.skipUpgrade ? undefined : this.packagePath,
@@ -70,15 +72,5 @@ export class UpdateMiddleware extends Middleware {
     }
 
     return /^\@halsp\//;
-  }
-
-  private parsePackageManager(): "pnpm" | "yarn" | "npm" {
-    if (fs.existsSync(path.join(process.cwd(), "pnpm-lock.yaml"))) {
-      return "pnpm";
-    } else if (fs.existsSync(path.join(process.cwd(), "yarn.lock"))) {
-      return "yarn";
-    } else {
-      return "npm";
-    }
   }
 }
