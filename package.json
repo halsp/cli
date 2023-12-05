@@ -38,8 +38,6 @@
   "dependencies": {
     "@halsp/core": "^2.2.2",
     "@halsp/inject": "^2.2.2",
-    "@halsp/native": "^2.2.2",
-    "@halsp/static": "^2.2.2",
     "chalk": "^5.3.0",
     "child_process": "^1.0.2",
     "chokidar": "^3.5.3",

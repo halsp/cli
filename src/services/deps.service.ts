@@ -97,7 +97,7 @@ export class DepsService {
       }
     | T
   )[] {
-    const pkgPath = packagePath ?? path.join(process.cwd(), "package.json");
+    const pkgPath = packagePath ?? path.resolve("package.json");
     if (!fs.existsSync(pkgPath)) {
       return [];
     }

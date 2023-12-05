@@ -1,4 +1,5 @@
 import { DepsService } from "../../src/services/deps.service";
+import { runin } from "../utils";
 import { runTest } from "./runTest";
 import path from "path";
 
@@ -7,12 +8,9 @@ runTest(DepsService, async (ctx, service) => {
   Array.isArray(deps).should.true;
   (deps.length > 0).should.true;
 
-  const depPath = (service as any).getPackagePath("@halsp/inject");
-  const pkgPath = path.join(
-    __dirname,
-    "../../node_modules/@halsp/inject/package.json",
-  );
-  depPath.should.eq(pkgPath);
+  const depPath: string = (service as any).getPackagePath("@halsp/inject");
+  const pkgPath = path.join("node_modules/@halsp/inject/package.json");
+  depPath.endsWith(pkgPath).should.true;
 });
 
 runTest(DepsService, async (ctx, service) => {
@@ -20,4 +18,22 @@ runTest(DepsService, async (ctx, service) => {
   const deps = service["getDeps"](depPath, () => false);
   Array.isArray(deps).should.true;
   deps.length.should.eq(0);
+});
+
+runTest(DepsService, async (ctx, service) => {
+  await runin("../../", () => {
+    const interfaces = service.getInterfaces("halspCliTest");
+    interfaces.length.should.eq(0);
+  });
+});
+
+runTest(DepsService, async (ctx, service) => {
+  await runin("../../", () => {
+    const interfaces = service.getInterfaces(
+      "createInject",
+      path.resolve("package.json"),
+      true,
+    );
+    interfaces.length.should.eq(1);
+  });
 });
