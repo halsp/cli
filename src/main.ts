@@ -25,7 +25,7 @@ new ServeCommand().register(program);
 new PluginCommand().register(program);
 
 const plugins = getPluginsWithOut();
-plugins.forEach((p) => p.interface(program));
+plugins.forEach((p) => p.config.register(program));
 
 program.parse(process.argv);
 

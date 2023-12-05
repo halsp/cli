@@ -4,6 +4,10 @@ import { DepsService } from "./deps.service";
 import { Command } from "commander";
 
 type PluginHook = (command: Command) => void;
+interface PluginConfig {
+  register: PluginHook;
+  baseOn: string | string[];
+}
 
 export class PluginService {
   @Inject
@@ -12,23 +16,28 @@ export class PluginService {
   public get() {
     const pkgPath = path.join(__dirname, "../../package.json");
     const localList = this.depsService
-      .getInterfaces<PluginHook>("cliPluginHook", pkgPath, true)
+      .getInterfaces<PluginConfig>("halspCliPlugin", pkgPath, true)
       .map((item) => ({
         ...item,
         cwd: false,
       }));
     const currentList = this.depsService
-      .getInterfaces<PluginHook>("cliPluginHook", undefined, true)
+      .getInterfaces<PluginConfig>("halspCliPlugin", undefined, true)
       .map((item) => ({
         ...item,
         cwd: true,
       }));
 
     return [...localList, ...currentList]
+      .map((item) => ({
+        package: item.package,
+        cwd: item.cwd,
+        config: item.interface,
+      }))
       .reduce<
         {
           package: string;
-          interface: PluginHook;
+          config: PluginConfig;
           cwd: boolean;
         }[]
       >((pre, cur) => {
@@ -36,16 +45,7 @@ export class PluginService {
           pre.push(cur);
         }
         return pre;
-      }, [])
-      .sort((left, right) => {
-        if (left.package == "@halsp/cli") {
-          return -1;
-        }
-        if (right.package == "@halsp/cli") {
-          return -1;
-        }
-        return 0;
-      });
+      }, []);
   }
 }
 

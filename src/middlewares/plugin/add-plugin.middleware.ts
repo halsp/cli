@@ -14,7 +14,6 @@ export class AddPluginMiddleware extends Middleware {
   private readonly pluginService!: PluginService;
 
   async invoke() {
-    const cliDir = path.join(__dirname, "../../..");
     const name = this.ctx.commandArgs.name;
 
     const plugins = this.pluginService.get();
@@ -23,17 +22,34 @@ export class AddPluginMiddleware extends Middleware {
       return;
     }
 
+    if (!(await this.installPlugin(name))) return;
+    if (!(await this.installBaseOn(name))) return;
+
+    this.logger.info(
+      "Add plugin " + this.chalkService.bold.greenBright(name) + " success.",
+    );
+  }
+
+  private async installPlugin(name: string) {
+    const cliDir = path.join(__dirname, "../../..");
     const installResult = await this.packageManagerService.add(
       name,
       undefined,
       cliDir,
     );
-    if (installResult.status != 0) {
-      return;
-    }
+    return installResult.status == 0;
+  }
 
-    this.logger.info(
-      "Add plugin " + this.chalkService.bold.greenBright(name) + " success.",
-    );
+  private async installBaseOn(name: string) {
+    const plugins = this.pluginService.get();
+    const plugin = plugins.filter((p) => p.package == name)[0];
+    if (!plugin) return false;
+
+    const baseOn = Array.isArray(plugin.config.baseOn)
+      ? plugin.config.baseOn
+      : [plugin.config.baseOn];
+    for (const pkg in baseOn) {
+      await this.installPlugin(pkg);
+    }
   }
 }
