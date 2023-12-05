@@ -89,10 +89,10 @@ export class DepsService {
       return [];
     }
 
-    return this.getDeps(pkgPath, /^(@halsp\/|halsp\-|@\S+\/halsp\-)/)
+    return this.getDeps(pkgPath, /^(@halsp\/|halsp\-|@\S+\/halsp\-)/, [cwd])
       .map((dep) => {
         const depPath = require.resolve(dep.key, {
-          paths: [process.cwd()],
+          paths: [cwd],
         });
         // eslint-disable-next-line @typescript-eslint/no-var-requires
         const module = require(depPath);
