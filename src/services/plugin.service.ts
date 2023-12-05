@@ -14,15 +14,15 @@ export class PluginService {
   private readonly depsService!: DepsService;
 
   public get() {
-    const pkgPath = path.join(__dirname, "../../package.json");
+    const pkgPath = path.join(__dirname, "../../");
     const localList = this.depsService
-      .getInterfaces<PluginConfig>("halspCliPlugin", pkgPath, true)
+      .getInterfaces<PluginConfig>("halspCliPlugin", pkgPath)
       .map((item) => ({
         ...item,
         cwd: false,
       }));
     const currentList = this.depsService
-      .getInterfaces<PluginConfig>("halspCliPlugin", undefined, true)
+      .getInterfaces<PluginConfig>("halspCliPlugin", undefined)
       .map((item) => ({
         ...item,
         cwd: true,

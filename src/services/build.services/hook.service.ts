@@ -57,6 +57,8 @@ export class HookService {
   }
 
   private getHooks(name: string) {
-    return this.depsService.getInterfaces<Prebuild>(name);
+    return this.depsService
+      .getInterfaces<Prebuild>(name)
+      .map((item) => item.interface);
   }
 }

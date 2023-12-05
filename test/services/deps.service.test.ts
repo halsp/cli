@@ -29,11 +29,7 @@ runTest(DepsService, async (ctx, service) => {
 
 runTest(DepsService, async (ctx, service) => {
   await runin("../../", () => {
-    const interfaces = service.getInterfaces(
-      "createInject",
-      path.resolve("package.json"),
-      true,
-    );
+    const interfaces = service.getInterfaces("createInject", process.cwd());
     interfaces.length.should.eq(1);
   });
 });

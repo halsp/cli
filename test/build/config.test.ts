@@ -120,10 +120,12 @@ describe("read config", () => {
         (service as any).depsService.getInterfaces = (name: string) => {
           if (name == "cliConfigHook") {
             return [
-              (config: Configuration) => {
-                config.start = {
-                  startupFile: "t1",
-                };
+              {
+                interface: (config: Configuration) => {
+                  config.start = {
+                    startupFile: "t1",
+                  };
+                },
               },
             ];
           } else {
@@ -150,11 +152,13 @@ describe("read config", () => {
         (service as any).depsService.getInterfaces = (name: string) => {
           if (name == "cliConfigHook") {
             return [
-              () => ({
-                start: {
-                  startupFile: "t1",
-                },
-              }),
+              {
+                interface: () => ({
+                  start: {
+                    startupFile: "t1",
+                  },
+                }),
+              },
             ];
           } else {
             return [];

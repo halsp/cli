@@ -78,10 +78,11 @@ export class ConfigService {
   private async loadConfig(): Promise<Configuration> {
     let config = await this.getConfig();
 
-    const cliConfigHooks =
-      this.depsService.getInterfaces<
+    const cliConfigHooks = this.depsService
+      .getInterfaces<
         (config: Configuration, options: ConfigEnv) => Configuration | void
-      >("cliConfigHook");
+      >("cliConfigHook")
+      .map((item) => item.interface);
     for (const hook of cliConfigHooks) {
       config = hook(config, this.configEnv) ?? config;
     }

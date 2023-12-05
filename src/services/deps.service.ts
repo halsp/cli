@@ -79,25 +79,12 @@ export class DepsService {
 
   public getInterfaces<T>(
     name: string,
-    packagePath: string | undefined,
-    containsPackage: true,
+    cwd = process.cwd(),
   ): {
     package: string;
     interface: T;
-  }[];
-  public getInterfaces<T>(name: string, packagePath?: string): T[];
-  public getInterfaces<T>(
-    name: string,
-    packagePath: string | undefined,
-    containsPackage?: boolean,
-  ): (
-    | {
-        package: string;
-        interface: T;
-      }
-    | T
-  )[] {
-    const pkgPath = packagePath ?? path.resolve("package.json");
+  }[] {
+    const pkgPath = path.resolve(cwd, "package.json");
     if (!fs.existsSync(pkgPath)) {
       return [];
     }
@@ -110,16 +97,12 @@ export class DepsService {
         // eslint-disable-next-line @typescript-eslint/no-var-requires
         const module = require(depPath);
         const inter = module[name];
-        if (containsPackage) {
-          return inter
-            ? {
-                package: dep.key,
-                interface: module[name],
-              }
-            : null;
-        } else {
-          return inter;
-        }
+        return inter
+          ? {
+              package: dep.key,
+              interface: module[name],
+            }
+          : null;
       })
       .filter((script) => !!script)
       .map((item) => item!);

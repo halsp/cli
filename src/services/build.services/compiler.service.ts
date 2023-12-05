@@ -32,19 +32,23 @@ export class CompilerService {
 
   public getHooks(program: ts.Program) {
     const before = [
-      ...this.getInterfaces<CompilerHook<ts.SourceFile>>("beforeCompile"),
+      ...this.getInterfaces<CompilerHook<ts.SourceFile>>("beforeCompile").map(
+        (item) => item.interface,
+      ),
       ...(this.config.build?.beforeHooks ?? []),
     ].map((hook) => hook(program));
 
     const after = [
-      ...this.getInterfaces<CompilerHook<ts.SourceFile>>("afterCompile"),
+      ...this.getInterfaces<CompilerHook<ts.SourceFile>>("afterCompile").map(
+        (item) => item.interface,
+      ),
       ...(this.config.build?.afterHooks ?? []),
     ].map((hook) => hook(program));
 
     const afterDeclarations = [
       ...this.getInterfaces<CompilerHook<ts.SourceFile | ts.Bundle>>(
         "afterCompileDeclarations",
-      ),
+      ).map((item) => item.interface),
       ...(this.config.build?.afterDeclarationsHooks ?? []),
     ].map((hook) => hook(program));
 
