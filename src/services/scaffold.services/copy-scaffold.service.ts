@@ -10,6 +10,9 @@ import { glob } from "glob";
 import { CopyIgnoreService } from "./copy-ignore.service";
 import { CreateService } from "../create.service";
 import { ParseCodeService } from "./parse-code.service";
+import { createDirname } from "../../utils/shims";
+
+const __dirname = createDirname(import.meta.url);
 
 export class CopyScaffoldService {
   @Inject

@@ -1,16 +1,18 @@
 import path from "path";
 import * as fs from "fs";
 import { Context } from "@halsp/core";
-import { ChalkService } from "../chalk.service";
+import chalk from "chalk";
 import { Inject } from "@halsp/inject";
 import { CommandService } from "../command.service";
 import { PackageManagerService } from "../package-manager.service";
+import { createDirname, createRequire } from "../../utils/shims";
+
+const require = createRequire(import.meta.url);
+const __dirname = createDirname(import.meta.url);
 
 export class InitService {
   @Inject
   private readonly ctx!: Context;
-  @Inject
-  private readonly chalkService!: ChalkService;
   @Inject
   private readonly commandService!: CommandService;
   @Inject
@@ -25,14 +27,14 @@ export class InitService {
     );
     if (this.commandService.getOptionVlaue<boolean>("forceInit")) {
       this.ctx.logger.info(
-        this.chalkService.magentaBright("Force init scaffold. Please wait..."),
+        chalk.magentaBright("Force init scaffold. Please wait..."),
       );
     } else {
       if (fs.existsSync(initFlatFilePath)) {
         return true;
       }
       this.ctx.logger.info(
-        this.chalkService.magentaBright(
+        chalk.magentaBright(
           "The command is used for the first time and is being initialized. Please wait...",
         ),
       );

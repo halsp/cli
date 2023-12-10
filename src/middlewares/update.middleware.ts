@@ -3,8 +3,8 @@ import { PackageManagerService } from "../services/package-manager.service";
 import { CommandService } from "../services/command.service";
 import * as fs from "fs";
 import path from "path";
-import runLocal from "npm-check-updates/build/src/lib/runLocal";
-import { chalkInit } from "npm-check-updates/build/src/lib/chalk";
+import runLocal from "npm-check-updates/build/src/lib/runLocal.js";
+import { chalkInit } from "npm-check-updates/build/src/lib/chalk.js";
 import { Middleware } from "@halsp/core";
 
 export class UpdateMiddleware extends Middleware {

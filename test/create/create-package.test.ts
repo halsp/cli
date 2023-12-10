@@ -1,6 +1,9 @@
 import path from "path";
 import { CopyPackageService } from "../../src/services/scaffold.services/copy-package.service";
 import { testService } from "../utils";
+import { createDirname } from "../../src/utils/shims";
+
+const __dirname = createDirname(import.meta.url);
 
 describe("create-package", () => {
   it("should not set cli version when dependencies is not exist", async () => {

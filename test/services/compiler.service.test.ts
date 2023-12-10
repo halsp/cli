@@ -4,6 +4,9 @@ import * as fs from "fs";
 import { WatchCompilerService } from "../../src/services/build.services/watch-compiler.service";
 import path from "path";
 import ts from "typescript";
+import { createDirname } from "../../src/utils/shims";
+
+const __dirname = createDirname(import.meta.url);
 
 runTest(CompilerService, async (ctx, service) => {
   fs.rmSync("./dist-compiler", {

@@ -1,15 +1,13 @@
 import { Middleware } from "@halsp/core";
 import { Inject } from "@halsp/inject";
 import { PackageManagerService } from "../../services/package-manager.service";
-import path from "path";
-import { ChalkService } from "../../services/chalk.service";
+import path, { dirname } from "path";
+import chalk from "chalk";
 import { PluginService } from "../../services/plugin.service";
 
 export class RemovePluginMiddleware extends Middleware {
   @Inject
   private readonly packageManagerService!: PackageManagerService;
-  @Inject
-  private readonly chalkService!: ChalkService;
   @Inject
   private readonly pluginService!: PluginService;
 
@@ -26,7 +24,7 @@ export class RemovePluginMiddleware extends Middleware {
     if (plugin.cwd) {
       dir = process.cwd();
     } else {
-      dir = path.join(__dirname, "../../../");
+      dir = path.join(dirname(import.meta.url), "../../../");
     }
 
     const installResult = await this.packageManagerService.uninstall(name, dir);
@@ -35,7 +33,7 @@ export class RemovePluginMiddleware extends Middleware {
     }
 
     this.logger.info(
-      "Remove plugin " + this.chalkService.bold.greenBright(name) + " success.",
+      "Remove plugin " + chalk.bold.greenBright(name) + " success.",
     );
   }
 }

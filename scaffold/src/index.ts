@@ -34,6 +34,7 @@ import "@halsp/alifc";
 //{http||micro
 import * as fs from "fs";
 import path from "path";
+import { fileURLToPath } from "url";
 //}
 
 import { Startup } from "@halsp/core";
@@ -287,7 +288,7 @@ export default async (c: any, q: any) => (c.res = await startup.run(q, c));
 //{http||micro
 const version = (() => {
   const pkgName = "package.json";
-  let dir = __dirname;
+  let dir = path.dirname(fileURLToPath(import.meta.url));
   let filePath = path.join(dir, pkgName);
   while (!fs.existsSync(filePath)) {
     dir = path.dirname(dir);

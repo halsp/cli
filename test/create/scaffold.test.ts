@@ -15,6 +15,10 @@ import { CopyScaffoldService } from "../../src/services/scaffold.services/copy-s
 import { HookType } from "@halsp/core";
 import { expect } from "chai";
 import { InitService } from "../../src/services/scaffold.services/init.service";
+import { createDirname, createRequire } from "../../src/utils/shims";
+
+const require = createRequire(import.meta.url);
+const __dirname = createDirname(import.meta.url);
 
 describe("scaffold", () => {
   const testName = ".cache-scaffold-create";

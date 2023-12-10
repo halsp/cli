@@ -1,5 +1,5 @@
 #!/usr/bin/env node
 
-'use strict';
+"use strict";
 
-require('../dist/create-halsp');
+import "../dist/create-halsp.js";

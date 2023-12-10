@@ -1,10 +1,11 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
-    "moduleResolution": "node",
+    "target": "ES2022",
+    "module": "ES2022",
+    "moduleResolution": "Bundler",
     "declaration": true,
+    "resolveJsonModule": true,
     "outDir": "./dist",
-    "target": "es2015",
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
@@ -12,5 +13,8 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "preserveWatchOutput": true
+  },
+  "ts-node": {
+    "esm": true
   }
 }

@@ -16,6 +16,7 @@
     "url": "https://github.com/halsp/cli/issues",
     "email": "support@hal.wang"
   },
+  "type": "module",
   "main": "dist/index.js",
   "scripts": {
     "dev": "npm start",

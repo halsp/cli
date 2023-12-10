@@ -1,5 +1,5 @@
 #!/usr/bin/env node
 
-'use strict';
+"use strict";
 
-require('../dist/main');
+import "../dist/main.js";

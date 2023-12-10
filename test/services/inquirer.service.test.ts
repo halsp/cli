@@ -1,5 +1,5 @@
 import { runTest } from "./runTest";
-import { InquirerService } from "../../src/services/inquirer.service";
+import inquirer from "inquirer";
 
 runTest(InquirerService, async (ctx, service) => {
   (typeof service.prompt).should.eq("function");

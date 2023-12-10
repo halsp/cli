@@ -1,12 +1,15 @@
 import { Context, isUndefined } from "@halsp/core";
 import path from "path";
-import { Configuration, ConfigEnv } from "../../configuration";
+import type { Configuration, ConfigEnv } from "../../configuration";
 import { Inject } from "@halsp/inject";
 import { CommandService } from "../command.service";
 import { FileService } from "../file.service";
 import * as tsNode from "ts-node";
 import * as fs from "fs";
 import { DepsService } from "../deps.service";
+import { createRequire } from "../../utils/shims";
+
+const require = createRequire(import.meta.url);
 
 export class ConfigService {
   @Inject

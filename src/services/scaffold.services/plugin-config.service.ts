@@ -4,6 +4,9 @@ import { isString } from "@halsp/core";
 import { ExpressionService } from "./expression.service";
 import { Inject } from "@halsp/inject";
 import { SortPluginsService } from "./sort-plugins.service";
+import { createDirname } from "../../utils/shims";
+
+const __dirname = createDirname(import.meta.url);
 
 export type ExpressionObject<T = string | boolean> = Record<
   string,

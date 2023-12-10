@@ -2,14 +2,15 @@ import { Middleware } from "@halsp/core";
 import { Inject } from "@halsp/inject";
 import { PackageManagerService } from "../../services/package-manager.service";
 import path from "path";
-import { ChalkService } from "../../services/chalk.service";
+import chalk from "chalk";
 import { PluginService } from "../../services/plugin.service";
+import { createDirname } from "../../utils/shims";
+
+const __dirname = createDirname(import.meta.url);
 
 export class AddPluginMiddleware extends Middleware {
   @Inject
   private readonly packageManagerService!: PackageManagerService;
-  @Inject
-  private readonly chalkService!: ChalkService;
   @Inject
   private readonly pluginService!: PluginService;
 
@@ -26,7 +27,7 @@ export class AddPluginMiddleware extends Middleware {
     if (!(await this.installBaseOn(name))) return;
 
     this.logger.info(
-      "Add plugin " + this.chalkService.bold.greenBright(name) + " success.",
+      "Add plugin " + chalk.bold.greenBright(name) + " success.",
     );
   }
 

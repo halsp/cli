@@ -7,13 +7,14 @@ import { StartCommand } from "./commands/start.command";
 import { UpdateCommand } from "./commands/update.command";
 import { PluginCommand } from "./commands/plugin.command";
 import { getPluginsWithOut } from "./services/plugin.service";
+import { createRequire } from "./utils/shims";
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const version = require("../package").version;
+const require = createRequire(import.meta.url);
+const pkg = require("../package.json");
 
 const program = new Command("halsp")
   .usage("<command> [options]")
-  .version(version, "-v, --version, -version, -V");
+  .version(pkg.version, "-v, --version, -version, -V");
 
 new CreateCommand(true).register(program);
 new BuildCommand().register(program);

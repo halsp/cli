@@ -7,9 +7,9 @@ import { CommandService } from "../../services/command.service";
 import { CopyRootService } from "../../services/scaffold.services/copy-root.service";
 import { Middleware } from "@halsp/core";
 import { SortPluginsService } from "../../services/scaffold.services/sort-plugins.service";
-import { ChalkService } from "../../services/chalk.service";
 import { PackageManagerService } from "../../services/package-manager.service";
 import { InitService } from "../../services/scaffold.services/init.service";
+import chalk from "chalk";
 
 export class ScaffoldMiddleware extends Middleware {
   @Inject
@@ -28,8 +28,6 @@ export class ScaffoldMiddleware extends Middleware {
   private readonly copyRootService!: CopyRootService;
   @Inject
   private readonly sortPluginsService!: SortPluginsService;
-  @Inject
-  private readonly chalkService!: ChalkService;
   @Inject
   private readonly packageManagerService!: PackageManagerService;
 
@@ -84,8 +82,8 @@ export class ScaffoldMiddleware extends Middleware {
       .map((p) => `@halsp/${p}`);
     this.logger.info("\n");
     this.logger.info(
-      this.chalkService.bold("Sorted plugins"),
-      this.chalkService.greenBright(consolePlugins.join(", ")),
+      chalk.bold("Sorted plugins"),
+      chalk.greenBright(consolePlugins.join(", ")),
     );
     this.logger.info("\n");
   }

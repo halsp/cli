@@ -1,14 +1,10 @@
 import path from "path";
 import * as fs from "fs";
-import { Inject } from "@halsp/inject";
-import { InquirerService } from "./inquirer.service";
+import inquirer from "inquirer";
 
 export class FileService {
-  @Inject
-  private readonly inquirerService!: InquirerService;
-
   public async isOverwrite(message: string): Promise<boolean> {
-    const { overwrite } = await this.inquirerService.prompt([
+    const { overwrite } = await inquirer.prompt([
       {
         type: "confirm",
         message: message,

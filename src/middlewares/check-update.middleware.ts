@@ -1,10 +1,12 @@
 import { Middleware } from "@halsp/core";
-import { dynamicImportDefault } from "../utils/dynamic-import";
-import { UpdateNotifier } from "../utils/dynamic-types/update-notifier";
 import * as fs from "fs";
 import path from "path";
 import { Inject } from "@halsp/inject";
 import { CommandService } from "../services/command.service";
+import updateNotifier from "update-notifier";
+import { createDirname } from "../utils/shims";
+
+const __dirname = createDirname(import.meta.url);
 
 export class CheckUpdateMiddleware extends Middleware {
   @Inject
@@ -25,8 +27,6 @@ export class CheckUpdateMiddleware extends Middleware {
   }
 
   private async getNotifier(pkg: any) {
-    const updateNotifier =
-      await dynamicImportDefault<UpdateNotifier>("update-notifier");
     return updateNotifier({
       pkg,
       updateCheckInterval: 1000 * 60 * 60 * 24, // 1 day

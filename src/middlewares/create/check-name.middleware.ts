@@ -3,7 +3,7 @@ import { Inject } from "@halsp/inject";
 import { CommandService } from "../../services/command.service";
 import * as fs from "fs";
 import { FileService } from "../../services/file.service";
-import { InquirerService } from "../../services/inquirer.service";
+import inquirer from "inquirer";
 import { CreateService } from "../../services/create.service";
 
 export class CheckNameMiddleware extends Middleware {
@@ -13,8 +13,6 @@ export class CheckNameMiddleware extends Middleware {
   private readonly createService!: CreateService;
   @Inject
   private readonly fileService!: FileService;
-  @Inject
-  private readonly inquirerService!: InquirerService;
 
   private get targetDir() {
     return this.createService.targetDir;
@@ -49,7 +47,7 @@ export class CheckNameMiddleware extends Middleware {
   }
 
   private async inputName(): Promise<void> {
-    const { name } = await this.inquirerService.prompt([
+    const { name } = await inquirer.prompt([
       {
         type: "input",
         message: "Project name:",

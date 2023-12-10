@@ -10,6 +10,10 @@ import {
 } from "./plugin-config.service";
 import { CreateService } from "../create.service";
 import { FileService } from "../file.service";
+import { createDirname, createRequire } from "../../utils/shims";
+
+const __dirname = createDirname(import.meta.url);
+const require = createRequire(import.meta.url);
 
 export class CopyPackageService {
   @Inject

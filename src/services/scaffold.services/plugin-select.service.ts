@@ -1,12 +1,10 @@
 import { Inject } from "@halsp/inject";
-import { InquirerService } from "../inquirer.service";
+import inquirer from "inquirer";
 import { PluginConfig, PluginConfigService } from "./plugin-config.service";
 
 export class PluginSelectService {
   @Inject
   private readonly pluginConfigService!: PluginConfigService;
-  @Inject
-  private readonly inquirerService!: InquirerService;
 
   public async select(env?: string): Promise<string[]> {
     let pluginConfig: PluginConfig;
@@ -16,7 +14,7 @@ export class PluginSelectService {
       pluginConfig = await this.pluginConfigService.getConfig();
     }
 
-    const { plugins } = await this.inquirerService.prompt([
+    const { plugins } = await inquirer.prompt([
       {
         type: "checkbox",
         message: "Select plugins",

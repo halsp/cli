@@ -4,7 +4,6 @@ import * as fs from "fs";
 import path from "path";
 import { RunnerService } from "../../src/services/runner.service";
 import { runin } from "../utils";
-import { InquirerService } from "../../src/services/inquirer.service";
 
 async function createCacheDir(name: string) {
   const cahceDir = ".cache-pm";
@@ -23,8 +22,8 @@ async function createCacheDir(name: string) {
 }
 
 runTest(PackageManagerService, async (ctx, service) => {
-  const inquirerService = await ctx.getService(InquirerService);
-  Object.defineProperty(inquirerService, "prompt", {
+  const inquirer = await import("inquirer");
+  Object.defineProperty(inquirer, "prompt", {
     value: () => Promise.resolve({ mng: "cnpm" }),
   });
 
@@ -33,8 +32,8 @@ runTest(PackageManagerService, async (ctx, service) => {
 });
 
 runTest(PackageManagerService, async (ctx, service) => {
-  const inquirerService = await ctx.getService(InquirerService);
-  Object.defineProperty(inquirerService, "prompt", {
+  const inquirer = await import("inquirer");
+  Object.defineProperty(inquirer, "prompt", {
     value: () => Promise.resolve({ mng: "cnpm" }),
   });
 

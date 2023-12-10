@@ -3,8 +3,6 @@ import "@halsp/inject";
 import { Context, HookType, Request, Startup } from "@halsp/core";
 import { ConfigService } from "./services/build.services/config.service";
 import { CommandType } from "./configuration";
-import { ChalkService } from "./services/chalk.service";
-import { InquirerService } from "./services/inquirer.service";
 import { CheckUpdateMiddleware } from "./middlewares/check-update.middleware";
 
 declare module "@halsp/core" {
@@ -58,16 +56,6 @@ export class CliStartup extends Startup {
       .useInject()
       .inject(ConfigService, async (ctx) => {
         const result = await ctx.getService(new ConfigService());
-        await result.init();
-        return result;
-      })
-      .inject(ChalkService, async (ctx) => {
-        const result = await ctx.getService(new ChalkService());
-        await result.init();
-        return result;
-      })
-      .inject(InquirerService, async (ctx) => {
-        const result = await ctx.getService(new InquirerService());
         await result.init();
         return result;
       })

@@ -1,5 +1,8 @@
 import * as fs from "fs";
 import path from "path";
+import { createRequire } from "../utils/shims";
+
+const require = createRequire(import.meta.url);
 
 export type DepItem = { key: string; value: string };
 
@@ -53,21 +56,28 @@ export class DepsService {
       result.push(...devPkgs);
     }
 
-    pkgs.forEach((pkg) => {
-      const depPackagePath = this.getPackagePath(pkg.key, paths);
-      this.loadDeps(result, depPackagePath, paths, regExp, false);
-    });
+    pkgs
+      .map((pkg) => this.getPackagePath(pkg.key, paths))
+      .filter((pkg) => !!pkg)
+      .forEach((pkg) => this.loadDeps(result, pkg!, paths, regExp, false));
   }
 
   private getPackagePath(pkg: string, paths = [process.cwd()]) {
-    return require.resolve(pkg + "/package.json", {
+    const pkgPath = path.join(pkg, "package.json");
+    if (!fs.existsSync(pkgPath)) {
+      return null;
+    }
+
+    return require.resolve(pkgPath, {
       paths: paths,
     });
   }
 
   public getPackageHalspDeps(pkg: string, paths = [process.cwd()]): DepItem[] {
-    const path = this.getPackagePath(pkg, paths);
-    return this.getDeps(path, /^@halsp\//, paths, false);
+    const pkgPath = this.getPackagePath(pkg, paths);
+    if (!pkgPath) return [];
+
+    return this.getDeps(pkgPath, /^@halsp\//, paths, false);
   }
 
   public getProjectHalspDeps(
@@ -84,10 +94,8 @@ export class DepsService {
     package: string;
     interface: T;
   }[] {
-    const pkgPath = path.resolve(cwd, "package.json");
-    if (!fs.existsSync(pkgPath)) {
-      return [];
-    }
+    const pkgPath = this.getPackagePath(cwd, [cwd]);
+    if (!pkgPath) return [];
 
     return this.getDeps(pkgPath, /^(@halsp\/|halsp\-|@\S+\/halsp\-)/, [cwd])
       .map((dep) => {

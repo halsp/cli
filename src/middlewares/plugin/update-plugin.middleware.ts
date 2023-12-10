@@ -4,9 +4,12 @@ import { PackageManagerService } from "../../services/package-manager.service";
 import fs from "fs";
 import { PluginService } from "../../services/plugin.service";
 import { CommandService } from "../../services/command.service";
-import { chalkInit } from "npm-check-updates/build/src/lib/chalk";
-import runLocal from "npm-check-updates/build/src/lib/runLocal";
+import { chalkInit } from "npm-check-updates/build/src/lib/chalk.js";
+import runLocal from "npm-check-updates/build/src/lib/runLocal.js";
 import path from "path";
+import { createDirname } from "../../utils/shims";
+
+const __dirname = createDirname(import.meta.url);
 
 export class UpdatePluginMiddleware extends Middleware {
   @Inject

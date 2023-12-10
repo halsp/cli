@@ -2,6 +2,9 @@ import { Inject } from "@halsp/inject";
 import * as fs from "fs";
 import path from "path";
 import { CreateService } from "../create.service";
+import { createDirname } from "../../utils/shims";
+
+const __dirname = createDirname(import.meta.url);
 
 export class CopyIgnoreService {
   @Inject
