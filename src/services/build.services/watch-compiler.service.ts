@@ -64,7 +64,7 @@ export class WatchCompilerService {
       );
 
       const originEmit = program.emit;
-      program.emit = (
+      const emit = async (
         targetSourceFile?: ts.SourceFile,
         writeFile?: ts.WriteFileCallback,
         cancellationToken?: ts.CancellationToken,
@@ -73,7 +73,7 @@ export class WatchCompilerService {
       ) => {
         const transforms = Object.assign(
           customTransformers ?? {},
-          this.compilerService.getHooks(program.getProgram()),
+          await this.compilerService.getHooks(program.getProgram()),
         );
         return originEmit(
           targetSourceFile,
@@ -83,6 +83,7 @@ export class WatchCompilerService {
           transforms,
         );
       };
+      program.emit = emit as any;
       return program;
     };
 

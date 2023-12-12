@@ -1,10 +1,15 @@
 import * as fs from "fs";
 import path from "path";
 import { createRequire } from "../utils/shims";
+import { pathToFileURL } from "url";
 
 const require = createRequire(import.meta.url);
 
 export type DepItem = { key: string; value: string };
+export type InterfaceItem<T> = {
+  package: string;
+  interface: T;
+};
 
 export class DepsService {
   private getDeps(
@@ -87,32 +92,36 @@ export class DepsService {
     return this.getDeps(packagePath, /^@halsp\//, paths, true);
   }
 
-  public getInterfaces<T>(
+  public async getPlugins<T>(
     name: string,
     cwd = process.cwd(),
-  ): {
-    package: string;
-    interface: T;
-  }[] {
+  ): Promise<InterfaceItem<T>[]> {
     const pkgPath = this.getPackagePath(cwd, [cwd]);
     if (!pkgPath) return [];
 
-    return this.getDeps(pkgPath, /^(@halsp\/|halsp\-|@\S+\/halsp\-)/, [cwd])
-      .map((dep) => {
-        const depPath = require.resolve(dep.key, {
-          paths: [cwd],
+    const deps = this.getDeps(pkgPath, /^(@halsp\/|halsp\-|@\S+\/halsp\-)/, [
+      cwd,
+    ]);
+    const scripts: InterfaceItem<T>[] = [];
+    for (const dep of deps) {
+      const depPath = require.resolve(dep.key, {
+        paths: [cwd],
+      });
+
+      const module = await import(pathToFileURL(depPath).toString());
+      const inter = module[name];
+      if (inter) {
+        scripts.push({
+          package: dep.key,
+          interface: module[name],
         });
-        // eslint-disable-next-line @typescript-eslint/no-var-requires
-        const module = require(depPath);
-        const inter = module[name];
-        return inter
-          ? {
-              package: dep.key,
-              interface: module[name],
-            }
-          : null;
-      })
-      .filter((script) => !!script)
-      .map((item) => item!);
+      }
+    }
+    return scripts;
+  }
+
+  public async getInterfaces<T>(name: string, cwd = process.cwd()) {
+    const plugins = await this.getPlugins<T>(name, cwd);
+    return plugins.map((p) => p.interface);
   }
 }

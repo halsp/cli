@@ -16,20 +16,23 @@ export class PluginService {
   @Inject
   private readonly depsService!: DepsService;
 
-  public get() {
+  public async get() {
     const pkgPath = path.join(__dirname, "../..");
-    const localList = this.depsService
-      .getInterfaces<PluginConfig>("halspCliPlugin", pkgPath)
-      .map((item) => ({
-        ...item,
-        cwd: false,
-      }));
-    const currentList = this.depsService
-      .getInterfaces<PluginConfig>("halspCliPlugin", undefined)
-      .map((item) => ({
-        ...item,
-        cwd: true,
-      }));
+    const localList = (
+      await this.depsService.getPlugins<PluginConfig>("halspCliPlugin", pkgPath)
+    ).map((item) => ({
+      ...item,
+      cwd: false,
+    }));
+    const currentList = (
+      await this.depsService.getPlugins<PluginConfig>(
+        "halspCliPlugin",
+        undefined,
+      )
+    ).map((item) => ({
+      ...item,
+      cwd: true,
+    }));
 
     return [...localList, ...currentList]
       .map((item) => ({

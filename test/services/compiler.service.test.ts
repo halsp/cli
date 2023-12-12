@@ -16,7 +16,7 @@ runTest(CompilerService, async (ctx, service) => {
 
   let done = true;
   try {
-    const compilerResult = service.compile("dist-compiler");
+    const compilerResult = await service.compile("dist-compiler");
     compilerResult.should.eq(true);
     fs.existsSync("./dist-compiler").should.eq(true);
     done = true;
@@ -59,7 +59,7 @@ runCompilerOptions("build");
 
 runTest(WatchCompilerService, async (ctx, service) => {
   const targetDir = path.join(__dirname, "dist", "watch-compiler");
-  service.compile(targetDir);
+  await service.compile(targetDir);
   const watcher = (service as any)
     .watcher as ts.WatchOfConfigFile<ts.EmitAndSemanticDiagnosticsBuilderProgram>;
   const program = watcher.getProgram();

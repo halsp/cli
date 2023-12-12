@@ -21,7 +21,7 @@ export class HookService {
   }
 
   public async execPrebuilds(): Promise<boolean> {
-    const internalPrebuild = this.getHooks("prebuild");
+    const internalPrebuild = await this.getHooks("prebuild");
     const options = this.getScriptOptions();
 
     for (const fn of [
@@ -36,7 +36,7 @@ export class HookService {
   }
 
   public async execPostbuilds() {
-    const internalPostbuild = this.getHooks("postbuild");
+    const internalPostbuild = await this.getHooks("postbuild");
     const options = this.getScriptOptions();
 
     for (const fn of [
@@ -57,8 +57,6 @@ export class HookService {
   }
 
   private getHooks(name: string) {
-    return this.depsService
-      .getInterfaces<Prebuild>(name)
-      .map((item) => item.interface);
+    return this.depsService.getInterfaces<Prebuild>(name);
   }
 }

@@ -8,6 +8,7 @@ import * as tsNode from "ts-node";
 import * as fs from "fs";
 import { DepsService } from "../deps.service";
 import { createRequire } from "../../utils/shims";
+import { pathToFileURL } from "url";
 
 const require = createRequire(import.meta.url);
 
@@ -29,7 +30,7 @@ export class ConfigService {
       if (optionsConfigName) {
         this.#configFileName = optionsConfigName;
       } else {
-        const exts = ["ts", "js", "json"];
+        const exts = ["ts", "js", "json", "cjs", "ejs", "cts", "ets"];
         const names = [".halsprc", "halsp.config"];
 
         const files: string[] = [];
@@ -81,11 +82,10 @@ export class ConfigService {
   private async loadConfig(): Promise<Configuration> {
     let config = await this.getConfig();
 
-    const cliConfigHooks = this.depsService
-      .getInterfaces<
+    const cliConfigHooks =
+      await this.depsService.getInterfaces<
         (config: Configuration, options: ConfigEnv) => Configuration | void
-      >("cliConfigHook")
-      .map((item) => item.interface);
+      >("cliConfigHook");
     for (const hook of cliConfigHooks) {
       config = hook(config, this.configEnv) ?? config;
     }
@@ -123,12 +123,12 @@ export class ConfigService {
     const isTS = this.configFileName.toLowerCase().endsWith(".ts");
     if (isTS) {
       if (!!process[tsNode.REGISTER_INSTANCE]) {
-        return this.requireConfig(configFilePath);
+        return this.importConfig(configFilePath);
       } else {
         const registerer = await this.registerTsNode();
         registerer.enabled(true);
         try {
-          return this.requireConfig(configFilePath);
+          return this.importConfig(configFilePath);
         } finally {
           registerer.enabled(false);
         }
@@ -137,7 +137,7 @@ export class ConfigService {
 
     const isJS = this.configFileName.toLowerCase().endsWith(".js");
     if (isJS) {
-      return this.requireConfig(configFilePath);
+      return this.importConfig(configFilePath);
     }
 
     const jsJson = this.configFileName.toLowerCase().endsWith(".json");
@@ -149,9 +149,8 @@ export class ConfigService {
     return JSON.parse(txt);
   }
 
-  private async requireConfig(configFilePath: string) {
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const module = require(configFilePath);
+  private async importConfig(configFilePath: string) {
+    const module = await import(pathToFileURL(configFilePath).toString());
     if (typeof module == "function") {
       return module(this.configEnv);
     } else if (module.default) {

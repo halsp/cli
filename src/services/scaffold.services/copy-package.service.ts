@@ -96,7 +96,6 @@ export class CopyPackageService {
 
   private getPackage(): any {
     const file = path.join(__dirname, "../../../scaffold/package.json");
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
     return require(file);
   }
 
@@ -123,7 +122,6 @@ export class CopyPackageService {
     }
 
     const file = path.join(__dirname, "../../../package.json");
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
     return require(file).version;
   }
 }

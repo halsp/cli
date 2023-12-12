@@ -11,3 +11,5 @@ coverage
 
 scaffold/yarn.lock
 .cli-plugins
+scripts/transpiler.js
+scripts/transpiler.cjs

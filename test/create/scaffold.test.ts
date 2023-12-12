@@ -427,7 +427,6 @@ describe("error", () => {
 describe("init", () => {
   function getCliVersion() {
     const file = path.join(__dirname, "../../package.json");
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
     return require(file).version;
   }
   const modulesPath = path.join(__dirname, "../../scaffold/node_modules");

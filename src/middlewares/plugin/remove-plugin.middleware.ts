@@ -13,7 +13,7 @@ export class RemovePluginMiddleware extends Middleware {
 
   async invoke() {
     const name = this.ctx.commandArgs.name;
-    const plugins = this.pluginService.get();
+    const plugins = await this.pluginService.get();
     const plugin = plugins.filter((p) => p.package == name)[0];
     if (!plugin) {
       this.logger.error(`The plugin does not exist.`);

@@ -3,7 +3,6 @@ import path from "path";
 import { AssetsService } from "../services/build.services/assets.service";
 import { CompilerService } from "../services/build.services/compiler.service";
 import { ConfigService } from "../services/build.services/config.service";
-import { TsconfigService } from "../services/build.services/tsconfig.service";
 import { WatchCompilerService } from "../services/build.services/watch-compiler.service";
 import * as fs from "fs";
 import { HookService } from "../services/build.services/hook.service";
@@ -11,8 +10,6 @@ import { Middleware } from "@halsp/core";
 import prettier from "prettier";
 
 export class BuildMiddlware extends Middleware {
-  @Inject
-  private readonly tsconfigService!: TsconfigService;
   @Inject
   private readonly configService!: ConfigService;
   @Inject
@@ -55,7 +52,7 @@ export class BuildMiddlware extends Middleware {
     if (this.watch) {
       return this.watchCompile();
     } else {
-      const compilerResult = this.compilerService.compile(this.cacheDir);
+      const compilerResult = await this.compilerService.compile(this.cacheDir);
       if (compilerResult) {
         await this.assetsService.copy();
         await this.copyPackage();

@@ -21,15 +21,18 @@ runTest(DepsService, async (ctx, service) => {
 });
 
 runTest(DepsService, async (ctx, service) => {
-  await runin("../../", () => {
-    const interfaces = service.getInterfaces("halspCliTest");
+  await runin("../../", async () => {
+    const interfaces = await service.getInterfaces("halspCliTest");
     interfaces.length.should.eq(0);
   });
 });
 
 runTest(DepsService, async (ctx, service) => {
-  await runin("../../", () => {
-    const interfaces = service.getInterfaces("createInject", process.cwd());
+  await runin("../../", async () => {
+    const interfaces = await service.getInterfaces(
+      "createInject",
+      process.cwd(),
+    );
     interfaces.length.should.eq(1);
   });
 });

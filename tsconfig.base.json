@@ -12,9 +12,11 @@
     "noImplicitAny": false,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "preserveWatchOutput": true
+    "preserveWatchOutput": true,
   },
   "ts-node": {
-    "esm": true
+    "esm": true,
+    "transpileOnly": true,
+    "transpiler": "./scripts/transpiler.cjs"
   }
 }

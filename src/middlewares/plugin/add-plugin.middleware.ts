@@ -17,7 +17,7 @@ export class AddPluginMiddleware extends Middleware {
   async invoke() {
     const name = this.ctx.commandArgs.name;
 
-    const plugins = this.pluginService.get();
+    const plugins = await this.pluginService.get();
     if (plugins.filter((p) => p.package == name).length) {
       this.logger.error(`This plugin has already been added.`);
       return;
@@ -42,7 +42,7 @@ export class AddPluginMiddleware extends Middleware {
   }
 
   private async installBaseOn(name: string) {
-    const plugins = this.pluginService.get();
+    const plugins = await this.pluginService.get();
     const plugin = plugins.filter((p) => p.package == name)[0];
     if (!plugin) return false;
 

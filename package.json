@@ -22,8 +22,9 @@
   "type": "module",
   "main": "./dist/index.js",
   "scripts": {
-    "build": "npm run prepare-compiler && rimraf ./dist/* --glob && node .cache-compiler/main.js build",
-    "build:create-halsp": "ts-node --esm scripts/create-halsp.ts && npm run build",
+    "build-transpiler": "sh scripts/build-transpiler.sh",
+    "build": "rimraf ./dist/* --glob && ts-node src/main.ts build",
+    "build:create-halsp": "ts-node scripts/create-halsp.ts && npm run build",
     "publish:beta": "npm run build && npm publish --tag=beta --access=public",
     "test": "c8 mocha test test/**/*.test.ts",
     "test:local": "c8 cross-env REGISTRY='https://registry.npmmirror.com/' mocha test test/**/*.test.ts",
@@ -32,8 +33,7 @@
     "ci-test": "sh scripts/ci-test.sh",
     "lint": "eslint src --ext .ts",
     "dev:link": "npm run build && npm uninstall @halsp/cli -g && npm link",
-    "prepare-compiler": "ts-node --esm scripts/prepare.ts",
-    "prepare": "husky install && npm run prepare-compiler"
+    "prepare": "husky install && npm run build-transpiler"
   },
   "author": "hal-wang",
   "license": "MIT",

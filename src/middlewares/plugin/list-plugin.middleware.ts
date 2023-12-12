@@ -8,7 +8,7 @@ export class ListPluginMiddleware extends Middleware {
   private readonly pluginService!: PluginService;
 
   async invoke() {
-    const plugins = this.pluginService.get();
+    const plugins = await this.pluginService.get();
     if (!plugins.length) {
       this.logger.info("No plugins.");
       return;

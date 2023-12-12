@@ -30,25 +30,21 @@ export class CompilerService {
     );
   }
 
-  public getHooks(program: ts.Program) {
+  public async getHooks(program: ts.Program) {
     const before = [
-      ...this.getInterfaces<CompilerHook<ts.SourceFile>>("beforeCompile").map(
-        (item) => item.interface,
-      ),
+      ...(await this.getPlugins<CompilerHook<ts.SourceFile>>("beforeCompile")),
       ...(this.config.build?.beforeHooks ?? []),
     ].map((hook) => hook(program));
 
     const after = [
-      ...this.getInterfaces<CompilerHook<ts.SourceFile>>("afterCompile").map(
-        (item) => item.interface,
-      ),
+      ...(await this.getPlugins<CompilerHook<ts.SourceFile>>("afterCompile")),
       ...(this.config.build?.afterHooks ?? []),
     ].map((hook) => hook(program));
 
     const afterDeclarations = [
-      ...this.getInterfaces<CompilerHook<ts.SourceFile | ts.Bundle>>(
+      ...(await this.getPlugins<CompilerHook<ts.SourceFile | ts.Bundle>>(
         "afterCompileDeclarations",
-      ).map((item) => item.interface),
+      )),
       ...(this.config.build?.afterDeclarationsHooks ?? []),
     ].map((hook) => hook(program));
 
@@ -59,15 +55,15 @@ export class CompilerService {
     };
   }
 
-  private getInterfaces<
+  private async getPlugins<
     T extends
       | CompilerHook<ts.SourceFile>
       | CompilerHook<ts.SourceFile | ts.Bundle>,
   >(name: string) {
-    return this.depsService.getInterfaces<T>(name);
+    return await this.depsService.getInterfaces<T>(name);
   }
 
-  public compile(outDir: string) {
+  public async compile(outDir: string) {
     const formatHost: ts.FormatDiagnosticsHost = {
       getCanonicalFileName: (path) => path,
       getCurrentDirectory: ts.sys.getCurrentDirectory,
@@ -88,7 +84,7 @@ export class CompilerService {
       undefined,
       undefined,
       undefined,
-      this.getHooks(program),
+      await this.getHooks(program),
     );
 
     const errorsCount = this.reportAfterCompilationDiagnostic(

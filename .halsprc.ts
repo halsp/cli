@@ -1,10 +1,10 @@
 import { defineConfig } from "./src";
-import transformer from "./src/utils/suffix-transformer";
+import { transformer } from "./scripts/transpiler.js";
 
 export default defineConfig(({ mode }) => {
   return {
     build: {
-      afterHooks: [() => transformer],
+      afterHooks: [(p) => transformer],
     },
   };
 });

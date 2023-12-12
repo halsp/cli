@@ -23,7 +23,7 @@ new InfoCommand().register(program);
 new UpdateCommand().register(program);
 new PluginCommand().register(program);
 
-const plugins = getPluginsWithOut();
+const plugins = await getPluginsWithOut();
 plugins.forEach((p) => p.config.register(program));
 
 program.parse(process.argv);

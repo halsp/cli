@@ -1,4 +1,4 @@
-export {
+export type {
   ConfigEnv,
   Configuration,
   Transformer,
@@ -8,5 +8,6 @@ export {
   Postbuild,
   Prebuild,
   ScriptOptions,
-  defineConfig,
 } from "./configuration";
+
+export { defineConfig } from "./configuration";
