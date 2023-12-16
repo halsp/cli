@@ -7,9 +7,11 @@ import { SourceFile } from "typescript";
 export const create: TranspilerFactory = () => {
   return {
     transpile: (input: string, o: TranspileOptions) => {
+      const output = transpileFile(o.fileName, input);
       return {
-        outputText: transpileFile(o.fileName, input),
-        sourceMapText: "{}",
+        outputText: output.outputText,
+        diagnostics: output.diagnostics,
+        sourceMapText: output.sourceMapText ?? "{}",
       };
     },
   };
@@ -40,7 +42,10 @@ function transpileFile(fileName: string, input: string) {
   );
   const { options } = parsedCmd!;
 
-  return ts.transpile(output, options, fileName);
+  return ts.transpileModule(output, {
+    compilerOptions: options,
+    fileName: fileName,
+  });
 }
 
 function getImportPath(node: ts.Node, sf: SourceFile) {
@@ -94,7 +99,6 @@ function getNewImportLine(
   return text.replace(importPath, newImportPath);
 }
 
-let show = false;
 export const transformer: ts.TransformerFactory<ts.SourceFile> = (context) => {
   const createNewNode = (node: ts.StringLiteral) => {
     const sf = node.getSourceFile();
@@ -114,10 +118,6 @@ export const transformer: ts.TransformerFactory<ts.SourceFile> = (context) => {
       ts.isImportDeclaration(node.parent)
     ) {
       const newNode = createNewNode(node);
-      if (!show && !!newNode) {
-        show = true;
-        console.log("newNode", newNode);
-      }
       if (newNode) return newNode;
     }
 

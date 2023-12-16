@@ -282,7 +282,7 @@ describe("read config", () => {
     await runin("test/build/config/types", async () => {
       await new CliStartup("test", undefined, {
         mode: "js-test",
-        config: `.halsprc.js`,
+        config: `.halsprc.cjs`,
       })
         .use(async (ctx) => {
           const service = await ctx.getService(ConfigService);

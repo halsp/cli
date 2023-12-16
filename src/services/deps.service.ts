@@ -69,13 +69,14 @@ export class DepsService {
 
   private getPackagePath(pkg: string, paths = [process.cwd()]) {
     const pkgPath = path.join(pkg, "package.json");
-    if (!fs.existsSync(pkgPath)) {
+
+    try {
+      return require.resolve(pkgPath, {
+        paths: paths,
+      });
+    } catch {
       return null;
     }
-
-    return require.resolve(pkgPath, {
-      paths: paths,
-    });
   }
 
   public getPackageHalspDeps(pkg: string, paths = [process.cwd()]): DepItem[] {

@@ -9,6 +9,7 @@ import * as fs from "fs";
 import { DepsService } from "../deps.service";
 import { createRequire } from "../../utils/shims";
 import { pathToFileURL } from "url";
+import { TsconfigService } from "./tsconfig.service";
 
 const require = createRequire(import.meta.url);
 
@@ -21,6 +22,8 @@ export class ConfigService {
   private readonly commandService!: CommandService;
   @Inject
   private readonly depsService!: DepsService;
+  @Inject
+  private readonly tsconfigService!: TsconfigService;
 
   #configFileName: string | undefined = undefined;
   private get configFileName() {
@@ -45,6 +48,29 @@ export class ConfigService {
       }
     }
     return this.#configFileName;
+  }
+
+  private get isESM() {
+    const name = this.configFileName.toLowerCase();
+    if (name.endsWith(".cjs") || name.endsWith(".cts")) {
+      return false;
+    }
+    if (name.endsWith(".ejs") || name.endsWith(".ets")) {
+      return true;
+    }
+
+    const pkgName = "package.json";
+    let dir = process.cwd();
+    let pkgPath = path.join(dir, pkgName);
+    while (
+      !fs.existsSync(pkgPath) &&
+      path.dirname(dir) != dir &&
+      dir.startsWith(path.dirname(dir))
+    ) {
+      dir = path.dirname(dir);
+      pkgPath = path.join(dir, pkgName);
+    }
+    return fs.existsSync(pkgPath) && require(pkgPath).type == "module";
   }
 
   private get configEnv(): ConfigEnv {
@@ -120,22 +146,26 @@ export class ConfigService {
   private async readConfigFile(
     configFilePath: string,
   ): Promise<Configuration | undefined> {
-    const isTS = this.configFileName.toLowerCase().endsWith(".ts");
+    const isTS = this.configFileName.toLowerCase().match(/.*\.(c|e)?ts$/);
     if (isTS) {
-      if (!!process[tsNode.REGISTER_INSTANCE]) {
+      const beforeregisterer = process[tsNode.REGISTER_INSTANCE];
+      beforeregisterer && beforeregisterer.enabled(false);
+
+      const registerer = await this.registerTsNode();
+      registerer.enabled(true);
+      try {
         return this.importConfig(configFilePath);
-      } else {
-        const registerer = await this.registerTsNode();
-        registerer.enabled(true);
-        try {
-          return this.importConfig(configFilePath);
-        } finally {
-          registerer.enabled(false);
+      } finally {
+        registerer.enabled(false);
+
+        if (!!beforeregisterer) {
+          beforeregisterer.enabled(true);
+          process[tsNode.REGISTER_INSTANCE] = beforeregisterer;
         }
       }
     }
 
-    const isJS = this.configFileName.toLowerCase().endsWith(".js");
+    const isJS = this.configFileName.toLowerCase().match(/.*\.(c|e)?js$/);
     if (isJS) {
       return this.importConfig(configFilePath);
     }
@@ -150,7 +180,12 @@ export class ConfigService {
   }
 
   private async importConfig(configFilePath: string) {
-    const module = await import(pathToFileURL(configFilePath).toString());
+    let module: any;
+    if (this.isESM) {
+      module = await import(pathToFileURL(configFilePath).toString());
+    } else {
+      module = require(configFilePath);
+    }
     if (typeof module == "function") {
       return module(this.configEnv);
     } else if (module.default) {
@@ -161,12 +196,15 @@ export class ConfigService {
   }
 
   private async registerTsNode() {
+    const isESM = this.isESM;
     return tsNode.register({
       compilerOptions: {
-        module: "CommonJS",
+        module: isESM ? "ES2022" : "CommonJS",
+        target: isESM ? "ES2022" : "ES2015",
       },
+      esm: this.isESM,
       moduleTypes: {
-        "**": "cjs",
+        "**": isESM ? "esm" : "cjs",
       },
     });
   }

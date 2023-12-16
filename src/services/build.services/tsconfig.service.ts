@@ -15,7 +15,17 @@ export class TsconfigService {
     );
   }
   public get filePath() {
-    return path.resolve(process.cwd(), this.fileName);
+    let dir = process.cwd();
+    let configFilePath = path.join(dir, this.fileName);
+    while (
+      !fs.existsSync(configFilePath) &&
+      path.dirname(dir) != dir &&
+      dir.startsWith(path.dirname(dir))
+    ) {
+      dir = path.dirname(dir);
+      configFilePath = path.join(dir, this.fileName);
+    }
+    return configFilePath;
   }
   public get outDir() {
     return this.parsedCommandLine.options.outDir || "dist";

@@ -1,5 +1,6 @@
 {
   "name": "script",
+  "type": "module",
   "dependencies": {
     "@halsp/core": "*"
   }

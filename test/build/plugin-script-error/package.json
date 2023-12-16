@@ -1,5 +1,6 @@
 {
   "name": "plugin-script-error",
+  "type": "module",
   "dependencies": {
     "@halsp/script-test": "*"
   }
