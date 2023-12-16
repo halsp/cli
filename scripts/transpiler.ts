@@ -1,52 +1,7 @@
 import path from "path";
 import fs from "fs";
-import type { TranspilerFactory, TranspileOptions } from "ts-node";
 import ts from "typescript";
 import { SourceFile } from "typescript";
-
-export const create: TranspilerFactory = () => {
-  return {
-    transpile: (input: string, o: TranspileOptions) => {
-      const output = transpileFile(o.fileName, input);
-      return {
-        outputText: output.outputText,
-        diagnostics: output.diagnostics,
-        sourceMapText: output.sourceMapText ?? "{}",
-      };
-    },
-  };
-};
-
-function transpileFile(fileName: string, input: string) {
-  const sf = ts.createSourceFile(fileName, input, ts.ScriptTarget.ES2022);
-
-  const output = sf.statements
-    .flatMap((statement) => {
-      const newText = getNewImportLine(statement, sf);
-      if (newText) {
-        const oldText = statement.getText(sf);
-        return {
-          old: oldText,
-          new: newText,
-        };
-      }
-    })
-    .filter((item) => !!item)
-    .map((item) => item!)
-    .reduce((code, node) => code.replace(node.old, node.new), input);
-
-  const parsedCmd = ts.getParsedCommandLineOfConfigFile(
-    path.join(__dirname, "../tsconfig.json"),
-    undefined,
-    ts.sys as unknown as ts.ParseConfigFileHost,
-  );
-  const { options } = parsedCmd!;
-
-  return ts.transpileModule(output, {
-    compilerOptions: options,
-    fileName: fileName,
-  });
-}
 
 function getImportPath(node: ts.Node, sf: SourceFile) {
   if (!node) return;
@@ -126,3 +81,22 @@ export const transformer: ts.TransformerFactory<ts.SourceFile> = (context) => {
 
   return (node) => ts.visitEachChild(node, visit, context);
 };
+
+export function replaceCode(input: string, fileName: string) {
+  const sf = ts.createSourceFile(fileName, input, ts.ScriptTarget.ES2022);
+
+  return sf.statements
+    .flatMap((statement) => {
+      const newText = getNewImportLine(statement, sf);
+      if (newText) {
+        const oldText = statement.getText(sf);
+        return {
+          old: oldText,
+          new: newText,
+        };
+      }
+    })
+    .filter((item) => !!item)
+    .map((item) => item!)
+    .reduce((code, node) => code.replace(node.old, node.new), input);
+}
