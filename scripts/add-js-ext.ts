@@ -54,7 +54,9 @@ function getNewImportLine(
   return text.replace(importPath, newImportPath);
 }
 
-export const transformer: ts.TransformerFactory<ts.SourceFile> = (context) => {
+export const addJsExtTransformer: ts.TransformerFactory<ts.SourceFile> = (
+  context,
+) => {
   const createNewNode = (node: ts.StringLiteral) => {
     const sf = node.getSourceFile();
     const importPath = getImportPath(node, sf);

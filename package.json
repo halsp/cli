@@ -22,7 +22,7 @@
   "type": "module",
   "main": "./dist/index.js",
   "scripts": {
-    "build-transpiler": "sh scripts/build-transpiler.sh",
+    "add-js-ext": "sh scripts/add-js-ext.sh",
     "build": "rimraf ./dist/* --glob && ts-node src/main.ts build",
     "build:create-halsp": "ts-node scripts/create-halsp.ts && npm run build",
     "publish:beta": "npm run build && npm publish --tag=beta --access=public",
@@ -33,7 +33,7 @@
     "ci-test": "sh scripts/ci-test.sh",
     "lint": "eslint src --ext .ts",
     "dev:link": "npm run build && npm uninstall @halsp/cli -g && npm link",
-    "prepare": "husky install && npm run build-transpiler"
+    "prepare": "husky install && npm run add-js-ext"
   },
   "author": "hal-wang",
   "license": "MIT",

@@ -11,3 +11,4 @@ export type {
 } from "./configuration";
 
 export { defineConfig } from "./configuration";
+export { addJsExtTransformer } from "./utils/transformer";

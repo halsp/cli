@@ -4,10 +4,10 @@ import path from "path";
 
 const require = createRequire(import.meta.url);
 const dirname = createDirname(import.meta.url);
-const flag = "/* halsp-cli-compiler */ ";
+const flag = "/* halsp-cli-add-js-ext */ ";
 
 const transpilerPath = path
-  .join(dirname, "./transpiler.cjs")
+  .join(dirname, "./add-js-ext.cjs")
   .replace(/\\/g, "/");
 const codeLine = `${flag}code = require('${transpilerPath}').replaceCode(code, fileName);`;
 

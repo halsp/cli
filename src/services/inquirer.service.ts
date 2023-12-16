@@ -1,4 +1,3 @@
-import { dynamicImportDefault } from "../utils/dynamic-import";
 import Inquirer from "inquirer";
 
 type InquirerType = typeof Inquirer;
@@ -6,9 +5,9 @@ type InquirerType = typeof Inquirer;
 // eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
 export class InquirerService {
   async init() {
-    const inquirer = await dynamicImportDefault<InquirerType>("inquirer");
+    const inquirer = await import("inquirer");
 
-    this["__proto__"] = inquirer;
+    this["__proto__"] = inquirer.default;
   }
 }
 
