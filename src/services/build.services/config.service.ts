@@ -59,18 +59,8 @@ export class ConfigService {
       return true;
     }
 
-    const pkgName = "package.json";
-    let dir = process.cwd();
-    let pkgPath = path.join(dir, pkgName);
-    while (
-      !fs.existsSync(pkgPath) &&
-      path.dirname(dir) != dir &&
-      dir.startsWith(path.dirname(dir))
-    ) {
-      dir = path.dirname(dir);
-      pkgPath = path.join(dir, pkgName);
-    }
-    return fs.existsSync(pkgPath) && require(pkgPath).type == "module";
+    const pkgPath = this.fileService.findFileFromTree("package.json");
+    return !!pkgPath && require(pkgPath).type == "module";
   }
 
   private get configEnv(): ConfigEnv {

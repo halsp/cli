@@ -1,12 +1,14 @@
 import ts from "typescript";
 import * as fs from "fs";
-import path from "path";
 import { Inject } from "@halsp/inject";
 import { CommandService } from "../command.service";
+import { FileService } from "../file.service";
 
 export class TsconfigService {
   @Inject
   private readonly commandService!: CommandService;
+  @Inject
+  private readonly fileService!: FileService;
 
   private get fileName() {
     return this.commandService.getOptionVlaue<string>(
@@ -15,17 +17,7 @@ export class TsconfigService {
     );
   }
   public get filePath() {
-    let dir = process.cwd();
-    let configFilePath = path.join(dir, this.fileName);
-    while (
-      !fs.existsSync(configFilePath) &&
-      path.dirname(dir) != dir &&
-      dir.startsWith(path.dirname(dir))
-    ) {
-      dir = path.dirname(dir);
-      configFilePath = path.join(dir, this.fileName);
-    }
-    return configFilePath;
+    return this.fileService.findFileFromTree(this.fileName)!;
   }
   public get outDir() {
     return this.parsedCommandLine.options.outDir || "dist";

@@ -30,6 +30,7 @@ export class DepsService {
     regExp: RegExp | ((dep: string) => boolean),
     containsDev: boolean,
   ) {
+    if (!fs.existsSync(packagePath)) return;
     const pkg = JSON.parse(fs.readFileSync(packagePath, "utf-8"));
 
     function getPkgs(dependencies: Record<string, string>) {

@@ -37,4 +37,22 @@ export class FileService {
       }
     }
   }
+
+  public findFileFromTree(fileName: string, dir = process.cwd()) {
+    let count = 0;
+    let pkgPath = path.join(dir, fileName);
+    while (
+      count++ < 16 &&
+      !fs.existsSync(pkgPath) &&
+      path.dirname(dir) != dir &&
+      dir.startsWith(path.dirname(dir))
+    ) {
+      dir = path.dirname(dir);
+      pkgPath = path.join(dir, fileName);
+    }
+    if (fs.existsSync(pkgPath)) {
+      return pkgPath;
+    }
+    return null;
+  }
 }

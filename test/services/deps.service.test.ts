@@ -15,7 +15,22 @@ runTest(DepsService, async (ctx, service) => {
 
 runTest(DepsService, async (ctx, service) => {
   const depPath = (service as any).getPackagePath("@halsp/inject");
-  const deps = service["getDeps"](depPath, () => false);
+
+  {
+    const deps = service["getDeps"](depPath, () => true);
+    Array.isArray(deps).should.true;
+    deps.length.should.greaterThan(0);
+  }
+
+  {
+    const deps = service["getDeps"](depPath, () => false);
+    Array.isArray(deps).should.true;
+    deps.length.should.eq(0);
+  }
+});
+
+runTest(DepsService, async (ctx, service) => {
+  const deps = service["getDeps"]("./not-exist", () => true);
   Array.isArray(deps).should.true;
   deps.length.should.eq(0);
 });
