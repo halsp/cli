@@ -36,3 +36,10 @@ runTest(DepsService, async (ctx, service) => {
     interfaces.length.should.eq(1);
   });
 });
+
+runTest(DepsService, async (ctx, service) => {
+  await runin("../../", async () => {
+    const deps = service.getPackageHalspDeps("not-exist", [process.cwd()]);
+    deps.length.should.eq(0);
+  });
+});

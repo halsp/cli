@@ -294,6 +294,23 @@ describe("read config", () => {
     worked.should.true;
   });
 
+  it(`should read esm js config file`, async () => {
+    let worked = false;
+    await runin("test/build/config/types", async () => {
+      await new CliStartup("test", undefined, {
+        mode: "js-test",
+        config: `.halsprc.mjs`,
+      })
+        .use(async (ctx) => {
+          const service = await ctx.getService(ConfigService);
+          service.value.start!.startupFile!.should.eq("t1");
+          worked = true;
+        })
+        .run();
+    });
+    worked.should.true;
+  });
+
   it(`should load config with module.exports`, async () => {
     let worked = false;
     await runin("test/build/config/exports", async () => {

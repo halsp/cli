@@ -1,3 +1,4 @@
 {
-  "reporter": ["html", "lcov", "text-summary"]
+  "reporter": ["html", "lcov", "text-summary"],
+  "include": "src/**/*.ts"
 }
