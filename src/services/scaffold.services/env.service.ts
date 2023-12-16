@@ -5,13 +5,15 @@ import {
   EnvSelectItem,
   PluginConfigService,
 } from "./plugin-config.service";
-import inquirer from "inquirer";
+import { InquirerService } from "../inquirer.service";
 
 export class EnvService {
   @Inject
   private readonly commandService!: CommandService;
   @Inject
   private readonly pluginConfigService!: PluginConfigService;
+  @Inject
+  private readonly inquirerService!: InquirerService;
 
   public async getEnv(): Promise<EnvPluginItem | undefined> {
     if (this.commandService.getOptionVlaue<boolean>("skipEnv")) {
@@ -54,7 +56,7 @@ export class EnvService {
     message?: string,
   ): Promise<string> {
     message = message ?? "Pick the environment to run application";
-    const answer = await inquirer.prompt([
+    const answer = await this.inquirerService.prompt([
       {
         type: "list",
         message: message,

@@ -2,7 +2,7 @@ import { runin } from "../utils";
 import * as fs from "fs";
 import { Context, HookType } from "@halsp/core";
 import { CliStartup } from "../../src/cli-startup";
-import inquirer from "inquirer";
+import { InquirerService } from "../../src/services/inquirer.service";
 import { ScaffoldMiddleware } from "../../src/middlewares/create/scaffold.middleware";
 import { CheckNameMiddleware } from "../../src/middlewares/create/check-name.middleware";
 import { InitGitMiddleware } from "../../src/middlewares/create/init-git.middleware";
@@ -13,7 +13,7 @@ describe("prompt", () => {
   async function runTest(options: {
     before?: (ctx: Context, md: ScaffoldMiddleware) => Promise<boolean | void>;
     after?: (ctx: Context) => Promise<void>;
-    promptFn?: (typeof inquirer)["prompt"];
+    promptFn?: InquirerService["prompt"];
     force?: boolean;
     skipPlugins?: boolean;
     name?: string;
@@ -39,8 +39,8 @@ describe("prompt", () => {
       },
     )
       .use(async (ctx, next) => {
-        const inquirer = await import("inquirer");
-        Object.defineProperty(inquirer, "prompt", {
+        const inquirerService = await ctx.getService(InquirerService);
+        Object.defineProperty(inquirerService, "prompt", {
           value: options.promptFn ?? ((() => ({})) as any),
         });
         await next();

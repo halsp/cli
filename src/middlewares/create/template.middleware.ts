@@ -15,7 +15,7 @@ import { InitGitMiddleware } from "./init-git.middleware";
 import { RunMiddleware } from "./run.middleware";
 import { InstallMiddleware } from "./install.middleware";
 import { ScaffoldMiddleware } from "./scaffold.middleware";
-import inquirer from "inquirer";
+import { InquirerService } from "../../services/inquirer.service";
 import { createDirname } from "../../utils/shims";
 
 const __dirname = createDirname(import.meta.url);
@@ -50,6 +50,8 @@ export class TemplateMiddleware extends Middleware {
   private readonly createService!: CreateService;
   @Inject
   private readonly packageManagerService!: PackageManagerService;
+  @Inject
+  private readonly inquirerService!: InquirerService;
 
   private get targetDir() {
     return this.createService.targetDir;
@@ -119,7 +121,7 @@ export class TemplateMiddleware extends Middleware {
     );
 
     this.#isSelTemplate = true;
-    const { name } = await inquirer.prompt([
+    const { name } = await this.inquirerService.prompt([
       {
         type: "list",
         message: "Select template",

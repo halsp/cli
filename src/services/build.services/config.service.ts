@@ -33,7 +33,7 @@ export class ConfigService {
       if (optionsConfigName) {
         this.#configFileName = optionsConfigName;
       } else {
-        const exts = ["ts", "js", "json", "cjs", "ejs", "cts", "ets"];
+        const exts = ["ts", "js", "json", "cjs", "mjs", "cts", "mts"];
         const names = [".halsprc", "halsp.config"];
 
         const files: string[] = [];
@@ -52,10 +52,10 @@ export class ConfigService {
 
   private get isESM() {
     const name = this.configFileName.toLowerCase();
-    if (name.endsWith(".cjs") || name.endsWith(".cts")) {
+    if (name.match(/\.c(j|t)s$/)) {
       return false;
     }
-    if (name.endsWith(".ejs") || name.endsWith(".ets")) {
+    if (name.match(/\.m(j|t)s$/)) {
       return true;
     }
 
@@ -146,7 +146,7 @@ export class ConfigService {
   private async readConfigFile(
     configFilePath: string,
   ): Promise<Configuration | undefined> {
-    const isTS = this.configFileName.toLowerCase().match(/.*\.(c|e)?ts$/);
+    const isTS = this.configFileName.toLowerCase().match(/.*\.(c|m)?ts$/);
     if (isTS) {
       const beforeregisterer = process[tsNode.REGISTER_INSTANCE];
       beforeregisterer && beforeregisterer.enabled(false);
@@ -165,7 +165,7 @@ export class ConfigService {
       }
     }
 
-    const isJS = this.configFileName.toLowerCase().match(/.*\.(c|e)?js$/);
+    const isJS = this.configFileName.toLowerCase().match(/.*\.(c|m)?js$/);
     if (isJS) {
       return this.importConfig(configFilePath);
     }

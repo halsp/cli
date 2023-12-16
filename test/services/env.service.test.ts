@@ -1,6 +1,7 @@
 import { EnvService } from "../../src/services/scaffold.services/env.service";
 import { runTest } from "./runTest";
 import { expect } from "chai";
+import { InquirerService } from "../../src/services/inquirer.service";
 
 runTest(
   EnvService,
@@ -48,8 +49,8 @@ runTest(
 );
 
 runTest(EnvService, async (ctx, service) => {
-  const inquirer = await import("inquirer");
-  Object.defineProperty(inquirer, "prompt", {
+  const inquirerService = await ctx.getService(InquirerService);
+  Object.defineProperty(inquirerService, "prompt", {
     value: () => Promise.resolve({ env: { plugin: "lambda", flag: "lambda" } }),
   });
 
@@ -59,11 +60,11 @@ runTest(EnvService, async (ctx, service) => {
 });
 
 runTest(EnvService, async (ctx, service) => {
-  const inquirer = await import("inquirer");
-  Object.defineProperty(inquirer, "prompt", {
+  const inquirerService = await ctx.getService(InquirerService);
+  Object.defineProperty(inquirerService, "prompt", {
     writable: true,
     value: () => {
-      Object.defineProperty(inquirer, "prompt", {
+      Object.defineProperty(inquirerService, "prompt", {
         writable: true,
         value: () =>
           Promise.resolve({
