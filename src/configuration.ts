@@ -55,7 +55,6 @@ export interface Configuration {
     preserveWatchOutput?: boolean;
 
     sourceMap?: boolean;
-    copyPackage?: boolean;
     removeDevDeps?: boolean;
 
     cacheDir?: string;

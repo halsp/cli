@@ -84,12 +84,6 @@ export class BuildMiddlware extends Middleware {
   }
 
   public async copyPackage() {
-    const copy = this.configService.getOptionOrConfigValue(
-      "copyPackage",
-      "build.copyPackage",
-      false,
-    );
-    if (!copy) return;
     const removeDevDeps = this.configService.getOptionOrConfigValue(
       "removeDevDeps",
       "build.removeDevDeps",
@@ -98,6 +92,7 @@ export class BuildMiddlware extends Middleware {
 
     const filePath = path.join(process.cwd(), "package.json");
     const targetPath = path.join(this.cacheDir, "package.json");
+    if (!fs.existsSync(filePath)) return;
 
     await fs.promises.rm(targetPath, {
       force: true,
