@@ -4,12 +4,13 @@ import type { Configuration, ConfigEnv } from "../../configuration";
 import { Inject } from "@halsp/inject";
 import { CommandService } from "../command.service";
 import { FileService } from "../file.service";
-import * as tsNode from "ts-node";
 import * as fs from "fs";
 import { DepsService } from "../deps.service";
 import { createRequire } from "../../utils/shims";
 import { pathToFileURL } from "url";
 import { TsconfigService } from "./tsconfig.service";
+import ts from "typescript";
+import { addJsExtTransformer } from "../../utils/transformer";
 
 const require = createRequire(import.meta.url);
 
@@ -138,26 +139,12 @@ export class ConfigService {
   ): Promise<Configuration | undefined> {
     const isTS = this.configFileName.toLowerCase().match(/.*\.(c|m)?ts$/);
     if (isTS) {
-      const beforeregisterer = process[tsNode.REGISTER_INSTANCE];
-      beforeregisterer && beforeregisterer.enabled(false);
-
-      const registerer = await this.registerTsNode();
-      registerer.enabled(true);
-      try {
-        return this.importConfig(configFilePath);
-      } finally {
-        registerer.enabled(false);
-
-        if (!!beforeregisterer) {
-          beforeregisterer.enabled(true);
-          process[tsNode.REGISTER_INSTANCE] = beforeregisterer;
-        }
-      }
+      return this.importTsConfig(configFilePath);
     }
 
     const isJS = this.configFileName.toLowerCase().match(/.*\.(c|m)?js$/);
     if (isJS) {
-      return this.importConfig(configFilePath);
+      return this.importJsConfig(configFilePath, true);
     }
 
     const jsJson = this.configFileName.toLowerCase().endsWith(".json");
@@ -169,10 +156,13 @@ export class ConfigService {
     return JSON.parse(txt);
   }
 
-  private async importConfig(configFilePath: string) {
+  private async importJsConfig(configFilePath: string, pathToFileUrl: boolean) {
     let module: any;
     if (this.isESM) {
-      module = await import(pathToFileURL(configFilePath).toString());
+      const filePath = pathToFileUrl
+        ? pathToFileURL(configFilePath).toString()
+        : configFilePath;
+      module = await import(filePath);
     } else {
       module = require(configFilePath);
     }
@@ -185,18 +175,27 @@ export class ConfigService {
     }
   }
 
-  private async registerTsNode() {
-    const isESM = this.isESM;
-    return tsNode.register({
-      compilerOptions: {
-        module: isESM ? "ES2022" : "CommonJS",
-        target: isESM ? "ES2022" : "ES2015",
-      },
-      esm: this.isESM,
-      moduleTypes: {
-        "**": isESM ? "esm" : "cjs",
+  private async importTsConfig(configFilePath: string) {
+    const skipJsExtTransformer = this.commandService.getOptionVlaue<boolean>(
+      "skipJsExtTransformer",
+    );
+    const code = await fs.promises.readFile(configFilePath, "utf-8");
+    const { options } = this.tsconfigService.parsedCommandLine;
+    const { outputText } = ts.transpileModule(code, {
+      compilerOptions: options,
+      transformers: {
+        after: skipJsExtTransformer ? [] : [addJsExtTransformer],
       },
     });
+    const tmpFile = path.join(path.dirname(configFilePath), ".halsprc.temp.js");
+    await fs.promises.writeFile(tmpFile, outputText);
+    try {
+      return await this.importJsConfig(tmpFile, true);
+    } finally {
+      await fs.promises.rm(tmpFile, {
+        force: true,
+      });
+    }
   }
 
   getConfigValue<T = any>(paths: string[] | string): T | undefined;

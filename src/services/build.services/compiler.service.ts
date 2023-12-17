@@ -5,6 +5,8 @@ import { ConfigService } from "./config.service";
 import { TsconfigService } from "./tsconfig.service";
 import { CompilerHook } from "../../configuration";
 import { DepsService } from "../deps.service";
+import { CommandService } from "../command.service";
+import { addJsExtTransformer } from "../../utils/transformer";
 
 export class CompilerService {
   @Inject
@@ -15,6 +17,8 @@ export class CompilerService {
   private readonly configService!: ConfigService;
   @Inject
   private readonly depsService!: DepsService;
+  @Inject
+  private readonly commandService!: CommandService;
 
   private get config() {
     return this.configService.value;
@@ -39,6 +43,9 @@ export class CompilerService {
     const after = [
       ...(await this.getPlugins<CompilerHook<ts.SourceFile>>("afterCompile")),
       ...(this.config.build?.afterHooks ?? []),
+      ...(this.commandService.getOptionVlaue<boolean>("skipJsExtTransformer")
+        ? []
+        : [() => addJsExtTransformer]),
     ].map((hook) => hook(program));
 
     const afterDeclarations = [

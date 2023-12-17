@@ -28,7 +28,6 @@ export class BuildMiddlware extends Middleware {
     return this.configService.getOptionOrConfigValue<boolean>(
       "watch",
       "build.watch",
-      this.ctx.command == "start",
     );
   }
 

@@ -97,7 +97,6 @@ export class AssetsService {
     return this.configService.getOptionOrConfigValue<boolean>(
       "watch",
       "build.watch",
-      this.ctx.command == "start",
     );
   }
   private get watchAssets() {

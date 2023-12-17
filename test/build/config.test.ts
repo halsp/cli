@@ -9,7 +9,6 @@ import { ConfigService } from "../../src/services/build.services/config.service"
 import { Configuration, defineConfig } from "../../src";
 import * as fs from "fs";
 import { expect } from "chai";
-import * as tsNode from "ts-node";
 
 describe("empty-config", () => {
   it("should parse empty config", async () => {
@@ -323,25 +322,6 @@ describe("read config", () => {
         .run();
     });
     worked.should.true;
-  });
-
-  it("should load ts config without ts-node register", async () => {
-    const register = process[tsNode.REGISTER_INSTANCE];
-    delete process[tsNode.REGISTER_INSTANCE];
-    try {
-      await testService(
-        ConfigService,
-        async (ctx, service) => {
-          const cfg = await (service as any).loadConfig();
-          cfg.services["from-config"].should.eq(1);
-        },
-        {
-          cwd: "test/build/config",
-        },
-      );
-    } finally {
-      process[tsNode.REGISTER_INSTANCE] = register;
-    }
   });
 });
 

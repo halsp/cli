@@ -72,7 +72,8 @@ export const addJsExtTransformer: ts.TransformerFactory<ts.SourceFile> = (
     if (
       ts.isStringLiteral(node) &&
       node.parent &&
-      ts.isImportDeclaration(node.parent)
+      (ts.isImportDeclaration(node.parent) ||
+        ts.isExportDeclaration(node.parent))
     ) {
       const newNode = createNewNode(node);
       if (newNode) return newNode;

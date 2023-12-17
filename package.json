@@ -51,13 +51,11 @@
     "ignore-walk": "^6.0.3",
     "inquirer": "^9.2.11",
     "lodash": "^4.17.21",
-    "magic-string": "^0.30.5",
     "npm-check-updates": "^16.14.5",
     "prettier": "^3.0.3",
     "reflect-metadata": "^0.1.13",
     "shelljs": "^0.8.5",
     "tree-kill": "^1.2.2",
-    "ts-node": "^10.9.2",
     "typescript": "^5.3.3",
     "update-notifier": "^6.0.2"
   },
@@ -93,7 +91,8 @@
     "mocha": "^10.2.0",
     "rimraf": "^5.0.5",
     "source-map-support": "^0.5.21",
-    "supertest": "^6.3.3"
+    "supertest": "^6.3.3",
+    "ts-node": "^10.9.2"
   },
   "bin": {
     "halsp": "bin/cli.js"
