@@ -33,9 +33,5 @@ Command.prototype.setBuildOptions = function (defaultMode: string) {
     .option(
       "-e, --env <variables...>",
       "Environment Variable, e.g. FOO=BAR,CUSTOM_ENV=abc",
-    )
-    .option(
-      "--skipJsExtTransformer",
-      "Remove transformer for adding js extention",
     );
 };

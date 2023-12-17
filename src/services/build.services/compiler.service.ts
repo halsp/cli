@@ -41,11 +41,9 @@ export class CompilerService {
     ].map((hook) => hook(program));
 
     const after = [
+      () => addJsExtTransformer,
       ...(await this.getPlugins<CompilerHook<ts.SourceFile>>("afterCompile")),
       ...(this.config.build?.afterHooks ?? []),
-      ...(this.commandService.getOptionVlaue<boolean>("skipJsExtTransformer")
-        ? []
-        : [() => addJsExtTransformer]),
     ].map((hook) => hook(program));
 
     const afterDeclarations = [

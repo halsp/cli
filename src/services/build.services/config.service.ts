@@ -174,9 +174,6 @@ export class ConfigService {
 
   private async importTsConfig(configFilePath: string) {
     const isESM = this.isESM;
-    const skipJsExtTransformer = this.commandService.getOptionVlaue<boolean>(
-      "skipJsExtTransformer",
-    );
     const code = await fs.promises.readFile(configFilePath, "utf-8");
     const { options } = this.tsconfigService.parsedCommandLine;
     const { outputText } = ts.transpileModule(code, {
@@ -189,7 +186,7 @@ export class ConfigService {
           : ts.ModuleResolutionKind.Node16,
       },
       transformers: {
-        after: skipJsExtTransformer ? [] : [addJsExtTransformer],
+        after: [addJsExtTransformer],
       },
       fileName: this.configFileName,
     });
