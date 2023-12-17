@@ -13,4 +13,4 @@ scaffold/yarn.lock
 .cli-plugins
 scripts/add-js-ext.js
 scripts/add-js-ext.cjs
-.halsprc.temp.js
+*.temp.*

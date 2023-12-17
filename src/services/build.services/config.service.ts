@@ -144,7 +144,7 @@ export class ConfigService {
 
     const isJS = this.configFileName.toLowerCase().match(/.*\.(c|m)?js$/);
     if (isJS) {
-      return this.importJsConfig(configFilePath, true);
+      return this.importJsConfig(configFilePath);
     }
 
     const jsJson = this.configFileName.toLowerCase().endsWith(".json");
@@ -156,13 +156,10 @@ export class ConfigService {
     return JSON.parse(txt);
   }
 
-  private async importJsConfig(configFilePath: string, pathToFileUrl: boolean) {
+  private async importJsConfig(configFilePath: string) {
     let module: any;
     if (this.isESM) {
-      const filePath = pathToFileUrl
-        ? pathToFileURL(configFilePath).toString()
-        : configFilePath;
-      module = await import(filePath);
+      module = await import(pathToFileURL(configFilePath).toString());
     } else {
       module = require(configFilePath);
     }
@@ -176,21 +173,33 @@ export class ConfigService {
   }
 
   private async importTsConfig(configFilePath: string) {
+    const isESM = this.isESM;
     const skipJsExtTransformer = this.commandService.getOptionVlaue<boolean>(
       "skipJsExtTransformer",
     );
     const code = await fs.promises.readFile(configFilePath, "utf-8");
     const { options } = this.tsconfigService.parsedCommandLine;
     const { outputText } = ts.transpileModule(code, {
-      compilerOptions: options,
+      compilerOptions: {
+        ...options,
+        module: isESM ? ts.ModuleKind.ES2022 : ts.ModuleKind.CommonJS,
+        target: isESM ? ts.ScriptTarget.ES2022 : ts.ScriptTarget.ES2015,
+        moduleResolution: isESM
+          ? ts.ModuleResolutionKind.Bundler
+          : ts.ModuleResolutionKind.Node16,
+      },
       transformers: {
         after: skipJsExtTransformer ? [] : [addJsExtTransformer],
       },
+      fileName: this.configFileName,
     });
-    const tmpFile = path.join(path.dirname(configFilePath), ".halsprc.temp.js");
+
+    const tmpFileName =
+      this.configFileName + ".temp." + (this.isESM ? "mjs" : "cjs");
+    const tmpFile = path.join(path.dirname(configFilePath), tmpFileName);
     await fs.promises.writeFile(tmpFile, outputText);
     try {
-      return await this.importJsConfig(tmpFile, true);
+      return await this.importJsConfig(tmpFile);
     } finally {
       await fs.promises.rm(tmpFile, {
         force: true,
