@@ -15,7 +15,11 @@ export class BuildCommand extends BaseCommand {
       .description("Build Halsp application")
       .setBuildOptions("production")
       .option("-sm, --sourceMap", "Whether to generate source map files.")
-      .option("--removeDevDeps", "Remove devDependencies in package.json file")
+      .option("-cp, --copyPackage", "Copy package.json to out dir.")
+      .option(
+        "--removeDevDeps",
+        "Remove devDependencies in package.json file when --copyPackage is true.",
+      )
       .setCommonOptions()
       .action(
         async (app: string, command: Record<string, boolean | string>) => {

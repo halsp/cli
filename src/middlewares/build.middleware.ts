@@ -84,6 +84,13 @@ export class BuildMiddlware extends Middleware {
   }
 
   public async copyPackage() {
+    const copy = this.configService.getOptionOrConfigValue(
+      "copyPackage",
+      "build.copyPackage",
+      this.ctx.command == "start",
+    );
+    if (!copy) return;
+
     const removeDevDeps = this.configService.getOptionOrConfigValue(
       "removeDevDeps",
       "build.removeDevDeps",

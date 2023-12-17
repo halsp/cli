@@ -13,6 +13,7 @@ describe("copy package", () => {
     let callCount = 0;
     await runin(`test/build/script`, async () => {
       await new CliStartup("test", undefined, {
+        copyPackage: true,
         mode: "production",
         cacheDir: path.resolve(cacheDir),
       })
@@ -30,6 +31,7 @@ describe("copy package", () => {
     let callCount = 0;
     await runin(`test/build/script`, async () => {
       await new CliStartup("test", undefined, {
+        copyPackage: true,
         removeDevDeps: true,
         mode: "production",
         cacheDir: path.resolve(cacheDir),
