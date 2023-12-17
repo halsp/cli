@@ -5,8 +5,11 @@ import { ConfigService } from "./config.service";
 import { TsconfigService } from "./tsconfig.service";
 import { CompilerHook } from "../../configuration";
 import { DepsService } from "../deps.service";
-import { CommandService } from "../command.service";
-import { addJsExtTransformer } from "../../utils/transformer";
+import { createJsExtTransformer } from "../../utils/transformer";
+import { FileService } from "../file.service";
+import { createRequire } from "../../utils/shims";
+
+const require = createRequire(import.meta.url);
 
 export class CompilerService {
   @Inject
@@ -18,7 +21,7 @@ export class CompilerService {
   @Inject
   private readonly depsService!: DepsService;
   @Inject
-  private readonly commandService!: CommandService;
+  private readonly fileService!: FileService;
 
   private get config() {
     return this.configService.value;
@@ -34,6 +37,32 @@ export class CompilerService {
     );
   }
 
+  private get moduleExt() {
+    const ext = this.configService.getOptionOrConfigValue<string, string>(
+      "moduleExt",
+      "build.moduleExt",
+    );
+    if (!ext) return;
+
+    const pkgPath = this.fileService.findFileFromTree("package.json");
+    const isESM = !!pkgPath && require(pkgPath).type == "module";
+    return isESM ? ".mjs" : ".cjs";
+  }
+  public get writeFileCallback() {
+    const ext = this.moduleExt;
+
+    return (
+      path: string,
+      data: string,
+      writeByteOrderMark?: boolean | undefined,
+    ) =>
+      ts.sys.writeFile(
+        ext ? path.replace(/\.js$/, ext) : path,
+        data,
+        writeByteOrderMark,
+      );
+  }
+
   public async getHooks(program: ts.Program) {
     const before = [
       ...(await this.getPlugins<CompilerHook<ts.SourceFile>>("beforeCompile")),
@@ -41,7 +70,7 @@ export class CompilerService {
     ].map((hook) => hook(program));
 
     const after = [
-      () => addJsExtTransformer,
+      () => createJsExtTransformer(this.moduleExt),
       ...(await this.getPlugins<CompilerHook<ts.SourceFile>>("afterCompile")),
       ...(this.config.build?.afterHooks ?? []),
     ].map((hook) => hook(program));
@@ -86,7 +115,7 @@ export class CompilerService {
     const program = buildProgram.getProgram();
     const emitResult = buildProgram.emit(
       undefined,
-      undefined,
+      this.writeFileCallback,
       undefined,
       undefined,
       await this.getHooks(program),

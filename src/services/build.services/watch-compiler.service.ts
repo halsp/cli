@@ -66,7 +66,7 @@ export class WatchCompilerService {
       const originEmit = program.emit;
       const emit = async (
         targetSourceFile?: ts.SourceFile,
-        writeFile?: ts.WriteFileCallback,
+        _writeFile?: ts.WriteFileCallback,
         cancellationToken?: ts.CancellationToken,
         emitOnlyDtsFiles?: boolean,
         customTransformers?: ts.CustomTransformers,
@@ -77,7 +77,7 @@ export class WatchCompilerService {
         );
         return originEmit(
           targetSourceFile,
-          writeFile,
+          this.compilerService.writeFileCallback,
           cancellationToken,
           emitOnlyDtsFiles,
           transforms,

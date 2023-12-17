@@ -10,7 +10,7 @@ import { createRequire } from "../../utils/shims";
 import { pathToFileURL } from "url";
 import { TsconfigService } from "./tsconfig.service";
 import ts from "typescript";
-import { addJsExtTransformer } from "../../utils/transformer";
+import { createJsExtTransformer } from "../../utils/transformer";
 
 const require = createRequire(import.meta.url);
 
@@ -186,7 +186,7 @@ export class ConfigService {
           : ts.ModuleResolutionKind.Node16,
       },
       transformers: {
-        after: [addJsExtTransformer],
+        after: [createJsExtTransformer()],
       },
       fileName: this.configFileName,
     });

@@ -20,10 +20,19 @@
     "email": "support@hal.wang"
   },
   "type": "module",
-  "main": "./dist/index.js",
+  "main": "./dist-cjs/index.cjs",
+  "module": "./dist-esm/index.mjs",
+  "exports": {
+    ".": {
+      "require": "./dist-cjs/index.cjs",
+      "import": "./dist-esm/index.mjs"
+    }
+  },
   "scripts": {
     "add-js-ext": "sh scripts/add-js-ext.sh",
-    "build": "rimraf ./dist/* --glob && ts-node src/main.ts build",
+    "build:esm": "rimraf ./dist-esm/* --glob && ts-node src/main.ts build --tsconfigPath tsconfig.esm.json --moduleExt",
+    "build:cjs": "rimraf ./dist-cjs/* --glob && ts-node src/main.ts build --tsconfigPath tsconfig.cjs.json --moduleExt",
+    "build": "npm run build:esm && npm run build:cjs",
     "build:create-halsp": "ts-node scripts/create-halsp.ts && npm run build",
     "publish:beta": "npm run build && npm publish --tag=beta --access=public",
     "test": "c8 mocha test test/**/*.test.ts",
@@ -101,7 +110,8 @@
     "/.github/*",
     "/.husky/*",
     "/bin/*",
-    "/dist/*",
+    "/dist-cjs/*",
+    "/dist-esm/*",
     "/scaffold/*",
     "/scripts/*",
     "/src/*",

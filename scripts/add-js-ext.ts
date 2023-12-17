@@ -20,13 +20,13 @@ function getImportPath(node: ts.Node, sf: SourceFile) {
   return result;
 }
 
-function getNewImportPath(importPath: string, sf: SourceFile) {
+function getNewImportPath(importPath: string, sf: SourceFile, ext = ".js") {
   const dir = path.dirname(sf.fileName);
   const impFile = path.join(dir, importPath);
   if (fs.existsSync(impFile) && fs.statSync(impFile).isDirectory()) {
-    return importPath + "/index.js";
+    return importPath + "/index" + ext;
   } else {
-    return importPath + ".js";
+    return importPath + ext;
   }
 }
 
@@ -54,36 +54,38 @@ function getNewImportLine(
   return text.replace(importPath, newImportPath);
 }
 
-export const addJsExtTransformer: ts.TransformerFactory<ts.SourceFile> = (
-  context,
-) => {
-  const createNewNode = (node: ts.StringLiteral) => {
-    const sf = node.getSourceFile();
-    const importPath = getImportPath(node, sf);
-    if (!importPath) return;
+export function createJsExtTransformer(
+  ext?: string,
+): ts.TransformerFactory<ts.SourceFile> {
+  return (context) => {
+    const createNewNode = (node: ts.StringLiteral) => {
+      const sf = node.getSourceFile();
+      const importPath = getImportPath(node, sf);
+      if (!importPath) return;
 
-    const newImportPath = getNewImportPath(importPath, sf);
-    if (!newImportPath) return;
+      const newImportPath = getNewImportPath(importPath, sf, ext);
+      if (!newImportPath) return;
 
-    return ts.factory.createStringLiteral(newImportPath);
+      return ts.factory.createStringLiteral(newImportPath);
+    };
+
+    const visit: ts.Visitor = (node) => {
+      if (
+        ts.isStringLiteral(node) &&
+        node.parent &&
+        (ts.isImportDeclaration(node.parent) ||
+          ts.isExportDeclaration(node.parent))
+      ) {
+        const newNode = createNewNode(node);
+        if (newNode) return newNode;
+      }
+
+      return ts.visitEachChild(node, visit, context);
+    };
+
+    return (node) => ts.visitEachChild(node, visit, context);
   };
-
-  const visit: ts.Visitor = (node) => {
-    if (
-      ts.isStringLiteral(node) &&
-      node.parent &&
-      (ts.isImportDeclaration(node.parent) ||
-        ts.isExportDeclaration(node.parent))
-    ) {
-      const newNode = createNewNode(node);
-      if (newNode) return newNode;
-    }
-
-    return ts.visitEachChild(node, visit, context);
-  };
-
-  return (node) => ts.visitEachChild(node, visit, context);
-};
+}
 
 export function replaceCode(input: string, fileName: string) {
   const sf = ts.createSourceFile(fileName, input, ts.ScriptTarget.ES2022);

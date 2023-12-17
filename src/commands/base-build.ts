@@ -33,5 +33,6 @@ Command.prototype.setBuildOptions = function (defaultMode: string) {
     .option(
       "-e, --env <variables...>",
       "Environment Variable, e.g. FOO=BAR,CUSTOM_ENV=abc",
-    );
+    )
+    .option("--moduleExt", "Useing .cjs or .ejs extension for js file name.");
 };

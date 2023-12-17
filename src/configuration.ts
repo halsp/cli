@@ -58,6 +58,7 @@ export interface Configuration {
     removeDevDeps?: boolean;
 
     cacheDir?: string;
+    moduleExt?: boolean;
   };
   start?: {
     port?: number;
