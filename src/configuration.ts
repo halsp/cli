@@ -61,7 +61,7 @@ export interface Configuration {
     removeDevDeps?: boolean;
 
     cacheDir?: string;
-    moduleExt?: boolean;
+    moduleType?: "cjs" | "mjs";
   };
   start?: {
     port?: number;

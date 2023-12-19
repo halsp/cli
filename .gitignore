@@ -1,6 +1,6 @@
 .git
 dist
-dist-esm
+dist-mjs
 dist-cjs
 node_modules
 package-lock.json

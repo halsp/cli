@@ -33,31 +33,40 @@ export class CompilerService {
       "build.sourceMap",
     );
   }
-
-  private get moduleExt() {
-    const ext = this.configService.getOptionOrConfigValue<string, string>(
-      "moduleExt",
-      "build.moduleExt",
+  public get moduleType() {
+    const type = this.configService.getOptionOrConfigValue<string, string>(
+      "moduleType",
+      "build.moduleType",
     );
-    if (!ext) return;
+    if (type && type != "cjs" && type != "mjs") {
+      throw new Enumerator(["cjs", "mjs"]);
+    }
+    return type as "cjs" | "mjs" | undefined;
+  }
+  private get isESM() {
+    if (this.moduleType) {
+      return this.moduleType == "mjs";
+    }
 
     const pkgPath = this.fileService.findFileFromTree("package.json");
-    const isESM = !!pkgPath && _require(pkgPath).type == "module";
-    return isESM ? ".mjs" : ".cjs";
+    return !!pkgPath && _require(pkgPath).type == "module";
   }
   public get writeFileCallback() {
-    const ext = this.moduleExt;
-
     return (
       path: string,
       data: string,
       writeByteOrderMark?: boolean | undefined,
     ) =>
       ts.sys.writeFile(
-        ext ? path.replace(/\.js$/, ext) : path,
+        this.moduleType ? path.replace(/\.js$/, "." + this.moduleType) : path,
         data,
         writeByteOrderMark,
       );
+  }
+  private get esmTransformer(): CompilerHook<ts.SourceFile>[] {
+    return this.isESM
+      ? [() => createAddShimsTransformer("." + this.moduleType)]
+      : [];
   }
 
   public async getHooks(program: ts.Program) {
@@ -67,7 +76,7 @@ export class CompilerService {
     ].map((hook) => hook(program));
 
     const after = [
-      () => createAddShimsTransformer(this.moduleExt),
+      ...this.esmTransformer,
       ...(await this.getPlugins<CompilerHook<ts.SourceFile>>("afterCompile")),
       ...(this.config.build?.afterHooks ?? []),
     ].map((hook) => hook(program));

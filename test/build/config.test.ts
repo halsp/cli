@@ -293,7 +293,7 @@ describe("read config", () => {
     worked.should.true;
   });
 
-  it(`should read esm js config file`, async () => {
+  it(`should read mjs js config file`, async () => {
     let worked = false;
     await runin("test/build/config/types", async () => {
       await new CliStartup("test", undefined, {

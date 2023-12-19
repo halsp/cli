@@ -21,18 +21,18 @@
   },
   "type": "module",
   "main": "./dist-cjs/index.cjs",
-  "module": "./dist-esm/index.mjs",
+  "module": "./dist-mjs/index.mjs",
   "exports": {
     ".": {
       "require": "./dist-cjs/index.cjs",
-      "import": "./dist-esm/index.mjs"
+      "import": "./dist-mjs/index.mjs"
     }
   },
   "scripts": {
     "add-shims": "sh scripts/add-shims.sh",
-    "build:esm": "rimraf ./dist-esm/* --glob && ts-node src/main.ts build --tsconfigPath tsconfig.esm.json --moduleExt",
-    "build:cjs": "rimraf ./dist-cjs/* --glob && ts-node src/main.ts build --tsconfigPath tsconfig.cjs.json --moduleExt",
-    "build": "npm run build:esm && npm run build:cjs",
+    "build:mjs": "rimraf ./dist-mjs/* --glob && ts-node src/main.ts build --tsconfigPath tsconfig.mjs.json --moduleType mjs",
+    "build:cjs": "rimraf ./dist-cjs/* --glob && ts-node src/main.ts build --tsconfigPath tsconfig.cjs.json --moduleType cjs",
+    "build": "npm run build:mjs && npm run build:cjs",
     "build:create-halsp": "ts-node scripts/create-halsp.ts && npm run build",
     "publish:beta": "npm run build && npm publish --tag=beta --access=public",
     "test": "c8 mocha test test/**/*.test.ts",
@@ -95,7 +95,6 @@
     "eslint": "^8.51.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-prettier": "^5.0.1",
-    "esm": "^3.2.25",
     "husky": "^8.0.3",
     "mocha": "^10.2.0",
     "rimraf": "^5.0.5",
@@ -111,7 +110,7 @@
     "/.husky/*",
     "/bin/*",
     "/dist-cjs/*",
-    "/dist-esm/*",
+    "/dist-mjs/*",
     "/scaffold/*",
     "/scripts/*",
     "/src/*",

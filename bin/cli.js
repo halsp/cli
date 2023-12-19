@@ -2,4 +2,10 @@
 
 "use strict";
 
-import "../dist/main.js";
+import { createRequire } from "module";
+
+if (process.env.PACKAGE_TYPE === "module") {
+  await import("../dist-mjs/main.mjs");
+} else {
+  createRequire(import.meta.url)("../dist-cjs/main.cjs");
+}
