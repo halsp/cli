@@ -5,7 +5,8 @@ import { ConfigService } from "./config.service";
 import { TsconfigService } from "./tsconfig.service";
 import { CompilerHook } from "../../configuration";
 import { DepsService } from "../deps.service";
-import { createAddShimsTransformer } from "../../utils/shims";
+import { addShimsTransformer } from "../../compiler";
+import { createAddExtTransformer } from "../../compiler";
 import { FileService } from "../file.service";
 
 export class CompilerService {
@@ -64,9 +65,15 @@ export class CompilerService {
       );
   }
   private get esmTransformer(): CompilerHook<ts.SourceFile>[] {
-    return this.isESM
-      ? [() => createAddShimsTransformer("." + this.moduleType)]
-      : [];
+    const result = [] as CompilerHook<ts.SourceFile>[];
+    const ext = "." + (this.moduleType ? this.moduleType : "js");
+    if (this.isESM) {
+      result.push(() => addShimsTransformer);
+      result.push(() => createAddExtTransformer(ext));
+    } else if (this.moduleType) {
+      result.push(() => createAddExtTransformer(ext));
+    }
+    return result;
   }
 
   public async getHooks(program: ts.Program) {

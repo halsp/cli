@@ -1,7 +1,7 @@
 import { Context, ObjectConstructor } from "@halsp/core";
 import { CliStartup } from "../src/cli-startup";
 import { expect } from "chai";
-import "../src/utils/global";
+import "../src/compiler";
 
 export async function runin(path: string, fn: () => void | Promise<void>) {
   const cwd = process.cwd();

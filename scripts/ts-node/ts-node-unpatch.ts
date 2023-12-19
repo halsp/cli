@@ -1,6 +1,6 @@
 import fs from "fs";
 import { createRequire } from "node:module";
-import { flag } from "./ts-node-patch";
+import { flag } from "./ts-node-patch.js";
 
 const tsNodePath = createRequire(import.meta.url).resolve("ts-node");
 const code = await fs.promises.readFile(tsNodePath, "utf-8");

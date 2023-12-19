@@ -29,7 +29,7 @@
     }
   },
   "scripts": {
-    "add-shims": "sh scripts/add-shims.sh",
+    "patch-ts-node": "sh scripts/ts-node/add-shims.sh",
     "build:mjs": "rimraf ./dist-mjs/* --glob && ts-node src/main.ts build --tsconfigPath tsconfig.mjs.json --moduleType mjs",
     "build:cjs": "rimraf ./dist-cjs/* --glob && ts-node src/main.ts build --tsconfigPath tsconfig.cjs.json --moduleType cjs",
     "build": "npm run build:mjs && npm run build:cjs",
@@ -42,7 +42,7 @@
     "ci-test": "sh scripts/ci-test.sh",
     "lint": "eslint src --ext .ts",
     "dev:link": "npm run build && npm uninstall @halsp/cli -g && npm link",
-    "prepare": "husky install && npm run add-shims"
+    "prepare": "husky install && npm run patch-ts-node"
   },
   "author": "hal-wang",
   "license": "MIT",

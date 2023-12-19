@@ -1,4 +1,4 @@
-import "./utils/global";
+import "./compiler";
 
 export type {
   ConfigEnv,
