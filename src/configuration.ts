@@ -36,6 +36,8 @@ export type Postbuild = (options: ScriptOptions) => Promise<void> | void;
 export interface ConfigEnv {
   mode: string;
   command: CommandType;
+  commandArgs: Record<string, string>;
+  commandOptions: Record<string, string | boolean>;
 }
 
 export interface Configuration {

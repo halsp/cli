@@ -1,3 +1,5 @@
+import "./utils/global";
+
 export type {
   ConfigEnv,
   Configuration,

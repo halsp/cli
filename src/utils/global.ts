@@ -1,3 +1,5 @@
-export declare global {
+declare global {
   const _require: NodeRequire;
 }
+
+export {};

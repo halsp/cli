@@ -1,7 +1,7 @@
 import { Middleware } from "@halsp/core";
 import { Inject } from "@halsp/inject";
 import { PackageManagerService } from "../../services/package-manager.service";
-import path, { dirname } from "path";
+import path from "path";
 import chalk from "chalk";
 import { PluginService } from "../../services/plugin.service";
 
@@ -24,7 +24,7 @@ export class RemovePluginMiddleware extends Middleware {
     if (plugin.cwd) {
       dir = process.cwd();
     } else {
-      dir = path.join(dirname(import.meta.url), "../../../");
+      dir = path.join(__dirname, "../../../");
     }
 
     const installResult = await this.packageManagerService.uninstall(name, dir);

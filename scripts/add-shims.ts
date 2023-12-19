@@ -141,7 +141,7 @@ function createShimsStatements(sf: ts.SourceFile) {
         ts.factory.createVariableDeclarationList(
           [
             ts.factory.createVariableDeclaration(
-              ts.factory.createIdentifier("___dirname"),
+              ts.factory.createIdentifier("__dirname"),
               undefined,
               undefined,
               ts.factory.createCallExpression(

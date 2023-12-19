@@ -4,7 +4,6 @@
     "outDir": "./dist-esm",
   },
   "include": [
-    "src/**/*",
-    "types/**/*.d.ts",
+    "src/**/*"
   ]
 }

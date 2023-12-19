@@ -53,6 +53,8 @@ export class HookService {
       command: this.ctx.command,
       cacheDir: this.cacheDir,
       mode: this.configService.mode,
+      commandArgs: { ...this.ctx.commandArgs },
+      commandOptions: { ...this.ctx.commandOptions },
     };
   }
 

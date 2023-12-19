@@ -15,10 +15,7 @@
     "preserveWatchOutput": true,
   },
   "include": [
-    "src/**/*.ts",
-    "src/**/*.d.ts",
-    "types/**/*.d.ts",
-    ".halsprc.ts"
+    "src/**/*"
   ],
   "ts-node": {
     "esm": true

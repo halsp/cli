@@ -65,6 +65,8 @@ export class ConfigService {
     return {
       mode: this.mode,
       command: this.ctx.command,
+      commandArgs: { ...this.ctx.commandArgs },
+      commandOptions: { ...this.ctx.commandOptions },
     };
   }
 
