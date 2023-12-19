@@ -5,10 +5,6 @@ import chalk from "chalk";
 import { Inject } from "@halsp/inject";
 import { CommandService } from "../command.service";
 import { PackageManagerService } from "../package-manager.service";
-import { createDirname, createRequire } from "../../utils/shims";
-
-const require = createRequire(import.meta.url);
-const __dirname = createDirname(import.meta.url);
 
 export class InitService {
   @Inject
@@ -53,5 +49,5 @@ export class InitService {
 
 function getCliVersion() {
   const file = path.join(__dirname, "../../../package.json");
-  return require(file).version;
+  return _require(file).version;
 }

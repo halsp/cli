@@ -1,8 +1,5 @@
 import path from "path";
 import { defineConfig } from "../../../src";
-import { createDirname } from "../../../src/utils/shims";
-
-const __dirname = createDirname(import.meta.url);
 
 export default defineConfig(() => ({
   build: {

@@ -2,9 +2,6 @@ import { Inject } from "@halsp/inject";
 import path from "path";
 import { DepsService } from "./deps.service";
 import { Command } from "commander";
-import { createDirname } from "../utils/shims";
-
-const __dirname = createDirname(import.meta.url);
 
 type PluginHook = (command: Command) => void;
 interface PluginConfig {

@@ -1,27 +1,30 @@
-import { createRequire, createDirname } from "../src/utils/shims.js";
 import fs from "fs";
 import path from "path";
+import { createRequire } from "node:module";
+import { fileURLToPath } from "url";
 
-const require = createRequire(import.meta.url);
-const dirname = createDirname(import.meta.url);
-const flag = "/* halsp-cli-add-js-ext */ ";
+export const flag = "/* halsp-cli-add-shims */ ";
 
 const transpilerPath = path
-  .join(dirname, "./add-js-ext.cjs")
+  .join(path.dirname(fileURLToPath(import.meta.url)), "./add-shims.cjs")
   .replace(/\\/g, "/");
-const codeLine = `${flag}code = require('${transpilerPath}').replaceCode(code, fileName);`;
+const addShimsCode = `${flag}contents = require('${transpilerPath}').addShims(contents, fileName);`;
 
-const tsNodePath = require.resolve("ts-node");
+const tsNodePath = createRequire(import.meta.url).resolve("ts-node");
 const code = await fs.promises.readFile(tsNodePath, "utf-8");
 const lines = code.replace(/\r\n/, "\n").split("\n");
-for (const line of lines) {
-  if (line.includes("function compile(")) {
-    const index = lines.indexOf(line);
-    if (!lines[index + 1].startsWith(flag)) {
-      lines.splice(index + 1, 0, codeLine);
+
+let lineIndex = 0;
+while (lineIndex < lines.length - 1) {
+  const line = lines[lineIndex];
+  if (line.includes("const updateMemoryCache =")) {
+    if (lines[lineIndex + 1].startsWith(flag)) {
+      lines.splice(lineIndex + 1, 1, addShimsCode);
+    } else {
+      lines.splice(lineIndex + 1, 0, addShimsCode);
     }
-    break;
   }
+  lineIndex++;
 }
 
 await fs.promises.writeFile(tsNodePath, lines.join("\n"));

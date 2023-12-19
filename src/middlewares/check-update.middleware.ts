@@ -4,9 +4,6 @@ import path from "path";
 import { Inject } from "@halsp/inject";
 import { CommandService } from "../services/command.service";
 import updateNotifier from "update-notifier";
-import { createDirname } from "../utils/shims";
-
-const __dirname = createDirname(import.meta.url);
 
 export class CheckUpdateMiddleware extends Middleware {
   @Inject

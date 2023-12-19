@@ -16,9 +16,6 @@ import { RunMiddleware } from "./run.middleware";
 import { InstallMiddleware } from "./install.middleware";
 import { ScaffoldMiddleware } from "./scaffold.middleware";
 import { InquirerService } from "../../services/inquirer.service";
-import { createDirname } from "../../utils/shims";
-
-const __dirname = createDirname(import.meta.url);
 
 type CopyConfig = {
   template: string;

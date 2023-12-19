@@ -6,13 +6,10 @@ import { CommandService } from "../command.service";
 import { FileService } from "../file.service";
 import * as fs from "fs";
 import { DepsService } from "../deps.service";
-import { createRequire } from "../../utils/shims";
 import { pathToFileURL } from "url";
 import { TsconfigService } from "./tsconfig.service";
 import ts from "typescript";
-import { createJsExtTransformer } from "../../utils/transformer";
-
-const require = createRequire(import.meta.url);
+import { createAddShimsTransformer } from "../../utils/shims";
 
 export class ConfigService {
   @Inject
@@ -61,7 +58,7 @@ export class ConfigService {
     }
 
     const pkgPath = this.fileService.findFileFromTree("package.json");
-    return !!pkgPath && require(pkgPath).type == "module";
+    return !!pkgPath && _require(pkgPath).type == "module";
   }
 
   private get configEnv(): ConfigEnv {
@@ -149,7 +146,7 @@ export class ConfigService {
 
     const jsJson = this.configFileName.toLowerCase().endsWith(".json");
     if (jsJson) {
-      return require(configFilePath);
+      return _require(configFilePath);
     }
 
     const txt = await fs.promises.readFile(configFilePath, "utf-8");
@@ -161,7 +158,7 @@ export class ConfigService {
     if (this.isESM) {
       module = await import(pathToFileURL(configFilePath).toString());
     } else {
-      module = require(configFilePath);
+      module = _require(configFilePath);
     }
     if (typeof module == "function") {
       return module(this.configEnv);
@@ -186,7 +183,7 @@ export class ConfigService {
           : ts.ModuleResolutionKind.Node16,
       },
       transformers: {
-        after: [createJsExtTransformer()],
+        after: isESM ? [createAddShimsTransformer()] : [],
       },
       fileName: this.configFileName,
     });

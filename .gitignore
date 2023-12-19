@@ -13,6 +13,6 @@ coverage
 
 scaffold/yarn.lock
 .cli-plugins
-scripts/add-js-ext.js
-scripts/add-js-ext.cjs
+scripts/add-shims.js
+scripts/add-shims.cjs
 *.temp.*

@@ -1,10 +1,10 @@
-import path from "path";
-import { fileURLToPath } from "url";
-import m from "node:module";
+import ts from "typescript";
 
-export function createDirname(url: string) {
-  return path.dirname(fileURLToPath(url));
-}
-export function createRequire(url: string) {
-  return m.createRequire(url);
-}
+const { createAddShimsTransformer: _createAddShimsTransformer } = _require(
+  "../../scripts/add-shims.cjs",
+);
+const createAddShimsTransformer = _createAddShimsTransformer as (
+  ext?: string,
+) => ts.TransformerFactory<ts.SourceFile>;
+
+export { createAddShimsTransformer };

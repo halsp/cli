@@ -10,10 +10,6 @@ import {
 } from "./plugin-config.service";
 import { CreateService } from "../create.service";
 import { FileService } from "../file.service";
-import { createDirname, createRequire } from "../../utils/shims";
-
-const __dirname = createDirname(import.meta.url);
-const require = createRequire(import.meta.url);
 
 export class CopyPackageService {
   @Inject
@@ -96,7 +92,7 @@ export class CopyPackageService {
 
   private getPackage(): any {
     const file = path.join(__dirname, "../../../scaffold/package.json");
-    return require(file);
+    return _require(file);
   }
 
   private setCliVersion(pkg: Record<string, any>) {
@@ -122,6 +118,6 @@ export class CopyPackageService {
     }
 
     const file = path.join(__dirname, "../../../package.json");
-    return require(file).version;
+    return _require(file).version;
   }
 }

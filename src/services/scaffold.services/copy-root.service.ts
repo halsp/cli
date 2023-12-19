@@ -3,9 +3,6 @@ import * as fs from "fs";
 import { FileService } from "../file.service";
 import path from "path";
 import { CreateService } from "../create.service";
-import { createDirname } from "../../utils/shims";
-
-const __dirname = createDirname(import.meta.url);
 
 const files = ["README.md", "LICENSE"];
 

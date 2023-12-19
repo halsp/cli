@@ -1,9 +1,6 @@
 import * as fs from "fs";
 import path from "path";
-import { createRequire } from "../utils/shims";
 import { pathToFileURL } from "url";
-
-const require = createRequire(import.meta.url);
 
 export type DepItem = { key: string; value: string };
 export type InterfaceItem<T> = {
@@ -72,7 +69,7 @@ export class DepsService {
     const pkgPath = path.join(pkg, "package.json");
 
     try {
-      return require.resolve(pkgPath, {
+      return _require.resolve(pkgPath, {
         paths: paths,
       });
     } catch {
@@ -106,7 +103,7 @@ export class DepsService {
     ]);
     const scripts: InterfaceItem<T>[] = [];
     for (const dep of deps) {
-      const depPath = require.resolve(dep.key, {
+      const depPath = _require.resolve(dep.key, {
         paths: [cwd],
       });
 

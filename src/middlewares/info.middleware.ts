@@ -6,9 +6,6 @@ import { DepsService } from "../services/deps.service";
 import { Inject } from "@halsp/inject";
 import { Middleware } from "@halsp/core";
 import chalk from "chalk";
-import { createDirname } from "../utils/shims";
-
-const __dirname = createDirname(import.meta.url);
 
 export class InfoMiddleware extends Middleware {
   @Inject

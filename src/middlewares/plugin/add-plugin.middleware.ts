@@ -4,9 +4,6 @@ import { PackageManagerService } from "../../services/package-manager.service";
 import path from "path";
 import chalk from "chalk";
 import { PluginService } from "../../services/plugin.service";
-import { createDirname } from "../../utils/shims";
-
-const __dirname = createDirname(import.meta.url);
 
 export class AddPluginMiddleware extends Middleware {
   @Inject

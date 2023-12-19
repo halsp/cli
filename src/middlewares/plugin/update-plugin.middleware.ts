@@ -7,9 +7,6 @@ import { CommandService } from "../../services/command.service";
 import { chalkInit } from "npm-check-updates/build/src/lib/chalk.js";
 import runLocal from "npm-check-updates/build/src/lib/runLocal.js";
 import path from "path";
-import { createDirname } from "../../utils/shims";
-
-const __dirname = createDirname(import.meta.url);
 
 export class UpdatePluginMiddleware extends Middleware {
   @Inject

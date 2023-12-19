@@ -5,11 +5,8 @@ import { ConfigService } from "./config.service";
 import { TsconfigService } from "./tsconfig.service";
 import { CompilerHook } from "../../configuration";
 import { DepsService } from "../deps.service";
-import { createJsExtTransformer } from "../../utils/transformer";
+import { createAddShimsTransformer } from "../../utils/shims";
 import { FileService } from "../file.service";
-import { createRequire } from "../../utils/shims";
-
-const require = createRequire(import.meta.url);
 
 export class CompilerService {
   @Inject
@@ -45,7 +42,7 @@ export class CompilerService {
     if (!ext) return;
 
     const pkgPath = this.fileService.findFileFromTree("package.json");
-    const isESM = !!pkgPath && require(pkgPath).type == "module";
+    const isESM = !!pkgPath && _require(pkgPath).type == "module";
     return isESM ? ".mjs" : ".cjs";
   }
   public get writeFileCallback() {
@@ -70,7 +67,7 @@ export class CompilerService {
     ].map((hook) => hook(program));
 
     const after = [
-      () => createJsExtTransformer(this.moduleExt),
+      () => createAddShimsTransformer(this.moduleExt),
       ...(await this.getPlugins<CompilerHook<ts.SourceFile>>("afterCompile")),
       ...(this.config.build?.afterHooks ?? []),
     ].map((hook) => hook(program));
