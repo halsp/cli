@@ -186,9 +186,8 @@ export class ConfigService {
           : ts.ModuleResolutionKind.Node16,
       },
       transformers: {
-        after: isESM
-          ? [addShimsTransformer, createAddExtTransformer(".js")]
-          : [],
+        before: isESM ? [createAddExtTransformer(".js")] : [],
+        after: isESM ? [addShimsTransformer] : [],
       },
       fileName: this.configFileName,
     });

@@ -64,26 +64,19 @@ export class CompilerService {
         writeByteOrderMark,
       );
   }
-  private get esmTransformer(): CompilerHook<ts.SourceFile>[] {
-    const result = [] as CompilerHook<ts.SourceFile>[];
-    const ext = "." + (this.moduleType ? this.moduleType : "js");
-    if (this.isESM) {
-      result.push(() => addShimsTransformer);
-      result.push(() => createAddExtTransformer(ext));
-    } else if (this.moduleType) {
-      result.push(() => createAddExtTransformer(ext));
-    }
-    return result;
-  }
 
   public async getHooks(program: ts.Program) {
+    const ext = "." + (this.moduleType ? this.moduleType : "js");
     const before = [
+      ...(this.isESM || this.moduleType
+        ? [() => createAddExtTransformer(ext)]
+        : []),
       ...(await this.getPlugins<CompilerHook<ts.SourceFile>>("beforeCompile")),
       ...(this.config.build?.beforeHooks ?? []),
     ].map((hook) => hook(program));
 
     const after = [
-      ...this.esmTransformer,
+      ...(this.isESM ? [() => addShimsTransformer] : []),
       ...(await this.getPlugins<CompilerHook<ts.SourceFile>>("afterCompile")),
       ...(this.config.build?.afterHooks ?? []),
     ].map((hook) => hook(program));

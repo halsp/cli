@@ -40,24 +40,34 @@ function createNewImportNode(node: ts.StringLiteral, ext: string) {
   return ts.factory.createStringLiteral(newImportPath);
 }
 
+function isNodeShouldUpdate(node: ts.Node): node is ts.StringLiteral {
+  if (!ts.isStringLiteral(node)) return false;
+  if (!node.parent) return false;
+  if (ts.isTypeOnlyImportOrExportDeclaration(node)) return false;
+
+  if (ts.isImportDeclaration(node.parent)) {
+    return true;
+  }
+
+  if (ts.isExportDeclaration(node.parent)) {
+    return true;
+  }
+
+  return false;
+}
+
 export function createAddExtTransformer(
   ext: string,
 ): ts.TransformerFactory<ts.SourceFile> {
   return (context) => {
-    const visit: ts.Visitor = (node) => {
-      if (
-        ts.isStringLiteral(node) &&
-        node.parent &&
-        (ts.isImportDeclaration(node.parent) ||
-          ts.isExportDeclaration(node.parent))
-      ) {
+    const visit = (sf: ts.SourceFile, node: ts.Node) => {
+      if (isNodeShouldUpdate(node)) {
         const newNode = createNewImportNode(node, ext);
         if (newNode) return newNode;
       }
-
-      return ts.visitEachChild(node, visit, context);
+      return ts.visitEachChild(node, (node) => visit(sf, node), context);
     };
 
-    return (sf) => ts.visitEachChild(sf, visit, context);
+    return (sf) => ts.visitEachChild(sf, (node) => visit(sf, node), context);
   };
 }
