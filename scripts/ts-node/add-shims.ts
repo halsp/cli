@@ -39,6 +39,8 @@ function getNewImportLine(
   ) {
     return;
   }
+  if (ts.isTypeOnlyImportOrExportDeclaration(statement)) return;
+  if (statement["isTypeOnly"]) return;
 
   const text = statement.getText(sf);
   const node = statement

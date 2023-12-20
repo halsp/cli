@@ -1,3 +1,3 @@
 export * from "./global";
 export { createAddExtTransformer } from "./add-ext";
-export { addShimsTransformer } from "./add-shims";
+export { createAddShimsTransformer } from "./add-shims";

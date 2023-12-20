@@ -9,8 +9,10 @@ import { DepsService } from "../deps.service";
 import { pathToFileURL } from "url";
 import { TsconfigService } from "./tsconfig.service";
 import ts from "typescript";
-import { addShimsTransformer } from "../../compiler";
-import { createAddExtTransformer } from "../../compiler";
+import {
+  createAddExtTransformer,
+  createAddShimsTransformer,
+} from "../../compiler";
 
 export class ConfigService {
   @Inject
@@ -186,8 +188,12 @@ export class ConfigService {
           : ts.ModuleResolutionKind.Node16,
       },
       transformers: {
-        before: isESM ? [createAddExtTransformer(".js")] : [],
-        after: isESM ? [addShimsTransformer] : [],
+        after: [
+          createAddShimsTransformer(isESM),
+          isESM ? createAddExtTransformer(".js") : undefined,
+        ]
+          .filter((item) => !!item)
+          .map((item) => item!),
       },
       fileName: this.configFileName,
     });

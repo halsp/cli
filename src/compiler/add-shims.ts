@@ -1,6 +1,6 @@
 import ts from "typescript";
 
-function createShimsStatements(sf: ts.SourceFile) {
+function createEsmShimsStatements(sf: ts.SourceFile) {
   const code = sf.getText();
   if (code.includes("_halsp_cli_shims_module")) return [];
   const nodes: ts.Statement[] = [];
@@ -116,16 +116,49 @@ function createShimsStatements(sf: ts.SourceFile) {
   return nodes;
 }
 
-export const addShimsTransformer: ts.TransformerFactory<ts.SourceFile> = () => {
-  return (sf) => {
-    return ts.factory.updateSourceFile(
-      sf,
-      [...createShimsStatements(sf), ...sf.statements],
-      sf.isDeclarationFile,
-      sf.referencedFiles,
-      sf.typeReferenceDirectives,
-      sf.hasNoDefaultLib,
-      sf.libReferenceDirectives,
+function createCjsShimsStatements(sf: ts.SourceFile) {
+  const code = sf.getText();
+  const nodes: ts.Statement[] = [];
+  if (code.includes("_require")) {
+    nodes.push(
+      ts.factory.createVariableStatement(
+        undefined,
+        ts.factory.createVariableDeclarationList(
+          [
+            ts.factory.createVariableDeclaration(
+              ts.factory.createIdentifier("_require"),
+              undefined,
+              undefined,
+              ts.factory.createIdentifier("require"),
+            ),
+          ],
+          ts.NodeFlags.Const,
+        ),
+      ),
     );
+  }
+  return nodes;
+}
+
+export function createAddShimsTransformer(
+  esm: boolean,
+): ts.TransformerFactory<ts.SourceFile> {
+  return () => {
+    return (sf) => {
+      return ts.factory.updateSourceFile(
+        sf,
+        [
+          ...(esm
+            ? createEsmShimsStatements(sf)
+            : createCjsShimsStatements(sf)),
+          ...sf.statements,
+        ],
+        sf.isDeclarationFile,
+        sf.referencedFiles,
+        sf.typeReferenceDirectives,
+        sf.hasNoDefaultLib,
+        sf.libReferenceDirectives,
+      );
+    };
   };
-};
+}

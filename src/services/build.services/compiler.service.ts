@@ -5,8 +5,10 @@ import { ConfigService } from "./config.service";
 import { TsconfigService } from "./tsconfig.service";
 import { CompilerHook } from "../../configuration";
 import { DepsService } from "../deps.service";
-import { addShimsTransformer } from "../../compiler";
-import { createAddExtTransformer } from "../../compiler";
+import {
+  createAddExtTransformer,
+  createAddShimsTransformer,
+} from "../../compiler";
 import { FileService } from "../file.service";
 
 export class CompilerService {
@@ -66,9 +68,10 @@ export class CompilerService {
   }
 
   public async getHooks(program: ts.Program) {
+    const isESM = this.isESM;
     const ext = "." + (this.moduleType ? this.moduleType : "js");
     const before = [
-      ...(this.isESM || this.moduleType
+      ...(!isESM && this.moduleType
         ? [() => createAddExtTransformer(ext)]
         : []),
       ...(await this.getPlugins<CompilerHook<ts.SourceFile>>("beforeCompile")),
@@ -76,7 +79,8 @@ export class CompilerService {
     ].map((hook) => hook(program));
 
     const after = [
-      ...(this.isESM ? [() => addShimsTransformer] : []),
+      ...(isESM ? [() => createAddExtTransformer(ext)] : []),
+      () => createAddShimsTransformer(isESM),
       ...(await this.getPlugins<CompilerHook<ts.SourceFile>>("afterCompile")),
       ...(this.config.build?.afterHooks ?? []),
     ].map((hook) => hook(program));

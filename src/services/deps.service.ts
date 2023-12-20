@@ -106,8 +106,16 @@ export class DepsService {
       const depPath = _require.resolve(dep.key, {
         paths: [cwd],
       });
-
-      const module = await import(pathToFileURL(depPath).toString());
+      let module: any;
+      try {
+        module = await import(pathToFileURL(depPath).toString());
+      } catch {
+        try {
+          module = _require(depPath);
+        } catch {
+          continue;
+        }
+      }
       const inter = module[name];
       if (inter) {
         scripts.push({
