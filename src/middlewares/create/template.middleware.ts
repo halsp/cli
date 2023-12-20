@@ -8,7 +8,6 @@ import path from "path";
 import * as fs from "fs";
 import walk from "ignore-walk";
 import { glob } from "glob";
-import chalk from "chalk";
 import { PackageManagerService } from "../../services/package-manager.service";
 import { CliStartup } from "../../cli-startup";
 import { InitGitMiddleware } from "./init-git.middleware";
@@ -16,6 +15,7 @@ import { RunMiddleware } from "./run.middleware";
 import { InstallMiddleware } from "./install.middleware";
 import { ScaffoldMiddleware } from "./scaffold.middleware";
 import { InquirerService } from "../../services/inquirer.service";
+import { ChalkService } from "../../services/chalk.service";
 
 type CopyConfig = {
   template: string;
@@ -49,6 +49,8 @@ export class TemplateMiddleware extends Middleware {
   private readonly packageManagerService!: PackageManagerService;
   @Inject
   private readonly inquirerService!: InquirerService;
+  @Inject
+  private readonly chalkService!: ChalkService;
 
   private get targetDir() {
     return this.createService.targetDir;
@@ -151,7 +153,7 @@ export class TemplateMiddleware extends Middleware {
     const templateConfig = await this.getTemprc(templateDir);
     if (templateConfig.preCommand) {
       console.log(
-        chalk.blueBright(
+        this.chalkService.blueBright(
           `Execute preCommand of ${config.template}: ${templateConfig.preCommand}`,
         ),
       );
@@ -182,7 +184,7 @@ export class TemplateMiddleware extends Middleware {
 
     if (templateConfig.postCommand) {
       console.log(
-        chalk.blueBright(
+        this.chalkService.blueBright(
           `Execute postCommand of ${config.template}: ${templateConfig.postCommand}`,
         ),
       );

@@ -43,7 +43,7 @@ function createNewImportNode(node: ts.StringLiteral, ext: string) {
 function isNodeShouldUpdate(node: ts.Node): node is ts.StringLiteral {
   if (!ts.isStringLiteral(node)) return false;
   if (!node.parent) return false;
-  if (ts.isTypeOnlyImportOrExportDeclaration(node)) return false;
+  if (node.parent["isTypeOnly"]) return false;
 
   if (ts.isImportDeclaration(node.parent)) {
     return true;

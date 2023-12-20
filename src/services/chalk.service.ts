@@ -1,15 +1,15 @@
-import type Inquirer from "inquirer";
+import type Chalk from "chalk";
 
-type InquirerType = typeof Inquirer;
+type ChalkType = typeof Chalk;
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
-export class InquirerService {
+export class ChalkService {
   async init() {
-    const inquirer = await import("inquirer");
+    const inquirer = await import("chalk");
 
     this["__proto__"] = inquirer.default;
   }
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
-export interface InquirerService extends InquirerType {}
+export interface ChalkService extends ChalkType {}

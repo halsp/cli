@@ -9,7 +9,7 @@ import { Middleware } from "@halsp/core";
 import { SortPluginsService } from "../../services/scaffold.services/sort-plugins.service";
 import { PackageManagerService } from "../../services/package-manager.service";
 import { InitService } from "../../services/scaffold.services/init.service";
-import chalk from "chalk";
+import { ChalkService } from "../../services/chalk.service";
 
 export class ScaffoldMiddleware extends Middleware {
   @Inject
@@ -30,6 +30,8 @@ export class ScaffoldMiddleware extends Middleware {
   private readonly sortPluginsService!: SortPluginsService;
   @Inject
   private readonly packageManagerService!: PackageManagerService;
+  @Inject
+  private readonly chalkService!: ChalkService;
 
   override async invoke(): Promise<void> {
     const pm = await this.packageManagerService.get();
@@ -82,8 +84,8 @@ export class ScaffoldMiddleware extends Middleware {
       .map((p) => `@halsp/${p}`);
     this.logger.info("\n");
     this.logger.info(
-      chalk.bold("Sorted plugins"),
-      chalk.greenBright(consolePlugins.join(", ")),
+      this.chalkService.bold("Sorted plugins"),
+      this.chalkService.greenBright(consolePlugins.join(", ")),
     );
     this.logger.info("\n");
   }

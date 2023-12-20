@@ -3,7 +3,7 @@ import * as fs from "fs";
 import path from "path";
 import { Inject } from "@halsp/inject";
 import { CommandService } from "../services/command.service";
-import updateNotifier from "update-notifier";
+import { dynamicImportDefault } from "../utils/dynamic-import";
 
 export class CheckUpdateMiddleware extends Middleware {
   @Inject
@@ -24,6 +24,10 @@ export class CheckUpdateMiddleware extends Middleware {
   }
 
   private async getNotifier(pkg: any) {
+    const updateNotifier =
+      await dynamicImportDefault<(typeof import("update-notifier"))["default"]>(
+        "update-notifier",
+      );
     return updateNotifier({
       pkg,
       updateCheckInterval: 1000 * 60 * 60 * 24, // 1 day

@@ -2,14 +2,16 @@ import { Middleware } from "@halsp/core";
 import { Inject } from "@halsp/inject";
 import { PackageManagerService } from "../../services/package-manager.service";
 import path from "path";
-import chalk from "chalk";
 import { PluginService } from "../../services/plugin.service";
+import { ChalkService } from "../../services/chalk.service";
 
 export class AddPluginMiddleware extends Middleware {
   @Inject
   private readonly packageManagerService!: PackageManagerService;
   @Inject
   private readonly pluginService!: PluginService;
+  @Inject
+  private readonly chalkService!: ChalkService;
 
   async invoke() {
     const name = this.ctx.commandArgs.name;
@@ -24,7 +26,7 @@ export class AddPluginMiddleware extends Middleware {
     if (!(await this.installBaseOn(name))) return;
 
     this.logger.info(
-      "Add plugin " + chalk.bold.greenBright(name) + " success.",
+      "Add plugin " + this.chalkService.bold.greenBright(name) + " success.",
     );
   }
 

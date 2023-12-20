@@ -5,6 +5,7 @@ import { ConfigService } from "./services/build.services/config.service";
 import { CommandType } from "./configuration";
 import { CheckUpdateMiddleware } from "./middlewares/check-update.middleware";
 import { InquirerService } from "./services/inquirer.service";
+import { ChalkService } from "./services/chalk.service";
 
 declare module "@halsp/core" {
   interface Context {
@@ -62,6 +63,11 @@ export class CliStartup extends Startup {
       })
       .inject(InquirerService, async (ctx) => {
         const result = await ctx.getService(new InquirerService());
+        await result.init();
+        return result;
+      })
+      .inject(ChalkService, async (ctx) => {
+        const result = await ctx.getService(new ChalkService());
         await result.init();
         return result;
       })

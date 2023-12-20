@@ -1,10 +1,10 @@
 import path from "path";
 import * as fs from "fs";
 import { Context } from "@halsp/core";
-import chalk from "chalk";
 import { Inject } from "@halsp/inject";
 import { CommandService } from "../command.service";
 import { PackageManagerService } from "../package-manager.service";
+import { ChalkService } from "../chalk.service";
 
 export class InitService {
   @Inject
@@ -13,6 +13,8 @@ export class InitService {
   private readonly commandService!: CommandService;
   @Inject
   private readonly packageManagerService!: PackageManagerService;
+  @Inject
+  private readonly chalkService!: ChalkService;
 
   public async init(pm: string) {
     const cliVersion = getCliVersion();
@@ -23,14 +25,14 @@ export class InitService {
     );
     if (this.commandService.getOptionVlaue<boolean>("forceInit")) {
       this.ctx.logger.info(
-        chalk.magentaBright("Force init scaffold. Please wait..."),
+        this.chalkService.magentaBright("Force init scaffold. Please wait..."),
       );
     } else {
       if (fs.existsSync(initFlatFilePath)) {
         return true;
       }
       this.ctx.logger.info(
-        chalk.magentaBright(
+        this.chalkService.magentaBright(
           "The command is used for the first time and is being initialized. Please wait...",
         ),
       );

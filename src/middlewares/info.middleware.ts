@@ -5,11 +5,13 @@ import path from "path";
 import { DepsService } from "../services/deps.service";
 import { Inject } from "@halsp/inject";
 import { Middleware } from "@halsp/core";
-import chalk from "chalk";
+import { ChalkService } from "../services/chalk.service";
 
 export class InfoMiddleware extends Middleware {
   @Inject
   private readonly depsService!: DepsService;
+  @Inject
+  private readonly chalkService!: ChalkService;
 
   get logInfo() {
     return this.logger.info.bind(this.logger);
@@ -25,7 +27,7 @@ export class InfoMiddleware extends Middleware {
 
     const text = figlet.textSync("HALSPCLI");
     this.logInfo("\n");
-    this.logInfo(chalk.blueBright(text));
+    this.logInfo(this.chalkService.blueBright(text));
 
     this.logTitle("System Information");
     this.logItems([
@@ -65,14 +67,16 @@ export class InfoMiddleware extends Middleware {
   }
 
   private logTitle(titie: string) {
-    this.logInfo("\n" + chalk.bold.blueBright(`[${titie}]`));
+    this.logInfo("\n" + this.chalkService.bold.blueBright(`[${titie}]`));
   }
 
   private logItems(items: { key: string; value: string }[]) {
     const keyLen = Math.max(...items.map((item) => item.key.length));
     for (const item of items) {
       this.logInfo(
-        item.key.padEnd(keyLen + 1, " ") + ": " + chalk.cyanBright(item.value),
+        item.key.padEnd(keyLen + 1, " ") +
+          ": " +
+          this.chalkService.cyanBright(item.value),
       );
     }
   }
