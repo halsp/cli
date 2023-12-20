@@ -1,10 +1,28 @@
 import ts from "typescript";
 
+function isIdentifierExist(code: string, text: string) {
+  function findIdentifer(node: ts.Node) {
+    let exist = false;
+    node.forEachChild((child) => {
+      if (ts.isIdentifier(child) && child.escapedText == text) {
+        exist = true;
+      } else {
+        const ex = findIdentifer(child);
+        if (ex) exist = true;
+      }
+    });
+    return exist;
+  }
+
+  const sf = ts.createSourceFile(".ts", code, ts.ScriptTarget.ES2022);
+  return sf.statements.filter(findIdentifer).length > 0;
+}
+
 function createEsmShimsStatements(sf: ts.SourceFile) {
   const code = sf.getText();
   if (code.includes("_halsp_cli_shims_module")) return [];
   const nodes: ts.Statement[] = [];
-  if (code.includes("_require")) {
+  if (isIdentifierExist(code, "_require")) {
     nodes.push(
       ts.factory.createImportDeclaration(
         undefined,
@@ -48,7 +66,7 @@ function createEsmShimsStatements(sf: ts.SourceFile) {
       ),
     );
   }
-  if (code.includes("__dirname")) {
+  if (isIdentifierExist(code, "___dirname")) {
     nodes.push(
       ts.factory.createImportDeclaration(
         undefined,
@@ -119,7 +137,7 @@ function createEsmShimsStatements(sf: ts.SourceFile) {
 function createCjsShimsStatements(sf: ts.SourceFile) {
   const code = sf.getText();
   const nodes: ts.Statement[] = [];
-  if (code.includes("_require")) {
+  if (isIdentifierExist(code, "_require")) {
     nodes.push(
       ts.factory.createVariableStatement(
         undefined,

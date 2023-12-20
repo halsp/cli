@@ -83,7 +83,7 @@ export function addShims(input: string, fileName: string) {
 
   const dirnameCode = `import _halsp_cli_shims_path from "path";
   import _halsp_cli_shims_url from "url";
-  const \_\_dirname=_halsp_cli_shims_path.dirname(_halsp_cli_shims_url.fileURLToPath(import.meta.url));`;
+  const __dirname=_halsp_cli_shims_path.dirname(_halsp_cli_shims_url.fileURLToPath(import.meta.url));`;
   if (input.includes("__dirname") && !input.includes("_halsp_cli_shims_path")) {
     input = dirnameCode + "\n" + input;
   }
