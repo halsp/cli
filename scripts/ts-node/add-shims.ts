@@ -29,18 +29,24 @@ function getNewImportPath(importPath: string, sf: ts.SourceFile) {
   }
 }
 
+function isImportOrExportDeclaration(
+  node: ts.Node,
+): node is ts.ImportDeclaration | ts.ExportDeclaration {
+  if (ts.isImportDeclaration(node) && !node.importClause?.isTypeOnly) {
+    return true;
+  }
+  if (ts.isExportDeclaration(node) && !node.isTypeOnly) {
+    return true;
+  }
+
+  return false;
+}
+
 function getNewImportLine(
   statement: ts.Statement | ts.StringLiteral,
   sf: ts.SourceFile,
 ) {
-  if (
-    !ts.isImportDeclaration(statement) &&
-    !ts.isExportDeclaration(statement)
-  ) {
-    return;
-  }
-  if (ts.isTypeOnlyImportOrExportDeclaration(statement)) return;
-  if (statement["isTypeOnly"]) return;
+  if (!isImportOrExportDeclaration(statement)) return;
 
   const text = statement.getText(sf);
   const node = statement

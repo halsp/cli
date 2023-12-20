@@ -2,6 +2,8 @@ import { Context, ObjectConstructor } from "@halsp/core";
 import { CliStartup } from "../src/cli-startup";
 import { expect } from "chai";
 import "../src/compiler";
+import fs from "fs";
+import path from "path";
 
 export async function runin(path: string, fn: () => void | Promise<void>) {
   const cwd = process.cwd();
@@ -35,4 +37,26 @@ export async function testService<T extends object = any>(
       .run();
   });
   expect(worked).true;
+}
+
+export function createTsconfig(
+  dir: string,
+  config?: (config: any) => any,
+): Record<string, any> {
+  const targetDir = path.relative(dir, path.join(__dirname, ".."));
+  const configFilePath = path.join(targetDir, "tsconfig.base.json");
+  const defConfig = {
+    extends: configFilePath.replace(/\\/g, "/"),
+    compilerOptions: {
+      outDir: "dist",
+    },
+    include: ["**/*"],
+    exclude: ["*.test.ts"],
+  };
+  const newConfig = config?.call(null, defConfig) ?? defConfig;
+
+  const json = JSON.stringify(newConfig);
+  const filePath = path.resolve(dir, "tsconfig.json");
+  fs.writeFileSync(filePath, json);
+  return newConfig;
 }

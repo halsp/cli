@@ -1,5 +1,5 @@
 {
-  "file": ["scripts/test-file.ts"],
+  "file": ["test/global.ts"],
   "require": ["ts-node/register", "source-map-support/register.js"],
   "loader": "ts-node/esm",
   "timeout": 60000

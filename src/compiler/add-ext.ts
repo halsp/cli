@@ -3,8 +3,6 @@ import fs from "fs";
 import ts from "typescript";
 
 function getImportPath(node: ts.Node, sf: ts.SourceFile) {
-  if (!node) return;
-
   const result = node
     .getText(sf)
     .replace(/^\'/, "")
@@ -40,21 +38,24 @@ function createNewImportNode(node: ts.StringLiteral, ext: string) {
   return ts.factory.createStringLiteral(newImportPath);
 }
 
-function isNodeShouldUpdate(node: ts.Node): node is ts.StringLiteral {
-  if (!ts.isStringLiteral(node)) return false;
-  if (!node.parent) return false;
-  if (ts.isTypeOnlyImportOrExportDeclaration(node.parent)) return false;
-  if (node.parent["isTypeOnly"]) return false;
-
-  if (ts.isImportDeclaration(node.parent)) {
+function isImportOrExportDeclaration(
+  node: ts.Node,
+): node is ts.ImportDeclaration | ts.ExportDeclaration {
+  if (ts.isImportDeclaration(node) && !node.importClause?.isTypeOnly) {
     return true;
   }
-
-  if (ts.isExportDeclaration(node.parent)) {
+  if (ts.isExportDeclaration(node) && !node.isTypeOnly) {
     return true;
   }
 
   return false;
+}
+
+function isNodeShouldUpdate(node: ts.Node): node is ts.StringLiteral {
+  if (!ts.isStringLiteral(node)) return false;
+  if (!node.parent) return false;
+
+  return isImportOrExportDeclaration(node.parent);
 }
 
 export function createAddExtTransformer(

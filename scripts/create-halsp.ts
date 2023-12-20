@@ -36,8 +36,6 @@ async function editReadme() {
   await fs.promises.writeFile("./README.md", readme);
 }
 
-(async () => {
-  await editTsconfig();
-  await editPackage();
-  await editReadme();
-})();
+await editTsconfig();
+await editPackage();
+await editReadme();
