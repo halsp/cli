@@ -32,10 +32,13 @@ export class BuildMiddlware extends Middleware {
   }
 
   override async invoke(): Promise<void> {
-    await fs.promises.rm(path.resolve(process.cwd(), this.cacheDir), {
-      recursive: true,
-      force: true,
-    });
+    const files = await fs.promises.readdir(path.resolve(this.cacheDir));
+    for (const file of files) {
+      await fs.promises.rm(path.resolve(path.join(this.cacheDir, file)), {
+        recursive: true,
+        force: true,
+      });
+    }
 
     if (!(await this.hookService.execPrebuilds())) {
       return;
