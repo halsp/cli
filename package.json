@@ -20,12 +20,16 @@
     "email": "support@hal.wang"
   },
   "type": "module",
-  "main": "./dist-cjs/index.cjs",
-  "module": "./dist-mjs/index.mjs",
   "exports": {
     ".": {
-      "require": "./dist-cjs/index.cjs",
-      "import": "./dist-mjs/index.mjs"
+      "require": {
+        "default": "./dist-cjs/index.cjs",
+        "types": "./dist-cjs/index.d.ts"
+      },
+      "import": {
+        "default": "./dist-mjs/index.mjs",
+        "types": "./dist-mjs/index.d.ts"
+      }
     }
   },
   "scripts": {

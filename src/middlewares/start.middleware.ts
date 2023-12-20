@@ -8,10 +8,13 @@ import { treeKillSync } from "../utils/tree-kill";
 import shell from "shelljs";
 import { ConfigService } from "../services/build.services/config.service";
 import { ChildProcess } from "child_process";
+import { FileService } from "../services/file.service";
 
 export class StartMiddleware extends Middleware {
   @Inject
   private readonly configService!: ConfigService;
+  @Inject
+  private readonly fileService!: FileService;
 
   private get cacheDir() {
     return this.configService.cacheDir;
@@ -142,37 +145,48 @@ export class StartMiddleware extends Middleware {
   }
 
   private getStartFilePath() {
+    let startupFile = this.getStartFilePathFromOptions();
+    if (startupFile) return startupFile;
+
+    const fiels = ["native", "index", "main"].reduce<string[]>((pre, file) => {
+      [".js", ".mjs", ".cjs"].forEach((ext) =>
+        pre.push(path.resolve(this.cacheDir, file + ext)),
+      );
+      return pre;
+    }, []);
+    startupFile = this.fileService.existAny(fiels);
+    if (startupFile) return startupFile;
+
+    throw new Error("The start file is not exist");
+  }
+
+  private getStartFilePathFromOptions() {
     const startupFile = this.configService.getOptionOrConfigValue<string>(
       "startupFile",
       "startu.startupFile",
     );
-    if (startupFile) {
-      const targetFile = path.resolve(this.cacheDir, startupFile);
-      if (fs.existsSync(targetFile)) {
-        return startupFile;
-      } else if (
-        !targetFile.endsWith(".js") &&
-        fs.existsSync(targetFile + ".js")
-      ) {
-        return startupFile + ".js";
-      } else if (
-        targetFile.endsWith(".ts") &&
-        fs.existsSync(targetFile.replace(/\.ts$/, ".js"))
-      ) {
-        return startupFile.replace(/\.ts$/, ".js");
-      } else {
-        throw new Error("Can't find startup file");
+    if (!startupFile) return;
+
+    const targetFile = path.resolve(this.cacheDir, startupFile);
+    if (fs.existsSync(targetFile)) {
+      return startupFile;
+    }
+
+    if (!targetFile.match(/\.(c|e)?(j|t)s$/)) {
+      for (const ext of [".js", ".cjs", ".mjs"]) {
+        if (fs.existsSync(targetFile + ext)) {
+          return startupFile + ext;
+        }
       }
     }
 
-    const files = ["native", "index", "main"];
-    for (const file of files) {
-      const filePath = path.resolve(process.cwd(), this.cacheDir, `${file}.js`);
-      if (fs.existsSync(filePath)) {
-        return filePath;
+    if (targetFile.match(/\.(c|e)?ts$/)) {
+      const newName = targetFile.replace(/ts$/, "js");
+      if (fs.existsSync(newName)) {
+        return newName;
       }
     }
 
-    throw new Error("The start file is not exist");
+    throw new Error("Can't find the startup file: " + startupFile);
   }
 }

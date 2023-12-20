@@ -29,10 +29,10 @@ export class CopyBuildResultMiddleware extends Middleware {
   }
 
   async invoke(): Promise<void> {
-    if (this.deleteOutDir) {
+    if (this.deleteOutDir && fs.existsSync(path.resolve(this.outDir))) {
       const files = await fs.promises.readdir(path.resolve(this.outDir));
       for (const file of files) {
-        await fs.promises.rm(path.resolve(path.join(this.outDir, file)), {
+        await fs.promises.rm(path.resolve(this.outDir, file), {
           recursive: true,
           force: true,
         });
@@ -44,8 +44,8 @@ export class CopyBuildResultMiddleware extends Middleware {
     const files = await fs.promises.readdir(path.resolve(this.cacheDir));
     for (const file of files) {
       await fs.promises.rename(
-        path.resolve(path.join(this.cacheDir, file)),
-        path.resolve(path.join(this.outDir, file)),
+        path.resolve(this.cacheDir, file),
+        path.resolve(this.outDir, file),
       );
     }
   }

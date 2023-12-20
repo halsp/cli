@@ -8,6 +8,7 @@ import * as fs from "fs";
 import { HookService } from "../services/build.services/hook.service";
 import { Middleware } from "@halsp/core";
 import prettier from "prettier";
+import { FileService } from "../services/file.service";
 
 export class BuildMiddlware extends Middleware {
   @Inject
@@ -20,6 +21,8 @@ export class BuildMiddlware extends Middleware {
   private readonly assetsService!: AssetsService;
   @Inject
   private readonly hookService!: HookService;
+  @Inject
+  private readonly fileService!: FileService;
 
   private get cacheDir() {
     return this.configService.cacheDir;
@@ -32,12 +35,14 @@ export class BuildMiddlware extends Middleware {
   }
 
   override async invoke(): Promise<void> {
-    const files = await fs.promises.readdir(path.resolve(this.cacheDir));
-    for (const file of files) {
-      await fs.promises.rm(path.resolve(path.join(this.cacheDir, file)), {
-        recursive: true,
-        force: true,
-      });
+    if (fs.existsSync(path.resolve(this.cacheDir))) {
+      const files = await fs.promises.readdir(path.resolve(this.cacheDir));
+      for (const file of files) {
+        await fs.promises.rm(path.resolve(this.cacheDir, file), {
+          recursive: true,
+          force: true,
+        });
+      }
     }
 
     if (!(await this.hookService.execPrebuilds())) {
