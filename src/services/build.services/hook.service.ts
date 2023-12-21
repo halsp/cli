@@ -3,6 +3,10 @@ import { ConfigService } from "./config.service";
 import { Context } from "@halsp/core";
 import { DepsService } from "../deps.service";
 import { Prebuild } from "../../configuration";
+import {
+  HALSP_CLI_PLUGIN_PREBUILD,
+  HALSP_CLI_PLUGIN_POSTBUILD,
+} from "../../constant";
 
 export class HookService {
   @Inject
@@ -21,13 +25,13 @@ export class HookService {
   }
 
   public async execPrebuilds(): Promise<boolean> {
-    const internalPrebuild = await this.getHooks("prebuild");
+    const pluginPrebuild = await this.getHooks(HALSP_CLI_PLUGIN_PREBUILD);
+    if (this.config.build?.prebuild) {
+      pluginPrebuild.push(...this.config.build.prebuild);
+    }
     const options = this.getScriptOptions();
 
-    for (const fn of [
-      ...internalPrebuild,
-      ...(this.config.build?.prebuild ?? []),
-    ]) {
+    for (const fn of pluginPrebuild) {
       if ((await fn(options)) == false) {
         return false;
       }
@@ -36,13 +40,13 @@ export class HookService {
   }
 
   public async execPostbuilds() {
-    const internalPostbuild = await this.getHooks("postbuild");
+    const pluginPostbuild = await this.getHooks(HALSP_CLI_PLUGIN_POSTBUILD);
+    if (this.config.build?.postbuild) {
+      pluginPostbuild.push(...this.config.build.postbuild);
+    }
     const options = this.getScriptOptions();
 
-    for (const fn of [
-      ...internalPostbuild,
-      ...(this.config.build?.postbuild ?? []),
-    ]) {
+    for (const fn of pluginPostbuild) {
       await fn(options);
     }
   }

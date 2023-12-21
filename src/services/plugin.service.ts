@@ -2,6 +2,7 @@ import { Inject } from "@halsp/inject";
 import path from "path";
 import { DepsService } from "./deps.service";
 import { Command } from "commander";
+import { HALSP_CLI_PLUGIN_COMMAND } from "../constant";
 
 type PluginHook = (command: Command) => void;
 interface PluginConfig {
@@ -16,14 +17,17 @@ export class PluginService {
   public async get() {
     const pkgPath = path.join(__dirname, "../..");
     const localList = (
-      await this.depsService.getPlugins<PluginConfig>("halspCliPlugin", pkgPath)
+      await this.depsService.getPlugins<PluginConfig>(
+        HALSP_CLI_PLUGIN_COMMAND,
+        pkgPath,
+      )
     ).map((item) => ({
       ...item,
       cwd: false,
     }));
     const currentList = (
       await this.depsService.getPlugins<PluginConfig>(
-        "halspCliPlugin",
+        HALSP_CLI_PLUGIN_COMMAND,
         undefined,
       )
     ).map((item) => ({

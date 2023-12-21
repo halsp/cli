@@ -163,14 +163,20 @@ export function createAddShimsTransformer(
 ): ts.TransformerFactory<ts.SourceFile> {
   return () => {
     return (sf) => {
+      const fileName = sf.fileName;
+      let statements: ts.Statement[];
+      if (fileName.match(/\.cts$/)) {
+        statements = createCjsShimsStatements(sf);
+      } else if (fileName.match(/\.mts$/)) {
+        statements = createCjsShimsStatements(sf);
+      } else {
+        statements = esm
+          ? createEsmShimsStatements(sf)
+          : createCjsShimsStatements(sf);
+      }
       return ts.factory.updateSourceFile(
         sf,
-        [
-          ...(esm
-            ? createEsmShimsStatements(sf)
-            : createCjsShimsStatements(sf)),
-          ...sf.statements,
-        ],
+        [...statements, ...sf.statements],
         sf.isDeclarationFile,
         sf.referencedFiles,
         sf.typeReferenceDirectives,

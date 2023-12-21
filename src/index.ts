@@ -3,8 +3,6 @@ import "./compiler";
 export type {
   ConfigEnv,
   Configuration,
-  Transformer,
-  CompilerHook,
   CommandType,
   AssetConfig,
   Postbuild,
@@ -13,3 +11,11 @@ export type {
 } from "./configuration";
 
 export { defineConfig } from "./configuration";
+
+export {
+  HALSP_CLI_PLUGIN_POSTBUILD,
+  HALSP_CLI_PLUGIN_PREBUILD,
+  HALSP_CLI_PLUGIN_TRANSFORMER,
+  HALSP_CLI_PLUGIN_CONFIG_HOOK,
+  HALSP_CLI_PLUGIN_COMMAND,
+} from "./constant";

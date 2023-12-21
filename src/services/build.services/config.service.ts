@@ -13,6 +13,7 @@ import {
   createAddExtTransformer,
   createAddShimsTransformer,
 } from "../../compiler";
+import { HALSP_CLI_PLUGIN_CONFIG_HOOK } from "../../constant";
 
 export class ConfigService {
   @Inject
@@ -101,10 +102,9 @@ export class ConfigService {
   private async loadConfig(): Promise<Configuration> {
     let config = await this.getConfig();
 
-    const cliConfigHooks =
-      await this.depsService.getInterfaces<
-        (config: Configuration, options: ConfigEnv) => Configuration | void
-      >("cliConfigHook");
+    const cliConfigHooks = await this.depsService.getInterfaces<
+      (config: Configuration, options: ConfigEnv) => Configuration | void
+    >(HALSP_CLI_PLUGIN_CONFIG_HOOK);
     for (const hook of cliConfigHooks) {
       config = hook(config, this.configEnv) ?? config;
     }

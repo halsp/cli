@@ -3,13 +3,13 @@ import { Inject } from "@halsp/inject";
 import ts from "typescript";
 import { ConfigService } from "./config.service";
 import { TsconfigService } from "./tsconfig.service";
-import { CompilerHook } from "../../configuration";
 import { DepsService } from "../deps.service";
 import {
   createAddExtTransformer,
   createAddShimsTransformer,
 } from "../../compiler";
 import { FileService } from "../file.service";
+import { HALSP_CLI_PLUGIN_TRANSFORMER } from "../../constant";
 
 export class CompilerService {
   @Inject
@@ -70,41 +70,41 @@ export class CompilerService {
   public async getHooks(program: ts.Program) {
     const isESM = this.isESM;
     const ext = "." + (this.moduleType ? this.moduleType : "js");
+
+    const configTransformers = await this.depsService.getInterfaces<
+      (program: ts.Program) => ts.CustomTransformers
+    >(HALSP_CLI_PLUGIN_TRANSFORMER);
+    if (this.config.build?.transformers) {
+      configTransformers.push(this.config.build.transformers);
+    }
+    const tsTransformers = configTransformers.map((t) => t(program));
+
+    const concatArray = <T>(arrList: T[][]) =>
+      arrList.reduce((pre, cur) => {
+        pre.push(...cur);
+        return pre;
+      }, []);
+
     const before = [
-      ...(!isESM && this.moduleType
-        ? [() => createAddExtTransformer(ext)]
-        : []),
-      ...(await this.getPlugins<CompilerHook<ts.SourceFile>>("beforeCompile")),
-      ...(this.config.build?.beforeHooks ?? []),
-    ].map((hook) => hook(program));
+      ...(!isESM && this.moduleType ? [createAddExtTransformer(ext)] : []),
+      ...concatArray(tsTransformers.map((t) => t.before ?? [])),
+    ];
 
     const after = [
-      ...(isESM ? [() => createAddExtTransformer(ext)] : []),
-      () => createAddShimsTransformer(isESM),
-      ...(await this.getPlugins<CompilerHook<ts.SourceFile>>("afterCompile")),
-      ...(this.config.build?.afterHooks ?? []),
-    ].map((hook) => hook(program));
+      ...(isESM ? [createAddExtTransformer(ext)] : []),
+      createAddShimsTransformer(isESM),
+      ...concatArray(tsTransformers.map((t) => t.after ?? [])),
+    ];
 
-    const afterDeclarations = [
-      ...(await this.getPlugins<CompilerHook<ts.SourceFile | ts.Bundle>>(
-        "afterCompileDeclarations",
-      )),
-      ...(this.config.build?.afterDeclarationsHooks ?? []),
-    ].map((hook) => hook(program));
+    const afterDeclarations = concatArray(
+      tsTransformers.map((t) => t.afterDeclarations ?? []),
+    );
 
     return {
       before,
       after,
       afterDeclarations,
     };
-  }
-
-  private async getPlugins<
-    T extends
-      | CompilerHook<ts.SourceFile>
-      | CompilerHook<ts.SourceFile | ts.Bundle>,
-  >(name: string) {
-    return await this.depsService.getInterfaces<T>(name);
   }
 
   public async compile(outDir: string) {

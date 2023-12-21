@@ -33,8 +33,6 @@ function createNewImportNode(node: ts.StringLiteral, ext: string) {
   if (!importPath) return;
 
   const newImportPath = getNewImportPath(importPath, sf, ext);
-  if (!newImportPath) return;
-
   return ts.factory.createStringLiteral(newImportPath);
 }
 

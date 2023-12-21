@@ -92,15 +92,13 @@ export class DepsService {
   }
 
   public async getPlugins<T>(
-    name: string,
+    name: string | symbol,
     cwd = process.cwd(),
   ): Promise<InterfaceItem<T>[]> {
     const pkgPath = this.getPackagePath(cwd, [cwd]);
     if (!pkgPath) return [];
 
-    const deps = this.getDeps(pkgPath, /^(@halsp\/|halsp\-|@\S+\/halsp\-)/, [
-      cwd,
-    ]);
+    const deps = this.getDeps(pkgPath, () => true, [cwd]);
     const scripts: InterfaceItem<T>[] = [];
     for (const dep of deps) {
       const depPath = _require.resolve(dep.key, {
@@ -127,7 +125,7 @@ export class DepsService {
     return scripts;
   }
 
-  public async getInterfaces<T>(name: string, cwd = process.cwd()) {
+  public async getInterfaces<T>(name: string | symbol, cwd = process.cwd()) {
     const plugins = await this.getPlugins<T>(name, cwd);
     return plugins.map((p) => p.interface);
   }

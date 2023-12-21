@@ -16,12 +16,6 @@ export type AssetConfig =
       root?: string;
     }
   | string;
-export type Transformer<T extends ts.Node> =
-  | ts.TransformerFactory<T>
-  | ts.CustomTransformerFactory;
-export type CompilerHook<T extends ts.Node> = (
-  program: ts.Program,
-) => Transformer<T>;
 
 export type ScriptOptions = {
   config: Configuration;
@@ -45,9 +39,7 @@ export interface Configuration {
     prebuild?: Prebuild[];
     postbuild?: Postbuild[];
 
-    beforeHooks?: CompilerHook<ts.SourceFile>[];
-    afterHooks?: CompilerHook<ts.SourceFile>[];
-    afterDeclarationsHooks?: CompilerHook<ts.SourceFile | ts.Bundle>[];
+    transformers?: (program: ts.Program) => ts.CustomTransformers;
 
     deleteOutDir?: boolean;
     assets?: AssetConfig[];

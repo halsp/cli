@@ -9,6 +9,7 @@ import { ConfigService } from "../../src/services/build.services/config.service"
 import { Configuration, defineConfig } from "../../src";
 import * as fs from "fs";
 import { expect } from "chai";
+import { HALSP_CLI_PLUGIN_CONFIG_HOOK } from "../../src/constant";
 
 describe("empty-config", () => {
   it("should parse empty config", async () => {
@@ -117,7 +118,7 @@ describe("read config", () => {
       ConfigService,
       async (ctx, service) => {
         (service as any).depsService.getInterfaces = (name: string) => {
-          if (name == "cliConfigHook") {
+          if (name == HALSP_CLI_PLUGIN_CONFIG_HOOK) {
             return [
               (config: Configuration) => {
                 config.start = {
@@ -142,12 +143,12 @@ describe("read config", () => {
     );
   });
 
-  it("should load config file with cliConfigHook", async () => {
+  it("should load config file with config hook", async () => {
     await testService(
       ConfigService,
       async (ctx, service) => {
         (service as any).depsService.getInterfaces = (name: string) => {
-          if (name == "cliConfigHook") {
+          if (name == HALSP_CLI_PLUGIN_CONFIG_HOOK) {
             return [
               () => ({
                 start: {

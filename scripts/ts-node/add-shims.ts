@@ -55,8 +55,6 @@ function getNewImportLine(
   const importPath = getImportPath(node, sf);
   if (!importPath) return;
   const newImportPath = getNewImportPath(importPath, sf);
-  if (!newImportPath) return;
-
   return text.replace(importPath, newImportPath);
 }
 
