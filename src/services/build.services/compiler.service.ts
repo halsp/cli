@@ -42,7 +42,7 @@ export class CompilerService {
       "build.moduleType",
     );
     if (type && type != "cjs" && type != "mjs") {
-      throw new Enumerator(["cjs", "mjs"]);
+      throw new Error("The moduleType is invalid.");
     }
     return type as "cjs" | "mjs" | undefined;
   }

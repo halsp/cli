@@ -241,3 +241,33 @@ describe("shims require", () => {
     });
   });
 });
+
+describe("moduleType", () => {
+  it("should be error when moduleType is invalid", async () => {
+    const dirName = ".cache-moduleType-invalid";
+    const configFileName = "tsconfig.moduleType.invalid.json";
+    createTsconfig(
+      path.join(__dirname, "compiler/add-ext"),
+      undefined,
+      configFileName,
+    );
+
+    let callCount = 0;
+    await runin("test/build/compiler/add-ext", async () => {
+      try {
+        await new CliStartup("test", undefined, {
+          cacheDir: dirName,
+          tsconfigPath: configFileName,
+          moduleType: "not-exist",
+        })
+          .add(BuildMiddlware)
+          .run();
+      } catch (err) {
+        const error = err as Error;
+        error.message.should.eq("The moduleType is invalid.");
+        callCount++;
+      }
+    });
+    callCount.should.eq(1);
+  });
+});
