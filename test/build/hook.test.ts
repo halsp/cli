@@ -20,7 +20,7 @@ describe("hooks", () => {
           const dict = configService.value["dict"]();
 
           (!!dict["beforeHook"]).should.true;
-          (!!dict["afterHook"]).should.true;
+          (!!dict["afterHook"]).should.false;
           (!!dict["afterDeclarationsHook"]).should.true;
           callCount++;
         })
@@ -55,7 +55,7 @@ describe("hooks", () => {
           const dict = configService.value["dict"]();
 
           (!!dict["beforeHook"]).should.true;
-          (!!dict["afterHook"]).should.true;
+          (!!dict["afterHook"]).should.false;
           (!!dict["afterDeclarationsHook"]).should.true;
           callCount++;
         })

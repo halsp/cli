@@ -73,7 +73,7 @@ export class WatchCompilerService {
       ) => {
         const transforms = Object.assign(
           customTransformers ?? {},
-          await this.compilerService.getHooks(program.getProgram()),
+          await this.compilerService.getTransformers(program.getProgram()),
         );
         return originEmit(
           targetSourceFile,

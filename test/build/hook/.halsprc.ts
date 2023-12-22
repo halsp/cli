@@ -13,14 +13,6 @@ export default defineConfig(() => ({
           };
         },
       ],
-      after: [
-        (): ts.Transformer<any> => {
-          return (sf: ts.SourceFile) => {
-            dict["afterHook"] = sf.getText();
-            return sf;
-          };
-        },
-      ],
       afterDeclarations: [
         (): ts.Transformer<any> => {
           return (sf: ts.SourceFile) => {

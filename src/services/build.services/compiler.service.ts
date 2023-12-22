@@ -67,7 +67,9 @@ export class CompilerService {
       );
   }
 
-  public async getHooks(program: ts.Program) {
+  public async getTransformers(
+    program: ts.Program,
+  ): Promise<ts.CustomTransformers> {
     const isESM = this.isESM;
     const ext = "." + (this.moduleType ? this.moduleType : "js");
 
@@ -79,26 +81,30 @@ export class CompilerService {
     }
     const tsTransformers = configTransformers.map((t) => t(program));
 
-    const concatArray = <T>(arrList: T[][]) =>
-      arrList.reduce((pre, cur) => {
-        pre.push(...cur);
-        return pre;
-      }, []);
+    function readConfig<T extends keyof ts.CustomTransformers>(
+      field: T,
+    ): NonNullable<ts.CustomTransformers[T]> {
+      return tsTransformers
+        .map((t) => t[field] ?? [])
+        .map((item) => item)
+        .reduce((pre, cur) => {
+          pre.push(...cur);
+          return pre;
+        }, [] as any[]);
+    }
 
-    const before = [
-      ...(!isESM && this.moduleType ? [createAddExtTransformer(ext)] : []),
-      ...concatArray(tsTransformers.map((t) => t.before ?? [])),
-    ];
+    const before = readConfig("before");
+    const afterDeclarations = readConfig("afterDeclarations");
+    const after = readConfig("after");
 
-    const after = [
-      ...(isESM ? [createAddExtTransformer(ext)] : []),
-      createAddShimsTransformer(isESM),
-      ...concatArray(tsTransformers.map((t) => t.after ?? [])),
-    ];
+    if (!isESM && this.moduleType) {
+      before.splice(0, 0, createAddExtTransformer(ext));
+    }
 
-    const afterDeclarations = concatArray(
-      tsTransformers.map((t) => t.afterDeclarations ?? []),
-    );
+    if (isESM) {
+      after.splice(0, 0, createAddExtTransformer(ext));
+    }
+    after.splice(1, 0, createAddShimsTransformer(isESM));
 
     return {
       before,
@@ -128,7 +134,7 @@ export class CompilerService {
       this.writeFileCallback,
       undefined,
       undefined,
-      await this.getHooks(program),
+      await this.getTransformers(program),
     );
 
     const errorsCount = this.reportAfterCompilationDiagnostic(
