@@ -2,6 +2,8 @@ import { DepsService } from "../../src/services/deps.service";
 import { runin } from "../utils";
 import { runTest } from "./runTest";
 import path from "path";
+import fs from "fs";
+import { FileService } from "../../src/services/file.service";
 
 runTest(DepsService, async (ctx, service) => {
   const deps = service.getPackageHalspDeps("@halsp/inject");
@@ -55,6 +57,37 @@ runTest(DepsService, async (ctx, service) => {
 runTest(DepsService, async (ctx, service) => {
   await runin("../../", async () => {
     const deps = service.getPackageHalspDeps("not-exist", [process.cwd()]);
+    deps.length.should.eq(0);
+  });
+});
+
+runTest(DepsService, async (ctx, service) => {
+  const moduleName = ".cache-deps-load-error";
+  if (!fs.existsSync(moduleName)) {
+    fs.mkdirSync(moduleName);
+  }
+  await runin(moduleName, async () => {
+    const fileService = await ctx.getService(FileService);
+    const dir = path.resolve(`node_modules/${moduleName}`);
+    const pkgPath = path.resolve(`${dir}/package.json`);
+    const jsPath = path.resolve(`${dir}/index.js`);
+    await fileService.createDir(pkgPath);
+    await fs.promises.writeFile(
+      pkgPath,
+      JSON.stringify({
+        name: "deps-load-error",
+        main: "./index.js",
+      }),
+    );
+    await fs.promises.writeFile(jsPath, 'throw new Error("");');
+    service["getPackagePath"] = () => [moduleName] as any;
+    service["getDeps"] = () =>
+      [
+        {
+          key: moduleName,
+        },
+      ] as any;
+    const deps = await service.getPlugins(moduleName);
     deps.length.should.eq(0);
   });
 });

@@ -42,6 +42,7 @@ export async function testService<T extends object = any>(
 export function createTsconfig(
   dir: string,
   config?: (config: any) => any,
+  fileName = "tsconfig.json",
 ): Record<string, any> {
   const targetDir = path.relative(dir, path.join(__dirname, ".."));
   const configFilePath = path.join(targetDir, "tsconfig.base.json");
@@ -56,7 +57,7 @@ export function createTsconfig(
   const newConfig = config?.call(null, defConfig) ?? defConfig;
 
   const json = JSON.stringify(newConfig);
-  const filePath = path.resolve(dir, "tsconfig.json");
+  const filePath = path.resolve(dir, fileName);
   fs.writeFileSync(filePath, json);
   return newConfig;
 }

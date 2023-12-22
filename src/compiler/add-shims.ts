@@ -168,7 +168,7 @@ export function createAddShimsTransformer(
       if (fileName.match(/\.cts$/)) {
         statements = createCjsShimsStatements(sf);
       } else if (fileName.match(/\.mts$/)) {
-        statements = createCjsShimsStatements(sf);
+        statements = createEsmShimsStatements(sf);
       } else {
         statements = esm
           ? createEsmShimsStatements(sf)

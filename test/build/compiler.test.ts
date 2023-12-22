@@ -129,3 +129,115 @@ describe("typeOnly", () => {
     });
   });
 });
+
+describe("shims dirname", () => {
+  it("should add __dirname for esm", async () => {
+    const dirName = ".cache-dirname-esm";
+    const configFileName = "tsconfig.dirname.esm.json";
+    createTsconfig(
+      path.join(__dirname, "compiler/add-shims"),
+      undefined,
+      configFileName,
+    );
+
+    await runin("test/build/compiler/add-shims", async () => {
+      await new CliStartup("test", undefined, {
+        cacheDir: dirName,
+        tsconfigPath: configFileName,
+      })
+        .add(BuildMiddlware)
+        .run();
+
+      const code = await fs.promises.readFile(path.join(dirName, "dirname.js"));
+      code.includes("const __dirname").should.true;
+    });
+  });
+
+  it("should not add __dirname for cjs", async () => {
+    const dirName = ".cache-dirname-cjs";
+    const configFileName = "tsconfig.dirname.cjs.json";
+    createTsconfig(
+      path.join(__dirname, "compiler/add-shims"),
+      (c) => {
+        c.compilerOptions = {
+          target: "ES2022",
+          module: "CommonJS",
+          moduleResolution: "Node",
+          outDir: "./dist",
+        };
+      },
+      configFileName,
+    );
+
+    await runin("test/build/compiler/add-shims", async () => {
+      await new CliStartup("test", undefined, {
+        cacheDir: dirName,
+        tsconfigPath: configFileName,
+        moduleType: "cjs",
+      })
+        .add(BuildMiddlware)
+        .run();
+
+      const code = await fs.promises.readFile(
+        path.join(dirName, "dirname.cjs"),
+      );
+      code.includes("const __dirname").should.false;
+    });
+  });
+});
+
+describe("shims require", () => {
+  it("should add _require for esm", async () => {
+    const dirName = ".cache-require-esm";
+    const configFileName = "tsconfig.require.esm.json";
+    createTsconfig(
+      path.join(__dirname, "compiler/add-shims"),
+      undefined,
+      configFileName,
+    );
+
+    await runin("test/build/compiler/add-shims", async () => {
+      await new CliStartup("test", undefined, {
+        cacheDir: dirName,
+        tsconfigPath: configFileName,
+      })
+        .add(BuildMiddlware)
+        .run();
+
+      const code = await fs.promises.readFile(path.join(dirName, "require.js"));
+      code.includes("_halsp_cli_shims_module.createRequire").should.true;
+    });
+  });
+
+  it("should add _require for cjs", async () => {
+    const dirName = ".cache-require-cjs";
+    const configFileName = "tsconfig.require.cjs.json";
+    createTsconfig(
+      path.join(__dirname, "compiler/add-shims"),
+      (c) => {
+        c.compilerOptions = {
+          target: "ES2022",
+          module: "CommonJS",
+          moduleResolution: "Node",
+          outDir: "./dist",
+        };
+      },
+      configFileName,
+    );
+
+    await runin("test/build/compiler/add-shims", async () => {
+      await new CliStartup("test", undefined, {
+        cacheDir: dirName,
+        tsconfigPath: configFileName,
+        moduleType: "cjs",
+      })
+        .add(BuildMiddlware)
+        .run();
+
+      const code = await fs.promises.readFile(
+        path.join(dirName, "require.cjs"),
+      );
+      code.includes("const _require = require").should.true;
+    });
+  });
+});
