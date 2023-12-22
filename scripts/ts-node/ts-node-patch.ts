@@ -8,7 +8,7 @@ export const flag = "/* halsp-cli-add-shims */ ";
 const transpilerPath = path
   .join(path.dirname(fileURLToPath(import.meta.url)), "./add-shims.cjs")
   .replace(/\\/g, "/");
-const addShimsCode = `${flag}contents = require('${transpilerPath}').addShims(contents, fileName);`;
+const addShimsCode = `${flag}code = require('${transpilerPath}').addShims(code, fileName);`;
 
 const tsNodePath = createRequire(import.meta.url).resolve("ts-node");
 const code = await fs.promises.readFile(tsNodePath, "utf-8");
@@ -17,7 +17,7 @@ const lines = code.replace(/\r\n/, "\n").split("\n");
 let lineIndex = 0;
 while (lineIndex < lines.length - 1) {
   const line = lines[lineIndex];
-  if (line.includes("const updateMemoryCache =")) {
+  if (line.includes("function compile(")) {
     if (lines[lineIndex + 1].startsWith(flag)) {
       lines.splice(lineIndex + 1, 1, addShimsCode);
     } else {

@@ -40,7 +40,7 @@ export async function testService<T extends object = any>(
 }
 
 export function createTsconfig(
-  dir: string,
+  dir = process.cwd(),
   config?: (config: any) => any,
   fileName = "tsconfig.json",
 ): Record<string, any> {

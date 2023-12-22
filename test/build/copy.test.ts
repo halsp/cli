@@ -47,6 +47,29 @@ describe("copy package", () => {
     });
     callCount.should.eq(1);
   });
+
+  it("should not copy package whe package.json is not exist", async () => {
+    const cwd = "package.json-not-exist";
+    const cacheDir = ".cache-copy-package-not-exist";
+    if (!fs.existsSync(`test/build/${cwd}`)) {
+      fs.mkdirSync(`test/build/${cwd}`);
+    }
+
+    let callCount = 0;
+    await runin(`test/build/${cwd}`, async () => {
+      await new CliStartup("test", undefined, {
+        copyPackage: true,
+        mode: "production",
+        cacheDir: path.resolve(cacheDir),
+      })
+        .add(BuildMiddlware)
+        .run();
+
+      fs.existsSync(`./${cacheDir}/package.json`).should.false;
+      callCount++;
+    });
+    callCount.should.eq(1);
+  });
 });
 
 describe("copy build files", () => {

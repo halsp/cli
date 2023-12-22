@@ -1,4 +1,4 @@
-import { runin, testService } from "../utils";
+import { createTsconfig, runin, testService } from "../utils";
 import { CliStartup } from "../../src/cli-startup";
 import { BuildMiddlware } from "../../src/middlewares/build.middleware";
 import { AssetsService } from "../../src/services/build.services/assets.service";
@@ -211,6 +211,7 @@ describe("read config", () => {
   it(`should parse json config file`, async () => {
     let worked = false;
     await runin("test/build/config/types", async () => {
+      createTsconfig();
       await new CliStartup("test", undefined, {
         config: `.halsprc.json`,
       })
@@ -227,6 +228,7 @@ describe("read config", () => {
   it(`should parse json config file without ext`, async () => {
     let worked = false;
     await runin("test/build/config/types", async () => {
+      createTsconfig();
       await new CliStartup("test", undefined, {
         config: `.halsprc`,
       })
@@ -243,6 +245,7 @@ describe("read config", () => {
   it(`should read json config from command options`, async () => {
     let worked = false;
     await runin("test/build/config/types", async () => {
+      createTsconfig();
       await new CliStartup("test", undefined, {
         jsonConfig: await fs.promises.readFile(".halsprc.json", "utf-8"),
       })
@@ -259,6 +262,7 @@ describe("read config", () => {
   it(`it should read func config from command options`, async () => {
     let worked = false;
     await runin("test/build/config/types", async () => {
+      createTsconfig();
       const func = defineConfig(() => ({
         start: {
           startupFile: "t1",
@@ -280,6 +284,7 @@ describe("read config", () => {
   it(`should read commonjs config file`, async () => {
     let worked = false;
     await runin("test/build/config/types", async () => {
+      createTsconfig();
       await new CliStartup("test", undefined, {
         mode: "js-test",
         config: `.halsprc.cjs`,
@@ -297,6 +302,7 @@ describe("read config", () => {
   it(`should read mjs js config file`, async () => {
     let worked = false;
     await runin("test/build/config/types", async () => {
+      createTsconfig();
       await new CliStartup("test", undefined, {
         mode: "js-test",
         config: `.halsprc.mjs`,
