@@ -1,11 +1,12 @@
 import { CliStartup } from "../../src/cli-startup";
-import { runin } from "../utils";
+import { createTsconfig, runin } from "../utils";
 import { isUndefined } from "@halsp/core";
 
 describe("startup", () => {
   async function testCliStartup(args?: any, options?: any) {
     let worked = false;
     await runin("test/cli-startup", async () => {
+      createTsconfig();
       const res = await new CliStartup("test", args, options)
         .use((ctx) => {
           ctx.res.setBody({
@@ -37,6 +38,7 @@ describe("startup", () => {
 describe("error", () => {
   it(`should throw error when throw error in middleware`, async () => {
     await runin("test/cli-startup", async () => {
+      createTsconfig();
       const errMsg = "startup-err";
       let err = false;
       try {

@@ -1,4 +1,4 @@
-import { runin } from "../utils";
+import { createTsconfig, runin } from "../utils";
 import { CliStartup } from "../../src/cli-startup";
 import { BuildMiddlware } from "../../src/middlewares/build.middleware";
 import * as fs from "fs";
@@ -11,12 +11,15 @@ describe("build with watch", () => {
     let callCount = 0;
     await runin(`test/build/watch`, async () => {
       const cacheDir = ".cache-build-with-watch-" + String(options.callback);
+      const configFileName = `tsconfig.${cacheDir}.json`;
+      createTsconfig(undefined, undefined, configFileName);
       await new CliStartup("test", undefined, {
         watch: true,
         watchAssets: true,
         preserveWatchOutput: true,
         sourceMap: true,
         cacheDir: path.resolve(cacheDir),
+        tsconfigPath: configFileName,
       })
         .use(async (ctx, next) => {
           if (options.callback) {

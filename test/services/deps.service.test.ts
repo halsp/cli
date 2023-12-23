@@ -63,9 +63,6 @@ runTest(DepsService, async (ctx, service) => {
 
 runTest(DepsService, async (ctx, service) => {
   const moduleName = ".cache-deps-load-error";
-  if (!fs.existsSync(moduleName)) {
-    fs.mkdirSync(moduleName);
-  }
   await runin(moduleName, async () => {
     const fileService = await ctx.getService(FileService);
     const dir = path.resolve(`node_modules/${moduleName}`);

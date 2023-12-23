@@ -1,4 +1,4 @@
-import { runin } from "../utils";
+import { createTsconfig, runin } from "../utils";
 import { CliStartup } from "../../src/cli-startup";
 import { BuildMiddlware } from "../../src/middlewares/build.middleware";
 import { CopyBuildResultMiddleware } from "../../src/middlewares/copy-build-result.middleware";
@@ -10,12 +10,15 @@ import path from "path";
 describe("copy package", () => {
   it("should copy package", async () => {
     const cacheDir = ".cache-copy-package";
+    const configFileName = `tsconfig.${cacheDir}.json`;
     let callCount = 0;
     await runin(`test/build/script`, async () => {
+      createTsconfig(undefined, undefined, configFileName);
       await new CliStartup("test", undefined, {
         copyPackage: true,
         mode: "production",
         cacheDir: path.resolve(cacheDir),
+        tsconfigPath: configFileName,
       })
         .add(BuildMiddlware)
         .run();
@@ -28,13 +31,16 @@ describe("copy package", () => {
 
   it("should copy package without devDependencies", async () => {
     const cacheDir = ".cache-copy-package-wdd";
+    const configFileName = `tsconfig.${cacheDir}.json`;
     let callCount = 0;
     await runin(`test/build/script`, async () => {
+      createTsconfig(undefined, undefined, configFileName);
       await new CliStartup("test", undefined, {
         copyPackage: true,
         removeDevDeps: true,
         mode: "production",
         cacheDir: path.resolve(cacheDir),
+        tsconfigPath: configFileName,
       })
         .add(BuildMiddlware)
         .run();
@@ -49,14 +55,9 @@ describe("copy package", () => {
   });
 
   it("should not copy package whe package.json is not exist", async () => {
-    const cwd = "package.json-not-exist";
     const cacheDir = ".cache-copy-package-not-exist";
-    if (!fs.existsSync(`test/build/${cwd}`)) {
-      fs.mkdirSync(`test/build/${cwd}`);
-    }
-
     let callCount = 0;
-    await runin(`test/build/${cwd}`, async () => {
+    await runin(`test/build/${cacheDir}`, async () => {
       await new CliStartup("test", undefined, {
         copyPackage: true,
         mode: "production",
@@ -75,10 +76,13 @@ describe("copy package", () => {
 describe("copy build files", () => {
   it(`should copy build files when use CopyBuildResultMiddleware`, async () => {
     const cacheDir = ".cache-copy-build-files-with-cbrm";
+    const configFileName = `tsconfig.${cacheDir}.json`;
     let callCount = 0;
     await runin(`test/build/copy`, async () => {
+      createTsconfig(undefined, undefined, configFileName);
       await new CliStartup(undefined, undefined, {
         cacheDir: path.resolve(cacheDir),
+        tsconfigPath: configFileName,
       })
         .add(BuildMiddlware)
         .add(CopyBuildResultMiddleware)
@@ -110,10 +114,13 @@ describe("assets", () => {
 
   it(`should build and copy assets`, async () => {
     const cacheDir = ".cache-build-and-copy-assets";
+    const configFileName = `tsconfig.${cacheDir}.json`;
     let worked = false;
     await runin(`test/build/assets`, async () => {
+      createTsconfig(undefined, undefined, configFileName);
       await new CliStartup("test", undefined, {
         cacheDir: path.resolve(cacheDir),
+        tsconfigPath: configFileName,
       })
         .add(BuildMiddlware)
         .run();
@@ -125,11 +132,14 @@ describe("assets", () => {
 
   it(`should build and copy command assets`, async () => {
     const cacheDir = ".cache-build-and-copy-command-assets";
+    const configFileName = `tsconfig.${cacheDir}.json`;
     let worked = false;
     await runin(`test/build/assets`, async () => {
+      createTsconfig(undefined, undefined, configFileName);
       await new CliStartup("test", undefined, {
         assets: "default/**/*",
         cacheDir: path.resolve(cacheDir),
+        tsconfigPath: configFileName,
       })
         .add(BuildMiddlware)
         .run();
@@ -153,6 +163,7 @@ describe("assets", () => {
     const cacheTargetFile = `./${cacheDir}/default/${cacheFileName}`;
     const cacheFileContent = "watchAssets";
     const cacheFileEditContent = "Edit";
+    const configFileName = `tsconfig.${cacheDir}.json`;
     let callCount = 0;
 
     const testWaiting = async (waiting: () => boolean) => {
@@ -172,10 +183,12 @@ describe("assets", () => {
     };
 
     await runin(`test/build/assets`, async () => {
+      createTsconfig(undefined, undefined, configFileName);
       await new CliStartup("test", undefined, {
         watch: true,
         watchAssets: true,
         cacheDir: path.resolve(cacheDir),
+        tsconfigPath: configFileName,
       })
         .use(async (ctx, next) => {
           if (fs.existsSync(cacheSourceFile)) {

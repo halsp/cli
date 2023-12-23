@@ -1,4 +1,4 @@
-import { runin } from "../utils";
+import { createTsconfig, runin } from "../utils";
 import { CliStartup } from "../../src/cli-startup";
 import { BuildMiddlware } from "../../src/middlewares/build.middleware";
 import { ConfigService } from "../../src/services/build.services/config.service";
@@ -10,9 +10,13 @@ import { expect } from "chai";
 
 describe("hooks", () => {
   it(`should build and invoke hooks`, async () => {
+    const configFileName = `tsconfig.hooks.json`;
     let callCount = 0;
     await runin(`test/build/hook`, async () => {
-      await new CliStartup()
+      createTsconfig(undefined, undefined, configFileName);
+      await new CliStartup("test", undefined, {
+        tsconfigPath: configFileName,
+      })
         .use(async (ctx, next) => {
           await next();
 
@@ -32,9 +36,14 @@ describe("hooks", () => {
   });
 
   it(`should build and invoke hooks with watch`, async () => {
+    const configFileName = `tsconfig.hooks-watch.json`;
     let callCount = 0;
     await runin(`test/build/hook`, async () => {
-      await new CliStartup("test", undefined, { watch: true })
+      createTsconfig(undefined, undefined, configFileName);
+      await new CliStartup("test", undefined, {
+        watch: true,
+        tsconfigPath: configFileName,
+      })
         .use(async (ctx, next) => {
           ctx.set("onWatchSuccess", () => {
             callCount++;
@@ -70,11 +79,14 @@ describe("hooks", () => {
 describe("build script", () => {
   it("should exec prebuild scripts", async () => {
     const cacheDir = ".cache-build-script-prebuild";
+    const configFileName = `tsconfig.${cacheDir}.json`;
     let callCount = 0;
     await runin(`test/build/script`, async () => {
+      createTsconfig(undefined, undefined, configFileName);
       await new CliStartup("test", undefined, {
         mode: "production",
         cacheDir: path.resolve(cacheDir),
+        tsconfigPath: configFileName,
       })
         .use(async (ctx, next) => {
           await next();
@@ -100,11 +112,14 @@ describe("build script", () => {
 
   it(`should build script failed`, async () => {
     const cacheDir = ".cache-build-script-failed";
+    const configFileName = `tsconfig.${cacheDir}.json`;
     let callCount = 0;
     await runin(`test/build/script`, async () => {
+      createTsconfig(undefined, undefined, configFileName);
       await new CliStartup("test", undefined, {
         mode: "development",
         cacheDir: path.resolve(cacheDir),
+        tsconfigPath: configFileName,
       })
         .use(async (ctx, next) => {
           await next();
@@ -129,11 +144,14 @@ describe("build script", () => {
 
   it(`should exec plugin script error`, async () => {
     const cacheDir = ".cache-build-plugin-script-failed";
+    const configFileName = `tsconfig.${cacheDir}.json`;
     let callCount = 0;
     await runin(`test/build/plugin-script-error`, async () => {
+      createTsconfig(undefined, undefined, configFileName);
       await new CliStartup("test", undefined, {
         mode: "production",
         cacheDir: path.resolve(cacheDir),
+        tsconfigPath: configFileName,
       })
         .use(async (ctx, next) => {
           await next();

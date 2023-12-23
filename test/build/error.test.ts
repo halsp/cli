@@ -1,4 +1,4 @@
-import { runin } from "../utils";
+import { createTsconfig, runin } from "../utils";
 import { CliStartup } from "../../src/cli-startup";
 import { BuildMiddlware } from "../../src/middlewares/build.middleware";
 import * as fs from "fs";
@@ -9,7 +9,10 @@ describe("error", () => {
     const cacheDir = ".cache-build-error";
     let callCount = 0;
     await runin(`test/build/build-error`, async () => {
-      await new CliStartup(undefined, undefined, {
+      createTsconfig(undefined, (c) => {
+        delete c.exclude;
+      });
+      await new CliStartup("test", undefined, {
         cacheDir: path.resolve(cacheDir),
       })
         .add(BuildMiddlware)

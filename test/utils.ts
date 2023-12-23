@@ -6,6 +6,12 @@ import fs from "fs";
 import path from "path";
 
 export async function runin(path: string, fn: () => void | Promise<void>) {
+  if (!fs.existsSync(path)) {
+    fs.mkdirSync(path, {
+      recursive: true,
+    });
+  }
+
   const cwd = process.cwd();
   process.chdir(path);
   try {
@@ -44,6 +50,11 @@ export function createTsconfig(
   config?: (config: any) => any,
   fileName = "tsconfig.json",
 ): Record<string, any> {
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir, {
+      recursive: true,
+    });
+  }
   const targetDir = path.relative(dir, path.join(__dirname, ".."));
   const configFilePath = path.join(targetDir, "tsconfig.base.json");
   const defConfig = {

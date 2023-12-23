@@ -15,6 +15,7 @@ describe("empty-config", () => {
   it("should parse empty config", async () => {
     let callCount = 0;
     await runin(`test/build/config/empty`, async () => {
+      createTsconfig();
       await new CliStartup().add(BuildMiddlware).run();
       callCount++;
     });
@@ -24,6 +25,7 @@ describe("empty-config", () => {
   it(`should build and watch assets success when config is empty`, async () => {
     let callCount = 0;
     await runin(`test/build/config/empty`, async () => {
+      createTsconfig();
       await new CliStartup("test", undefined, { watch: true })
         .use(async (ctx, next) => {
           ctx.set("onWatchSuccess", () => {
@@ -52,6 +54,7 @@ describe("empty-config", () => {
   it(`should load empty config when the file is not config`, async () => {
     let worked = false;
     await runin("test/build/config/not-config", async () => {
+      createTsconfig();
       await new CliStartup()
         .use(async (ctx) => {
           const service = await ctx.getService(ConfigService);
@@ -66,6 +69,7 @@ describe("empty-config", () => {
 
 describe("tsconfig", () => {
   it("should parse outDir", async () => {
+    createTsconfig("test/build/tsconfig");
     await testService(
       TsconfigService,
       async (ctx, service) => {
@@ -80,6 +84,7 @@ describe("tsconfig", () => {
   });
 
   it("should be error when file from args.tsconfigPath is not exist", async () => {
+    createTsconfig("test/build/tsconfig");
     await testService(
       TsconfigService,
       async (ctx, service) => {
@@ -97,6 +102,15 @@ describe("tsconfig", () => {
   });
 
   it("should parse empty tsconfig and set outDir dist", async () => {
+    createTsconfig(
+      "test/build/tsconfig",
+      (config) => {
+        Object.keys(config).forEach((k) => {
+          delete config[k];
+        });
+      },
+      "tsconfig.empty.json",
+    );
     await testService(
       TsconfigService,
       async (ctx, service) => {
@@ -104,7 +118,7 @@ describe("tsconfig", () => {
       },
       {
         options: {
-          tsconfigPath: "empty.tsconfig.json",
+          tsconfigPath: "tsconfig.empty.json",
         },
         cwd: "test/build/tsconfig",
       },
@@ -320,6 +334,7 @@ describe("read config", () => {
   it(`should load config with module.exports`, async () => {
     let worked = false;
     await runin("test/build/config/exports", async () => {
+      createTsconfig();
       await new CliStartup()
         .use(async (ctx) => {
           const service = await ctx.getService(ConfigService);
