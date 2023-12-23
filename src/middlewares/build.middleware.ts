@@ -8,7 +8,6 @@ import * as fs from "fs";
 import { HookService } from "../services/build.services/hook.service";
 import { Middleware } from "@halsp/core";
 import prettier from "prettier";
-import { FileService } from "../services/file.service";
 
 export class BuildMiddlware extends Middleware {
   @Inject
@@ -21,8 +20,6 @@ export class BuildMiddlware extends Middleware {
   private readonly assetsService!: AssetsService;
   @Inject
   private readonly hookService!: HookService;
-  @Inject
-  private readonly fileService!: FileService;
 
   private get cacheDir() {
     return this.configService.cacheDir;

@@ -4,21 +4,13 @@ import { runin } from "../utils";
 
 describe("info", () => {
   it(`should log info with assets options`, async () => {
-    await new CliStartup("test", undefined, {
-      assets: "assets",
-    })
-      .add(InfoMiddleware)
-      .run();
+    await new CliStartup("test").add(InfoMiddleware).run();
   });
 
   it(`should log info with empty package`, async () => {
     let worked = false;
     await runin("test/info/empty-package", async () => {
-      await new CliStartup("test", undefined, {
-        assets: "assets",
-      })
-        .add(InfoMiddleware)
-        .run();
+      await new CliStartup("test").add(InfoMiddleware).run();
       worked = true;
     });
     worked.should.true;

@@ -37,10 +37,10 @@
   },
   "scripts": {
     "patch-ts-node": "sh scripts/ts-node/add-shims.sh",
-    "build:mjs": "ts-node src/main.ts build --tsconfigPath tsconfig.mjs.json --moduleType mjs",
-    "build:cjs": "ts-node src/main.ts build --tsconfigPath tsconfig.cjs.json --moduleType cjs",
+    "build:mjs": "ts-node --esm src/main.ts build --tsconfigPath tsconfig.mjs.json --moduleType mjs",
+    "build:cjs": "ts-node --esm src/main.ts build --tsconfigPath tsconfig.cjs.json --moduleType cjs",
     "build": "npm run build:mjs && npm run build:cjs",
-    "build:create-halsp": "ts-node scripts/create-halsp.ts && npm run build",
+    "build:create-halsp": "ts-node --esm scripts/create-halsp.ts && npm run build",
     "publish:beta": "npm run build && npm publish --tag=beta --access=public",
     "test": "c8 mocha test test/**/*.test.ts",
     "test:local": "c8 cross-env REGISTRY='https://registry.npmmirror.com/' mocha test test/**/*.test.ts",

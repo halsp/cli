@@ -294,7 +294,6 @@ const version = (() => {
     dir = path.dirname(dir);
     filePath = path.join(dir, pkgName);
   }
-  const pkgStr = fs.readFileSync(filePath, "utf-8");
-  return JSON.parse(pkgStr).version;
+  return _require(filePath).version;
 })();
 //}

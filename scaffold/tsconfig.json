@@ -11,7 +11,11 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "preserveWatchOutput": true,
-    "moduleResolution": "Bundler"
+    "moduleResolution": "Bundler",
+    "types": [
+      "@types/node",
+      "@halsp/cli"
+    ]
   },
   "include": [
     "src/**/*"
