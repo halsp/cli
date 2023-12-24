@@ -9,11 +9,13 @@ export function runTest<T extends object = any>(
   mode = "test",
   args?: any,
   options?: any,
+  before?: () => Promise<void> | void,
 ) {
   it(`service ${service.name} ${!!args} ${!!options}`, async () => {
     let worked = false;
     await runin("test/services", async () => {
       createTsconfig();
+      before && (await before());
       await new CliStartup(mode, args, options)
         .use(async (ctx) => {
           const svc = await ctx.getService(service);

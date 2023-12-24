@@ -4,27 +4,37 @@ import * as fs from "fs";
 import { WatchCompilerService } from "../../src/services/build.services/watch-compiler.service";
 import path from "path";
 import ts from "typescript";
+import { createTsconfig } from "../utils";
 
-runTest(CompilerService, async (ctx, service) => {
-  fs.rmSync("./dist-compiler", {
-    recursive: true,
-    force: true,
-  });
-
-  let done = true;
-  try {
-    const compilerResult = await service.compile("dist-compiler");
-    compilerResult.should.eq(true);
-    fs.existsSync("./dist-compiler").should.eq(true);
-    done = true;
-  } finally {
-    fs.rmSync("./dist-compiler", {
+runTest(
+  CompilerService,
+  async (ctx, service) => {
+    await fs.promises.rm("./cache-compiler", {
       recursive: true,
       force: true,
     });
-  }
-  done.should.true;
-});
+
+    const compilerResult = await service.compile(".cache-compiler");
+    compilerResult.should.eq(true);
+    fs.existsSync(".cache-compiler").should.eq(true);
+  },
+  undefined,
+  undefined,
+  {
+    tsconfigPath: "tsconfig.compiler.json",
+  },
+  () => {
+    createTsconfig(
+      undefined,
+      (c) => {
+        c.include = "**/*.ts";
+        c.exclude = ["*.test.ts", "dist", "**/dist"];
+        return c;
+      },
+      "tsconfig.compiler.json",
+    );
+  },
+);
 
 runTest(WatchCompilerService, async (ctx, service) => {
   const fn = () => ({

@@ -10,6 +10,7 @@ describe("error", () => {
     let callCount = 0;
     await runin(`test/build/build-error`, async () => {
       createTsconfig(undefined, (c) => {
+        c.include = "**/*";
         delete c.exclude;
       });
       await new CliStartup("test", undefined, {

@@ -166,9 +166,9 @@ describe("assets", () => {
     const configFileName = `tsconfig.${cacheDir}.json`;
     let callCount = 0;
 
-    const testWaiting = async (waiting: () => boolean) => {
+    const waitingFor = async (waiting: () => boolean) => {
       let times = 0;
-      while (waiting()) {
+      while (!waiting()) {
         if (times > 50) {
           // 10s
           break;
@@ -223,8 +223,8 @@ describe("assets", () => {
           if (type == "edit") {
             const text = fs.readFileSync(cacheTargetFile, "utf-8");
             fs.writeFileSync(cacheSourceFile, text + cacheFileEditContent);
-            await testWaiting(
-              () => fs.readFileSync(cacheTargetFile, "utf-8") == text,
+            await waitingFor(
+              () => fs.readFileSync(cacheTargetFile, "utf-8") != text,
             );
 
             fs.existsSync(cacheTargetFile).should.true;
@@ -239,7 +239,7 @@ describe("assets", () => {
 
           if (type == "unlink") {
             fs.unlinkSync(cacheSourceFile);
-            await testWaiting(() => fs.existsSync(cacheTargetFile));
+            await waitingFor(() => !fs.existsSync(cacheTargetFile));
 
             fs.existsSync(cacheTargetFile).should.false;
           }
@@ -249,7 +249,7 @@ describe("assets", () => {
           await next();
 
           await fs.promises.writeFile(cacheSourceFile, cacheFileContent);
-          await testWaiting(() => !fs.existsSync(cacheTargetFile));
+          await waitingFor(() => fs.existsSync(cacheTargetFile));
 
           fs.existsSync(cacheTargetFile).should.true;
           fs.readFileSync(cacheTargetFile, "utf-8").should.eq(cacheFileContent);
