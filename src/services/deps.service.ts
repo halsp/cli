@@ -101,18 +101,18 @@ export class DepsService {
     const deps = this.getDeps(pkgPath, () => true, [cwd]);
     const scripts: InterfaceItem<T>[] = [];
     for (const dep of deps) {
-      const depPath = _require.resolve(dep.key, {
-        paths: [cwd],
-      });
       let module: any;
       try {
-        module = await import(pathToFileURL(depPath).toString());
-      } catch {
+        const depPath = _require.resolve(dep.key, {
+          paths: [cwd],
+        });
         try {
-          module = _require(depPath);
+          module = await import(pathToFileURL(depPath).toString());
         } catch {
-          continue;
+          module = _require(depPath);
         }
+      } catch {
+        continue;
       }
       const inter = module[name];
       if (inter) {
