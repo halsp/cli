@@ -20,6 +20,7 @@ export class BuildCommand extends BaseCommand {
         "--removeDevDeps",
         "Remove devDependencies in package.json file when --copyPackage is true.",
       )
+      .option(`--cleanDist`, "Remove all files from the outDir")
       .setCommonOptions()
       .action(
         async (app: string, command: Record<string, boolean | string>) => {

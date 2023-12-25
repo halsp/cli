@@ -269,3 +269,42 @@ describe("assets", () => {
     });
   });
 });
+
+describe("clean", () => {
+  it("should clean dist dir", async () => {
+    const cacheDir = ".cache-clean-dist-dir";
+    const configFileName = `tsconfig.${cacheDir}.json`;
+    const distDir = cacheDir + "-dist";
+
+    await runin(`test/build/copy`, async () => {
+      createTsconfig(
+        undefined,
+        (c) => {
+          c.compilerOptions.outDir = distDir;
+        },
+        configFileName,
+      );
+
+      if (!fs.existsSync(cacheDir)) {
+        fs.mkdirSync(cacheDir);
+      }
+      fs.writeFileSync(path.join(cacheDir, "test1.js"), "test");
+      if (!fs.existsSync(distDir)) {
+        fs.mkdirSync(distDir);
+      }
+      fs.writeFileSync(path.join(distDir, "test2.js"), "test");
+
+      await new CliStartup("test", undefined, {
+        cacheDir: path.resolve(cacheDir),
+        tsconfigPath: configFileName,
+        cleanDist: true,
+      })
+        .add(CopyBuildResultMiddleware)
+        .run();
+
+      fs.existsSync(distDir).should.be.true;
+      fs.existsSync(path.join(distDir, "test1.js")).should.be.true;
+      fs.existsSync(path.join(distDir, "test2.js")).should.be.false;
+    });
+  });
+});

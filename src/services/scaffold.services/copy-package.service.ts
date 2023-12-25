@@ -43,7 +43,7 @@ export class CopyPackageService {
     pkg.version = this.getCurrentVersion().replace(/^\^/, "");
 
     const filePath = path.join(this.targetDir, "package.json");
-    await this.fileService.createDir(filePath);
+    await this.fileService.createParentDir(filePath);
     await fs.promises.writeFile(
       filePath,
       await prettier.format(JSON.stringify(pkg), {

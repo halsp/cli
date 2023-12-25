@@ -19,11 +19,15 @@ export class FileService {
     return overwrite as boolean;
   }
 
-  public async createDir(filePath: string) {
+  public async createParentDir(filePath: string) {
     const dirname = path.dirname(filePath);
 
-    if (!fs.existsSync(dirname)) {
-      await fs.promises.mkdir(dirname, {
+    await this.safeMkdir(dirname);
+  }
+
+  public async safeMkdir(dir: string) {
+    if (!fs.existsSync(dir)) {
+      await fs.promises.mkdir(dir, {
         recursive: true,
       });
     }

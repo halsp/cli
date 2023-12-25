@@ -41,7 +41,7 @@ export interface Configuration {
 
     transformers?: (program: ts.Program) => ts.CustomTransformers;
 
-    deleteOutDir?: boolean;
+    cleanDist?: boolean;
     assets?: AssetConfig[];
 
     watch?: boolean;

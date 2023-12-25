@@ -68,7 +68,7 @@ runTest(DepsService, async (ctx, service) => {
     const dir = path.resolve(`node_modules/${moduleName}`);
     const pkgPath = path.resolve(`${dir}/package.json`);
     const jsPath = path.resolve(`${dir}/index.js`);
-    await fileService.createDir(pkgPath);
+    await fileService.createParentDir(pkgPath);
     await fs.promises.writeFile(
       pkgPath,
       JSON.stringify({

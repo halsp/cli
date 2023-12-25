@@ -178,7 +178,7 @@ export class TemplateMiddleware extends Middleware {
     for (const filePath of paths) {
       const sourceFile = path.resolve(templateDir, filePath);
       const targetFile = path.resolve(this.targetDir, filePath);
-      await this.fileService.createDir(targetFile);
+      await this.fileService.createParentDir(targetFile);
       await fs.promises.rename(sourceFile, targetFile);
     }
 

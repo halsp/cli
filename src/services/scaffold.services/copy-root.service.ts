@@ -26,7 +26,7 @@ export class CopyRootService {
     const targetFile = path.join(this.targetDir, fileName);
     const sourceFile = path.join(__dirname, "../../..", fileName);
 
-    await this.fileService.createDir(targetFile);
+    await this.fileService.createParentDir(targetFile);
     await fs.promises.copyFile(sourceFile, targetFile);
   }
 }

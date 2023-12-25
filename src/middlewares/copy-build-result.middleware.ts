@@ -20,16 +20,15 @@ export class CopyBuildResultMiddleware extends Middleware {
   private get cacheDir() {
     return this.configService.cacheDir;
   }
-  private get deleteOutDir() {
+  private get cleanDist() {
     return this.configService.getOptionOrConfigValue<boolean>(
-      "deleteOutDir",
-      "build.deleteOutDir",
-      true,
+      "cleanDist",
+      "build.cleanDist",
     );
   }
 
   async invoke(): Promise<void> {
-    if (this.deleteOutDir && fs.existsSync(path.resolve(this.outDir))) {
+    if (this.cleanDist && fs.existsSync(path.resolve(this.outDir))) {
       const files = await fs.promises.readdir(path.resolve(this.outDir));
       for (const file of files) {
         await fs.promises.rm(path.resolve(this.outDir, file), {
@@ -39,7 +38,7 @@ export class CopyBuildResultMiddleware extends Middleware {
       }
     }
 
-    await this.fileService.createDir(this.outDir);
+    await this.fileService.safeMkdir(this.outDir);
 
     const files = await fs.promises.readdir(path.resolve(this.cacheDir));
     for (const file of files) {

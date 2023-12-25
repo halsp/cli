@@ -37,8 +37,8 @@
   },
   "scripts": {
     "patch-ts-node": "sh scripts/ts-node/add-shims.sh",
-    "build:mjs": "sh scripts/ts-node.sh src/main.ts build --tsconfigPath tsconfig.mjs.json --moduleType mjs",
-    "build:cjs": "sh scripts/ts-node.sh src/main.ts build --tsconfigPath tsconfig.cjs.json --moduleType cjs",
+    "build:mjs": "sh scripts/ts-node.sh src/main.ts build --tsconfigPath tsconfig.mjs.json --moduleType mjs --cleanDist",
+    "build:cjs": "sh scripts/ts-node.sh src/main.ts build --tsconfigPath tsconfig.cjs.json --moduleType cjs --cleanDist",
     "build": "npm run build:mjs && npm run build:cjs",
     "build:create-halsp": "sh scripts/ts-node.sh scripts/create-halsp.ts && npm run build",
     "publish:beta": "npm run build && npm publish --tag=beta --access=public",

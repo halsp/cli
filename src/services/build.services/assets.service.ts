@@ -134,7 +134,7 @@ export class AssetsService {
       const sourceFile = path.join(asset.root, p);
       const targetFile = path.join(asset.outDir, p);
 
-      await this.fileService.createDir(targetFile);
+      await this.fileService.createParentDir(targetFile);
       await fs.promises.copyFile(sourceFile, targetFile);
     }
   }
@@ -149,7 +149,7 @@ export class AssetsService {
     const onChange = async (filePath: string) => {
       const targetPath = getTargetPath(filePath);
       const sourcePath = getSourcePath(filePath);
-      await this.fileService.createDir(targetPath);
+      await this.fileService.createParentDir(targetPath);
       await fs.promises.copyFile(sourcePath, targetPath);
     };
     const onUnlink = async (filePath: string) => {

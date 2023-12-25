@@ -76,7 +76,7 @@ export class CopyScaffoldService {
             parser: "typescript",
           })) as string;
         }
-        await this.fileService.createDir(targetFile);
+        await this.fileService.createParentDir(targetFile);
         await fs.promises.writeFile(targetFile, content);
       }
     }
