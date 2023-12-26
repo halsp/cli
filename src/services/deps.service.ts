@@ -65,8 +65,8 @@ export class DepsService {
       .forEach((pkg) => this.loadDeps(result, pkg!, paths, regExp, false));
   }
 
-  private getPackagePath(pkg: string, paths = [process.cwd()]) {
-    const pkgPath = path.join(pkg, "package.json");
+  private getPackagePath(dir: string, paths = [process.cwd()]) {
+    const pkgPath = path.join(dir, "package.json");
 
     try {
       return _require.resolve(pkgPath, {

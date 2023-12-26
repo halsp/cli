@@ -13,6 +13,7 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "preserveWatchOutput": true,
+    "sourceMap": true
   },
   "include": [
     "src/**/*"
