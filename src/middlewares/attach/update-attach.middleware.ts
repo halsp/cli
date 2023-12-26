@@ -25,24 +25,17 @@ export class UpdateAttachMiddleware extends Middleware {
       return;
     }
 
-    let dir = "";
-    if (attach.cwd) {
-      dir = process.cwd();
-    } else {
-      dir = path.join(__dirname, "../../../");
-    }
-    const packagePath = path.join(dir, "package.json");
-
-    const registry = this.commandService.getOptionVlaue<string>("registry");
+    const packagePath = path.join(this.attachService.cacheDir, "package.json");
     const pkgData = await fs.promises.readFile(packagePath, "utf-8");
     const packageManager = await this.packageManagerService.get();
 
+    const registry = this.commandService.getOptionVlaue<string>("registry");
     await chalkInit();
     await runLocal(
       {
         upgrade: true,
         filter: name,
-        cwd: dir,
+        cwd: this.attachService.cacheDir,
         loglevel: "warn",
         registry: registry,
         packageManager: packageManager as any,

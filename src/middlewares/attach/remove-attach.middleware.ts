@@ -1,7 +1,6 @@
 import { Middleware } from "@halsp/core";
 import { Inject } from "@halsp/inject";
 import { PackageManagerService } from "../../services/package-manager.service";
-import path from "path";
 import { AttachService } from "../../services/attach.service";
 import { ChalkService } from "../../services/chalk.service";
 
@@ -22,14 +21,10 @@ export class RemoveAttachMiddleware extends Middleware {
       return;
     }
 
-    let dir = "";
-    if (attach.cwd) {
-      dir = process.cwd();
-    } else {
-      dir = path.join(__dirname, "../../../");
-    }
-
-    const installResult = await this.packageManagerService.uninstall(name, dir);
+    const installResult = await this.packageManagerService.uninstall(
+      name,
+      this.attachService.cacheDir,
+    );
     if (installResult.status != 0) {
       return;
     }

@@ -1,8 +1,10 @@
 import { Inject } from "@halsp/inject";
 import path from "path";
+import fs from "fs";
 import { DepsService } from "./deps.service";
 import { Command } from "commander";
 import { HALSP_CLI_PLUGIN_ATTACH } from "../constant";
+import { RunnerService } from "./runner.service";
 
 type AttachHook = (command: Command) => void;
 interface AttachConfig {
@@ -13,39 +15,30 @@ interface AttachConfig {
 export class AttachService {
   @Inject
   private readonly depsService!: DepsService;
+  @Inject
+  private readonly runnerService!: RunnerService;
+
+  public get cacheDir() {
+    return path.join(__dirname, "../../node_modules/.halsp.attach");
+  }
 
   public async get() {
-    const pkgPath = path.join(__dirname, "../..");
-    const localList = (
-      await this.depsService.getPlugins<AttachConfig>(
-        HALSP_CLI_PLUGIN_ATTACH,
-        pkgPath,
-      )
-    ).map((item) => ({
-      ...item,
-      cwd: false,
-    }));
-    const currentList = (
-      await this.depsService.getPlugins<AttachConfig>(
-        HALSP_CLI_PLUGIN_ATTACH,
-        undefined,
-      )
-    ).map((item) => ({
-      ...item,
-      cwd: true,
-    }));
+    await this.init();
 
-    return [...localList, ...currentList]
+    const list = await this.depsService.getPlugins<AttachConfig>(
+      HALSP_CLI_PLUGIN_ATTACH,
+      this.cacheDir,
+    );
+
+    return list
       .map((item) => ({
         package: item.package,
-        cwd: item.cwd,
         config: item.interface,
       }))
       .reduce<
         {
           package: string;
           config: AttachConfig;
-          cwd: boolean;
         }[]
       >((pre, cur) => {
         if (!pre.filter((p) => p.package == cur.package).length) {
@@ -54,12 +47,27 @@ export class AttachService {
         return pre;
       }, []);
   }
+
+  private async init() {
+    if (fs.existsSync(path.join(this.cacheDir, "package.json"))) {
+      return;
+    }
+
+    await fs.promises.mkdir(this.cacheDir, { recursive: true });
+    this.runnerService.run("npm", ["init", "-y"], {
+      cwd: this.cacheDir,
+      encoding: "utf-8",
+    });
+  }
 }
 
 export function getAttachsWithOut() {
   const service = new AttachService();
   Object.defineProperty(service, "depsService", {
     value: new DepsService(),
+  });
+  Object.defineProperty(service, "runnerService", {
+    value: new RunnerService(),
   });
   return service.get();
 }

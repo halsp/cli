@@ -7,7 +7,7 @@ import { runin } from "../utils";
 import { InquirerService } from "../../src/services/inquirer.service";
 
 async function createCacheDir(name: string) {
-  const cahceDir = ".cache-pm";
+  const cahceDir = "test/services/.cache-pm";
   if (!fs.existsSync(cahceDir)) {
     await fs.promises.mkdir(cahceDir);
   }

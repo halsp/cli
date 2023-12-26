@@ -1,7 +1,6 @@
 import { Middleware } from "@halsp/core";
 import { Inject } from "@halsp/inject";
 import { PackageManagerService } from "../../services/package-manager.service";
-import path from "path";
 import { AttachService } from "../../services/attach.service";
 import { ChalkService } from "../../services/chalk.service";
 
@@ -31,11 +30,10 @@ export class AddAttachMiddleware extends Middleware {
   }
 
   private async installAttach(name: string) {
-    const cliDir = path.join(__dirname, "../../..");
     const installResult = await this.packageManagerService.add(
       name,
       undefined,
-      cliDir,
+      this.attachService.cacheDir,
     );
     return installResult.status == 0;
   }
