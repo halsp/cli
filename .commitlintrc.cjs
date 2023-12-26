@@ -33,7 +33,7 @@ module.exports = {
         "start",
         "scaffold",
         "update",
-        "plugin",
+        "attach",
       ],
     ],
   },

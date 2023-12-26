@@ -2,23 +2,23 @@ import { Inject } from "@halsp/inject";
 import path from "path";
 import { DepsService } from "./deps.service";
 import { Command } from "commander";
-import { HALSP_CLI_PLUGIN_COMMAND } from "../constant";
+import { HALSP_CLI_PLUGIN_ATTACH } from "../constant";
 
-type PluginHook = (command: Command) => void;
-interface PluginConfig {
-  register: PluginHook;
+type AttachHook = (command: Command) => void;
+interface AttachConfig {
+  register: AttachHook;
   baseOn: string | string[];
 }
 
-export class PluginService {
+export class AttachService {
   @Inject
   private readonly depsService!: DepsService;
 
   public async get() {
     const pkgPath = path.join(__dirname, "../..");
     const localList = (
-      await this.depsService.getPlugins<PluginConfig>(
-        HALSP_CLI_PLUGIN_COMMAND,
+      await this.depsService.getPlugins<AttachConfig>(
+        HALSP_CLI_PLUGIN_ATTACH,
         pkgPath,
       )
     ).map((item) => ({
@@ -26,8 +26,8 @@ export class PluginService {
       cwd: false,
     }));
     const currentList = (
-      await this.depsService.getPlugins<PluginConfig>(
-        HALSP_CLI_PLUGIN_COMMAND,
+      await this.depsService.getPlugins<AttachConfig>(
+        HALSP_CLI_PLUGIN_ATTACH,
         undefined,
       )
     ).map((item) => ({
@@ -44,7 +44,7 @@ export class PluginService {
       .reduce<
         {
           package: string;
-          config: PluginConfig;
+          config: AttachConfig;
           cwd: boolean;
         }[]
       >((pre, cur) => {
@@ -56,8 +56,8 @@ export class PluginService {
   }
 }
 
-export function getPluginsWithOut() {
-  const service = new PluginService();
+export function getAttachsWithOut() {
+  const service = new AttachService();
   Object.defineProperty(service, "depsService", {
     value: new DepsService(),
   });

@@ -2,35 +2,35 @@ import { Middleware } from "@halsp/core";
 import { Inject } from "@halsp/inject";
 import { PackageManagerService } from "../../services/package-manager.service";
 import path from "path";
-import { PluginService } from "../../services/plugin.service";
+import { AttachService } from "../../services/attach.service";
 import { ChalkService } from "../../services/chalk.service";
 
-export class AddPluginMiddleware extends Middleware {
+export class AddAttachMiddleware extends Middleware {
   @Inject
   private readonly packageManagerService!: PackageManagerService;
   @Inject
-  private readonly pluginService!: PluginService;
+  private readonly attachService!: AttachService;
   @Inject
   private readonly chalkService!: ChalkService;
 
   async invoke() {
     const name = this.ctx.commandArgs.name;
 
-    const plugins = await this.pluginService.get();
-    if (plugins.filter((p) => p.package == name).length) {
-      this.logger.error(`This plugin has already been added.`);
+    const attachs = await this.attachService.get();
+    if (attachs.filter((p) => p.package == name).length) {
+      this.logger.error(`This attach has already been added.`);
       return;
     }
 
-    if (!(await this.installPlugin(name))) return;
+    if (!(await this.installAttach(name))) return;
     if (!(await this.installBaseOn(name))) return;
 
     this.logger.info(
-      "Add plugin " + this.chalkService.bold.greenBright(name) + " success.",
+      "Add attach " + this.chalkService.bold.greenBright(name) + " success.",
     );
   }
 
-  private async installPlugin(name: string) {
+  private async installAttach(name: string) {
     const cliDir = path.join(__dirname, "../../..");
     const installResult = await this.packageManagerService.add(
       name,
@@ -41,15 +41,15 @@ export class AddPluginMiddleware extends Middleware {
   }
 
   private async installBaseOn(name: string) {
-    const plugins = await this.pluginService.get();
-    const plugin = plugins.filter((p) => p.package == name)[0];
-    if (!plugin) return false;
+    const attachs = await this.attachService.get();
+    const attach = attachs.filter((p) => p.package == name)[0];
+    if (!attach) return false;
 
-    const baseOn = Array.isArray(plugin.config.baseOn)
-      ? plugin.config.baseOn
-      : [plugin.config.baseOn];
+    const baseOn = Array.isArray(attach.config.baseOn)
+      ? attach.config.baseOn
+      : [attach.config.baseOn];
     for (const pkg in baseOn) {
-      await this.installPlugin(pkg);
+      await this.installAttach(pkg);
     }
   }
 }

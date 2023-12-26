@@ -6,8 +6,8 @@ import { CreateCommand } from "./commands/create.command";
 import { InfoCommand } from "./commands/info.command";
 import { StartCommand } from "./commands/start.command";
 import { UpdateCommand } from "./commands/update.command";
-import { PluginCommand } from "./commands/plugin.command";
-import { getPluginsWithOut } from "./services/plugin.service";
+import { AttachCommand } from "./commands/attach.command";
+import { getAttachsWithOut } from "./services/attach.service";
 
 const pkg = _require("../package.json");
 
@@ -20,11 +20,11 @@ new BuildCommand().register(program);
 new StartCommand().register(program);
 new InfoCommand().register(program);
 new UpdateCommand().register(program);
-new PluginCommand().register(program);
+new AttachCommand().register(program);
 
 (async () => {
-  const plugins = await getPluginsWithOut();
-  plugins.forEach((p) => p.config.register(program));
+  const attachs = await getAttachsWithOut();
+  attachs.forEach((p) => p.config.register(program));
 
   program.parse(process.argv);
 

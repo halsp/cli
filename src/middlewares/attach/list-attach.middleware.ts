@@ -1,23 +1,23 @@
 import { Middleware } from "@halsp/core";
 import { Inject } from "@halsp/inject";
-import { PluginService } from "../../services/plugin.service";
+import { AttachService } from "../../services/attach.service";
 import { ChalkService } from "../../services/chalk.service";
 
-export class ListPluginMiddleware extends Middleware {
+export class ListAttachMiddleware extends Middleware {
   @Inject
-  private readonly pluginService!: PluginService;
+  private readonly attachService!: AttachService;
   @Inject
   private readonly chalkService!: ChalkService;
 
   async invoke() {
-    const plugins = await this.pluginService.get();
-    if (!plugins.length) {
-      this.logger.info("No plugins.");
+    const attachs = await this.attachService.get();
+    if (!attachs.length) {
+      this.logger.info("No attachs.");
       return;
     }
 
-    this.logger.info("Plugins:");
-    plugins.forEach((item, index) => {
+    this.logger.info("Attachs:");
+    attachs.forEach((item, index) => {
       const pkg = this.chalkService.blueBright(item.package);
       this.logger.info(`  ${index + 1}. ${pkg}`);
     });

@@ -2,28 +2,28 @@ import { Middleware } from "@halsp/core";
 import { Inject } from "@halsp/inject";
 import { PackageManagerService } from "../../services/package-manager.service";
 import path from "path";
-import { PluginService } from "../../services/plugin.service";
+import { AttachService } from "../../services/attach.service";
 import { ChalkService } from "../../services/chalk.service";
 
-export class RemovePluginMiddleware extends Middleware {
+export class RemoveAttachMiddleware extends Middleware {
   @Inject
   private readonly packageManagerService!: PackageManagerService;
   @Inject
-  private readonly pluginService!: PluginService;
+  private readonly attachService!: AttachService;
   @Inject
   private readonly chalkService!: ChalkService;
 
   async invoke() {
     const name = this.ctx.commandArgs.name;
-    const plugins = await this.pluginService.get();
-    const plugin = plugins.filter((p) => p.package == name)[0];
-    if (!plugin) {
-      this.logger.error(`The plugin does not exist.`);
+    const attachs = await this.attachService.get();
+    const attach = attachs.filter((p) => p.package == name)[0];
+    if (!attach) {
+      this.logger.error(`The attach does not exist.`);
       return;
     }
 
     let dir = "";
-    if (plugin.cwd) {
+    if (attach.cwd) {
       dir = process.cwd();
     } else {
       dir = path.join(__dirname, "../../../");
@@ -35,7 +35,7 @@ export class RemovePluginMiddleware extends Middleware {
     }
 
     this.logger.info(
-      "Remove plugin " + this.chalkService.bold.greenBright(name) + " success.",
+      "Remove attach " + this.chalkService.bold.greenBright(name) + " success.",
     );
   }
 }

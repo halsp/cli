@@ -1,18 +1,18 @@
 import { Command } from "commander";
 import { CliStartup } from "../cli-startup";
 import { BaseCommand } from "./base.command";
-import { AddPluginMiddleware } from "../middlewares/plugin/add-plugin.middleware";
-import { ListPluginMiddleware } from "../middlewares/plugin/list-plugin.middleware";
-import { RemovePluginMiddleware } from "../middlewares/plugin/remove-plugin.middleware";
-import { UpdatePluginMiddleware } from "../middlewares/plugin/update-plugin.middleware";
+import { AddAttachMiddleware } from "../middlewares/attach/add-attach.middleware";
+import { ListAttachMiddleware } from "../middlewares/attach/list-attach.middleware";
+import { RemoveAttachMiddleware } from "../middlewares/attach/remove-attach.middleware";
+import { UpdateAttachMiddleware } from "../middlewares/attach/update-attach.middleware";
 
-export class PluginCommand extends BaseCommand {
+export class AttachCommand extends BaseCommand {
   register(command: Command): void {
     command
-      .command("plugin")
+      .command("attach")
       .argument("<action>", "add, remove, list, update")
       .argument("[name]", "The name of plugin")
-      .description("CLI Plugins")
+      .description("Attach CLI Plugins")
       .option(
         "-pm, --packageManager <packageManager>",
         "Specify package manager. (npm/yarn/pnpm/cnpm)",
@@ -25,7 +25,7 @@ export class PluginCommand extends BaseCommand {
           name: string,
           command: Record<string, boolean | string>,
         ) => {
-          await new CliStartup("plugin", { action, name }, command)
+          await new CliStartup("attach", { action, name }, command)
             .use(async (ctx, next) => {
               if (action != "list" && !name) {
                 ctx.logger.error("error: missing required argument 'name'");
@@ -36,13 +36,13 @@ export class PluginCommand extends BaseCommand {
             .add(() => {
               switch (action) {
                 case "add":
-                  return AddPluginMiddleware;
+                  return AddAttachMiddleware;
                 case "list":
-                  return ListPluginMiddleware;
+                  return ListAttachMiddleware;
                 case "remove":
-                  return RemovePluginMiddleware;
+                  return RemoveAttachMiddleware;
                 case "update":
-                  return UpdatePluginMiddleware;
+                  return UpdateAttachMiddleware;
                 default:
                   throw new Error("The action is not support: " + action);
               }

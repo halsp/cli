@@ -6,7 +6,8 @@ export type CommandType =
   | "info"
   | "start"
   | "template"
-  | "update";
+  | "update"
+  | "attach";
 
 export type AssetConfig =
   | {
