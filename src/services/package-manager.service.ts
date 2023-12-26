@@ -34,16 +34,16 @@ export class PackageManagerService {
         default: "npm",
         choices: [
           {
+            name: "Use PNPM",
+            value: "pnpm",
+          },
+          {
             name: "Use Yarn",
             value: "yarn",
           },
           {
             name: "Use NPM",
             value: "npm",
-          },
-          {
-            name: "Use PNPM",
-            value: "pnpm",
           },
           {
             name: "Use CNPM",

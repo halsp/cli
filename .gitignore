@@ -12,6 +12,8 @@ coverage
 .husky/_
 
 scaffold/yarn.lock
+scaffold/package-lock.json
+scaffold/pnpm-lock.yaml
 .cli-plugins
 *.temp.*
 test/**/tsconfig.json
