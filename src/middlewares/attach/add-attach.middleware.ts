@@ -13,41 +13,22 @@ export class AddAttachMiddleware extends Middleware {
   private readonly chalkService!: ChalkService;
 
   async invoke() {
-    const name = this.ctx.commandArgs.name;
-
-    const attachs = await this.attachService.get();
-    if (attachs.filter((p) => p.package == name).length) {
-      this.logger.error(`This attach has already been added.`);
-      return;
-    }
-
-    if (!(await this.installAttach(name))) return;
-    if (!(await this.installBaseOn(name))) return;
+    const names = this.attachService.names;
+    if (!(await this.installAttachs(names))) return;
 
     this.logger.info(
-      "Add attach " + this.chalkService.bold.greenBright(name) + " success.",
+      "Attach " +
+        this.chalkService.bold.greenBright(names.join(" ")) +
+        " success.",
     );
   }
 
-  private async installAttach(name: string) {
+  private async installAttachs(names: string[]) {
     const installResult = await this.packageManagerService.add(
-      name,
+      names,
       undefined,
       this.attachService.cacheDir,
     );
     return installResult.status == 0;
-  }
-
-  private async installBaseOn(name: string) {
-    const attachs = await this.attachService.get();
-    const attach = attachs.filter((p) => p.package == name)[0];
-    if (!attach) return false;
-
-    const baseOn = Array.isArray(attach.config.baseOn)
-      ? attach.config.baseOn
-      : [attach.config.baseOn];
-    for (const pkg in baseOn) {
-      await this.installAttach(pkg);
-    }
   }
 }

@@ -13,16 +13,9 @@ export class RemoveAttachMiddleware extends Middleware {
   private readonly chalkService!: ChalkService;
 
   async invoke() {
-    const name = this.ctx.commandArgs.name;
-    const attachs = await this.attachService.get();
-    const attach = attachs.filter((p) => p.package == name)[0];
-    if (!attach) {
-      this.logger.error(`The attach does not exist.`);
-      return;
-    }
-
+    const names = this.attachService.names;
     const installResult = await this.packageManagerService.uninstall(
-      name,
+      names,
       this.attachService.cacheDir,
     );
     if (installResult.status != 0) {
@@ -30,7 +23,9 @@ export class RemoveAttachMiddleware extends Middleware {
     }
 
     this.logger.info(
-      "Remove attach " + this.chalkService.bold.greenBright(name) + " success.",
+      "Remove " +
+        this.chalkService.bold.greenBright(names.join(" ")) +
+        " success.",
     );
   }
 }

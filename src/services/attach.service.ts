@@ -5,11 +5,11 @@ import { DepsService } from "./deps.service";
 import { Command } from "commander";
 import { HALSP_CLI_PLUGIN_ATTACH } from "../constant";
 import { RunnerService } from "./runner.service";
+import { Context } from "@halsp/core";
 
 type AttachHook = (command: Command) => void;
 interface AttachConfig {
   register: AttachHook;
-  baseOn: string | string[];
 }
 
 export class AttachService {
@@ -17,9 +17,19 @@ export class AttachService {
   private readonly depsService!: DepsService;
   @Inject
   private readonly runnerService!: RunnerService;
+  @Inject((c) => c)
+  private readonly ctx!: Context;
 
   public get cacheDir() {
     return path.join(__dirname, "../../node_modules/.halsp.attach");
+  }
+  private get cachePkgPath() {
+    return path.join(this.cacheDir, "package.json");
+  }
+  public get names() {
+    return Array.isArray(this.ctx.commandArgs.name)
+      ? this.ctx.commandArgs.name
+      : [this.ctx.commandArgs.name];
   }
 
   public async get() {
@@ -49,7 +59,7 @@ export class AttachService {
   }
 
   private async init() {
-    if (fs.existsSync(path.join(this.cacheDir, "package.json"))) {
+    if (fs.existsSync(this.cachePkgPath)) {
       return;
     }
 

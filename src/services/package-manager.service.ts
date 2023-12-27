@@ -75,11 +75,13 @@ export class PackageManagerService {
     return await this.exec("install", pm, dir);
   }
 
-  public async add(name: string, pm?: string, dir = process.cwd()) {
-    return await this.exec(["add", name], pm, dir);
+  public async add(name: string | string[], pm?: string, dir = process.cwd()) {
+    if (!Array.isArray(name)) name = [name];
+    return await this.exec(["add", ...name], pm, dir);
   }
 
-  public async uninstall(name: string, dir = process.cwd()) {
-    return await this.exec(["uninstall", name], "npm", dir);
+  public async uninstall(name: string | string[], dir = process.cwd()) {
+    if (!Array.isArray(name)) name = [name];
+    return await this.exec(["uninstall", ...name], "npm", dir);
   }
 }

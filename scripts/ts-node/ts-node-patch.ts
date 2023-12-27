@@ -8,7 +8,7 @@ export const flag = "/* halsp-cli-add-shims */ ";
 const transpilerPath = path
   .join(path.dirname(fileURLToPath(import.meta.url)), "./add-shims.cjs")
   .replace(/\\/g, "/");
-const addShimsCode = `${flag}code = require('${transpilerPath}').addShims(code, fileName);`;
+const addShimsCode = `${flag}try{code = require('${transpilerPath}').addShims(code, fileName);}catch{}`;
 
 const tsNodePath = createRequire(import.meta.url).resolve("ts-node");
 const code = await fs.promises.readFile(tsNodePath, "utf-8");

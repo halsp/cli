@@ -17,14 +17,7 @@ export class UpdateAttachMiddleware extends Middleware {
   private readonly attachService!: AttachService;
 
   async invoke() {
-    const name = this.ctx.commandArgs.name;
-    const attachs = await this.attachService.get();
-    const attach = attachs.filter((p) => p.package == name)[0];
-    if (!attach) {
-      this.logger.error(`The attach does not exist.`);
-      return;
-    }
-
+    const names = this.attachService.names;
     const packagePath = path.join(this.attachService.cacheDir, "package.json");
     const pkgData = await fs.promises.readFile(packagePath, "utf-8");
     const packageManager = await this.packageManagerService.get();
@@ -34,7 +27,7 @@ export class UpdateAttachMiddleware extends Middleware {
     await runLocal(
       {
         upgrade: true,
-        filter: name,
+        filter: names,
         cwd: this.attachService.cacheDir,
         loglevel: "warn",
         registry: registry,

@@ -10,7 +10,7 @@ import { ChalkService } from "./services/chalk.service";
 declare module "@halsp/core" {
   interface Context {
     get command(): CommandType;
-    get commandArgs(): Record<string, string>;
+    get commandArgs(): Record<string, string | string[]>;
     get commandOptions(): Record<string, string | boolean>;
   }
 }

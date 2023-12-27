@@ -10,7 +10,7 @@ export class AttachCommand extends BaseCommand {
   register(command: Command): void {
     command
       .command("attach")
-      .argument("[name]", "The name of plugin")
+      .argument("[name...]", "The name of plugin")
       .description("Attach CLI Plugins")
       .option(
         "-pm, --packageManager <packageManager>",

@@ -17,6 +17,6 @@ export class ChdirMiddleware extends Middleware {
   }
 
   private get app() {
-    return this.ctx.commandArgs.app;
+    return this.ctx.commandArgs.app as string;
   }
 }
