@@ -7,18 +7,16 @@ import { runin } from "../utils";
 import { InquirerService } from "../../src/services/inquirer.service";
 
 async function createCacheDir(name: string) {
-  const cahceDir = "test/services/.cache-pm";
-  if (!fs.existsSync(cahceDir)) {
-    await fs.promises.mkdir(cahceDir);
-  }
-  const dir = path.join(cahceDir, name);
+  const dir = path.join(__dirname, ".cache-pm", name);
   if (fs.existsSync(dir)) {
     await fs.promises.rm(dir, {
       recursive: true,
       force: true,
     });
   }
-  await fs.promises.mkdir(dir);
+  await fs.promises.mkdir(dir, {
+    recursive: true,
+  });
   return dir;
 }
 
