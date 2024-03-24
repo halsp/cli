@@ -12,10 +12,4 @@ export type {
 
 export { defineConfig } from "./configuration";
 
-export {
-  HALSP_CLI_PLUGIN_POSTBUILD,
-  HALSP_CLI_PLUGIN_PREBUILD,
-  HALSP_CLI_PLUGIN_TRANSFORMER,
-  HALSP_CLI_PLUGIN_CONFIG_HOOK,
-  HALSP_CLI_PLUGIN_ATTACH,
-} from "./constant";
+export * as constant from "./constant";
