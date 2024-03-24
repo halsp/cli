@@ -32,6 +32,7 @@
     "@halsp/cors": "^2.2.2",
     "@halsp/env": "^2.2.2",
     "@halsp/filter": "^2.2.2",
+    "@halsp/http": "^2.2.2",
     "@halsp/inject": "^2.2.2",
     "@halsp/jwt": "^2.2.2",
     "@halsp/lambda": "^2.2.2",
