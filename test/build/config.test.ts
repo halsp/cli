@@ -364,3 +364,71 @@ describe("not-exist", () => {
     worked.should.true;
   });
 });
+
+describe("esm", () => {
+  it("should be esm when package.type is module", async () => {
+    await testService(
+      ConfigService,
+      async (ctx, service) => {
+        expect(service["isESM"]).true;
+      },
+      {
+        cwd: "test/build/config/esm/mjs",
+      },
+    );
+  });
+
+  it("should be cjs when package.type is commonjs", async () => {
+    await testService(
+      ConfigService,
+      async (ctx, service) => {
+        expect(service["isESM"]).false;
+      },
+      {
+        cwd: "test/build/config/esm/cjs",
+      },
+    );
+  });
+
+  it("should be cjs when package.type is undefined", async () => {
+    await testService(
+      ConfigService,
+      async (ctx, service) => {
+        expect(service["isESM"]).false;
+      },
+      {
+        cwd: "test/build/config/esm/empty",
+      },
+    );
+  });
+
+  it("should be cjs when moduleType is cjs", async () => {
+    await testService(
+      ConfigService,
+      async (ctx, service) => {
+        expect(service["isESM"]).false;
+      },
+      {
+        cwd: "test/build/config/esm/empty",
+        options: {
+          moduleType: "cjs",
+        },
+      },
+    );
+  });
+
+  it("should be esm when moduleType is mjs", async () => {
+    await testService(
+      ConfigService,
+      async (ctx, service) => {
+        expect(service["isESM"]).true;
+      },
+      {
+        cwd: "test/build/config/esm/empty",
+        options: {
+          moduleType: "mjs",
+        },
+      },
+    );
+  });
+});

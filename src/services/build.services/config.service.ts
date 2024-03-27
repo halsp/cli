@@ -52,6 +52,18 @@ export class ConfigService {
     return this.#configFileName;
   }
 
+  public get moduleType() {
+    type ModuleType = "cjs" | "mjs";
+    const type = this.getOptionOrConfigValue<ModuleType, ModuleType>(
+      "moduleType",
+      "build.moduleType",
+    );
+    if (type && type != "cjs" && type != "mjs") {
+      throw new Error("The moduleType is invalid.");
+    }
+    return type;
+  }
+
   private get isESM() {
     const name = this.configFileName.toLowerCase();
     if (name.match(/\.c(j|t)s$/)) {
@@ -59,6 +71,10 @@ export class ConfigService {
     }
     if (name.match(/\.m(j|t)s$/)) {
       return true;
+    }
+
+    if (this.moduleType) {
+      return this.moduleType == "mjs";
     }
 
     const pkgPath = this.fileService.findFileFromTree("package.json");

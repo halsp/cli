@@ -37,14 +37,7 @@ export class CompilerService {
     );
   }
   public get moduleType() {
-    const type = this.configService.getOptionOrConfigValue<string, string>(
-      "moduleType",
-      "build.moduleType",
-    );
-    if (type && type != "cjs" && type != "mjs") {
-      throw new Error("The moduleType is invalid.");
-    }
-    return type as "cjs" | "mjs" | undefined;
+    return this.configService.moduleType;
   }
   private get isESM() {
     if (this.moduleType) {
