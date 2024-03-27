@@ -17,12 +17,21 @@
 
 ## 介绍
 
-`create-halsp` 是 `Halsp` 的快速开始脚手架工具，由 @halsp/cli 自动生成
+`create-halsp` 是 `Halsp` 的快速开始脚手架工具
+
+由 `@halsp/cli` 自动生成
 
 ## 开始使用
 
-```
+```sh
 npm init halsp
+```
+
+等同于
+
+```sh
+npm install @halsp/cli -g
+halsp create
 ```
 
 ## 贡献
