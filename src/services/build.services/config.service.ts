@@ -64,7 +64,12 @@ export class ConfigService {
     return type;
   }
 
-  private get isESM() {
+  public get isPackageEsm() {
+    const pkgPath = this.fileService.findFileFromTree("package.json");
+    return !!pkgPath && _require(pkgPath).type == "module";
+  }
+
+  private get isConfigEsm() {
     const name = this.configFileName.toLowerCase();
     if (name.match(/\.c(j|t)s$/)) {
       return false;
@@ -77,8 +82,7 @@ export class ConfigService {
       return this.moduleType == "mjs";
     }
 
-    const pkgPath = this.fileService.findFileFromTree("package.json");
-    return !!pkgPath && _require(pkgPath).type == "module";
+    return this.isPackageEsm;
   }
 
   private get configEnv(): ConfigEnv {
@@ -176,7 +180,7 @@ export class ConfigService {
 
   private async importJsConfig(configFilePath: string) {
     let module: any;
-    if (this.isESM) {
+    if (this.isConfigEsm) {
       module = await import(pathToFileURL(configFilePath).toString());
     } else {
       module = _require(configFilePath);
@@ -191,22 +195,22 @@ export class ConfigService {
   }
 
   private async importTsConfig(configFilePath: string) {
-    const isESM = this.isESM;
+    const isConfigEsm = this.isConfigEsm;
     const code = await fs.promises.readFile(configFilePath, "utf-8");
     const { options } = this.tsconfigService.parsedCommandLine;
     const { outputText } = ts.transpileModule(code, {
       compilerOptions: {
         ...options,
-        module: isESM ? ts.ModuleKind.ES2022 : ts.ModuleKind.CommonJS,
-        target: isESM ? ts.ScriptTarget.ES2022 : ts.ScriptTarget.ES2015,
-        moduleResolution: isESM
+        module: isConfigEsm ? ts.ModuleKind.ES2022 : ts.ModuleKind.CommonJS,
+        target: isConfigEsm ? ts.ScriptTarget.ES2022 : ts.ScriptTarget.ES2015,
+        moduleResolution: isConfigEsm
           ? ts.ModuleResolutionKind.Bundler
           : ts.ModuleResolutionKind.Node16,
       },
       transformers: {
         after: [
-          createAddShimsTransformer(isESM),
-          isESM ? createAddExtTransformer(".js") : undefined,
+          createAddShimsTransformer(isConfigEsm),
+          isConfigEsm ? createAddExtTransformer(".js") : undefined,
         ]
           .filter((item) => !!item)
           .map((item) => item!),
@@ -215,7 +219,7 @@ export class ConfigService {
     });
 
     const tmpFileName =
-      this.configFileName + ".temp." + (this.isESM ? "mjs" : "cjs");
+      this.configFileName + ".temp." + (this.isConfigEsm ? "mjs" : "cjs");
     const tmpFile = path.join(path.dirname(configFilePath), tmpFileName);
     await fs.promises.writeFile(tmpFile, outputText);
     try {

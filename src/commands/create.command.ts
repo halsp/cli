@@ -47,6 +47,7 @@ export class CreateCommand extends BaseCommand {
       .option("-sp, --skipPlugins", "No plugins will be added")
       .option("-sr, --skipRun", "Skip running after completion")
       .option("--forceInit", "Force init scaffold")
+      .option("--commonjs", "Use commonjs. (default: ESM)")
       .option(
         "-t, --template [url]",
         "Generate a project from a remote template",

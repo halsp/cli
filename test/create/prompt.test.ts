@@ -159,20 +159,18 @@ describe("prompt", () => {
     let done = false;
     await runin("test/create", async () => {
       const testName = ".cache-create-inquirer-copyPackageService-create";
-      if (fs.existsSync(testName)) {
-        await fs.promises.rm(testName, {
-          force: true,
-          recursive: true,
-        });
-      }
 
       await runTest({
         promptFn: (() => Promise.resolve({ overwrite: false })) as any,
         before: async (ctx, md) => {
+          if (!fs.existsSync(testName)) {
+            fs.mkdirSync(testName);
+          }
           (md as any).copyPackageService.create = () => false;
           done = true;
         },
         force: true,
+        name: testName,
       });
 
       fs.existsSync(`${testName}/package.json`).should.false;

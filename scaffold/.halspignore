@@ -5,3 +5,5 @@ package.json
 .gitignore
 package-lock.json
 yarn.lock
+tsconfig.mjs.json
+tsconfig.cjs.json

@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "module": "CommonJS",
+    "declaration": true,
+    "outDir": "./dist",
+    "target": "ES2020",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "noImplicitAny": false,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "preserveWatchOutput": true,
+    "moduleResolution": "Node",
+    "types": [
+      "@types/node",
+      "@halsp/cli"
+    ]
+  },
+  "include": [
+    "src/**/*"
+  ]
+}

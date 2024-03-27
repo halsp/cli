@@ -1,8 +1,10 @@
 import path from "path";
 import fs from "fs";
 import { CliStartup } from "../../src/cli-startup";
-import { createTsconfig, runin } from "../utils";
+import { createTsconfig, runin, testService } from "../utils";
 import { BuildMiddlware } from "../../src/middlewares/build.middleware";
+import { CompilerService } from "../../src/services/build.services/compiler.service";
+import { expect } from "chai";
 
 describe("add ext", () => {
   it("should add .js ext when type is esm", async () => {
@@ -269,5 +271,47 @@ describe("moduleType", () => {
       }
     });
     callCount.should.eq(1);
+  });
+
+  it("should set moduleType=mjs when command is start and package.type is module", async () => {
+    await testService(
+      CompilerService,
+      async (ctx, service) => {
+        expect(service["moduleType"]).eq("mjs");
+      },
+      {
+        mode: "start",
+        cwd: "test/build/config/esm/mjs",
+        options: {},
+      },
+    );
+  });
+
+  it("should set moduleType=cjs when command is start and package.type is commonjs", async () => {
+    await testService(
+      CompilerService,
+      async (ctx, service) => {
+        expect(service["moduleType"]).eq("cjs");
+      },
+      {
+        mode: "start",
+        cwd: "test/build/config/esm/cjs",
+        options: {},
+      },
+    );
+  });
+
+  it("should set moduleType=cjs when command is start and package.type is empty", async () => {
+    await testService(
+      CompilerService,
+      async (ctx, service) => {
+        expect(service["moduleType"]).eq("cjs");
+      },
+      {
+        mode: "start",
+        cwd: "test/build/config/esm/empty",
+        options: {},
+      },
+    );
   });
 });

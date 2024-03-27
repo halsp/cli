@@ -10,6 +10,7 @@ import { SortPluginsService } from "../../services/scaffold.services/sort-plugin
 import { PackageManagerService } from "../../services/package-manager.service";
 import { InitService } from "../../services/scaffold.services/init.service";
 import { ChalkService } from "../../services/chalk.service";
+import { CopyTsconfigService } from "../../services/scaffold.services/copy-tsconfig.service";
 
 export class ScaffoldMiddleware extends Middleware {
   @Inject
@@ -32,6 +33,8 @@ export class ScaffoldMiddleware extends Middleware {
   private readonly packageManagerService!: PackageManagerService;
   @Inject
   private readonly chalkService!: ChalkService;
+  @Inject
+  private readonly copyTsconfigService!: CopyTsconfigService;
 
   override async invoke(): Promise<void> {
     const pm = await this.packageManagerService.get();
@@ -43,6 +46,7 @@ export class ScaffoldMiddleware extends Middleware {
     await this.logPlugins(plugins);
 
     await this.copyPackageService.create(plugins);
+    await this.copyTsconfigService.create();
     await this.copyRootService.copy();
 
     const exFlags = env?.flag ? [env.flag] : [];

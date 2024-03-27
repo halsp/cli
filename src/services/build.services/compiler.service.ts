@@ -8,7 +8,6 @@ import {
   createAddExtTransformer,
   createAddShimsTransformer,
 } from "../../compiler";
-import { FileService } from "../file.service";
 import { HALSP_CLI_PLUGIN_TRANSFORMER } from "../../constant";
 
 export class CompilerService {
@@ -20,8 +19,6 @@ export class CompilerService {
   private readonly configService!: ConfigService;
   @Inject
   private readonly depsService!: DepsService;
-  @Inject
-  private readonly fileService!: FileService;
 
   private get config() {
     return this.configService.value;
@@ -37,16 +34,21 @@ export class CompilerService {
     );
   }
   public get moduleType() {
-    return this.configService.moduleType;
+    const val = this.configService.moduleType;
+    if (!val && this.ctx.command == "start") {
+      return this.configService.isPackageEsm ? "mjs" : "cjs";
+    } else {
+      return val;
+    }
   }
   private get isESM() {
     if (this.moduleType) {
       return this.moduleType == "mjs";
+    } else {
+      return this.configService.isPackageEsm;
     }
-
-    const pkgPath = this.fileService.findFileFromTree("package.json");
-    return !!pkgPath && _require(pkgPath).type == "module";
   }
+
   public get writeFileCallback() {
     return (
       path: string,

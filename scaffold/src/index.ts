@@ -288,7 +288,7 @@ export default async (c: any, q: any) => (c.res = await startup.run(q, c));
 //{http||micro
 const version = (() => {
   const pkgName = "package.json";
-  let dir = path.dirname(fileURLToPath(import.meta.url));
+  let dir = __dirname;
   let filePath = path.join(dir, pkgName);
   while (!fs.existsSync(filePath)) {
     dir = path.dirname(dir);

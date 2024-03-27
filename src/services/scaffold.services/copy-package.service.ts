@@ -37,7 +37,7 @@ export class CopyPackageService {
 
     this.setDeps(pkg.dependencies, plugins, pluginConfig, false);
     this.setDeps(pkg.devDependencies, plugins, pluginConfig, true);
-
+    this.setCommonJS(pkg);
     this.setCliVersion(pkg);
     pkg.name = this.name;
     pkg.version = this.getCurrentVersion().replace(/^\^/, "");
@@ -119,5 +119,17 @@ export class CopyPackageService {
 
     const file = path.join(__dirname, "../../../package.json");
     return _require(file).version;
+  }
+
+  private setCommonJS(pkg: Record<string, any>) {
+    const commonjs = this.commandService.getOptionVlaue<boolean>(
+      "commonjs",
+      false,
+    );
+    if (commonjs) {
+      pkg.type = "commonjs";
+    } else {
+      pkg.type = "module";
+    }
   }
 }

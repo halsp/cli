@@ -370,7 +370,7 @@ describe("esm", () => {
     await testService(
       ConfigService,
       async (ctx, service) => {
-        expect(service["isESM"]).true;
+        expect(service["isConfigEsm"]).true;
       },
       {
         cwd: "test/build/config/esm/mjs",
@@ -382,7 +382,7 @@ describe("esm", () => {
     await testService(
       ConfigService,
       async (ctx, service) => {
-        expect(service["isESM"]).false;
+        expect(service["isConfigEsm"]).false;
       },
       {
         cwd: "test/build/config/esm/cjs",
@@ -394,7 +394,7 @@ describe("esm", () => {
     await testService(
       ConfigService,
       async (ctx, service) => {
-        expect(service["isESM"]).false;
+        expect(service["isConfigEsm"]).false;
       },
       {
         cwd: "test/build/config/esm/empty",
@@ -406,7 +406,7 @@ describe("esm", () => {
     await testService(
       ConfigService,
       async (ctx, service) => {
-        expect(service["isESM"]).false;
+        expect(service["isConfigEsm"]).false;
       },
       {
         cwd: "test/build/config/esm/empty",
@@ -421,7 +421,7 @@ describe("esm", () => {
     await testService(
       ConfigService,
       async (ctx, service) => {
-        expect(service["isESM"]).true;
+        expect(service["isConfigEsm"]).true;
       },
       {
         cwd: "test/build/config/esm/empty",
