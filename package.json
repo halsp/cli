@@ -25,18 +25,14 @@
   "types": "./dist-mjs/index.d.ts",
   "exports": {
     ".": {
-      "require": {
-        "default": "./dist-cjs/index.cjs",
-        "types": "./dist-mjs/index.d.ts"
-      },
-      "import": {
-        "default": "./dist-mjs/index.mjs",
-        "types": "./dist-mjs/index.d.ts"
-      }
+      "require": "./dist-cjs/index.cjs",
+      "import": "./dist-mjs/index.mjs",
+      "types": "./dist-mjs/index.d.ts"
     }
   },
   "scripts": {
     "patch-ts-node": "sh scripts/ts-node/add-shims.sh",
+    "unpatch-ts-node": "sh scripts/ts-node.sh scripts/ts-node/ts-node-unpatch.ts",
     "build:mjs": "sh scripts/ts-node.sh src/main.ts build --tsconfigPath tsconfig.mjs.json --moduleType mjs --cleanDist",
     "build:cjs": "sh scripts/ts-node.sh src/main.ts build --tsconfigPath tsconfig.cjs.json --moduleType cjs --cleanDist",
     "build": "npm run build:mjs && npm run build:cjs",

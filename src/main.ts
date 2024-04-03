@@ -8,6 +8,7 @@ import { StartCommand } from "./commands/start.command";
 import { UpdateCommand } from "./commands/update.command";
 import { AttachCommand } from "./commands/attach.command";
 import { getAttachsWithOut } from "./services/attach.service";
+import { CleanCommand } from "./commands/clean.command";
 
 const pkg = _require("../package.json");
 
@@ -21,6 +22,7 @@ new StartCommand().register(program);
 new InfoCommand().register(program);
 new UpdateCommand().register(program);
 new AttachCommand().register(program);
+new CleanCommand().register(program);
 
 (async () => {
   const attachs = await getAttachsWithOut();

@@ -1,7 +1,7 @@
 import { createTsconfig, runin } from "../utils";
 import { CliStartup } from "../../src/cli-startup";
 import { BuildMiddlware } from "../../src/middlewares/build.middleware";
-import { CopyBuildResultMiddleware } from "../../src/middlewares/copy-build-result.middleware";
+import { CacheToDistMiddleware } from "../../src/middlewares/build/cache-to-dist.middleware";
 import * as fs from "fs";
 import { AssetsService } from "../../src/services/build.services/assets.service";
 import { WatchCompilerService } from "../../src/services/build.services/watch-compiler.service";
@@ -74,7 +74,7 @@ describe("copy package", () => {
 });
 
 describe("copy build files", () => {
-  it(`should copy build files when use CopyBuildResultMiddleware`, async () => {
+  it(`should copy build files when use CacheToDistMiddleware`, async () => {
     const cacheDir = ".cache-copy-build-files-with-cbrm";
     const configFileName = `tsconfig.${cacheDir}.json`;
     let callCount = 0;
@@ -85,11 +85,12 @@ describe("copy build files", () => {
         tsconfigPath: configFileName,
       })
         .add(BuildMiddlware)
-        .add(CopyBuildResultMiddleware)
+        .add(CacheToDistMiddleware)
         .run();
 
       fs.existsSync("./dist").should.true;
       fs.existsSync("./dist/build-test.js").should.true;
+      fs.existsSync("./dist/dir/build-test.js").should.true;
       callCount++;
     });
     callCount.should.eq(1);
@@ -266,45 +267,6 @@ describe("assets", () => {
   ["add", "edit", "unlink"].forEach((e) => {
     it(`should watch assets event '${e}'`, async () => {
       await runWatchAssetsTest(e);
-    });
-  });
-});
-
-describe("clean", () => {
-  it("should clean dist dir", async () => {
-    const cacheDir = ".cache-clean-dist-dir";
-    const configFileName = `tsconfig.${cacheDir}.json`;
-    const distDir = cacheDir + "-dist";
-
-    await runin(`test/build/copy`, async () => {
-      createTsconfig(
-        undefined,
-        (c) => {
-          c.compilerOptions.outDir = distDir;
-        },
-        configFileName,
-      );
-
-      if (!fs.existsSync(cacheDir)) {
-        fs.mkdirSync(cacheDir);
-      }
-      fs.writeFileSync(path.join(cacheDir, "test1.js"), "test");
-      if (!fs.existsSync(distDir)) {
-        fs.mkdirSync(distDir);
-      }
-      fs.writeFileSync(path.join(distDir, "test2.js"), "test");
-
-      await new CliStartup("test", undefined, {
-        cacheDir: path.resolve(cacheDir),
-        tsconfigPath: configFileName,
-        cleanDist: true,
-      })
-        .add(CopyBuildResultMiddleware)
-        .run();
-
-      fs.existsSync(distDir).should.be.true;
-      fs.existsSync(path.join(distDir, "test1.js")).should.be.true;
-      fs.existsSync(path.join(distDir, "test2.js")).should.be.false;
     });
   });
 });

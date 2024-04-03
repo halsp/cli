@@ -7,7 +7,8 @@ export type CommandType =
   | "start"
   | "template"
   | "update"
-  | "attach";
+  | "attach"
+  | "clean";
 
 export type AssetConfig =
   | {

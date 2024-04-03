@@ -3,9 +3,10 @@ import { CliStartup } from "../cli-startup";
 import { BuildMiddlware } from "../middlewares/build.middleware";
 import { BaseCommand } from "./base.command";
 import "./base-build";
-import { CopyBuildResultMiddleware } from "../middlewares/copy-build-result.middleware";
+import { CacheToDistMiddleware } from "../middlewares/build/cache-to-dist.middleware";
 import { ChdirMiddleware } from "../middlewares/chdir.middleware";
 import { EnvMiddleware } from "../middlewares/env.middleware";
+import { CleanDistMiddleware } from "../middlewares/build/clean-dist.middleware";
 
 export class BuildCommand extends BaseCommand {
   register(command: Command): void {
@@ -28,7 +29,8 @@ export class BuildCommand extends BaseCommand {
             .add(ChdirMiddleware)
             .add(EnvMiddleware)
             .add(BuildMiddlware)
-            .add(CopyBuildResultMiddleware)
+            .add(CleanDistMiddleware)
+            .add(CacheToDistMiddleware)
             .run();
         },
       );

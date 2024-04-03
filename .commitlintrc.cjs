@@ -34,6 +34,7 @@ module.exports = {
         "scaffold",
         "update",
         "attach",
+        "clean",
       ],
     ],
   },
