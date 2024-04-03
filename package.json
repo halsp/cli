@@ -1,6 +1,6 @@
 {
   "name": "@halsp/cli",
-  "version": "0.5.7",
+  "version": "0.5.8",
   "description": "Halsp 的命令行脚手架工具",
   "engines": {
     "node": ">=16"
@@ -117,6 +117,7 @@
     "/dist-mjs/**/*",
     "/scaffold/**/*",
     "/scaffold/.gitignore",
+    "/scripts/**/*",
     "/src/**/*",
     ".eslintignore",
     ".eslintrc.js",

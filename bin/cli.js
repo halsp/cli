@@ -6,7 +6,7 @@ import path from "path";
 import { createRequire } from "module";
 
 const pkg = readPackage();
-if (pkg.type === "module") {
+if (pkg?.type === "module") {
   await import("../dist-mjs/main.mjs");
 } else {
   createRequire(import.meta.url)("../dist-cjs/main.cjs");
