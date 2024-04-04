@@ -54,15 +54,15 @@
     "@halsp/ws": "^2.3.0",
     "class-validator": "^0.14.1",
     "ejs": "^3.1.9",
-    "reflect-metadata": "^0.2.1"
+    "reflect-metadata": "^0.2.2"
   },
   "devDependencies": {
     "@halsp/cli": "../",
     "@halsp/native": "^2.3.0",
     "@halsp/testing": "^2.3.0",
-    "@types/node": "^20.11.30",
-    "@typescript-eslint/eslint-plugin": "^7.4.0",
-    "@typescript-eslint/parser": "^7.4.0",
+    "@types/node": "^20.12.4",
+    "@typescript-eslint/eslint-plugin": "^7.5.0",
+    "@typescript-eslint/parser": "^7.5.0",
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.1.3",
