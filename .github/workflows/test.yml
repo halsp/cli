@@ -12,19 +12,13 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node_version: [16, 18, 20]
-        include:
-          # Active LTS + other OS
-          - os: macos-latest
-            node_version: 18
-          - os: windows-latest
-            node_version: 18
+        node_version: [18, 20]
     steps:
-      - uses: actions/checkout@v3
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
+      - uses: actions/checkout@v4
+      - name: Use Node.js ${{ matrix.node_version }}
+        uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: ${{ matrix.node_version }}
       - uses: pnpm/action-setup@v2
         with:
           version: 8

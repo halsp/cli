@@ -11,18 +11,13 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node_version: [16, 18, 20]
-        include:
-          # Active LTS + other OS
-          - os: macos-latest
-            node_version: 18
-          - os: windows-latest
-            node_version: 18
+        node_version: [18, 20]
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v2
+      - uses: actions/checkout@v4
+      - name: Use Node.js ${{ matrix.node_version }}
+        uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: ${{ matrix.node_version }}
       - uses: pnpm/action-setup@v2
         with:
           version: 8
@@ -32,10 +27,11 @@ jobs:
   try-publish-npm:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v2
+      - uses: actions/checkout@v4
+      - name: Use Node.js 20
+        uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20
           registry-url: https://registry.npmjs.org/
       - uses: pnpm/action-setup@v2
         with:
@@ -46,10 +42,11 @@ jobs:
   try-publish-create-halsp:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v2
+      - uses: actions/checkout@v4
+      - name: Use Node.js 20
+        uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20
           registry-url: https://registry.npmjs.org/
       - uses: pnpm/action-setup@v2
         with:
@@ -62,10 +59,11 @@ jobs:
     needs: [test, try-publish-npm, try-publish-create-halsp]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v2
+      - uses: actions/checkout@v4
+      - name: Use Node.js 20
+        uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20
           registry-url: https://registry.npmjs.org/
       - uses: pnpm/action-setup@v2
         with:
@@ -81,10 +79,11 @@ jobs:
     needs: [test, try-publish-npm, try-publish-create-halsp]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v2
+      - uses: actions/checkout@v4
+      - name: Use Node.js 20
+        uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20
           registry-url: https://registry.npmjs.org/
       - uses: pnpm/action-setup@v2
         with:
@@ -100,9 +99,5 @@ jobs:
     needs: [publish-npm, publish-create-halsp]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
-        with:
-          node-version: 20
-          registry-url: https://registry.npmjs.org/
+      - uses: actions/checkout@v4
       - run: sh scripts/sync-cnpm.sh
