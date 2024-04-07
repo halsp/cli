@@ -484,7 +484,7 @@ describe("init", () => {
           },
         } as any;
         const plugins = await service["sortPlugins"]([]);
-        plugins.should.deep.eq(["view", "router", "core", "cli"]);
+        plugins.should.deep.eq(["view", "router", "cli", "core"]);
       },
       {
         options: {
