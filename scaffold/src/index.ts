@@ -34,7 +34,6 @@ import "@halsp/alifc";
 //{http||micro
 import * as fs from "fs";
 import path from "path";
-import { fileURLToPath } from "url";
 //}
 
 import { Startup } from "@halsp/core";
