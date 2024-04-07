@@ -91,20 +91,20 @@ export class DepsService {
     return this.getDeps(packagePath, /^@halsp\//, paths, true);
   }
 
-  public async getPlugins<T>(
+  private async getDirPlugins<T>(
     name: string | symbol,
-    cwd = process.cwd(),
+    dir: string,
   ): Promise<InterfaceItem<T>[]> {
-    const pkgPath = this.getPackagePath(cwd, [cwd]);
+    const pkgPath = this.getPackagePath(dir, [dir]);
     if (!pkgPath) return [];
 
-    const deps = this.getDeps(pkgPath, () => true, [cwd]);
+    const deps = this.getDeps(pkgPath, () => true, [dir]);
     const scripts: InterfaceItem<T>[] = [];
     for (const dep of deps) {
       let module: any;
       try {
         const depPath = _require.resolve(dep.key, {
-          paths: [cwd],
+          paths: [dir],
         });
         try {
           module = await import(pathToFileURL(depPath).toString());
@@ -123,6 +123,23 @@ export class DepsService {
       }
     }
     return scripts;
+  }
+
+  public async getPlugins<T>(
+    name: string | symbol,
+    cwd = process.cwd(),
+  ): Promise<InterfaceItem<T>[]> {
+    const result: InterfaceItem<T>[] = [];
+    let dir = cwd;
+    while (dir != path.dirname(dir) && dir.startsWith(path.dirname(dir))) {
+      for (const newItem of await this.getDirPlugins<T>(name, cwd)) {
+        if (!result.some((r) => r.package == newItem.package)) {
+          result.push(newItem);
+        }
+      }
+      dir = path.dirname(dir);
+    }
+    return result;
   }
 
   public async getInterfaces<T>(name: string | symbol, cwd = process.cwd()) {
