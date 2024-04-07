@@ -110,7 +110,9 @@ export class CopyScaffoldService {
     addFromConfig(pluginConfig.devDependencies);
 
     plugins = await this.sortPluginsService.sortPlugins(plugins, false);
-    plugins.push("cli");
+    ["cli", "core"].forEach(
+      (plugin) => !plugins.includes(plugin) && plugins.push(plugin),
+    );
     return plugins;
   }
 
