@@ -7,8 +7,9 @@ import { FileService } from "../../src/services/file.service";
 
 runTest(DepsService, async (ctx, service) => {
   const deps = service.getPackageHalspDeps("@halsp/inject");
+  console.log("deps1", deps);
   Array.isArray(deps).should.true;
-  (deps.length > 0).should.true;
+  deps.length.should.greaterThan(0);
 
   const depPath: string = (service as any).getPackagePath("@halsp/inject");
   const pkgPath = path.join("node_modules/@halsp/inject/package.json");
@@ -20,6 +21,7 @@ runTest(DepsService, async (ctx, service) => {
 
   {
     const deps = service["getDeps"](depPath, () => true);
+    console.log("deps2", deps);
     Array.isArray(deps).should.true;
     deps.length.should.greaterThan(0);
   }
