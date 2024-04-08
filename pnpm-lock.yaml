@@ -6,11 +6,11 @@ settings:
 
 dependencies:
   '@halsp/core':
-    specifier: ^2.3.3
-    version: 2.3.3
+    specifier: ^2.3.4
+    version: 2.3.4
   '@halsp/inject':
-    specifier: ^2.3.3
-    version: 2.3.3
+    specifier: ^2.3.4
+    version: 2.3.4
   chalk:
     specifier: ^5.3.0
     version: 5.3.0
@@ -412,16 +412,16 @@ packages:
     resolution: {integrity: sha512-k2Ty1JcVojjJFwrg/ThKi2ujJ7XNLYaFGNB/bWT9wGR+oSMJHMa5w+CUq6p/pVrKeNNgA7pCqEcjSnHVoqJQFw==}
     dev: false
 
-  /@halsp/core@2.3.3:
-    resolution: {integrity: sha512-p5jJOCdXroBz5r0Tq0VGpOd0X8h7iqJkIYxa7eyylaIq4IqaRUDqs7J5b5K/88NbIARl+ovdegNcmg4n4HduVQ==}
+  /@halsp/core@2.3.4:
+    resolution: {integrity: sha512-7mzSfrmojHengALNfn1RYmGeYRbEy8hFxwIDS75GHLzu6ZFmKggi0ut3VHBo4ZpK3t5VSNWYzoxo/n8PJwp81Q==}
     engines: {node: '>=16'}
     dev: false
 
-  /@halsp/inject@2.3.3:
-    resolution: {integrity: sha512-5RzZAYgcj8Y0Vboxq+7lVvt7MU/aLc+EYHfYoLmerPR4glSnM4UVbxQy9nfkPqXTyvQhfbtXqR7fyAhArmRo+A==}
+  /@halsp/inject@2.3.4:
+    resolution: {integrity: sha512-LbX4uKDhl3LH2AKDEOGwHlZpoy/K39gotIup2lSJokZzTuZ+v2Pcqij0SutVa4mbJIHSbhDqpu65wwJSVI6RAg==}
     engines: {node: '>=16'}
     dependencies:
-      '@halsp/core': 2.3.3
+      '@halsp/core': 2.3.4
       reflect-metadata: 0.2.2
     dev: false
 
