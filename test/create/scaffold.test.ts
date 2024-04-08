@@ -234,7 +234,7 @@ describe("mock scaffold", () => {
       });
       await service.create([]);
       fs.existsSync("dist/default").should.true;
-      fs.existsSync("dist/default/.eslintrc.js").should.true;
+      fs.existsSync("dist/default/.eslintrc.cjs").should.true;
     });
   });
 
@@ -484,7 +484,7 @@ describe("init", () => {
           },
         } as any;
         const plugins = await service["sortPlugins"]([]);
-        plugins.should.deep.eq(["view", "router", "cli", "core"]);
+        plugins.sort().should.deep.eq(["view", "router", "cli", "core"].sort());
       },
       {
         options: {

@@ -1,6 +1,6 @@
 {
   "name": "@halsp/cli",
-  "version": "0.5.9",
+  "version": "0.5.10",
   "description": "Halsp 的命令行脚手架工具",
   "engines": {
     "node": ">=16"
@@ -50,8 +50,8 @@
   "author": "hal-wang",
   "license": "MIT",
   "dependencies": {
-    "@halsp/core": "^2.3.0",
-    "@halsp/inject": "^2.3.0",
+    "@halsp/core": "^2.3.3",
+    "@halsp/inject": "^2.3.3",
     "chalk": "^5.3.0",
     "child_process": "^1.0.2",
     "chokidar": "^3.6.0",
@@ -68,7 +68,7 @@
     "reflect-metadata": "^0.2.2",
     "shelljs": "^0.8.5",
     "tree-kill": "^1.2.2",
-    "typescript": "^5.4.3",
+    "typescript": "^5.4.4",
     "update-notifier": "^7.0.0"
   },
   "devDependencies": {
@@ -83,7 +83,7 @@
     "@types/inquirer": "^9.0.7",
     "@types/lodash": "^4.17.0",
     "@types/mocha": "^10.0.6",
-    "@types/node": "^20.12.4",
+    "@types/node": "^20.12.5",
     "@types/shelljs": "^0.8.15",
     "@types/supertest": "^6.0.2",
     "@types/update-notifier": "^6.0.8",
@@ -116,7 +116,7 @@
     "/scripts/**/*",
     "/src/**/*",
     ".eslintignore",
-    ".eslintrc.js",
+    ".eslintrc.cjs",
     ".gitignore",
     ".mocharc.json",
     "CODE_OF_CONDUCT.md",

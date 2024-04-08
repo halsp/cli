@@ -2,10 +2,10 @@
   "explorer.fileNesting.enabled": true,
   "explorer.fileNesting.expand": false,
   "explorer.fileNesting.patterns": {
-    "package.json": "yarn.lock,pnpm-lock.yaml,package-lock.json,.gitattributes,.gitignore,.halspignore,CNAME,README*,*.README.md,CODE_OF_CONDUCT.md,CONTRIBUTING.md,LICENSE,.prettierrc",
-    ".eslintrc.js": ".eslintignore,.commitlintrc.js",
+    "package.json": "yarn.lock,yarn-error.log,pnpm-lock.yaml,package-lock.json,.gitattributes,.gitignore,.halspignore,CNAME,README*,*.README.md,CODE_OF_CONDUCT.md,CONTRIBUTING.md,LICENSE",
+    ".eslintrc.cjs": ".eslintignore,.commitlintrc.cjs,.prettierrc",
     ".mocharc.json": ".c8rc.json",
-    "tsconfig.json": "tsconfig.base.json",
+    "tsconfig.json": "tsconfig.base.json,tsconfig.cjs.json,tsconfig.mjs.json",
     ".env": ".env.*",
     ".halsprc.ts": ".stackblitzrc,plugin.json"
   },
