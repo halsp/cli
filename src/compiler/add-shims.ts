@@ -66,6 +66,30 @@ function createEsmShimsStatements(sf: ts.SourceFile) {
       ),
     );
   }
+  if (isIdentifierExist(code, "_resolve")) {
+    nodes.push(
+      ts.factory.createVariableStatement(
+        undefined,
+        ts.factory.createVariableDeclarationList(
+          [
+            ts.factory.createVariableDeclaration(
+              ts.factory.createIdentifier("_resolve"),
+              undefined,
+              undefined,
+              ts.factory.createPropertyAccessExpression(
+                ts.factory.createMetaProperty(
+                  ts.SyntaxKind.ImportKeyword,
+                  ts.factory.createIdentifier("meta"),
+                ),
+                ts.factory.createIdentifier("resolve"),
+              ),
+            ),
+          ],
+          ts.NodeFlags.Const,
+        ),
+      ),
+    );
+  }
   if (isIdentifierExist(code, "___dirname")) {
     nodes.push(
       ts.factory.createImportDeclaration(
@@ -148,6 +172,60 @@ function createCjsShimsStatements(sf: ts.SourceFile) {
               undefined,
               undefined,
               ts.factory.createIdentifier("require"),
+            ),
+          ],
+          ts.NodeFlags.Const,
+        ),
+      ),
+    );
+  }
+  if (isIdentifierExist(code, "_resolve")) {
+    nodes.push(
+      ts.factory.createVariableStatement(
+        undefined,
+        ts.factory.createVariableDeclarationList(
+          [
+            ts.factory.createVariableDeclaration(
+              ts.factory.createIdentifier("_resolve"),
+              undefined,
+              undefined,
+              ts.factory.createArrowFunction(
+                undefined,
+                undefined,
+                [
+                  ts.factory.createParameterDeclaration(
+                    undefined,
+                    undefined,
+                    ts.factory.createIdentifier("name"),
+                    undefined,
+                    undefined,
+                    undefined,
+                  ),
+                  ts.factory.createParameterDeclaration(
+                    undefined,
+                    undefined,
+                    ts.factory.createIdentifier("dir"),
+                    undefined,
+                    undefined,
+                    undefined,
+                  ),
+                ],
+                undefined,
+                ts.factory.createToken(ts.SyntaxKind.EqualsGreaterThanToken),
+                ts.factory.createCallExpression(
+                  ts.factory.createPropertyAccessExpression(
+                    ts.factory.createIdentifier("require"),
+                    ts.factory.createIdentifier("resolve"),
+                  ),
+                  undefined,
+                  [
+                    ts.factory.createIdentifier("name"),
+                    ts.factory.createArrayLiteralExpression([
+                      ts.factory.createIdentifier("dir"),
+                    ]),
+                  ],
+                ),
+              ),
             ),
           ],
           ts.NodeFlags.Const,

@@ -85,6 +85,11 @@ export function addShims(input: string, fileName: string) {
     input = requireCode + "\n" + input;
   }
 
+  const resolveCode = `const _resolve = import.meta.resolve;`;
+  if (input.includes("_resolve") && !input.includes(resolveCode)) {
+    input = resolveCode + "\n" + input;
+  }
+
   const dirnameCode = `import _halsp_cli_shims_path from "path";
   import _halsp_cli_shims_url from "url";
   const __dirname=_halsp_cli_shims_path.dirname(_halsp_cli_shims_url.fileURLToPath(import.meta.url));`;

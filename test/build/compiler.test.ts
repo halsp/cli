@@ -188,7 +188,7 @@ describe("shims dirname", () => {
   });
 });
 
-describe("shims require", () => {
+describe("shims _require", () => {
   it("should add _require for esm", async () => {
     const dirName = ".cache-require-esm";
     const configFileName = "tsconfig.require.esm.json";
@@ -240,6 +240,62 @@ describe("shims require", () => {
         path.join(dirName, "require.cjs"),
       );
       code.includes("const _require = require").should.true;
+    });
+  });
+});
+
+describe("shims _resolve", () => {
+  it("should add _resolve for esm", async () => {
+    const dirName = ".cache-resolve-esm";
+    const configFileName = "tsconfig.resolve.esm.json";
+    createTsconfig(
+      path.join(__dirname, "compiler/add-shims"),
+      undefined,
+      configFileName,
+    );
+
+    await runin("test/build/compiler/add-shims", async () => {
+      await new CliStartup("test", undefined, {
+        cacheDir: dirName,
+        tsconfigPath: configFileName,
+      })
+        .add(BuildMiddlware)
+        .run();
+
+      const code = await fs.promises.readFile(path.join(dirName, "resolve.js"));
+      code.includes("const _resolve = import.meta.resolve;").should.true;
+    });
+  });
+
+  it("should add _resolve for cjs", async () => {
+    const dirName = ".cache-resolve-cjs";
+    const configFileName = "tsconfig.resolve.cjs.json";
+    createTsconfig(
+      path.join(__dirname, "compiler/add-shims"),
+      (c) => {
+        c.compilerOptions = {
+          target: "ES2022",
+          module: "CommonJS",
+          moduleResolution: "Node",
+          outDir: "./dist",
+        };
+      },
+      configFileName,
+    );
+
+    await runin("test/build/compiler/add-shims", async () => {
+      await new CliStartup("test", undefined, {
+        cacheDir: dirName,
+        tsconfigPath: configFileName,
+        moduleType: "cjs",
+      })
+        .add(BuildMiddlware)
+        .run();
+
+      const code = await fs.promises.readFile(
+        path.join(dirName, "resolve.cjs"),
+      );
+      code.includes("const _resolve = (name, dir) => require.resolve(name, [dir]);").should.true;
     });
   });
 });

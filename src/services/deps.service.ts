@@ -1,6 +1,5 @@
 import * as fs from "fs";
 import path from "path";
-import { pathToFileURL } from "url";
 
 export type DepItem = { key: string; value: string };
 export type InterfaceItem<T> = {
@@ -101,19 +100,8 @@ export class DepsService {
     const deps = this.getDeps(pkgPath, () => true, [dir]);
     const scripts: InterfaceItem<T>[] = [];
     for (const dep of deps) {
-      let module: any;
-      try {
-        const depPath = _require.resolve(dep.key, {
-          paths: [dir],
-        });
-        try {
-          module = await import(pathToFileURL(depPath).toString());
-        } catch {
-          module = _require(depPath);
-        }
-      } catch {
-        continue;
-      }
+      const module = await this.importDep(dep.key, dir);
+      if (!module) continue;
       const inter = module[name];
       if (inter) {
         scripts.push({
@@ -123,6 +111,19 @@ export class DepsService {
       }
     }
     return scripts;
+  }
+
+  private async importDep(name: string, dir: string) {
+    try {
+      const depPath = _resolve(name, dir);
+      try {
+        return await import(depPath);
+      } catch {
+        return _require(depPath);
+      }
+    } catch {
+      return null;
+    }
   }
 
   public async getPlugins<T>(
