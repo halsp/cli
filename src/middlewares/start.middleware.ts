@@ -5,16 +5,18 @@ import * as fs from "fs";
 import spawn from "cross-spawn";
 import killProcess from "tree-kill";
 import { treeKillSync } from "../utils/tree-kill";
-import shell from "shelljs";
 import { ConfigService } from "../services/build.services/config.service";
 import { ChildProcess } from "child_process";
 import { FileService } from "../services/file.service";
+import { RunnerService } from "../services/runner.service";
 
 export class StartMiddleware extends Middleware {
   @Inject
   private readonly configService!: ConfigService;
   @Inject
   private readonly fileService!: FileService;
+  @Inject
+  private readonly runnerService!: RunnerService;
 
   private get cacheDir() {
     return this.configService.cacheDir;
@@ -74,7 +76,7 @@ export class StartMiddleware extends Middleware {
       await watchPromise;
     } else {
       const processArgs = this.getProcessArgs();
-      shell.exec(`${this.binaryToRun} ${processArgs.join(" ")}`, {
+      this.runnerService.run(this.binaryToRun, processArgs, {
         cwd: this.cacheDir,
         env: this.processEnv,
       });

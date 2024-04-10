@@ -29,7 +29,7 @@
       "import": "./dist-mjs/index.mjs",
       "types": "./dist-mjs/index.d.ts"
     },
-    "./package.json":"./package.json"
+    "./package.json": "./package.json"
   },
   "scripts": {
     "patch-ts-node": "sh scripts/ts-node/add-shims.sh",
@@ -67,7 +67,6 @@
     "npm-check-updates": "^16.14.18",
     "prettier": "^3.2.5",
     "reflect-metadata": "^0.2.2",
-    "shelljs": "^0.8.5",
     "tree-kill": "^1.2.2",
     "typescript": "^5.4.4",
     "update-notifier": "^7.0.0"
@@ -85,7 +84,6 @@
     "@types/lodash": "^4.17.0",
     "@types/mocha": "^10.0.6",
     "@types/node": "^20.12.5",
-    "@types/shelljs": "^0.8.15",
     "@types/supertest": "^6.0.2",
     "@types/update-notifier": "^6.0.8",
     "@typescript-eslint/eslint-plugin": "^7.5.0",
