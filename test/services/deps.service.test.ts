@@ -89,31 +89,3 @@ runTest(DepsService, async (ctx, service) => {
     deps.length.should.eq(0);
   });
 });
-
-runTest(DepsService, async (ctx, service) => {
-  await runin("../../", async () => {
-    const dep = await service["importDep"]("not-exist", "not-exist");
-    expect(dep).be.null;
-  });
-});
-
-runTest(DepsService, async (ctx, service) => {
-  const cacheDir = "./.cache-deps-import-error";
-  if (fs.existsSync(cacheDir)) {
-    fs.rmSync(cacheDir, {
-      force: true,
-      recursive: true,
-    });
-  }
-  fs.mkdirSync(cacheDir);
-
-  fs.writeFileSync(path.join(cacheDir, "index.js"), "throw '';");
-
-  await runin(path.resolve(cacheDir), async () => {
-    const dep = await service["importDep"](
-      path.resolve(cacheDir, "index.js"),
-      process.cwd(),
-    );
-    expect(dep).be.null;
-  });
-});

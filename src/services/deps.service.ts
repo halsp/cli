@@ -1,3 +1,4 @@
+import { safeImport } from "@halsp/core";
 import * as fs from "fs";
 import path from "path";
 
@@ -100,7 +101,7 @@ export class DepsService {
     const deps = this.getDeps(pkgPath, () => true, [dir]);
     const scripts: InterfaceItem<T>[] = [];
     for (const dep of deps) {
-      const module = await this.importDep(dep.key, dir);
+      const module = await safeImport(dep.key);
       if (!module) continue;
       const inter = module[name];
       if (inter) {
@@ -111,19 +112,6 @@ export class DepsService {
       }
     }
     return scripts;
-  }
-
-  private async importDep(name: string, dir: string) {
-    try {
-      const depPath = _resolve(name, dir);
-      try {
-        return await import(depPath);
-      } catch {
-        return _require(depPath);
-      }
-    } catch {
-      return null;
-    }
   }
 
   public async getPlugins<T>(
