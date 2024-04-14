@@ -62,7 +62,7 @@ export function createTsconfig(
     compilerOptions: {
       outDir: "dist",
     },
-    include: ["src/**/*"],
+    include: ["**/*"],
     exclude: ["*.test.ts"],
   };
   const newConfig = config?.call(null, defConfig) ?? defConfig;
