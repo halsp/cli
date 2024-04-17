@@ -1,4 +1,4 @@
-import { Context, isUndefined } from "@halsp/core";
+import { Context, isUndefined, safeImport } from "@halsp/core";
 import path from "path";
 import type { Configuration, ConfigEnv } from "../../configuration";
 import { Inject } from "@halsp/inject";
@@ -6,7 +6,6 @@ import { CommandService } from "../command.service";
 import { FileService } from "../file.service";
 import * as fs from "fs";
 import { DepsService } from "../deps.service";
-import { pathToFileURL } from "url";
 import { TsconfigService } from "./tsconfig.service";
 import ts from "typescript";
 import {
@@ -179,15 +178,10 @@ export class ConfigService {
   }
 
   private async importJsConfig(configFilePath: string) {
-    let module: any;
-    if (this.isConfigEsm) {
-      module = await import(pathToFileURL(configFilePath).toString());
-    } else {
-      module = _require(configFilePath);
-    }
+    const module = await safeImport(configFilePath);
     if (typeof module == "function") {
       return module(this.configEnv);
-    } else if (module.default) {
+    } else if (module?.default) {
       return module.default(this.configEnv);
     } else {
       return {};

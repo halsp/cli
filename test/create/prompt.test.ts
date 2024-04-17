@@ -26,7 +26,7 @@ describe("prompt", () => {
         name: options.name ?? ".cache-create-inquirer",
       },
       {
-        packageManager: options.packageManager ?? "npm",
+        packageManager: options.packageManager ?? "pnpm",
         registry: process.env.REGISTRY as string,
         skipInstall: true,
         skipPlugins: options.skipPlugins ?? true,

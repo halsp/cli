@@ -34,7 +34,7 @@ describe("scaffold", () => {
             name: "test",
           },
           {
-            packageManager: "npm",
+            packageManager: "pnpm",
             registry: process.env.REGISTRY || "https://registry.npmjs.org/",
             plugins: pluginsStr,
             force: true,
@@ -359,7 +359,7 @@ describe("error", () => {
           name: testName,
         },
         {
-          packageManager: "npm",
+          packageManager: "pnpm",
           force: true,
           registry: process.env.REGISTRY as string,
         },
@@ -396,7 +396,7 @@ describe("error", () => {
           name: testName,
         },
         {
-          packageManager: "npm",
+          packageManager: "pnpm",
           force: true,
         },
       )
@@ -435,10 +435,10 @@ describe("init", () => {
         if (fs.existsSync(flagPath)) {
           await fs.promises.rm(flagPath);
         }
-        await service.init("npm");
+        await service.init("pnpm");
         fs.existsSync(flagPath).should.true;
 
-        await service.init("npm");
+        await service.init("pnpm");
         fs.existsSync(flagPath).should.true;
       },
       {
@@ -454,7 +454,7 @@ describe("init", () => {
     await testService(
       InitService,
       async (ctx, service) => {
-        await service.init("npm");
+        await service.init("pnpm");
         fs.existsSync(flagPath).should.true;
       },
       {

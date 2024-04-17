@@ -295,7 +295,7 @@ describe("shims _resolve", () => {
       const code = await fs.promises.readFile(
         path.join(dirName, "resolve.cjs"),
       );
-      code.includes("const _resolve = (name, dir) => require.resolve(name, [dir]);").should.true;
+      code.includes("const _resolve = (name, dir) => require.resolve(name, { paths: [dir] });").should.true;
     });
   });
 });

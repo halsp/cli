@@ -220,8 +220,13 @@ function createCjsShimsStatements(sf: ts.SourceFile) {
                   undefined,
                   [
                     ts.factory.createIdentifier("name"),
-                    ts.factory.createArrayLiteralExpression([
-                      ts.factory.createIdentifier("dir"),
+                    ts.factory.createObjectLiteralExpression([
+                      ts.factory.createPropertyAssignment(
+                        ts.factory.createIdentifier("paths"),
+                        ts.factory.createArrayLiteralExpression([
+                          ts.factory.createIdentifier("dir"),
+                        ]),
+                      ),
                     ]),
                   ],
                 ),

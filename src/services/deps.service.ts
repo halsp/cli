@@ -101,9 +101,13 @@ export class DepsService {
     const deps = this.getDeps(pkgPath, () => true, [dir]);
     const scripts: InterfaceItem<T>[] = [];
     for (const dep of deps) {
-      const module = await safeImport(dep.key);
-      if (!module) continue;
-      const inter = module[name];
+      let module: any = null;
+      try {
+        const depPath = _resolve(dep.key, dir);
+        module = await safeImport(depPath);
+      } catch {}
+
+      const inter = module?.[name];
       if (inter) {
         scripts.push({
           package: dep.key,
@@ -121,7 +125,8 @@ export class DepsService {
     const result: InterfaceItem<T>[] = [];
     let dir = cwd;
     while (dir != path.dirname(dir) && dir.startsWith(path.dirname(dir))) {
-      for (const newItem of await this.getDirPlugins<T>(name, cwd)) {
+      const dirPlugins = await this.getDirPlugins<T>(name, cwd);
+      for (const newItem of dirPlugins) {
         if (!result.some((r) => r.package == newItem.package)) {
           result.push(newItem);
         }
