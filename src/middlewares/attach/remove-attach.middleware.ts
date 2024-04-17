@@ -22,10 +22,10 @@ export class RemoveAttachMiddleware extends Middleware {
       return;
     }
 
-    this.logger.info(
-      "Remove " +
-        this.chalkService.bold.greenBright(names.join(" ")) +
-        " success.",
-    );
+    this.logger.info("Remove success:");
+    names.forEach((name, index) => {
+      const cName = this.chalkService.greenBright(name);
+      this.logger.info(`  ${index + 1}. ${cName}`);
+    });
   }
 }

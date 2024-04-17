@@ -10,6 +10,7 @@ import { Context } from "@halsp/core";
 type AttachHook = (command: Command) => void;
 interface AttachConfig {
   register: AttachHook;
+  dependencies?: string | string[];
 }
 
 export class AttachService {
