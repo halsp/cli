@@ -46,9 +46,15 @@ export class AddAttachMiddleware extends Middleware {
 
     const deps = names
       .reduce<string[]>((pre, cur) => {
-        const pkgDeps =
+        let pkgDeps =
           attachs.filter((a) => a.package == cur)[0]?.config?.dependencies ??
           [];
+        if (typeof pkgDeps == "string") {
+          pkgDeps = pkgDeps
+            .split(",")
+            .map((item) => item.trim())
+            .filter((item) => !!item);
+        }
         for (const dep of pkgDeps) {
           if (!pre.includes(dep)) {
             pre.push(dep);
